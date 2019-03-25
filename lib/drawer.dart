@@ -8,27 +8,27 @@ class NavigationDrawer extends StatelessWidget {
 				ListTile (
 					title: Text ("Lunch"),
 					leading: Icon (Icons.fastfood),
-					onTap: () => Navigator.of(context).pushNamed("lunch")
+					onTap: () => Navigator.of(context).pushReplacementNamed("lunch")
 				),
 				ListTile (
 					title: Text ("Schedule"),
 					leading: Icon (Icons.schedule),
-					onTap: () => Navigator.of(context).pushNamed("schedule")
+					onTap: () => Navigator.of(context).pushReplacementNamed("schedule")
 				),
 				ListTile (
 					title: Text ("News"),
 					leading: Icon (Icons.new_releases),
-					onTap: () => Navigator.of(context).pushNamed("news"),
+					onTap: () => Navigator.of(context).pushReplacementNamed("news"),
 				),
 				ListTile (
 					title: Text ("Lost and Found"),
 					leading: Icon (Icons.help),
-					onTap: () => Navigator.of(context).pushNamed("lost-and-found")
+					onTap: () => Navigator.of(context).pushReplacementNamed("lost-and-found")
 				),
 				ListTile (
 					title: Text ("Sports"),
 					subtitle: Text ("Need to find a good icon for this"),
-					onTap: () => Navigator.of(context).pushNamed("sports")
+					onTap: () => Navigator.of(context).pushReplacementNamed("sports")
 				)
 			]
 		)

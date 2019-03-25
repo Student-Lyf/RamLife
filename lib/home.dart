@@ -59,7 +59,7 @@ class HomePage extends StatefulWidget {
 }
 
 class HomePageState extends State <HomePage> {
-	final Day today = getToday();
+	Day today = getToday();
 	static Duration minute = Duration (minutes: 1);
 	Schedule schedule;
 	Period currentPeriod;
@@ -96,7 +96,7 @@ class HomePageState extends State <HomePage> {
 						title: Text (
 							currentPeriod == null
 								? "School is over"
-								: "Next class: ${currentSubject?.name ?? currentPeriod.period}",
+								: "Current class: ${currentSubject?.name ?? currentPeriod.period}",
 							textScaleFactor: 1.5
 						),
 						leading: Icon (Icons.school, size: 35),
@@ -136,6 +136,7 @@ class HomePageState extends State <HomePage> {
 						}
 					)
 				)),
+
 				Card (child: InfoCard (
 					title: "Today's lunch: ${today.lunch.main}",
 					icon: today.lunch.icon,
@@ -148,7 +149,49 @@ class HomePageState extends State <HomePage> {
 						Text ("Salad: ${today.lunch.salad}"),
 						Text ("Dessert: ${today.lunch.dessert}")
 					],
-				))
+				)),
+
+				DropdownButton<Letters> (
+					onChanged: (Letters letter) => setState (() {
+						today = Day (
+							letter: letter, 
+							lunch: today.lunch
+						);
+						periods = widget.student.getPeriods(today);
+					}),
+					value: today.letter,
+					hint: Text ("Choose letter"),
+					items: <DropdownMenuItem<Letters>> [
+						DropdownMenuItem (
+							child: Text ("M"),
+							value: Letters.M
+						),
+						DropdownMenuItem (
+							child: Text ("R"),
+							value: Letters.R
+						),
+						DropdownMenuItem (
+							child: Text ("A"),
+							value: Letters.A
+						),
+						DropdownMenuItem (
+							child: Text ("B"),
+							value: Letters.B
+						),
+						DropdownMenuItem (
+							child: Text ("C"),
+							value: Letters.C
+						),
+						DropdownMenuItem (
+							child: Text ("E"),
+							value: Letters.E
+						),
+						DropdownMenuItem (
+							child: Text ("F"),
+							value: Letters.F
+						)
+					]
+				)
 			]
 		),
 	);

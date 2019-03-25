@@ -95,21 +95,21 @@ class Subject {
 }
 
 class PeriodData {
-	final String period, room;
+	final String room;
 	final int id;
 
 	const PeriodData ({
-		@required this.period,
 		@required this.room,
 		@required this.id
 	});
 
-	@override String toString() => "PeriodData $period";
+	@override String toString() => "PeriodData $id";
 }
 
 class Period {
 	final Range time;
-	final String room, period;
+	final String room; 
+	final String period;
 	final int id;
 
 	const Period._ ({
@@ -121,11 +121,12 @@ class Period {
 
 	factory Period (
 		PeriodData data,
-		{@required time}
+		{@required Range time, @required String period}
 	) => Period._ (
 		time: time, 
 		room: data.room,
-		period: data.period,
+		// period: data.period,
+		period: period,
 		id: data.id
 	);
 
@@ -167,7 +168,9 @@ class Day {
 
 	static DateTime today = DateTime.now();
 
-	String get name => "${letter.toString().substring (8)} day ${special.name}";
+	String get name => "${letter.toString().substring (8)} day ${
+		special == regular || special == rotate ? '' : special.name
+	}";
 
 	Day ({
 		@required this.letter,
@@ -238,41 +241,29 @@ class Lunch {
 }
 
 class Schedule {
-	final Letters letter;
 	final List <PeriodData> periods;
+	final List <int> freePeriods;
 
-	const Schedule ({
-		@required this.letter,
-		@required this.periods
-	});
-
-	static Period free (String period, Range time) => Period (
-		PeriodData (
-			id: null, 
-			room: null,
-			period: period
-		),
-		time: time
-	);
+	const Schedule (this.periods, {this.freePeriods = const []});
 
 	static Period homeroom (
 		Range time, 
 		{String room}
 	) => Period (
 		PeriodData (
-			period: "Homeroom",
 			room: room,
 			id: null,
 		),
+		period: "Homeroom",
 		time: time
 	);
 
 	static Period mincha (Range time, String room) => Period (
 		PeriodData (
-			period: "Mincha",
 			room: room, 
 			id: null,
 		),
+		period: "Mincha",
 		time: time
 	);
 }
@@ -307,11 +298,26 @@ class Student {
 				)
 			); else if (special.mincha == index) result.add (
 				Schedule.mincha (range, minchaRooms [day.letter])
-			); else {
+			); else if (schedule [day.letter].freePeriods.any (
+				(int index2) => index2 == periodIndex + 1
+			)) {
+				result.add (
+					Period (
+						PeriodData (
+							room: null,
+							id: null
+						),
+						period: (periodIndex + 1).toString(),
+						time: range,
+					)
+				);
+				periodIndex++;
+			} else {
 				result.add (
 					Period (
 						periods [periodIndex],
-						time: range
+						time: range,
+						period: (periodIndex + 1).toString()
 					)
 				);
 				periodIndex++;
