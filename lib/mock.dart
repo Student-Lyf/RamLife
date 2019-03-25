@@ -1,11 +1,12 @@
-import "dataclasses.dart";
 import "package:flutter/material.dart";
-import "home.dart";
+
+import "backend/schedule.dart";
+import "backend/student.dart";
+
+import "widgets/home.dart";
 
 // ----------------Temporary values----------------
 
-// To be replaced with asset file
-// const String RAMAZ_LOGO = "https://www.ramaz.org/uploaded/04_Support_Ramaz_(PDFs,_Docs,_other_files)/Annual_Campaign/logoteal.jpg";
 const int PLACEHOLDER_PERIOD = 4;
 const Map <int, Subject> PLACEHOLDER_SUBJECTS = {  // ID: Subject
 	1: const Subject (name: "Chemistry", teacher: "Dr. Rotenberg"),

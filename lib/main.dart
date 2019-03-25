@@ -10,10 +10,10 @@
 // TEST: Winter fridays
 
 import "package:flutter/material.dart";
-import "drawer.dart";
+import "widgets/drawer.dart";  // mock page for all other screens
 
 import "mock.dart";
-import "home.dart" show HomePage;
+import "widgets/home.dart" show HomePage;
 
 void main () => runApp (
 	MaterialApp (
