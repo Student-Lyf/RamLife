@@ -19,6 +19,7 @@ class HomePage extends StatelessWidget {
 	@override Widget build (BuildContext context) => Scaffold (
 		drawer: NavigationDrawer(),
 		bottomNavigationBar: Footer(),
+		endDrawer: Drawer (child: Placeholder()),
 		body: Column (
 			mainAxisSize: MainAxisSize.min, 
 			crossAxisAlignment: CrossAxisAlignment.center,
