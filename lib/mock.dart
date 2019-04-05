@@ -38,213 +38,57 @@ Day placeholderToday = Day (
 );
 
 const Schedule aSchedule = Schedule ([
-	PeriodData (
-		// period: "1",
-		room: "Beit Knesset",
-		id: 12
-	),
-	PeriodData (
-		// period: "2",
-		room: "503",
-		id: 1			
-	),
-	PeriodData (
-		// period: "3",
-		room: "304",
-		id: 2
-	),
-	PeriodData (
-		// period: "4",
-		room: "303",
-		id: 3
-	),
-	PeriodData (
-		// period: "5",
-		room: "GYM",
-		id: 4
-	),
-	PeriodData (
-		// period: "6",
-		room: "604",
-		id: 5
-	),
-	PeriodData (
-		// period: "7",
-		room: "AUD",
-		id: 6
-	),
-	PeriodData (
-		// period: "8",
-		room: "506",
-		id: 3
-	),
-	PeriodData (
-		// period: "9",
-		room: "506",
-		id: 7
-	),
-	PeriodData (
-		// period: "10",
-		room: "601",
-		id: 8
-	),
-	PeriodData (
-		// period: "11",
-		room: "304",
-		id: 9
-	)
+	PeriodData (room: "Beit Knesset", id: 12),
+	PeriodData (room: "503", id: 1),
+	PeriodData (room: "304", id: 2),
+	PeriodData (room: "303", id: 3),
+	PeriodData (room: "GYM", id: 4),
+	PeriodData (room: "604", id: 5),
+	PeriodData (room: "AUD", id: 6),
+	PeriodData (room: "506", id: 3),
+	PeriodData (room: "506", id: 7),
+	PeriodData (room: "601", id: 8),
+	PeriodData (room: "304", id: 9)
 ]);
 
 const Schedule mSchedule = Schedule ([
-	PeriodData (
-		// period: "1",
-		room: "Beit Knesset",
-		id: 12
-	),
-	PeriodData (
-		// period: "2",
-		room: "GYM",
-		id: 4
-	),
-	PeriodData (
-		// period: "3",
-		room: "506",
-		id: 3
-	),
-	PeriodData (
-		// period: "4",
-		room: "503",
-		id: 1
-	),
-	PeriodData (
-		// period: "5",
-		room: "604",
-		id: 5
-	),
-	PeriodData (
-		// period: "6",
-		room: "703",
-		id: 10
-	),
-	PeriodData (
-		// period: "7",
-		room: "AUD",
-		id: 6
-	),
-	PeriodData (
-		// period: "8",
-		room: "401",
-		id: 8
-	),
-	PeriodData (
-		// period: "9",
-		room: "301",
-		id: 7
-	),
-	PeriodData (
-		// period: "10",
-		room: "506",
-		id: 2
-	),
-	PeriodData (
-		// period: "11",
-		room: "301",
-		id: 11
-	)
+	PeriodData (room: "Beit Knesset", id: 12),
+	PeriodData (room: "GYM", id: 4),
+	PeriodData (room: "506", id: 3),
+	PeriodData (room: "503", id: 1),
+	PeriodData (room: "604", id: 5),
+	PeriodData (room: "703", id: 10),
+	PeriodData (room: "AUD", id: 6),
+	PeriodData (room: "401", id: 8),
+	PeriodData (room: "301", id: 7),
+	PeriodData (room: "506", id: 2),
+	PeriodData (room: "301", id: 11)
 ]);
 
 const Schedule rSchedule = Schedule ([
-	PeriodData (
-		// period: "1",
-		room: "Beit Knesset",
-		id: 12
-	),
-	PeriodData (
-		// period: "2",
-		room: "704",
-		id: 13
-	),
-	PeriodData (
-		// period: "3",
-		room: "305",
-		id: 2
-	),
-	PeriodData (
-		// period: "4",
-		room: "306",
-		id: 7
-	),
-	PeriodData (
-		// period: "5",
-		room: "506",
-		id: 3
-	),
-	PeriodData (
-		// period: "6",
-		room: "406",
-		id: 8
-	),
-	PeriodData (
-		// period: "7",
-		room: "304",
-		id: 11
-	),
-	PeriodData (
-		// period: "8",
-		room: "AUD",
-		id: 6
-	),
-	PeriodData (
-		// period: "9",
-		room: "304",
-		id: 9
-	),
-	PeriodData (
-		// period: "10",
-		room: "604",
-		id: 5
-	),
-	PeriodData (
-		// period: "11",
-		room: "503",
-		id: 1
-	),
+	PeriodData (room: "Beit Knesset", id: 12),
+	PeriodData (room: "704", id: 13),
+	PeriodData (room: "305", id: 2),
+	PeriodData (room: "306", id: 7),
+	PeriodData (room: "506", id: 3),
+	PeriodData (room: "406", id: 8),
+	PeriodData (room: "304", id: 11),
+	PeriodData (room: "AUD", id: 6),
+	PeriodData (room: "304", id: 9),
+	PeriodData (room: "604", id: 5),
+	PeriodData (room: "503", id: 1),
 ]);
 
 const Schedule bSchedule = Schedule (
 	[
-		PeriodData (
-			room: "503",
-			id: 1
-		),
-		PeriodData (
-			room: "507",
-			id: 2
-		),
-		PeriodData (
-			room: "304",
-			id: 8
-		),
-		PeriodData (
-			room: "303",
-			id: 11
-		),
-		PeriodData (
-			room: "GYM",
-			id: 4
-		),
-		PeriodData (
-			room: "AUD",
-			id: 6
-		),
-		PeriodData (
-			room: "304",
-			id: 9
-		),
-		PeriodData (
-			room: "501",
-			id: 3
-		),
+		PeriodData (room: "503", id: 1),
+		PeriodData (room: "507", id: 2),
+		PeriodData (room: "304", id: 8),
+		PeriodData (room: "303", id: 11),
+		PeriodData (room: "GYM", id: 4),
+		PeriodData (room: "AUD", id: 6),
+		PeriodData (room: "304", id: 9),
+		PeriodData (room: "501", id: 3),
 	], 
 	freePeriods: [4, 10]
 );

@@ -13,7 +13,7 @@ import "package:flutter/material.dart";
 import "widgets/drawer.dart";  // mock page for all other screens
 
 import "mock.dart";
-import "widgets/home.dart" show HomePage;
+import "widgets/schedule.dart" show HomePage;
 
 void main () => runApp (
 	MaterialApp (
