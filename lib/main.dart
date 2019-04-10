@@ -13,14 +13,16 @@ import "package:flutter/material.dart";
 import "widgets/drawer.dart";  // mock page for all other screens
 
 import "mock.dart";
-import "widgets/schedule.dart" show HomePage;
+import "widgets/schedule.dart" show SchedulePage;
+import "widgets/home.dart" show HomePage;
 
 void main () => runApp (
 	MaterialApp (
 		home: getMainPage(),
 		routes: {
+			"main": (_) => HomePage(), 
 			"lunch": placeholder ("Lunch"),
-			"schedule": (_) => HomePage(levi),
+			"schedule": (_) => SchedulePage(levi),
 			"news": placeholder ("News"),
 			"lost-and-found": placeholder ("Lost and found"),
 			"sports": placeholder ("Sports")

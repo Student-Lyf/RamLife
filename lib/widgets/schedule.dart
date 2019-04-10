@@ -44,7 +44,7 @@ class InfoCard extends StatelessWidget {
 							(Widget child) => Padding (
 								padding: EdgeInsets.symmetric(vertical: padding),
 								child: child
-							)
+							) 
 						).toList()
 					)
 				)
@@ -53,15 +53,15 @@ class InfoCard extends StatelessWidget {
 	);
 }
 
-class HomePage extends StatefulWidget {
+class SchedulePage extends StatefulWidget {
 	final Student student;
 
-	HomePage (this.student);
+	SchedulePage (this.student);
 
 	@override HomePageState createState() => HomePageState();
 }
 
-class HomePageState extends State <HomePage> {
+class HomePageState extends State <SchedulePage> {
 	Day today = getToday();
 	Schedule schedule;
 	Period currentPeriod;
