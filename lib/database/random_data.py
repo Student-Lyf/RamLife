@@ -1,17 +1,18 @@
-from my_stuff.lists import ALPHABET
-
 from random import choice, randrange 
+from itertools import count
 
-classId = 0
-studentId = 0
+
+ALPHABET = list ("abcdefghijklmnopqrstuvwxyz")
 WEEKDAYS = ("A", "B", "C", "M", "R")
 FRIDAYS = ("E", "F")
-ROOMS = []
-for hundred in range (300, 800, 100): 
-	for room in range (hundred, hundred + 8): 
-		ROOMS.append (room)
-# ROOMS = tuple (range (300, 308)) + tuple (range (400, 408))
+ROOMS = [
+	room 
+	for hundred in range (300, 800, 100)
+	for room in range (hundred, hundred + 8)
+]
 
+classId = 0
+studentId = count (1)
 
 def get_random_string(): return "".join (
 	[choice (ALPHABET) for _ in range (randrange (1, 7))]
@@ -32,10 +33,7 @@ def get_class():
 	}
 
 def get_student(): 
-	global studentId
-	studentId += 1
-
-	id_ = studentId
+	id_ = next (studentId)
 	first = get_random_string()
 	last = get_random_string()
 	days = {}
