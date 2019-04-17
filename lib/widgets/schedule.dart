@@ -62,16 +62,30 @@ class NextClass extends StatelessWidget {
 }
 
 class ClassList extends StatelessWidget {
-	final List<Period> periods;
+	final Iterable<Period> periods;
 	const ClassList (this.periods);
 
 	@override Widget build (BuildContext context) => ListView (
-		children: periods.map (
+		children: <Widget>[
+			DrawerHeader (
+				child: Center (
+					child: Text (
+						"Upcoming classes",
+						textScaleFactor: 2
+					)
+				)
+			)
+		] + periods.map (
 			(Period period) {
 				final Subject subject = getSubject (period);
+				final List<String> info = period.getInfo();
+				// ListTile has the period number, so get rid of it
+				info.removeWhere(
+					(String description) => description.startsWith("Period:")
+				);
 				return InfoCard (
 					title: "${period.period}${subject == null ? '' : ': ${subject.name}'}",
-					children: period.getInfo().map (
+					children: info.map (
 						(String description) => Text (description)
 					).toList()
 				);
@@ -213,7 +227,7 @@ class HomePageState extends State <SchedulePage> {
 
 				Card (child: InfoCard (
 					title: "Today's lunch: ${today.lunch.main}",
-					icon: today.lunch.icon,
+					icon: Icons.fastfood,
 					padding: 5,
 					children: [
 						Text ("Main: ${today.lunch.main}"),

@@ -1,5 +1,4 @@
 import "package:flutter/foundation.dart" show required;
-import "package:flutter/material.dart" show IconData, Icons;
 
 import "times.dart";
 import "../mock.dart";  // for winter friday start and end times
@@ -130,7 +129,6 @@ class Day {
 
 class Lunch {
 	final String main, soup, side1, side2, salad, dessert;
-	final IconData icon;
 
 	const Lunch ({
 		@required this.main, 
@@ -138,7 +136,6 @@ class Lunch {
 		@required this.side1, 
 		@required this.side2,
 		@required this.salad, 
-		this.icon = Icons.fastfood,
 		this.dessert = "Seasonal Fresh Fruit"
 	});
 }

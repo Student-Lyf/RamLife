@@ -14,19 +14,16 @@ class InfoCard extends StatelessWidget {
 	const InfoCard (this.title, [this.subtitle]);
 
 	@override Widget build (BuildContext context) => Card (
-		// color: Colors.lightBlueAccent,
 		child: ListTile (
 			title: Text (
 				title, 
 				style: TextStyle (
-					// color: Colors.white,
 					fontSize: 25
 				)
 			),
 			subtitle: subtitle == null ? null : Text (
 				subtitle,
 				style: TextStyle (
-					// color: Colors.white,
 					fontSize: 18
 				)
 			)
@@ -43,6 +40,7 @@ class HomePage extends StatefulWidget {
 
 class HomePageState extends State<HomePage> {
 	static final today = getToday();
+	final GlobalKey<ScaffoldState> key = GlobalKey<ScaffoldState>();
 
 	Schedule schedule;
 	List<Period> periods;
@@ -60,33 +58,23 @@ class HomePageState extends State<HomePage> {
 	}
 
 	@override Widget build (BuildContext context) => Scaffold (
+		key: key,
 		appBar: AppBar (
-			title: Text ("Home")
-			actions: [],
+			title: Text ("Home"),
+			actions: [FlatButton (
+				child: Text ("Swipe from left see more", textScaleFactor: 0.9, style: TextStyle (color: Colors.white)),
+				onPressed: key.currentState.openEndDrawer
+			)]
 		),
 		drawer: NavigationDrawer(),
-		// bottomNavigationBar: Footer(),
 		endDrawer: Drawer (
 			child: ClassList(
-				periods.getRange (periodIndex, periods.length)
+				periods.getRange (periodIndex ?? 0, periods.length)
 			)
 		),
 		body: Column (
 			children: [
-				NextClass(
-					// Period (
-					// 	PeriodData (
-					// 		room: "GYM",
-					// 		id: 4
-					// 	),
-					// 	time: Range (
-					// 		Time (8, 00), Time (8, 50)
-					// 	),
-					// 	period: "5"
-					// ),
-					period
-				),
-				// InfoCard("This is the class you have now", "Made you look"),
+				NextClass(period),
 				InfoCard("This is today's lunch"),
 				InfoCard("These are today's sports games")
 			]
