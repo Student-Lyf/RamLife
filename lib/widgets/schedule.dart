@@ -11,7 +11,7 @@ import "../backend/student.dart";
 import "../backend/helpers.dart";
 
 import "drawer.dart";
-import "info_tile.dart";
+import "info_card.dart";
 
 
 List <Widget> pad ({List <Widget> children, double padding}) => children.map (
@@ -30,7 +30,7 @@ class NextClass extends StatelessWidget {
 
 	@override Widget build (BuildContext context) {
 		final subject = getSubject (period);
-		return InfoTile (
+		return InfoCard (
 			icon: Icons.school,
 			title: period == null
 				? "School is over"
@@ -62,7 +62,7 @@ class ClassList extends StatelessWidget {
 				info.removeWhere(
 					(String description) => description.startsWith("Period:")
 				);
-				return InfoCard (
+				return InfoPanel (
 					title: "${period.period}${subject == null ? '' : ': ${subject.name}'}",
 					children: info.map (
 						(String description) => Text (description)
@@ -73,13 +73,13 @@ class ClassList extends StatelessWidget {
 	);
 }
 
-class InfoCard extends StatelessWidget {
+class InfoPanel extends StatelessWidget {
 	final String title;
 	// final IconData icon;
 	final List <Widget> children;
 	// final double padding;
 
-	const InfoCard ({
+	const InfoPanel ({
 		@required this.title,
 		@required this.children,
 	});

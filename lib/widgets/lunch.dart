@@ -1,12 +1,12 @@
 import "package:flutter/material.dart";
 import "../backend/schedule.dart" show Lunch;
-import "info_tile.dart";
+import "info_card.dart";
 
 class LunchTile extends StatelessWidget {
 	final Lunch lunch;
 	const LunchTile ({@required this.lunch});
 
-	@override Widget build (BuildContext context) => InfoTile (
+	@override Widget build (BuildContext context) => InfoCard (
 		icon: Icons.fastfood,
 		title: "Today's lunch is ${lunch.main}",
 		children: [

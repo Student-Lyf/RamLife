@@ -12,29 +12,30 @@ import "../mock.dart" show getToday;
 // UI
 import "schedule.dart" show NextClass, ClassList;
 import "drawer.dart";
-import "lunch.dart" show LunchTile;
+import "lunch.dart";
+import "info_card.dart";
 
-class InfoCard extends StatelessWidget {
-	final String title, subtitle;
-	const InfoCard (this.title, [this.subtitle]);
+// class InfoCard extends StatelessWidget {
+// 	final String title, subtitle;
+// 	const InfoCard (this.title, [this.subtitle]);
 
-	@override Widget build (BuildContext context) => Card (
-		child: ListTile (
-			title: Text (
-				title, 
-				style: TextStyle (
-					fontSize: 25
-				)
-			),
-			subtitle: subtitle == null ? null : Text (
-				subtitle,
-				style: TextStyle (
-					fontSize: 18
-				)
-			)
-		)
-	);
-}
+// 	@override Widget build (BuildContext context) => Card (
+// 		child: ListTile (
+// 			title: Text (
+// 				title, 
+// 				style: TextStyle (
+// 					fontSize: 25
+// 				)
+// 			),
+// 			subtitle: subtitle == null ? null : Text (
+// 				subtitle,
+// 				style: TextStyle (
+// 					fontSize: 18
+// 				)
+// 			)
+// 		)
+// 	);
+// }
 
 class HomePage extends StatefulWidget {
 	final Student student;
@@ -93,7 +94,7 @@ class HomePageState extends State<HomePage> {
 			children: [
 				NextClass(period),
 				LunchTile (lunch: today.lunch),
-				InfoCard("TODO: Sports"),
+				InfoCard(title: "TODO: Sports", icon: Icons.directions_run),
 			]
 		)
 	);

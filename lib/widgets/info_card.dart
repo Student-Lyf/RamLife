@@ -1,14 +1,14 @@
 import "package:flutter/material.dart";
 
-class InfoTile extends StatelessWidget {
+class InfoCard extends StatelessWidget {
 	final IconData icon;
 	final Iterable<String> children;
 	final String title;
 
-	const InfoTile ({
-		@required this.icon, 
+	const InfoCard ({
 		@required this.title,
-		@required this.children, 
+		@required this.icon, 
+		this.children = const [], 
 	});
 
 	@override Widget build (BuildContext context) => Card (
