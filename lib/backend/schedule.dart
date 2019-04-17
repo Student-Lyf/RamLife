@@ -80,11 +80,20 @@ class Day {
 		special
 	}) {
 		if (special == null) {
-			if ([Letters.A, Letters.B, Letters.C].contains (letter)) 
-				this.special = rotate;
-			else if ([Letters.M, Letters.R].contains (letter)) 
-				this.special = regular;
-			else this.special = getWinterFriday();
+			switch (letter) {
+				case Letters.A: 
+				case Letters.B: 
+				case Letters.C: 
+					this.special = rotate;
+					break;
+				case Letters.M: 
+				case Letters.R: 
+					this.special = regular;
+					break;
+				case Letters.E: 
+				case Letters.F: 
+					this.special = getWinterFriday();
+			}
 		} else this.special = special;
 	} 
 

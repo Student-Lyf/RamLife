@@ -281,3 +281,17 @@ final Special early = Special (
 	homeroom: 3,
 	mincha: 10
 );
+
+final List<Special> specials = [
+	regular,
+	roshChodesh,
+	fastDay,
+	friday,
+	fridayRoshChodesh,
+	winterFriday,
+	winterFridayRoshChodesh,
+	amAssembly,
+	pmAssembly,
+	rotate,
+	early,
+];

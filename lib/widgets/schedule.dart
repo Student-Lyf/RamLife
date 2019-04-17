@@ -5,15 +5,13 @@
 
 import "package:flutter/material.dart";
 
-import "dart:async";
-
-import "../mock.dart";
-
+import "../backend/times.dart" show Special, specials;
 import "../backend/schedule.dart";
 import "../backend/student.dart";
 import "../backend/helpers.dart";
 
 import "drawer.dart";
+import "info_tile.dart";
 
 
 List <Widget> pad ({List <Widget> children, double padding}) => children.map (
@@ -32,50 +30,31 @@ class NextClass extends StatelessWidget {
 
 	@override Widget build (BuildContext context) {
 		final subject = getSubject (period);
-		return Card (
-			// color: Colors.lightBlueAccent,
-			child: ListTile (
-				title: Text (
-					period == null
-						? "School is over"
-						: "Current class: ${subject?.name ?? period.period}",
-					textScaleFactor: 1.5,
-					// style: TextStyle (color: Colors.)
-				),
-				leading: Icon (Icons.school, size: 35),// color: Colors.black),
-				subtitle: Column (
-					crossAxisAlignment: CrossAxisAlignment.start,
-					children: (period?.getInfo() ?? []).map (
-						(String description) => Padding (
-							padding: EdgeInsets.symmetric (vertical: 5),
-							child: Text (
-								description,
-								textScaleFactor: 1.25,
-								// style: white
-							)
-						)
-					).toList()
-				)
-			)
+		return InfoTile (
+			icon: Icons.school,
+			title: period == null
+				? "School is over"
+				: "Current class: ${subject?.name ?? period.period}",
+			children: period?.getInfo()
 		);
 	}
 }
 
 class ClassList extends StatelessWidget {
 	final Iterable<Period> periods;
-	const ClassList (this.periods);
+	final String headerText;
+	const ClassList ({@required this.periods, @required this.headerText});
 
 	@override Widget build (BuildContext context) => ListView (
-		children: <Widget>[
-			DrawerHeader (
-				child: Center (
-					child: Text (
-						"Upcoming classes",
-						textScaleFactor: 2
-					)
+		shrinkWrap: true,
+		children: <Widget>[DrawerHeader (
+			child: Center (
+				child: Text (
+					headerText,
+					textScaleFactor: 2
 				)
 			)
-		] + periods.map (
+		)] + periods.map (
 			(Period period) {
 				final Subject subject = getSubject (period);
 				final List<String> info = period.getInfo();
@@ -87,7 +66,7 @@ class ClassList extends StatelessWidget {
 					title: "${period.period}${subject == null ? '' : ': ${subject.name}'}",
 					children: info.map (
 						(String description) => Text (description)
-					).toList()
+					).toList(),
 				);
 			}
 		).toList()
@@ -96,197 +75,100 @@ class ClassList extends StatelessWidget {
 
 class InfoCard extends StatelessWidget {
 	final String title;
-	final IconData icon;
+	// final IconData icon;
 	final List <Widget> children;
-	final double padding;
+	// final double padding;
 
 	const InfoCard ({
 		@required this.title,
 		@required this.children,
-		this.icon,
-		this.padding = 5
 	});
 
 	@override Widget build (BuildContext context) => ExpansionTile (
-		leading: Icon (icon),
 		title: Text(title),
-		children: [
-			Padding (
-				padding: EdgeInsets.symmetric(horizontal: 30, vertical: 5),
-				child: Align (
-					alignment: Alignment.centerLeft,
-					child: Column (
-						mainAxisSize: MainAxisSize.max,
-						crossAxisAlignment: CrossAxisAlignment.start,
-						children: children.map (
-							(Widget child) => Padding (
-								padding: EdgeInsets.symmetric(vertical: padding),
-								child: child
-							) 
-						).toList()
-					)
-				)
+		children: [Align (
+			alignment: Alignment (-0.75, 0),
+			child: Column (
+				crossAxisAlignment: CrossAxisAlignment.start,
+				children: children.map (
+					(Widget child) => Padding (
+						padding: EdgeInsets.symmetric(vertical: 5),
+						child: child
+					) 
+				).toList()
 			)
-		]
+		)]
 	);
 }
 
 class SchedulePage extends StatefulWidget {
 	final Student student;
-
 	SchedulePage (this.student);
 
-	@override HomePageState createState() => HomePageState();
+	@override ScheduleState createState() => ScheduleState();
 }
 
-class HomePageState extends State <SchedulePage> {
-	Day today = getToday();
+class ScheduleState extends State <SchedulePage> {
+	static const Letters defaultLetter = Letters.M;
+	static final Special defaultSpecial = specials [0];
+
+	Letters letter = defaultLetter;
+	Special special = defaultSpecial;
+	Day day = getDay (defaultLetter, defaultSpecial);
 	Schedule schedule;
-	Period currentPeriod;
-	Subject currentSubject;
+	List<Period> periods;
 
-	static Duration minute = Duration (minutes: 1);
-	Timer timer;
-
-	String special;
-	List <Period> periods;
-	int periodNumber;
+	static Day getDay (Letters letter, Special special) => Day (
+		letter: letter,
+		special: special,
+		lunch : null
+	);
 
 	@override void initState () {
 		super.initState();
-		timer = Timer.periodic (minute, updateScreen);
-		schedule = widget.student.schedule [today.letter];
-		periods = widget.student.getPeriods (today);
-		periodNumber = today.period;
-		currentPeriod = periodNumber == null 
-			? null
-			: periods [periodNumber];
-		currentSubject = getSubject (currentPeriod);
+		update();
 	}
 
-	@override void dispose() {
-		timer.cancel();
-		super.dispose();
+	void update({Letters letter, Special special}) {
+		if (letter != null) this.letter = letter;
+		if (special != null) this.special = special;
+		schedule = widget.student.schedule [letter];
+		periods = widget.student.getPeriods (day);
 	}
 
 	@override
 	Widget build (BuildContext context) => Scaffold (
-		appBar: AppBar (
-			title: Text ("Ramaz")
-		),
-
+		appBar: AppBar (title: Text ("Schedule")),
 		drawer: NavigationDrawer(),
-
 		body: ListView (
 			children: [
-				Card (
-					child: ListTile (
-						title: Text (
-							currentPeriod == null
-								? "School is over"
-								: "Current class: ${currentSubject?.name ?? currentPeriod.period}",
-							textScaleFactor: 1.5
-						),
-						leading: Icon (Icons.school, size: 35),
-						subtitle: Column (
-							crossAxisAlignment: CrossAxisAlignment.start,
-							children: pad (
-								padding: 5,
-								children: currentPeriod?.getInfo() ?? []
-							) 
-						)
+				ListTile (
+					title: Text ("Choose a letter"),
+					trailing: DropdownButton<Letters> (
+						value: letter, 
+						onChanged: (Letters letter) => update (letter: letter),
+						items: Letters.values.map<DropdownMenuItem<Letters>> (
+							(Letters letter) => DropdownMenuItem<Letters> (
+								child: Text (letter.toString().split(".").last),
+								value: letter
+							)
+						).toList()
 					)
 				),
-
-				Card (child: InfoCard (
-					icon: Icons.schedule,
-					padding: 1,
-					title: (
-						"Today is a${aOrAn (today.name)} "
-						"${today.name}"
-					),
-					children: List.generate(
-						today.special.periods.length - ((periodNumber ?? -1) + 1),
-						(int index) {
-							final Period period = periods[(periodNumber ?? - 1) + index + 1];
-							final Subject subject = getSubject (period);
-							final List <Text> info = [
-								Text ("Time: ${period.time}"),
-							];
-							if (period.room != null) 
-								info.add (Text ("Room: ${period.room}"));
-							if (subject != null) 
-								info.add (Text ("Teacher: ${subject.teacher}"));
-							return InfoCard (
-								title: "${period.period}${subject == null ? '' : ': ${subject.name}'}",
-								children: info
-							);
-						}
+				ListTile (
+					title: Text ("Choose a schedule"),
+					trailing: DropdownButton<Special> (
+						value: special,
+						onChanged: (Special special) => update (special: special),
+						items: specials.map<DropdownMenuItem<Special>> (
+							(Special special) => DropdownMenuItem<Special> (
+								child: Text (special.name),
+								value: special
+							)
+						).toList()
 					)
-				)),
-
-				Card (child: InfoCard (
-					title: "Today's lunch: ${today.lunch.main}",
-					icon: Icons.fastfood,
-					padding: 5,
-					children: [
-						Text ("Main: ${today.lunch.main}"),
-						Text ("Soup: ${today.lunch.soup}"),
-						Text ("Side 1: ${today.lunch.side1}"),
-						Text ("Side 2: ${today.lunch.side2}"),
-						Text ("Salad: ${today.lunch.salad}"),
-						Text ("Dessert: ${today.lunch.dessert}")
-					],
-				)),
-
-				DropdownButton<Letters> (
-					onChanged: (Letters letter) => setState (() {
-						today = Day (
-							letter: letter, 
-							lunch: today.lunch
-						);
-						periods = widget.student.getPeriods(today);
-					}),
-					value: today.letter,
-					hint: Text ("Choose letter"),
-					items: <DropdownMenuItem<Letters>> [
-						DropdownMenuItem (
-							child: Text ("M"),
-							value: Letters.M
-						),
-						DropdownMenuItem (
-							child: Text ("R"),
-							value: Letters.R
-						),
-						DropdownMenuItem (
-							child: Text ("A"),
-							value: Letters.A
-						),
-						DropdownMenuItem (
-							child: Text ("B"),
-							value: Letters.B
-						),
-						DropdownMenuItem (
-							child: Text ("C"),
-							value: Letters.C
-						),
-						DropdownMenuItem (
-							child: Text ("E"),
-							value: Letters.E
-						),
-						DropdownMenuItem (
-							child: Text ("F"),
-							value: Letters.F
-						)
-					]
 				)
 			]
-		),
+		)
 	);
-
-	updateScreen(_) {
-		setState(() {
-			periodNumber = today.period;
-		});
-	}
 }

@@ -16,8 +16,9 @@ import "package:flutter/material.dart";
 import "widgets/drawer.dart";
 import "mock.dart" show levi;
 
-import "widgets/home.dart" show HomePage;
 import "constants.dart";  // for route keys
+import "widgets/home.dart" show HomePage;
+import "widgets/schedule.dart" show SchedulePage;
 
 void main () => runApp (
 	MaterialApp (
@@ -28,7 +29,8 @@ void main () => runApp (
 			NEWS: placeholder ("News"),
 			LOST_AND_FOUND: placeholder ("Lost and found"),
 			SPORTS: placeholder ("Sports"),
-			ADMIN_LOGIN: placeholder ("Admin Login")
+			ADMIN_LOGIN: placeholder ("Admin Login"),
+			SCHEDULE: (_) => SchedulePage (levi)
 		}
 	)
 );
