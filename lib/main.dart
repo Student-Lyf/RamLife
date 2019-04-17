@@ -8,24 +8,27 @@
 // TODO: Retrieve period
 // TODO: Handle free
 // TEST: Winter fridays
+// TODO: calendar
 
 import "package:flutter/material.dart";
-import "widgets/drawer.dart";  // mock page for all other screens
 
-import "mock.dart";
-import "widgets/schedule.dart" show SchedulePage;
+// used to mock all other pages
+import "widgets/drawer.dart";
+import "mock.dart" show levi;
+
 import "widgets/home.dart" show HomePage;
+import "constants.dart";  // for route keys
 
 void main () => runApp (
 	MaterialApp (
-		home: getMainPage(),
+		home: HomePage(levi),
+		title: "Student Life",
 		routes: {
-			"main": (_) => HomePage(), 
-			"lunch": placeholder ("Lunch"),
-			"schedule": (_) => SchedulePage(levi),
-			"news": placeholder ("News"),
-			"lost-and-found": placeholder ("Lost and found"),
-			"sports": placeholder ("Sports")
+			HOME_PAGE: (_) => HomePage(levi), 
+			NEWS: placeholder ("News"),
+			LOST_AND_FOUND: placeholder ("Lost and found"),
+			SPORTS: placeholder ("Sports"),
+			ADMIN_LOGIN: placeholder ("Admin Login")
 		}
 	)
 );

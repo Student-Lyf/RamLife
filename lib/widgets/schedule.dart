@@ -16,6 +16,70 @@ import "../backend/helpers.dart";
 import "drawer.dart";
 
 
+List <Widget> pad ({List <Widget> children, double padding}) => children.map (
+	(Widget child) => Padding (
+		padding: EdgeInsets.symmetric(vertical: padding),
+		child: child
+	)
+).toList();
+
+class NextClass extends StatelessWidget {
+	final Period period;
+	const NextClass(this.period);
+	static final TextStyle white = TextStyle (
+		color: Colors.white
+	);
+
+	@override Widget build (BuildContext context) {
+		final subject = getSubject (period);
+		return Card (
+			// color: Colors.lightBlueAccent,
+			child: ListTile (
+				title: Text (
+					period == null
+						? "School is over"
+						: "Current class: ${subject?.name ?? period.period}.",
+					textScaleFactor: 1.5,
+					// style: TextStyle (color: Colors.)
+				),
+				leading: Icon (Icons.school, size: 35),// color: Colors.black),
+				subtitle: Column (
+					crossAxisAlignment: CrossAxisAlignment.start,
+					children: (period?.getInfo() ?? []).map (
+						(String description) => Padding (
+							padding: EdgeInsets.symmetric (vertical: 5),
+							child: Text (
+								description,
+								textScaleFactor: 1.25,
+								// style: white
+							)
+						)
+					).toList()
+				)
+			)
+		);
+	}
+}
+
+class ClassList extends StatelessWidget {
+	final List<Period> periods;
+	const ClassList (this.periods);
+
+	@override Widget build (BuildContext context) => ListView (
+		children: periods.map (
+			(Period period) {
+				final Subject subject = getSubject (period);
+				return InfoCard (
+					title: "${period.period}${subject == null ? '' : ': ${subject.name}'}",
+					children: period.getInfo().map (
+						(String description) => Text (description)
+					).toList()
+				);
+			}
+		).toList()
+	);
+}
+
 class InfoCard extends StatelessWidget {
 	final String title;
 	final IconData icon;

@@ -1,5 +1,5 @@
 import "package:flutter/foundation.dart" show required;
-import "package:flutter/material.dart" show IconData, Icons, Text;
+import "package:flutter/material.dart" show IconData, Icons;
 
 import "times.dart";
 import "../mock.dart";  // for winter friday start and end times
@@ -53,36 +53,16 @@ class Period {
 
 	@override String toString() => "Period $period";
 
-	List <Text> getInfo() {
-		final List <Text> result = [
-			Text (
-				"Time: $time",
-				textScaleFactor: 1.25
-			)
-		];
-		if (room != null) result.add (
-			Text (
-				"Room: $room", 
-				textScaleFactor: 1.25
-			)
-		);
-		if (int.tryParse(period) != null) result.add (
-			Text (
-				"Period: $period",
-				textScaleFactor: 1.25
-			)
-		);
+	List <String> getInfo() {
+		final List <String> result = ["Time: $time"];
+		if (room != null) result.add ("Room: $room");
+		if (int.tryParse(period) != null) result.add ("Period: $period");
 		if (id != null) result.add (
-			Text (
 				"Teacher: ${getSubjectByID (id).teacher}",
-				textScaleFactor: 1.25
-			)		
-		);				
+		);
 		return result;
 	}
 }
-
-
 
 class Day {
 	final Letters letter;
@@ -190,4 +170,3 @@ class Schedule {
 		time: time
 	);
 }
-
