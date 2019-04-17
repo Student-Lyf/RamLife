@@ -33,7 +33,6 @@ Day placeholderToday = Day (
 		side1: "Roasted Broccoli",
 		side2: "Sweet Potato Wedges",
 		salad: "Greek Salad",
-		icon: Icons.fastfood
 	)
 );
 

@@ -38,7 +38,7 @@ class NextClass extends StatelessWidget {
 				title: Text (
 					period == null
 						? "School is over"
-						: "Current class: ${subject?.name ?? period.period}.",
+						: "Current class: ${subject?.name ?? period.period}",
 					textScaleFactor: 1.5,
 					// style: TextStyle (color: Colors.)
 				),
