@@ -1,6 +1,3 @@
-// Verify: Light blue color
-// TODO: add border radius for InfoCard
-
 import "package:flutter/material.dart";
 import "dart:async";
 
@@ -8,6 +5,7 @@ import "dart:async";
 import "../backend/schedule.dart";
 import "../backend/student.dart";
 import "../mock.dart" show getToday;
+import "../constants.dart" show SPORTS;
 
 // UI
 import "schedule.dart" show NextClass, ClassList;
@@ -72,9 +70,10 @@ class HomePageState extends State<HomePage> {
 				NextClass(period),
 				LunchTile (lunch: today.lunch),
 				InfoCard(
-					title: "TODO: Sports", 
+					title: "Sports coming soon!", 
 					icon: Icons.directions_run,
-					children: const []
+					children: const [],
+					page: SPORTS
 				),
 			]
 		)

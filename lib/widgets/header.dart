@@ -1,6 +1,6 @@
 import "package:flutter/material.dart";
 
-class Footer extends StatelessWidget {
+class Header extends StatelessWidget {
 	@override Widget build (BuildContext context) => BottomAppBar(
 		child: Container (
 			height: 50,

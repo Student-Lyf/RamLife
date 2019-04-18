@@ -1,7 +1,7 @@
 import "package:flutter/foundation.dart" show required;
 
 import "times.dart";
-import "../mock.dart";  // for winter friday start and end times
+import "../mock.dart";  // for resolving subjects from periods
 
 enum Letters {M, R, A, B, C, E, F}
 

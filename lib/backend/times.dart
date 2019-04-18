@@ -1,5 +1,5 @@
 // winter fridays
-import "../mock.dart";
+import "../mock.dart";  // for winter friday times
 
 class Time {
 	static const List <int> clock = [

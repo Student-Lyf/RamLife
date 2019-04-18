@@ -1,5 +1,5 @@
-import "../mock.dart" show getSubjectByID;  // belongs here but is a mock...
 import "schedule.dart";
+import "../mock.dart" show getSubjectByID;  // belongs here but is a mock...
 
 String aOrAn (String nextWord) => 
 	["a", "e", "i", "o", "u"].contains (

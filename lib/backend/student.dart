@@ -1,4 +1,5 @@
 import "package:flutter/foundation.dart";
+
 import "schedule.dart";
 import "times.dart";
 
@@ -22,7 +23,6 @@ class Student {
 		final List <PeriodData> periods = schedule [day.letter].periods;
 		final Special special = day.special;
 		int periodIndex = 0;
-		print (periods);
 
 		for (int index = 0; index < special.periods.length; index++) {
 			final Range range = special.periods [index];

@@ -1,4 +1,3 @@
-// BUG: Tzom should skip lunch periods
 // TODO: Convert static funcs to factories
 // TODO: Get Ramaz icon for login
 // TODO: Retrieve user
@@ -10,6 +9,17 @@
 // TEST: Winter fridays
 // TODO: calendar
 
+// TODOS: 
+// 	calendar
+// 	notes
+// 	sports
+// 	new logo (drawer, header, login)
+// 	lost + found chat/threads
+// 	about page (whole thing)
+// 	header for next class
+
+
+
 import "package:flutter/material.dart";
 
 // used to mock all other pages
@@ -19,6 +29,7 @@ import "mock.dart" show levi;
 import "constants.dart";  // for route keys
 import "widgets/home.dart" show HomePage;
 import "widgets/schedule.dart" show SchedulePage;
+import "widgets/login.dart" show Login;
 
 void main () => runApp (
 	MaterialApp (
@@ -30,7 +41,8 @@ void main () => runApp (
 			LOST_AND_FOUND: placeholder ("Lost and found"),
 			SPORTS: placeholder ("Sports"),
 			ADMIN_LOGIN: placeholder ("Admin Login"),
-			SCHEDULE: (_) => SchedulePage (levi)
+			SCHEDULE: (_) => SchedulePage (levi),
+			LOGIN: (_) => Login()
 		}
 	)
 );
@@ -42,7 +54,7 @@ class PlaceholderPage extends StatelessWidget {
 	@override Widget build (BuildContext context) => Scaffold (
 		drawer: NavigationDrawer(),
 		appBar: AppBar (title: Text (title)),
-		body: Placeholder()
+		body: Center (child: Text ("This page is coming soon!", textScaleFactor: 2))
 	);
 }
 

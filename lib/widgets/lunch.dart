@@ -1,5 +1,7 @@
 import "package:flutter/material.dart";
+
 import "../backend/schedule.dart" show Lunch;
+
 import "info_card.dart";
 
 class LunchTile extends StatelessWidget {

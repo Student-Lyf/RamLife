@@ -1,21 +1,7 @@
-// TODO: open links: 
-	// - ramaz.org
-	// - mymail.ramaz.org
-	// - app.schoology.com
-	// - myBackPack
-
-// calendar, notes, schedule, lunch, sports
-// sports
-// new icon (drawer, header)
-// lost + found chat/threads
-// about page (whole thing)
-// header for next class
-
-
 import "package:flutter/material.dart";
 import 'package:url_launcher/url_launcher.dart';
 
-import "../constants.dart";
+import "../constants.dart";  // for route names
 
 class NavigationDrawer extends StatelessWidget {
 	@override Widget build (BuildContext context) => Drawer (
@@ -49,8 +35,13 @@ class NavigationDrawer extends StatelessWidget {
 				),
 				ListTile (
 					title: Text ("Admin console"),
-					leading: Icon (Icons.lock),
+					leading: Icon (Icons.verified_user),
 					onTap: () => Navigator.of(context).pushReplacementNamed(ADMIN_LOGIN)
+				),
+				ListTile (
+					title: Text ("Logout"),
+					leading: Icon (Icons.lock),
+					onTap: () => Navigator.of(context).pushReplacementNamed(LOGIN)
 				),
 				SizedBox (height: 30),
 				Divider(),

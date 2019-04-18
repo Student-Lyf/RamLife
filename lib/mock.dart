@@ -166,10 +166,11 @@ Subject getSubjectByID (int id) => PLACEHOLDER_SUBJECTS [id];
 // Derived from the calendar/date
 Day getToday () => placeholderToday;
 
-// Dervied by FB query (username -> Student.fromDocument)
-Student getStudent (String username) => username == "leschesl"
-	? levi
-	: null;
+// Should actually return the corresponing password
+bool verifyUsername (String username) => username == "leschesl";
+
+// Will be replaced by return value of verifyStudent
+bool verifyPassword (bool user, String password) => password == "redcow182";
 
 // Check the Shared Preferences for user login and decide from there
 Widget getMainPage() => HomePage(levi);

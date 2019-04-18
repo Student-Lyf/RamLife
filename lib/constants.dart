@@ -5,6 +5,7 @@ const String NEWS = "news";
 const String LOST_AND_FOUND = "lost-and-found";
 const String SPORTS = "sports";
 const String ADMIN_LOGIN = "admin-login";
+const String LOGIN = "login";
 
 // urls
 const String SCHOOLOGY = "https://app.schoology.com";

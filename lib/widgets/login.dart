@@ -1,21 +1,25 @@
 import "package:flutter/material.dart";
 
 import "home.dart";
-import "../mock.dart";
-import "../backend/student.dart";
+import "../mock.dart";  // for logging in
 
 class Login extends StatefulWidget {
 	@override LoginState createState() => LoginState();
 }
 
 class LoginState extends State <Login> {
+	static final RegExp usernameRegex = RegExp ("[a-z]+");
+	static final RegExp passwordRegex = RegExp (r"([a-z]|\d)+");
 	final FocusNode _userNode = FocusNode();
 	final FocusNode _passwordNode = FocusNode();
 	final TextEditingController _userController = TextEditingController();
 	final TextEditingController _passController = TextEditingController();
+	final GlobalKey<ScaffoldState> key = GlobalKey();
 
 	bool obscure = true;
-	Student student;
+	bool student = false;
+	bool ready = false;
+	// bool ready = false;
 	Icon userSuffix;  // goes after the username prompt
 
 	@override void initState () {
@@ -31,11 +35,13 @@ class LoginState extends State <Login> {
 
 	@override
 	Widget build (BuildContext context) => Scaffold(
+		key: key,
 		appBar: AppBar (title: Text ("Login")),
 		floatingActionButton: FloatingActionButton.extended (
-			onPressed: submit,
+			onPressed: ready ? submit : null,
 			icon: Icon (Icons.done),
-			label: Text ("Submit")
+			label: Text ("Submit"),
+			backgroundColor: ready ? Colors.blue : Colors.grey
 		),
 		body: Padding (
 			padding: EdgeInsets.all (20),
@@ -74,7 +80,7 @@ class LoginState extends State <Login> {
 										controller: _passController,
 										validator: passwordValidator,
 										obscureText: obscure,
-										onFieldSubmitted: submit,
+										onFieldSubmitted: verify,
 										decoration: InputDecoration (
 											icon: Icon (Icons.security),
 											labelText: "Password",
@@ -98,28 +104,57 @@ class LoginState extends State <Login> {
 		)
 	);
 
-	String passwordValidator(String pass) => pass != pass.toLowerCase()
-		? "All letters must be lowercase"
-		: null;
+	static bool capturesAll (String text, RegExp regex) {
+		final Match match = regex?.matchAsPrefix(text);
+		return match != null && match.end == text.length;
+	}
 
-	String usernameValidate(String text) => text.split (RegExp (r"[a-z]+")).any (
-			(String region) => region.isNotEmpty
-		)
-			? "Only lower case letters allowed" 
-			: null;
+	String passwordValidator (String pass) {
+		if (pass.isEmpty) return null;
+		else if (capturesAll(pass, passwordRegex)) {
+			// verify();
+			return null;
+		} else return "Only lower case letters and numbers";
+	}
+
+	String usernameValidate(String text) {
+		print ("TEST");
+		if (text.isEmpty) return null;
+		else if (capturesAll(text, usernameRegex)) {
+			return null;
+		} else return "Only lower case letters allowed";
+	}
 
 	void submit ([_]) {
+		if (!student) {
+			key.currentState.showSnackBar (
+				SnackBar (content: Text ("Invalid username"))
+			);
+			return;
+		}
+		else if (!verifyPassword (student, _passController.text)) {
+			key.currentState.showSnackBar(
+				SnackBar (content: Text ("Incorrect password"))
+			);
+			return;
+		}
 		print ("""Submitted credentials: 
 			User: ${_userController.text},
 			Password: ${_passController.text}"""
 		);
 		Navigator.of(context).pushReplacement(
 			MaterialPageRoute (
-				// builder: (_) => HomePage (student)
 				builder: (_) => HomePage (levi)
 			)
 		);
 	}
+
+	void verify([_]) => setState(
+		() => ready = (
+			verifyUsername (_userController.text) && 
+			verifyPassword (student, _passController.text)
+		)
+	);
 
 	void transition ([String username]) {
 		_userNode.unfocus();
@@ -127,14 +162,13 @@ class LoginState extends State <Login> {
 		lookupUsername();
 	}
 
-	void lookupUsername() => _userController.text.isEmpty 
-		? null
-		: setState (
-			() {
-				student = getStudent (_userController.text);
-				userSuffix = student == null
-					? Icon (Icons.error, color: Colors.red)
-					: Icon (Icons.done, color: Colors.green);
-			}
-		);
+	void lookupUsername() {
+		verify();
+		setState (() {
+			student = verifyUsername (_userController.text);
+			userSuffix = student == false
+				? Icon (Icons.error, color: Colors.red)
+				: Icon (Icons.done, color: Colors.green);
+		});
+	}
 }

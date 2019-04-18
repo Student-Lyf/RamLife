@@ -9,6 +9,7 @@ import "../backend/times.dart";
 import "../backend/schedule.dart";
 import "../backend/student.dart";
 import "../backend/helpers.dart";
+import "../constants.dart" show SCHEDULE;
 
 import "drawer.dart";
 import "info_card.dart";
@@ -28,7 +29,8 @@ class NextClass extends StatelessWidget {
 			title: period == null
 				? "School is over"
 				: "Current class: ${subject?.name ?? period.period}",
-			children: period?.getInfo()
+			children: period?.getInfo(),
+			page: SCHEDULE
 		);
 	}
 }
@@ -171,7 +173,6 @@ class ScheduleState extends State<SchedulePage> {
 			schedule = widget.student.schedule [letter];
 			day = getDay (letter, special);
 			periods = widget.student.getPeriods (day);
-			print (day.letter);
 		});
 	}
 
