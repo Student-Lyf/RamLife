@@ -40,7 +40,7 @@ class Student:
 	def get_username(first: str, last: str) -> str: 
 		assert type (first) is str
 		assert type (last) is str
-		return last + first [0]
+		return (last + first [0]).lower()
 
 	def random(): 
 		id_ = next (studentId)
@@ -48,7 +48,7 @@ class Student:
 		last = get_random_string()
 		days = {}
 		for day in WEEKDAYS: days [day] = {
-			index: {
+			str (index): {
 				"id": randrange (1, classId),
 				"room": str (choice (ROOMS))
 			}
@@ -56,7 +56,7 @@ class Student:
 		}
 
 		for day in FRIDAYS: days [day] = {
-			index: {
+			str (index): {
 				"id": randrange (1, classId),
 				"room": str (choice (ROOMS))
 			}
@@ -83,12 +83,32 @@ class Student:
 		assert type (self.F) is dict
 		assert type (self.R) is dict
 		assert type (self.M) is dict
-		assert 1 in self.A
-		first = self.A [1]
+		assert "1" in self.A
+		first = self.A ["1"]
 		assert type (first) is dict
 		assert "id" in first
 		assert "room" in first
 		assert type (first ["id"]) is int
 		assert type (first ["room"]) is str
 
-if __name__ == '__main__': print (Student.random())
+	def output(self): return {
+		"A": self.A,
+		"B": self.B,
+		"C": self.C,
+		"E": self.E,
+		"F": self.F,
+		"M": self.M,
+		"R": self.R,
+		"first": self.first,
+		"last": self.last,
+		"id": self.id,
+	}
+
+if __name__ == '__main__': 
+	student = Student.random()
+	print (student)
+	for key, value in student.output().items(): 
+		assert type (key) is str
+		if type (value) is dict: 
+			for key2 in value: 
+				assert type (key2) is str, key2

@@ -8,3 +8,4 @@ pubspec.lock
 *.iml
 .flutter-plugins
 __pycache__
+*.json

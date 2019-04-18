@@ -9,6 +9,11 @@ class PeriodData:
 		id: int
 	): pass
 
+	def output(self): return {
+		"room": self.room,
+		"id": self.id
+	}
+
 class Period: 
 	@init
 	def __init__(
