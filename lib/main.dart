@@ -18,6 +18,14 @@
 // 	about page (whole thing)
 // 	header for next class
 
+// DB: 
+// 	Students (labelled by username)
+// 	classes (labelled by ID)
+//  admins (labelled by username)
+// 	calendar (labelled by month #)
+// 	lost + found (labelled by ID)
+// 	timeslots (labelled by name)
+
 
 
 import "package:flutter/material.dart";

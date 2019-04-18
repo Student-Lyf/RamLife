@@ -1,0 +1,10 @@
+.idea
+android
+build
+ios
+.metadata
+.packages
+pubspec.lock
+*.iml
+.flutter-plugins
+__pycache__

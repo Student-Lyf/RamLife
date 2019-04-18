@@ -129,8 +129,6 @@ class Lunch {
 
 class Schedule {
 	final List <PeriodData> periods;
-	// final List <int> freePeriods;
-
 	const Schedule (this.periods);
 
 	static Period homeroom (
