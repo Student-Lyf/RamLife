@@ -1,3 +1,6 @@
+// winter fridays
+import "../mock.dart";
+
 class Time {
 	static const List <int> clock = [
 		8, 9, 10, 11, 12, 1, 2, 3, 4, 5
@@ -70,6 +73,7 @@ class Range {
 class Special {
 	final String name;
 	final List <Range> periods;
+	final List<int> skip;
 	final int mincha, homeroom;
 
 	const Special (
@@ -77,9 +81,32 @@ class Special {
 		this.periods, 
 		{
 			this.homeroom, 
-			this.mincha
+			this.mincha,
+			this.skip
 		}
 	);
+
+	static Special getWinterFriday() {
+		final DateTime today = DateTime.now();
+		final int month = today.month, day = today.day;
+		if (month >= SCHOOL_START && month < WINTER_FRIDAY_MONTH_START)
+			return friday;
+		else if (
+			month > WINTER_FRIDAY_MONTH_START ||
+			month < WINTER_FRIDAY_MONTH_END
+		) return winterFriday;
+		else if (
+			month > WINTER_FRIDAY_MONTH_END &&
+			month <= SCHOOL_END
+		) return friday;
+		else if (month == WINTER_FRIDAY_MONTH_START) {
+			if (day < WINTER_FRIDAY_DAY_START) return friday;
+			else return winterFriday;
+		} else if (month == WINTER_FRIDAY_MONTH_END) {
+			if (day < WINTER_FRIDAY_DAY_END) return winterFriday;
+			else return friday;
+		} else throw "Cannot get friday schedule for summer month ($month)";
+	}
 }
 
 final Special roshChodesh = Special (
@@ -117,6 +144,7 @@ final Special fastDay = Special (
 		Range (Time (1, 35), Time (2, 05))
 	],
 	mincha: 8,
+	skip: const [6, 7, 8]
 );
 
 final Special friday = Special (

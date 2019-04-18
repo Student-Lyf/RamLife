@@ -5,7 +5,7 @@
 
 import "package:flutter/material.dart";
 
-import "../backend/times.dart" show Special, specials;
+import "../backend/times.dart";
 import "../backend/schedule.dart";
 import "../backend/student.dart";
 import "../backend/helpers.dart";
@@ -13,13 +13,6 @@ import "../backend/helpers.dart";
 import "drawer.dart";
 import "info_card.dart";
 
-
-List <Widget> pad ({List <Widget> children, double padding}) => children.map (
-	(Widget child) => Padding (
-		padding: EdgeInsets.symmetric(vertical: padding),
-		child: child
-	)
-).toList();
 
 class NextClass extends StatelessWidget {
 	final Period period;
@@ -43,18 +36,24 @@ class NextClass extends StatelessWidget {
 class ClassList extends StatelessWidget {
 	final Iterable<Period> periods;
 	final String headerText;
-	const ClassList ({@required this.periods, @required this.headerText});
+	const ClassList ({@required this.periods, this.headerText});
 
 	@override Widget build (BuildContext context) => ListView (
 		shrinkWrap: true,
-		children: <Widget>[DrawerHeader (
-			child: Center (
-				child: Text (
-					headerText,
-					textScaleFactor: 2
-				)
-			)
-		)] + periods.map (
+		children: 
+			(headerText == null 
+					? const <Widget> [] 
+					: <Widget>[
+						DrawerHeader (
+							child: Center (
+								child: Text (
+									headerText,
+									textScaleFactor: 2
+								)
+							)
+						)
+					]
+			) + periods.map (
 			(Period period) {
 				final Subject subject = getSubject (period);
 				final List<String> info = period.getInfo();
@@ -62,7 +61,7 @@ class ClassList extends StatelessWidget {
 				info.removeWhere(
 					(String description) => description.startsWith("Period:")
 				);
-				return InfoPanel (
+				return ClassPanel (
 					title: "${period.period}${subject == null ? '' : ': ${subject.name}'}",
 					children: info.map (
 						(String description) => Text (description)
@@ -73,13 +72,11 @@ class ClassList extends StatelessWidget {
 	);
 }
 
-class InfoPanel extends StatelessWidget {
+class ClassPanel extends StatelessWidget {
 	final String title;
-	// final IconData icon;
 	final List <Widget> children;
-	// final double padding;
 
-	const InfoPanel ({
+	const ClassPanel ({
 		@required this.title,
 		@required this.children,
 	});
@@ -87,12 +84,12 @@ class InfoPanel extends StatelessWidget {
 	@override Widget build (BuildContext context) => ExpansionTile (
 		title: Text(title),
 		children: [Align (
-			alignment: Alignment (-0.75, 0),
+			alignment: const Alignment (-0.75, 0),
 			child: Column (
 				crossAxisAlignment: CrossAxisAlignment.start,
 				children: children.map (
 					(Widget child) => Padding (
-						padding: EdgeInsets.symmetric(vertical: 5),
+						padding: const EdgeInsets.symmetric(vertical: 5),
 						child: child
 					) 
 				).toList()
@@ -108,9 +105,9 @@ class SchedulePage extends StatefulWidget {
 	@override ScheduleState createState() => ScheduleState();
 }
 
-class ScheduleState extends State <SchedulePage> {
+class ScheduleState extends State<SchedulePage> {
 	static const Letters defaultLetter = Letters.M;
-	static final Special defaultSpecial = specials [0];
+	static final Special defaultSpecial = regular;
 
 	Letters letter = defaultLetter;
 	Special special = defaultSpecial;
@@ -129,24 +126,66 @@ class ScheduleState extends State <SchedulePage> {
 		update();
 	}
 
-	void update({Letters letter, Special special}) {
-		if (letter != null) this.letter = letter;
-		if (special != null) this.special = special;
-		schedule = widget.student.schedule [letter];
-		periods = widget.student.getPeriods (day);
+	void update({Letters newLetter, Special newSpecial}) {
+		print ("letter: $newLetter, special: ${newSpecial?.name}");
+		if (newLetter != null) {
+			this.letter = newLetter;
+			switch (newLetter) {
+				case Letters.A: 
+				case Letters.B:
+				case Letters.C: 
+					special = rotate;
+					break;
+				case Letters.M:
+				case Letters.R: 
+					special = regular;
+					break;
+				case Letters.E:
+				case Letters.F:
+					special = Special.getWinterFriday();
+			}
+		}
+		if (newSpecial != null) {
+			final List<Special> fridays = [
+				friday, 
+				winterFriday, 
+				fridayRoshChodesh, 
+				winterFridayRoshChodesh
+			];
+			switch (letter) {
+				case Letters.A:
+				case Letters.B:
+				case Letters.C:
+				case Letters.M:
+				case Letters.R:
+					if (!fridays.contains (newSpecial)) 
+						special = newSpecial;
+					break;
+				case Letters.E:
+				case Letters.F:
+					if (fridays.contains (newSpecial))
+						special = newSpecial;
+			}
+		}
+		setState(() {
+			schedule = widget.student.schedule [letter];
+			day = getDay (letter, special);
+			periods = widget.student.getPeriods (day);
+			print (day.letter);
+		});
 	}
 
 	@override
 	Widget build (BuildContext context) => Scaffold (
 		appBar: AppBar (title: Text ("Schedule")),
 		drawer: NavigationDrawer(),
-		body: ListView (
+		body: Column (
 			children: [
 				ListTile (
 					title: Text ("Choose a letter"),
 					trailing: DropdownButton<Letters> (
 						value: letter, 
-						onChanged: (Letters letter) => update (letter: letter),
+						onChanged: (Letters letter) => update (newLetter: letter),
 						items: Letters.values.map<DropdownMenuItem<Letters>> (
 							(Letters letter) => DropdownMenuItem<Letters> (
 								child: Text (letter.toString().split(".").last),
@@ -159,7 +198,7 @@ class ScheduleState extends State <SchedulePage> {
 					title: Text ("Choose a schedule"),
 					trailing: DropdownButton<Special> (
 						value: special,
-						onChanged: (Special special) => update (special: special),
+						onChanged: (Special special) => update (newSpecial: special),
 						items: specials.map<DropdownMenuItem<Special>> (
 							(Special special) => DropdownMenuItem<Special> (
 								child: Text (special.name),
@@ -167,7 +206,11 @@ class ScheduleState extends State <SchedulePage> {
 							)
 						).toList()
 					)
-				)
+				),
+				SizedBox (height: 20),
+				Divider(),
+				SizedBox (height: 20),
+				Expanded (child: ClassList(periods: periods))
 			]
 		)
 	);

@@ -15,28 +15,6 @@ import "drawer.dart";
 import "lunch.dart";
 import "info_card.dart";
 
-// class InfoCard extends StatelessWidget {
-// 	final String title, subtitle;
-// 	const InfoCard (this.title, [this.subtitle]);
-
-// 	@override Widget build (BuildContext context) => Card (
-// 		child: ListTile (
-// 			title: Text (
-// 				title, 
-// 				style: TextStyle (
-// 					fontSize: 25
-// 				)
-// 			),
-// 			subtitle: subtitle == null ? null : Text (
-// 				subtitle,
-// 				style: TextStyle (
-// 					fontSize: 18
-// 				)
-// 			)
-// 		)
-// 	);
-// }
-
 class HomePage extends StatefulWidget {
 	final Student student;
 	HomePage (this.student);
@@ -61,7 +39,6 @@ class HomePageState extends State<HomePage> {
 		schedule = widget.student.schedule [today.letter];
 		periods = widget.student.getPeriods (today);
 		periodIndex = today.period;
-		periodIndex = 6;
 		period = periodIndex == null 
 			? null
 			: periods [periodIndex];
@@ -78,7 +55,7 @@ class HomePageState extends State<HomePage> {
 			title: Text ("Home"),
 			actions: [FlatButton (
 				child: Text (
-					"Swipe from left to see more",
+					"Swipe from left to see schedule",
 					style: TextStyle (color: Colors.white)),
 				onPressed: () => key.currentState.openEndDrawer()
 			)]
@@ -94,7 +71,11 @@ class HomePageState extends State<HomePage> {
 			children: [
 				NextClass(period),
 				LunchTile (lunch: today.lunch),
-				InfoCard(title: "TODO: Sports", icon: Icons.directions_run),
+				InfoCard(
+					title: "TODO: Sports", 
+					icon: Icons.directions_run,
+					children: const []
+				),
 			]
 		)
 	);

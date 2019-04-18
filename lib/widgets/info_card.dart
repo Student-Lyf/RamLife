@@ -8,7 +8,7 @@ class InfoCard extends StatelessWidget {
 	const InfoCard ({
 		@required this.title,
 		@required this.icon, 
-		this.children = const [], 
+		@required this.children, 
 	});
 
 	@override Widget build (BuildContext context) => Card (

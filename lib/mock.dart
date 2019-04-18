@@ -9,6 +9,7 @@ import "widgets/home.dart";
 
 const int PLACEHOLDER_PERIOD = 4;
 const Map <int, Subject> PLACEHOLDER_SUBJECTS = {  // ID: Subject
+	-1: const Subject (name: "Free period", teacher: null),
 	1: const Subject (name: "Chemistry", teacher: "Dr. Rotenberg"),
 	2: const Subject (name: "Math", teacher: "Ms. Shine"),
 	3: Subject (name: "Talmud", teacher: "Rabbi Albo"),
@@ -80,19 +81,22 @@ const Schedule rSchedule = Schedule ([
 
 const Schedule bSchedule = Schedule (
 	[
+		PeriodData (room: "Beit Knesset", id: 12),
 		PeriodData (room: "503", id: 1),
 		PeriodData (room: "507", id: 2),
+		null,  // free
 		PeriodData (room: "304", id: 8),
 		PeriodData (room: "303", id: 11),
 		PeriodData (room: "GYM", id: 4),
 		PeriodData (room: "AUD", id: 6),
 		PeriodData (room: "304", id: 9),
+		null,  // free
 		PeriodData (room: "501", id: 3),
 	], 
-	freePeriods: [4, 10]
 );
 
 const Schedule cSchedule = Schedule ([
+	PeriodData (room: "Beit Knesset", id: 12),
 	PeriodData (room: "303", id: 11),
 	PeriodData (room: "604", id: 5),
 	PeriodData (room: "506", id: 3),
@@ -106,6 +110,7 @@ const Schedule cSchedule = Schedule ([
 ]);
 
 const Schedule eSchedule = Schedule ([
+	PeriodData (room: "Beit Knesset", id: 12),
 	PeriodData (room: "506", id: 3),
 	PeriodData (room: "704", id: 13),
 	PeriodData (room: "201", id: 7),
@@ -115,6 +120,7 @@ const Schedule eSchedule = Schedule ([
 ]);
 
 const Schedule fSchedule = Schedule ([
+	PeriodData (room: "Beit Knesset", id: 12),
 	PeriodData (room: "201", id: 11),
 	PeriodData (room: "301", id: 3),
 	PeriodData (room: "507", id: 8),

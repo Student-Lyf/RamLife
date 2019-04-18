@@ -45,7 +45,6 @@ class Period {
 	) => Period._ (
 		time: time, 
 		room: data.room,
-		// period: data.period,
 		period: period,
 		id: data.id
 	);
@@ -54,8 +53,9 @@ class Period {
 
 	List <String> getInfo() {
 		final List <String> result = ["Time: $time"];
-		if (room != null) result.add ("Room: $room");
 		if (int.tryParse(period) != null) result.add ("Period: $period");
+		if (id ==  -1) return result;
+		if (room != null) result.add ("Room: $room");
 		if (id != null) result.add (
 				"Teacher: ${getSubjectByID (id).teacher}",
 		);
@@ -92,14 +92,13 @@ class Day {
 					break;
 				case Letters.E: 
 				case Letters.F: 
-					this.special = getWinterFriday();
+					this.special = Special.getWinterFriday();
 			}
 		} else this.special = special;
 	} 
 
 	int get period {
 		final Time time = Time.fromDateTime (today);
-		// final Time time = Time (10, 35);
 		for (int index = 0; index < special.periods.length; index++) {
 			final Range range = special.periods [index];
 			if (
@@ -112,27 +111,6 @@ class Day {
 			) return index;
 		}
 		return null;
-	}
-
-	static Special getWinterFriday() {
-		final int month = today.month, day = today.day;
-		if (month >= SCHOOL_START && month < WINTER_FRIDAY_MONTH_START)
-			return friday;
-		else if (
-			month > WINTER_FRIDAY_MONTH_START ||
-			month < WINTER_FRIDAY_MONTH_END
-		) return winterFriday;
-		else if (
-			month > WINTER_FRIDAY_MONTH_END &&
-			month <= SCHOOL_END
-		) return friday;
-		else if (month == WINTER_FRIDAY_MONTH_START) {
-			if (day < WINTER_FRIDAY_DAY_START) return friday;
-			else return winterFriday;
-		} else if (month == WINTER_FRIDAY_MONTH_END) {
-			if (day < WINTER_FRIDAY_DAY_END) return winterFriday;
-			else return friday;
-		} else throw "Cannot get friday schedule for summer month ($month)";
 	}
 }
 
@@ -151,9 +129,9 @@ class Lunch {
 
 class Schedule {
 	final List <PeriodData> periods;
-	final List <int> freePeriods;
+	// final List <int> freePeriods;
 
-	const Schedule (this.periods, {this.freePeriods = const []});
+	const Schedule (this.periods);
 
 	static Period homeroom (
 		Range time, 
