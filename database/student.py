@@ -91,5 +91,4 @@ class Student:
 		assert type (first ["id"]) is int
 		assert type (first ["room"]) is str
 
-if __name__ == '__main__':
-	print (Student.random())
+if __name__ == '__main__': print (Student.random())

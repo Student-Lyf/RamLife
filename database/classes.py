@@ -26,5 +26,4 @@ class Class:
 			teacher = teacher
 		)
 
-if __name__ == '__main__':
-	print (Class.random())
+if __name__ == '__main__': print (Class.random())
