@@ -3,8 +3,8 @@ from firebase_admin import (
 	firestore,
 	initialize_app as init
 )
-from student import Student
-from schedule import PeriodData
+from data.student import Student
+from data.schedule import PeriodData
 
 creds = credentials.Certificate("admin.json")
 init (creds)

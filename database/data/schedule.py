@@ -1,5 +1,5 @@
 from my_stuff.misc import init
-from time_ import Range
+from data.time_ import Range
 
 class PeriodData: 
 	@init
