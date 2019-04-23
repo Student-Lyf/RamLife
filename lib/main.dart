@@ -10,6 +10,7 @@
 // TODO: calendar
 
 // TODOS: 
+// 	Google auth -- use Ramaz email, redesign login page
 // 	calendar
 // 	notes
 // 	sports

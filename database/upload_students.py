@@ -1,16 +1,10 @@
-from firebase_admin import (
-	credentials, 
-	firestore,
-	initialize_app as init
-)
 from data.student import Student
 from data.schedule import PeriodData
+from db import get_db
 
-creds = credentials.Certificate("admin.json")
-init (creds)
-db = firestore.client()
+db = get_db()
 student = Student.random()
-STUDENTS = "Students"
+STUDENTS = "students"
 
 def to_dict(list): return {
 	str (index + 1): value

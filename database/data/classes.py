@@ -10,13 +10,17 @@ def get_random_string(): return "".join (
 
 class Class: 
 	@init 
-	def __init__(self, name: str, id: int, teacher: str): pass
+	def __init__(self, name: str, id: str, teacher: str): self.verify()
 	def __repr__(self): return f"Class ({self.name})"
+	def verify(self): 
+		assert type (self.name) is str
+		assert type (self.id) is str
+		assert type (self.teacher) is str		
 	def random(): 
 		global classId
 		classId += 1
 
-		id_ = classId
+		id_ = str (classId)
 		name = get_random_string()
 		teacher = get_random_string()
 
@@ -25,5 +29,10 @@ class Class:
 			id = id_,
 			teacher = teacher
 		)
+
+	def output(self): return {
+		"name": self.name,
+		"teacher": self.teacher
+	}
 
 if __name__ == '__main__': print (Class.random())
