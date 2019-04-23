@@ -8,6 +8,7 @@ android/gradlew.bat
 android/local.properties
 android/ramaz_android.iml
 android/settings.gradle
+android/key.properties
 build
 ios
 .metadata
@@ -17,3 +18,4 @@ pubspec.lock
 .flutter-plugins
 __pycache__
 *.json
+.gradle/

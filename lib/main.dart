@@ -14,7 +14,7 @@
 // 	calendar
 // 	notes
 // 	sports
-// 	new logo (drawer, header, login)
+// 	new logo (drawer, header, login, home screen)
 // 	lost + found chat/threads
 // 	about page (whole thing)
 // 	header for next class
@@ -42,7 +42,8 @@ import "widgets/login.dart" show Login;
 
 void main () => runApp (
 	MaterialApp (
-		home: HomePage(levi),
+		// home: HomePage(levi),
+		home: Login(),
 		title: "Student Life",
 		routes: {
 			HOME_PAGE: (_) => HomePage(levi), 

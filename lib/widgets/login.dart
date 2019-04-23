@@ -2,6 +2,8 @@ import "package:flutter/material.dart";
 
 import "home.dart";
 import "../mock.dart";  // for logging in
+import "../backend/firestore.dart" as Firestore;
+import "../backend/auth.dart" as Auth;
 
 class Login extends StatefulWidget {
 	@override LoginState createState() => LoginState();
@@ -97,7 +99,11 @@ class LoginState extends State <Login> {
 								]
 							)
 						),
-						SizedBox (height: 30)  // FAB covers textbox when keyboard is up
+						SizedBox (height: 30),  // FAB covers textbox when keyboard is up
+						RaisedButton (
+							child: Text ("Login"),
+							onPressed: loginWithFirebase
+						)
 					]
 				)
 			)
@@ -118,7 +124,6 @@ class LoginState extends State <Login> {
 	}
 
 	String usernameValidate(String text) {
-		print ("TEST");
 		if (text.isEmpty) return null;
 		else if (capturesAll(text, usernameRegex)) {
 			return null;
@@ -170,5 +175,11 @@ class LoginState extends State <Login> {
 				? Icon (Icons.error, color: Colors.red)
 				: Icon (Icons.done, color: Colors.green);
 		});
+	}
+
+	void loginWithFirebase() async {
+		// final document = await Firestore.getStudent("leschesl", null);
+		// print (document.data);
+		Auth.signin();
 	}
 }
