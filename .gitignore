@@ -1,5 +1,13 @@
 .idea
-android
+android/.gradle/
+android/app/src/
+android/gradle/
+android/gradle.properties
+android/gradlew
+android/gradlew.bat
+android/local.properties
+android/ramaz_android.iml
+android/settings.gradle
 build
 ios
 .metadata
