@@ -14,8 +14,8 @@ class LoginState extends State <Login> {
 	static final RegExp passwordRegex = RegExp (r"([a-z]|\d)+");
 	final FocusNode _userNode = FocusNode();
 	final FocusNode _passwordNode = FocusNode();
-	final TextEditingController _userController = TextEditingController();
-	final TextEditingController _passController = TextEditingController();
+	final TextEditingController usernameController = TextEditingController();
+	final TextEditingController passwordController = TextEditingController();
 	final GlobalKey<ScaffoldState> key = GlobalKey();
 
 	bool obscure = true;
@@ -68,7 +68,7 @@ class LoginState extends State <Login> {
 										textInputAction: TextInputAction.next,
 										onFieldSubmitted: transition,
 										validator: usernameValidate,
-										controller: _userController,
+										controller: usernameController,
 										decoration: InputDecoration (
 											icon: Icon (Icons.account_circle),
 											labelText: "Username",
@@ -79,7 +79,7 @@ class LoginState extends State <Login> {
 									TextFormField (
 										textInputAction: TextInputAction.done,
 										focusNode: _passwordNode,
-										controller: _passController,
+										controller: passwordController,
 										validator: passwordValidator,
 										obscureText: obscure,
 										onFieldSubmitted: verify,
@@ -137,15 +137,15 @@ class LoginState extends State <Login> {
 			);
 			return;
 		}
-		else if (!verifyPassword (student, _passController.text)) {
+		else if (!verifyPassword (student, passwordController.text)) {
 			key.currentState.showSnackBar(
 				SnackBar (content: Text ("Incorrect password"))
 			);
 			return;
 		}
 		print ("""Submitted credentials: 
-			User: ${_userController.text},
-			Password: ${_passController.text}"""
+			User: ${usernameController.text},
+			Password: ${passwordController.text}"""
 		);
 		Navigator.of(context).pushReplacement(
 			MaterialPageRoute (
@@ -156,8 +156,8 @@ class LoginState extends State <Login> {
 
 	void verify([_]) => setState(
 		() => ready = (
-			verifyUsername (_userController.text) && 
-			verifyPassword (student, _passController.text)
+			verifyUsername (usernameController.text) && 
+			verifyPassword (student, passwordController.text)
 		)
 	);
 
@@ -170,7 +170,7 @@ class LoginState extends State <Login> {
 	void lookupUsername() {
 		verify();
 		setState (() {
-			student = verifyUsername (_userController.text);
+			student = verifyUsername (usernameController.text);
 			userSuffix = student == false
 				? Icon (Icons.error, color: Colors.red)
 				: Icon (Icons.done, color: Colors.green);
@@ -178,8 +178,10 @@ class LoginState extends State <Login> {
 	}
 
 	void loginWithFirebase() async {
-		// final document = await Firestore.getStudent("leschesl", null);
-		// print (document.data);
-		Auth.signin();
+		final String username = usernameController.text;
+		final String password = passwordController.text;
+		await Auth.signin(username, password);
+		final Map<String, dynamic> data = (await Firestore.getStudent(username)).data;
+		print (data.entries);
 	}
 }

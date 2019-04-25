@@ -1,52 +1,14 @@
-import 'package:firebase_auth/firebase_auth.dart' show FirebaseAuth, AuthCredential;
-import "package:flutter/services.dart";
-
-// signInWithCredential(AuthCredential)
+import 'package:firebase_auth/firebase_auth.dart' show FirebaseAuth, FirebaseUser;
+import "dart:async";
 
 final FirebaseAuth auth = FirebaseAuth.instance;
 
-
-// abstract class Temp {
-// 	Temp(this._provider);
-// 	final int _provider;
-// }
-
-
-// class Credentials {
-// 	final int temp = 0;
-// 	Credentials(String username, String password)
-// 		: super(0);
-// 		 // : super (
-// 			 	// "Ramaz",
-// 			 	// {
-// 			 	// 	"username": username,
-// 			 	// 	"password": password
-// 			 	// }
-// 		 	// );
-// 		 	// _provider = "Ramaz";
-// 	// final String _provider = "Ramaz";
-// 	// final Map<String, String> _data;
-// }
-
-void signin() async {
-	// FirebaseUser user = await auth.signInWithCustomToken(token: "leschesl");
-	// assert (auth.currentUser == user);
-	// await MethodChannel('plugins.flutter.io/firebase_auth')
-	// 	.invokeMethod(
-	// 		"signInWithCredential",
-	// 		{
-	// 			"app": 
-	// 			"username": "leschesl",
-	// 			"password": "temp"
-	// 		}
-	// );
-	// auth.signInWithRamaz("leschesl", "ramaz");
-	AuthCredential creds = AuthCredential (
-		"Ramaz", 
-		{
-			"username": "leschesl",
-			"password": "temp"
-		}
+// Can't just do username + password, so use Ramaz email
+Future<void> signin(String username, String password) async => await auth
+	.signInWithEmailAndPassword(
+		email: username + "@ramaz.org",
+		password: password
 	);
-	await auth.signInWithCredential(creds);
-}
+
+Future<FirebaseUser> currentUser() async => await auth.currentUser();
+Future<void> signOut() async => await auth.signOut();
