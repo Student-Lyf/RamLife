@@ -3,7 +3,6 @@
 import "package:flutter/material.dart";
 
 import "home.dart";
-import "../mock.dart";  // for logging in
 import "../backend/firestore.dart" as Firestore;
 import "../backend/auth.dart" as Auth;
 import "../backend/data/student.dart";
@@ -22,9 +21,13 @@ class LoginState extends State <Login> {
 
 	bool obscure = true;
 	bool ready = false;
-	// bool ready = false;
 	Icon userSuffix;  // goes after the username prompt
 	Student student;
+
+	@override void initState() {
+		super.initState();
+		Auth.signOut();  // To log in, one must first log out  --Levi
+	}
 
 	@override void dispose() {
 		super.dispose();
@@ -77,7 +80,6 @@ class LoginState extends State <Login> {
 										controller: passwordController,
 										validator: passwordValidator,
 										obscureText: obscure,
-										onFieldSubmitted: getStudentData,
 										decoration: InputDecoration (
 											icon: Icon (Icons.security),
 											labelText: "Password",
@@ -112,6 +114,9 @@ class LoginState extends State <Login> {
 		? null
 		: "Only lower case letters allowed";
 
+	void transition ([String username]) => FocusScope.of(context)
+		.requestFocus(_passwordNode);
+
 	void login ([_]) async {
 		final String username = usernameController.text;
 		final String password = passwordController.text;
@@ -124,15 +129,5 @@ class LoginState extends State <Login> {
 			)
 		);
 	}
-
-	void verify([_]) => setState(
-		() => ready = (
-			verifyUsername (usernameController.text) && 
-			verifyPassword (student, passwordController.text)
-		)
-	);
-
-	void transition ([String username]) => FocusScope.of(context)
-		.requestFocus(_passwordNode);
 
 }

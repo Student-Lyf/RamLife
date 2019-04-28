@@ -9,6 +9,8 @@
 // TEST: Winter fridays
 // TODO: calendar
 
+// TODO: save DB data
+
 // TODOS: 
 // 	Google auth -- use Ramaz email, redesign login page
 // 	calendar
@@ -23,6 +25,8 @@
 
 // DB: 
 // 	Students (labelled by username)
+// 		Find a way to store homeroom/mincha info
+// 		See backend/data/students.dart for more.
 // 	classes (labelled by ID)
 //  admins (labelled by username)
 // 	calendar (labelled by month #)

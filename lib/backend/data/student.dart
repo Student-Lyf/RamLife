@@ -3,6 +3,24 @@ import "package:flutter/foundation.dart";
 import "schedule.dart";
 import "times.dart";
 
+// helper function to resolve issue of storing days in the DB:
+Letters stringToLetter (String letter) {
+	switch (letter) {
+		case "A": return Letters.A;
+		case "B": return Letters.B;
+		case "C": return Letters.C;
+		case "M": return Letters.M;
+		case "R": return Letters.R;
+		case "E": return Letters.E;
+		case "F": return Letters.F;
+		default: throw ArgumentError.value (
+			letter,  // invalid value
+			"stringToLetter",  // Function name
+			"Letter must be one of ${Letters.values}"
+		);
+	}
+} 
+
 class Student {
 	final int id;
 	final Map <Letters, Schedule> schedule;
@@ -17,6 +35,29 @@ class Student {
 		@required this.homeroomMeeting,
 		@required this.minchaRooms
 	});
+
+	factory Student.fromData (Map<String, dynamic> data) => Student (
+		id: data ["id"],
+		schedule: {
+			Letters.A: Schedule.fromData (data ["A"]),
+			Letters.B: Schedule.fromData (data ["B"]),
+			Letters.C: Schedule.fromData (data ["C"]),
+			Letters.E: Schedule.fromData (data ["E"]),
+			Letters.F: Schedule.fromData (data ["F"]),
+			Letters.M: Schedule.fromData (data ["M"]),
+			Letters.R: Schedule.fromData (data ["R"]),
+		},
+		// These entries are not actually in the database yet
+		// We need to find out how Ramaz stores them
+		homeroomDay: Letters.B,  // I think this is standard
+		homeroomMeeting: data ["homeroom meeting room"],
+		minchaRooms: data ["mincha rooms"].entries.map (
+			(MapEntry<String, String> entry) => MapEntry (
+				stringToLetter (entry.key),
+				entry.value
+			)
+		)
+	);
 
 	List <Period> getPeriods (Day day) {
 		final List <Period> result = [];

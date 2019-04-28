@@ -23,6 +23,11 @@ class PeriodData {
 		@required this.id
 	});
 
+	factory PeriodData.fromData (Map<String, dynamic> data) => PeriodData(
+		room: data ["room"],
+		id: data ["id"]
+	);
+
 	@override String toString() => "PeriodData $id";
 }
 
@@ -132,6 +137,42 @@ class Lunch {
 class Schedule {
 	final List <PeriodData> periods;
 	const Schedule (this.periods);
+	factory Schedule.fromData(Map<String, Map<String, dynamic>> data) {
+		// Each entry has an index (as a String) as its key, and {
+		// 	id: int, 
+		// 	room: String
+		// } as its value.
+		// 
+		// Also, we can't use typedefs as these are not functions :)
+		
+		// First, cast the indices from Strings to ints:
+		final List<MapEntry<int,Map<String,dynamic>>> entries = data
+			.entries
+			.map(
+				// Each key is a String representing the index of the value
+				(MapEntry<String, Map<String, dynamic>> entry) => MapEntry (
+					int.parse (entry.key),  // Make it an int
+					entry.value
+				)
+			)
+			.toList();
+
+		// Second, sort the list of entries 
+		entries.sort(
+			(
+				MapEntry<int, Map<String, dynamic>> a, 
+				MapEntry<int, Map<String, dynamic>> b
+			) => a.key.compareTo(b.key)
+		);
+
+		// Finally, loop over their values and add them to the class
+		return Schedule (
+			entries.map(
+				(MapEntry<int, Map<String, dynamic>> entry) => 
+					PeriodData.fromData (entry.value)
+			)
+		);
+	}
 
 	static Period homeroom (
 		Range time, 
