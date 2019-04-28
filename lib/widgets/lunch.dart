@@ -1,6 +1,6 @@
 import "package:flutter/material.dart";
 
-import "../backend/schedule.dart" show Lunch;
+import "../backend/data/schedule.dart" show Lunch;
 
 import "info_card.dart";
 

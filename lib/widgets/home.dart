@@ -2,8 +2,8 @@ import "package:flutter/material.dart";
 import "dart:async";
 
 // Backend tools
-import "../backend/schedule.dart";
-import "../backend/student.dart";
+import "../backend/data/schedule.dart";
+import "../backend/data/student.dart";
 import "../mock.dart" show getToday;
 import "../constants.dart" show SPORTS;
 

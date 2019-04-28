@@ -6,7 +6,7 @@ import "home.dart";
 import "../mock.dart";  // for logging in
 import "../backend/firestore.dart" as Firestore;
 import "../backend/auth.dart" as Auth;
-import "../backend/student.dart";
+import "../backend/data/student.dart";
 
 class Login extends StatefulWidget {
 	@override LoginState createState() => LoginState();

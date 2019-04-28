@@ -6,11 +6,9 @@
 import "package:flutter/material.dart";
 
 import "../backend/times.dart";
-import "../backend/schedule.dart";
-import "../backend/student.dart";
+import "../backend/data/schedule.dart";
+import "../backend/data/student.dart";
 import "../constants.dart" show SCHEDULE;
-
-import "../mock.dart" show getSubjectByID;
 
 import "drawer.dart";
 import "info_card.dart";
@@ -24,7 +22,7 @@ class NextClass extends StatelessWidget {
 	);
 
 	@override Widget build (BuildContext context) {
-		final subject = getSubjectByID (period);
+		final Subject subject = period.subject;
 		return InfoCard (
 			icon: Icons.school,
 			title: period == null
@@ -58,7 +56,7 @@ class ClassList extends StatelessWidget {
 					]
 			) + periods.map (
 			(Period period) {
-				final Subject subject = getSubjectByID (period);
+				final Subject subject = period.subject;
 				final List<String> info = period.getInfo();
 				// ListTile has the period number, so get rid of it
 				info.removeWhere(
