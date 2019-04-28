@@ -1,6 +1,5 @@
-// VERIFY: onFieldSubmitted for password works when tapped off
-
 import "package:flutter/material.dart";
+import "package:google_sign_in/google_sign_in.dart";
 
 import "home.dart";
 import "../backend/services/firestore.dart" as Firestore;
@@ -17,6 +16,12 @@ class LoginState extends State <Login> {
 	final FocusNode _passwordNode = FocusNode();
 	final TextEditingController usernameController = TextEditingController();
 	final TextEditingController passwordController = TextEditingController();
+	final GoogleSignIn google = GoogleSignIn (
+		scopes: [
+			"email",
+			'https://www.googleapis.com/auth/contacts.readonly'
+		]
+	);
 
 	bool obscure = true, ready = false;
 	Icon userSuffix;  // goes after the username prompt
@@ -90,6 +95,10 @@ class LoginState extends State <Login> {
 							)
 						),
 						SizedBox (height: 30),  // FAB covers textbox when keyboard is up
+						RaisedButton (
+							child: Text ("Login with Google"),
+							onPressed: googleLogin
+						)
 					]
 				)
 			)
@@ -128,6 +137,14 @@ class LoginState extends State <Login> {
 				builder: (_) => HomePage (student)
 			)
 		);
+	}
+
+	void googleLogin() async {
+		await google.signOut();
+		assert (await google.isSignedIn() == false);
+		final GoogleSignInAccount account = await google.signIn();
+		if (!account.email.endsWith("@ramaz.org")) print ("Invalid");
+		else print ("Valid");
 	}
 
 }
