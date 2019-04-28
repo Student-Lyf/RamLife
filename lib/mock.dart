@@ -1,7 +1,7 @@
 import "package:flutter/material.dart";
 
-import "backend/schedule.dart";
-import "backend/student.dart";
+import "backend/data/schedule.dart";
+import "backend/data/student.dart";
 
 import "widgets/home.dart";
 

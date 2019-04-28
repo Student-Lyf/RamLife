@@ -1,4 +1,4 @@
-import "dart:async";
+import "dart:async" show Future;
 import "package:cloud_firestore/cloud_firestore.dart";
 
 const String STUDENTS = "students";

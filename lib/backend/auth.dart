@@ -1,5 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart' show FirebaseAuth, FirebaseUser;
-import "dart:async";
+import "dart:async" show Future;
 
 final FirebaseAuth auth = FirebaseAuth.instance;
 

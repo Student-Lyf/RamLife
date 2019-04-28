@@ -18,6 +18,8 @@
 // 	lost + found chat/threads
 // 	about page (whole thing)
 // 	header for next class
+// 	Username validation on login
+// 	Save student on login 
 
 // DB: 
 // 	Students (labelled by username)
