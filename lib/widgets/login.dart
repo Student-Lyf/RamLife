@@ -17,7 +17,6 @@ class LoginState extends State <Login> {
 	final FocusNode _passwordNode = FocusNode();
 	final TextEditingController usernameController = TextEditingController();
 	final TextEditingController passwordController = TextEditingController();
-	final GlobalKey<ScaffoldState> key = GlobalKey();
 
 	bool obscure = true, ready = false;
 	Icon userSuffix;  // goes after the username prompt
@@ -35,9 +34,7 @@ class LoginState extends State <Login> {
 	}
 
 	@override
-	Widget build (BuildContext context) {
-		return Scaffold(
-		key: key,
+	Widget build (BuildContext context) => Scaffold(
 		appBar: AppBar (title: Text ("Login")),
 		floatingActionButton: FloatingActionButton.extended (
 			onPressed: ready ? login : null,
@@ -97,7 +94,7 @@ class LoginState extends State <Login> {
 				)
 			)
 		)
-	);}
+	);
 
 	static bool capturesAll (String text, RegExp regex) => 
 		text.isEmpty || regex.matchAsPrefix(text)?.end == text.length;
