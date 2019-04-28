@@ -3,8 +3,8 @@
 import "package:flutter/material.dart";
 
 import "home.dart";
-import "../backend/firestore.dart" as Firestore;
-import "../backend/auth.dart" as Auth;
+import "../backend/services/firestore.dart" as Firestore;
+import "../backend/services/auth.dart" as Auth;
 import "../backend/data/student.dart";
 
 class Login extends StatefulWidget {
