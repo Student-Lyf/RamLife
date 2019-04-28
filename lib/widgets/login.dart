@@ -19,10 +19,10 @@ class LoginState extends State <Login> {
 	final TextEditingController passwordController = TextEditingController();
 	final GlobalKey<ScaffoldState> key = GlobalKey();
 
-	bool obscure = true;
-	bool ready = false;
+	bool obscure = true, ready = false;
 	Icon userSuffix;  // goes after the username prompt
 	Student student;
+	String usernameError, passwordError;
 
 	@override void initState() {
 		super.initState();
@@ -35,14 +35,15 @@ class LoginState extends State <Login> {
 	}
 
 	@override
-	Widget build (BuildContext context) => Scaffold(
+	Widget build (BuildContext context) {
+		return Scaffold(
 		key: key,
 		appBar: AppBar (title: Text ("Login")),
 		floatingActionButton: FloatingActionButton.extended (
 			onPressed: ready ? login : null,
 			icon: Icon (Icons.done),
 			label: Text ("Submit"),
-			backgroundColor: ready ? Colors.blue : Colors.grey
+			backgroundColor: ready ? Colors.blue : Theme.of(context).disabledColor
 		),
 		body: Padding (
 			padding: EdgeInsets.all (20),
@@ -57,43 +58,38 @@ class LoginState extends State <Login> {
 							),
 							Image.asset ("lib/logo.jpg"),
 						]),
-						Form (
-							autovalidate: true,
-							child: Column (
-								children: [
-									TextFormField (
-										keyboardType: TextInputType.text,
-										textInputAction: TextInputAction.next,
-										onFieldSubmitted: transition,
-										validator: usernameValidate,
-										controller: usernameController,
-										decoration: InputDecoration (
-											icon: Icon (Icons.account_circle),
-											labelText: "Username",
-											helperText: "Enter your Ramaz username",
-											suffix: userSuffix
-										)
+						TextField (
+							keyboardType: TextInputType.text,
+							textInputAction: TextInputAction.next,
+							onSubmitted: transition,
+							onChanged: usernameValidate,
+							controller: usernameController,
+							decoration: InputDecoration (
+								icon: Icon (Icons.account_circle),
+								errorText: usernameError,
+								labelText: "Username",
+								helperText: "Enter your Ramaz username",
+								suffix: userSuffix
+							)
+						),
+						TextField (
+							textInputAction: TextInputAction.done,
+							focusNode: _passwordNode,
+							controller: passwordController,
+							onChanged: passwordValidator,
+							obscureText: obscure,
+							decoration: InputDecoration (
+								icon: Icon (Icons.security),
+								labelText: "Password",
+								helperText: "Enter your Ramaz password",
+								errorText: passwordError,
+								suffixIcon: IconButton (
+									icon: Icon (obscure 
+										? Icons.visibility 
+										: Icons.visibility_off
 									),
-									TextFormField (
-										textInputAction: TextInputAction.done,
-										focusNode: _passwordNode,
-										controller: passwordController,
-										validator: passwordValidator,
-										obscureText: obscure,
-										decoration: InputDecoration (
-											icon: Icon (Icons.security),
-											labelText: "Password",
-											helperText: "Enter your Ramaz password",
-											suffixIcon: IconButton (
-												icon: Icon (obscure 
-													? Icons.visibility 
-													: Icons.visibility_off
-												),
-												onPressed: () => setState (() {obscure = !obscure;})
-											)
-										)
-									)
-								]
+									onPressed: () => setState (() {obscure = !obscure;})
+								)
 							)
 						),
 						SizedBox (height: 30),  // FAB covers textbox when keyboard is up
@@ -101,18 +97,25 @@ class LoginState extends State <Login> {
 				)
 			)
 		)
-	);
+	);}
 
 	static bool capturesAll (String text, RegExp regex) => 
 		text.isEmpty || regex.matchAsPrefix(text)?.end == text.length;
 
-	String passwordValidator (String pass) => capturesAll (pass, passwordRegex)
-		? null
-		: "Only lower case letters and numbers";
+	void passwordValidator (String pass) => setState(() {
+		passwordError = capturesAll (pass, passwordRegex)
+			? null
+			: "Only lower case letters and numbers allowed";
+		ready = pass.isNotEmpty && usernameController.text.isNotEmpty;
+	});
 
-	String usernameValidate(String text) => capturesAll (text, usernameRegex)
-		? null
-		: "Only lower case letters allowed";
+	void usernameValidate(String text) => setState(() {
+		if (text.contains("@"))
+			usernameError = "Do not enter your Ramaz email, just your username";
+		else if (capturesAll (text, usernameRegex)) usernameError = null;
+		else usernameError = "Only lower case letters allowed";
+		ready = text.isNotEmpty && passwordController.text.isNotEmpty; 
+	});
 
 	void transition ([String username]) => FocusScope.of(context)
 		.requestFocus(_passwordNode);

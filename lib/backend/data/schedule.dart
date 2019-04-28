@@ -23,10 +23,12 @@ class PeriodData {
 		@required this.id
 	});
 
-	factory PeriodData.fromData (Map<String, dynamic> data) => PeriodData(
-		room: data ["room"],
-		id: data ["id"]
-	);
+	factory PeriodData.fromData (Map<String, dynamic> data) => data == null
+		? null 
+		: PeriodData(
+			room: data ["room"],
+			id: data ["id"]
+		);
 
 	@override String toString() => "PeriodData $id";
 }
@@ -137,28 +139,50 @@ class Lunch {
 class Schedule {
 	final List <PeriodData> periods;
 	const Schedule (this.periods);
-	factory Schedule.fromData(Map<String, Map<String, dynamic>> data) {
+	factory Schedule.fromData(Map data) {
 		// Each entry has an index (as a String) as its key, and {
 		// 	id: int, 
 		// 	room: String
 		// } as its value.
 		// 
 		// Also, we can't use typedefs as these are not functions :)
+
+		// The data we receive will come with other data (ints, Strings, etc.)
+		// So we have to receive it with dynamic values
+		// Here we can cast it to have a FB Map as the value
+		// 
+		// final Map<String, Map<String, dynamic>> newData = 
+		// // Map<String, Map<String, dynamic>>
+		// 	data
+		// 	// .from (data);
+		// 	.cast<String, dynamic>()
+		// 	.cast<String, Map>()
+		// 	.cast<String, Map<String, dynamic>>();
 		
 		// First, cast the indices from Strings to ints:
-		final List<MapEntry<int,Map<String,dynamic>>> entries = data
+		print (data);
+		final List<MapEntry<int, Map<String, dynamic>>> temp = data
 			.entries
-			.map(
-				// Each key is a String representing the index of the value
-				(MapEntry<String, Map<String, dynamic>> entry) => MapEntry (
-					int.parse (entry.key),  // Make it an int
-					entry.value
+			.map<MapEntry<int, Map<String, dynamic>>> (
+				(MapEntry entry) => MapEntry (
+					int.parse (entry.key),
+					entry.value?.cast<String, dynamic>()
 				)
-			)
-			.toList();
+			).toList();
+
+		// final List<MapEntry<int, Map<String, dynamic>>> entries = newData
+		// 	.entries
+		// 	.map(
+		// 		// Each key is a String representing the index of the value
+		// 		(MapEntry<String, Map<String, dynamic>> entry) => MapEntry<int, Map<String, dynamic>> (
+		// 			int.parse (entry.key),  // Make it an int
+		// 			entry.value
+		// 		)
+		// 	)
+		// 	.toList();
 
 		// Second, sort the list of entries 
-		entries.sort(
+		temp.sort(
 			(
 				MapEntry<int, Map<String, dynamic>> a, 
 				MapEntry<int, Map<String, dynamic>> b
@@ -167,10 +191,10 @@ class Schedule {
 
 		// Finally, loop over their values and add them to the class
 		return Schedule (
-			entries.map(
+			temp.map(
 				(MapEntry<int, Map<String, dynamic>> entry) => 
 					PeriodData.fromData (entry.value)
-			)
+			).toList()
 		);
 	}
 

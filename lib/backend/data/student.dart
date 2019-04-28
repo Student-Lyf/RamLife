@@ -51,10 +51,12 @@ class Student {
 		// We need to find out how Ramaz stores them
 		homeroomDay: Letters.B,  // I think this is standard
 		homeroomMeeting: data ["homeroom meeting room"],
-		minchaRooms: data ["mincha rooms"].entries.map (
-			(MapEntry<String, String> entry) => MapEntry (
-				stringToLetter (entry.key),
-				entry.value
+		minchaRooms: Map.fromEntries (
+			data ["mincha rooms"].entries.map<MapEntry<Letters, String>> (
+				(MapEntry<dynamic, dynamic> entry) => MapEntry<Letters, String> (
+					stringToLetter (entry.key as String),
+					entry.value as String
+				)
 			)
 		)
 	);

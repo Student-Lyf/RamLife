@@ -5,7 +5,7 @@
 
 import "package:flutter/material.dart";
 
-import "../backend/times.dart";
+import "../backend/data/times.dart";
 import "../backend/data/schedule.dart";
 import "../backend/data/student.dart";
 import "../constants.dart" show SCHEDULE;
@@ -22,12 +22,12 @@ class NextClass extends StatelessWidget {
 	);
 
 	@override Widget build (BuildContext context) {
-		final Subject subject = period.subject;
+		final Subject subject = period?.subject;
 		return InfoCard (
 			icon: Icons.school,
 			title: period == null
 				? "School is over"
-				: "Current class: ${subject?.name ?? period.period}",
+				: "Current period: ${subject?.name ?? period.period}",
 			children: period?.getInfo(),
 			page: SCHEDULE
 		);
