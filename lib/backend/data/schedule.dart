@@ -151,16 +151,7 @@ class Schedule {
 		// So we have to receive it with dynamic values
 		// Here we can cast it to have a FB Map as the value
 		// 
-		// final Map<String, Map<String, dynamic>> newData = 
-		// // Map<String, Map<String, dynamic>>
-		// 	data
-		// 	// .from (data);
-		// 	.cast<String, dynamic>()
-		// 	.cast<String, Map>()
-		// 	.cast<String, Map<String, dynamic>>();
-		
 		// First, cast the indices from Strings to ints:
-		print (data);
 		final List<MapEntry<int, Map<String, dynamic>>> temp = data
 			.entries
 			.map<MapEntry<int, Map<String, dynamic>>> (
@@ -169,17 +160,6 @@ class Schedule {
 					entry.value?.cast<String, dynamic>()
 				)
 			).toList();
-
-		// final List<MapEntry<int, Map<String, dynamic>>> entries = newData
-		// 	.entries
-		// 	.map(
-		// 		// Each key is a String representing the index of the value
-		// 		(MapEntry<String, Map<String, dynamic>> entry) => MapEntry<int, Map<String, dynamic>> (
-		// 			int.parse (entry.key),  // Make it an int
-		// 			entry.value
-		// 		)
-		// 	)
-		// 	.toList();
 
 		// Second, sort the list of entries 
 		temp.sort(

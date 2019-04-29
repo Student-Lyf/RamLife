@@ -16,12 +16,8 @@ class LoginState extends State <Login> {
 	final FocusNode _passwordNode = FocusNode();
 	final TextEditingController usernameController = TextEditingController();
 	final TextEditingController passwordController = TextEditingController();
-	final GoogleSignIn google = GoogleSignIn (
-		scopes: [
-			"email",
-			'https://www.googleapis.com/auth/contacts.readonly'
-		]
-	);
+	final GlobalKey<ScaffoldState> key = GlobalKey();
+	final GoogleSignIn google = GoogleSignIn (scopes: ["email"]);
 
 	bool obscure = true, ready = false;
 	Icon userSuffix;  // goes after the username prompt
@@ -40,6 +36,7 @@ class LoginState extends State <Login> {
 
 	@override
 	Widget build (BuildContext context) => Scaffold(
+		key: key,
 		appBar: AppBar (title: Text ("Login")),
 		floatingActionButton: FloatingActionButton.extended (
 			onPressed: ready ? login : null,
@@ -126,10 +123,30 @@ class LoginState extends State <Login> {
 	void transition ([String username]) => FocusScope.of(context)
 		.requestFocus(_passwordNode);
 
-	void login ([_]) async {
+	void login () async {
 		final String username = usernameController.text;
 		final String password = passwordController.text;
-		await Auth.signin(username, password);
+		await Auth.signIn(username, password);
+		downloadData(username);
+	}
+
+	void googleLogin() async {
+		await google.signOut();
+		final GoogleSignInAccount account = await google.signIn();
+		if (account == null) return;
+		if (!account.email.endsWith("@ramaz.org")) {
+			key.currentState.showSnackBar(
+				SnackBar (
+					content: Text ("You need to sign in with your Ramaz email")
+				)
+			); 
+			return;
+		}
+		await Auth.signInWithGoogle(account);
+		downloadData(account.email.split("@")[0]);
+	}
+
+	void downloadData(String username) async {
 		final Map<String, dynamic> data = (await Firestore.getStudent(username)).data;
 		Student student = Student.fromData(data);
 		Navigator.of(context).pushReplacement(
@@ -137,14 +154,7 @@ class LoginState extends State <Login> {
 				builder: (_) => HomePage (student)
 			)
 		);
-	}
 
-	void googleLogin() async {
-		await google.signOut();
-		assert (await google.isSignedIn() == false);
-		final GoogleSignInAccount account = await google.signIn();
-		if (!account.email.endsWith("@ramaz.org")) print ("Invalid");
-		else print ("Valid");
 	}
 
 }
