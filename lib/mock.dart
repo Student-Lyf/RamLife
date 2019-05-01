@@ -1,9 +1,9 @@
-import "package:flutter/material.dart";
+// import "package:flutter/material.dart";
 
-import "backend/data/schedule.dart";
-import "backend/data/student.dart";
+import "data/schedule.dart";
+// import "data/student.dart";
 
-import "widgets/home.dart";
+// import "pages/home.dart";
 
 // ----------------Temporary values----------------
 
@@ -27,7 +27,7 @@ const Map <int, Subject> PLACEHOLDER_SUBJECTS = {  // ID: Subject
 };
 
 Day placeholderToday = Day (
-	letter: Letters.A,
+	letter: Letters.C,
 	lunch: Lunch (  // Lunch for 2/7/19
 		soup: "Navy Bean soup",
 		main: "Fish Tacos",
@@ -37,119 +37,118 @@ Day placeholderToday = Day (
 	)
 );
 
-const Schedule aSchedule = Schedule ([
-	PeriodData (room: "Beit Knesset", id: 12),
-	PeriodData (room: "503", id: 1),
-	PeriodData (room: "304", id: 2),
-	PeriodData (room: "303", id: 3),
-	PeriodData (room: "GYM", id: 4),
-	PeriodData (room: "604", id: 5),
-	PeriodData (room: "AUD", id: 6),
-	PeriodData (room: "506", id: 3),
-	PeriodData (room: "506", id: 7),
-	PeriodData (room: "601", id: 8),
-	PeriodData (room: "304", id: 9)
-]);
+// const Schedule aSchedule = Schedule ([
+// 	PeriodData (room: "Beit Knesset", id: 12),
+// 	PeriodData (room: "503", id: 1),
+// 	PeriodData (room: "304", id: 2),
+// 	PeriodData (room: "303", id: 3),
+// 	PeriodData (room: "GYM", id: 4),
+// 	PeriodData (room: "604", id: 5),
+// 	PeriodData (room: "AUD", id: 6),
+// 	PeriodData (room: "506", id: 3),
+// 	PeriodData (room: "506", id: 7),
+// 	PeriodData (room: "601", id: 8),
+// 	PeriodData (room: "304", id: 9)
+// ]);
 
-const Schedule mSchedule = Schedule ([
-	PeriodData (room: "Beit Knesset", id: 12),
-	PeriodData (room: "GYM", id: 4),
-	PeriodData (room: "506", id: 3),
-	PeriodData (room: "503", id: 1),
-	PeriodData (room: "604", id: 5),
-	PeriodData (room: "703", id: 10),
-	PeriodData (room: "AUD", id: 6),
-	PeriodData (room: "401", id: 8),
-	PeriodData (room: "301", id: 7),
-	PeriodData (room: "506", id: 2),
-	PeriodData (room: "301", id: 11)
-]);
+// const Schedule mSchedule = Schedule ([
+// 	PeriodData (room: "Beit Knesset", id: 12),
+// 	PeriodData (room: "GYM", id: 4),
+// 	PeriodData (room: "506", id: 3),
+// 	PeriodData (room: "503", id: 1),
+// 	PeriodData (room: "604", id: 5),
+// 	PeriodData (room: "703", id: 10),
+// 	PeriodData (room: "AUD", id: 6),
+// 	PeriodData (room: "401", id: 8),
+// 	PeriodData (room: "301", id: 7),
+// 	PeriodData (room: "506", id: 2),
+// 	PeriodData (room: "301", id: 11)
+// ]);
 
-const Schedule rSchedule = Schedule ([
-	PeriodData (room: "Beit Knesset", id: 12),
-	PeriodData (room: "704", id: 13),
-	PeriodData (room: "305", id: 2),
-	PeriodData (room: "306", id: 7),
-	PeriodData (room: "506", id: 3),
-	PeriodData (room: "406", id: 8),
-	PeriodData (room: "304", id: 11),
-	PeriodData (room: "AUD", id: 6),
-	PeriodData (room: "304", id: 9),
-	PeriodData (room: "604", id: 5),
-	PeriodData (room: "503", id: 1),
-]);
+// const Schedule rSchedule = Schedule ([
+// 	PeriodData (room: "Beit Knesset", id: 12),
+// 	PeriodData (room: "704", id: 13),
+// 	PeriodData (room: "305", id: 2),
+// 	PeriodData (room: "306", id: 7),
+// 	PeriodData (room: "506", id: 3),
+// 	PeriodData (room: "406", id: 8),
+// 	PeriodData (room: "304", id: 11),
+// 	PeriodData (room: "AUD", id: 6),
+// 	PeriodData (room: "304", id: 9),
+// 	PeriodData (room: "604", id: 5),
+// 	PeriodData (room: "503", id: 1),
+// ]);
 
-const Schedule bSchedule = Schedule (
-	[
-		PeriodData (room: "Beit Knesset", id: 12),
-		PeriodData (room: "503", id: 1),
-		PeriodData (room: "507", id: 2),
-		null,  // free
-		PeriodData (room: "304", id: 8),
-		PeriodData (room: "303", id: 11),
-		PeriodData (room: "GYM", id: 4),
-		PeriodData (room: "AUD", id: 6),
-		PeriodData (room: "304", id: 9),
-		null,  // free
-		PeriodData (room: "501", id: 3),
-	], 
-);
+// const Schedule bSchedule = Schedule (
+// 	[
+// 		PeriodData (room: "Beit Knesset", id: 12),
+// 		PeriodData (room: "503", id: 1),
+// 		PeriodData (room: "507", id: 2),
+// 		null,  // free
+// 		PeriodData (room: "304", id: 8),
+// 		PeriodData (room: "303", id: 11),
+// 		PeriodData (room: "GYM", id: 4),
+// 		PeriodData (room: "AUD", id: 6),
+// 		PeriodData (room: "304", id: 9),
+// 		null,  // free
+// 		PeriodData (room: "501", id: 3),
+// 	], 
+// );
 
-const Schedule cSchedule = Schedule ([
-	PeriodData (room: "Beit Knesset", id: 12),
-	PeriodData (room: "303", id: 11),
-	PeriodData (room: "604", id: 5),
-	PeriodData (room: "506", id: 3),
-	PeriodData (room: "304", id: 2),
-	PeriodData (room: "704", id: 13),
-	PeriodData (room: "AUD", id: 6),
-	PeriodData (room: "503", id: 1),
-	PeriodData (room: "301", id: 8),
-	PeriodData (room: "506", id: 3),
-	PeriodData (room: "501", id: 14),
-]);
+// const Schedule cSchedule = Schedule ([
+// 	PeriodData (room: "Beit Knesset", id: 12),
+// 	PeriodData (room: "303", id: 11),
+// 	PeriodData (room: "604", id: 5),
+// 	PeriodData (room: "506", id: 3),
+// 	PeriodData (room: "304", id: 2),
+// 	PeriodData (room: "704", id: 13),
+// 	PeriodData (room: "AUD", id: 6),
+// 	PeriodData (room: "503", id: 1),
+// 	PeriodData (room: "301", id: 8),
+// 	PeriodData (room: "506", id: 3),
+// 	PeriodData (room: "501", id: 14),
+// ]);
 
-const Schedule eSchedule = Schedule ([
-	PeriodData (room: "Beit Knesset", id: 12),
-	PeriodData (room: "506", id: 3),
-	PeriodData (room: "704", id: 13),
-	PeriodData (room: "201", id: 7),
-	PeriodData (room: "604", id: 5),
-	PeriodData (room: "302", id: 2),
-	PeriodData (room: "503", id: 1),
-]);
+// const Schedule eSchedule = Schedule ([
+// 	PeriodData (room: "Beit Knesset", id: 12),
+// 	PeriodData (room: "506", id: 3),
+// 	PeriodData (room: "704", id: 13),
+// 	PeriodData (room: "201", id: 7),
+// 	PeriodData (room: "604", id: 5),
+// 	PeriodData (room: "302", id: 2),
+// 	PeriodData (room: "503", id: 1),
+// ]);
 
-const Schedule fSchedule = Schedule ([
-	PeriodData (room: "Beit Knesset", id: 12),
-	PeriodData (room: "201", id: 11),
-	PeriodData (room: "301", id: 3),
-	PeriodData (room: "507", id: 8),
-	PeriodData (room: "304", id: 9),
-	PeriodData (room: "703", id: 10),
-	PeriodData (room: "604", id: 5),
-]);
+// const Schedule fSchedule = Schedule ([
+// 	PeriodData (room: "Beit Knesset", id: 12),
+// 	PeriodData (room: "201", id: 11),
+// 	PeriodData (room: "301", id: 3),
+// 	PeriodData (room: "507", id: 8),
+// 	PeriodData (room: "304", id: 9),
+// 	PeriodData (room: "703", id: 10),
+// 	PeriodData (room: "604", id: 5),
+// ]);
 
-Student levi = Student (
-	id: 770,
-	schedule: {
-		Letters.A: aSchedule,
-		Letters.B: bSchedule, 
-		Letters.C: cSchedule,
-		Letters.M: mSchedule,
-		Letters.R: rSchedule,
-		Letters.E: eSchedule,
-		Letters.F: fSchedule
-	},
-	homeroomDay: Letters.B,
-	homeroomMeeting: "507",
-	minchaRooms: {
-		Letters.M: "303",
-		Letters.R: "304",
-		Letters.A: "503",
-		Letters.B: "304",
-		Letters.C: "303",
-	}
-);
+// Student levi = Student (
+// 	schedule: {
+// 		Letters.A: aSchedule,
+// 		Letters.B: bSchedule, 
+// 		Letters.C: cSchedule,
+// 		Letters.M: mSchedule,
+// 		Letters.R: rSchedule,
+// 		Letters.E: eSchedule,
+// 		Letters.F: fSchedule
+// 	},
+// 	homeroomDay: Letters.B,
+// 	homeroomMeeting: "507",
+// 	minchaRooms: {
+// 		Letters.M: "303",
+// 		Letters.R: "304",
+// 		Letters.A: "503",
+// 		Letters.B: "304",
+// 		Letters.C: "303",
+// 	}
+// );
 
 const int SCHOOL_START = 9, SCHOOL_END = 7;
 const int WINTER_FRIDAY_MONTH_START = 11;
@@ -164,7 +163,7 @@ const int WINTER_FRIDAY_DAY_END = 1;
 Subject getSubjectByID (int id) => PLACEHOLDER_SUBJECTS [id];
 
 // Derived from the calendar/date
-Day getToday () => placeholderToday;
+Day getToday() => placeholderToday;
 
 // Should actually return the corresponing password
 bool verifyUsername (String username) => username == "leschesl";
@@ -173,4 +172,4 @@ bool verifyUsername (String username) => username == "leschesl";
 bool verifyPassword (bool user, String password) => password == "redcow182";
 
 // Check the Shared Preferences for user login and decide from there
-Widget getMainPage() => HomePage(levi);
+// Widget getMainPage() => HomePage(levi);

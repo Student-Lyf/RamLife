@@ -1,103 +1,11 @@
-// TODO: refresh every minute
-// VERIFY: Today is a(n) message (see comment)
-// VERIFY: How many periods are left in the dropdown
-// VERIFY: Times
-
 import "package:flutter/material.dart";
 
-import "../backend/data/times.dart";
-import "../backend/data/schedule.dart";
-import "../backend/data/student.dart";
-import "../constants.dart" show SCHEDULE;
+import "package:ramaz/data/times.dart";
+import "package:ramaz/data/schedule.dart";
+import "package:ramaz/data/student.dart";
 
-import "drawer.dart";
-import "info_card.dart";
-
-
-class NextClass extends StatelessWidget {
-	final Period period;
-	const NextClass(this.period);
-	static final TextStyle white = TextStyle (
-		color: Colors.white
-	);
-
-	@override Widget build (BuildContext context) {
-		final Subject subject = period?.subject;
-		return InfoCard (
-			icon: Icons.school,
-			title: period == null
-				? "School is over"
-				: "Current period: ${subject?.name ?? period.period}",
-			children: period?.getInfo(),
-			page: SCHEDULE
-		);
-	}
-}
-
-class ClassList extends StatelessWidget {
-	final Iterable<Period> periods;
-	final String headerText;
-	const ClassList ({@required this.periods, this.headerText});
-
-	@override Widget build (BuildContext context) => ListView (
-		shrinkWrap: true,
-		children: 
-			(headerText == null 
-					? const <Widget> [] 
-					: <Widget>[
-						DrawerHeader (
-							child: Center (
-								child: Text (
-									headerText,
-									textScaleFactor: 2
-								)
-							)
-						)
-					]
-			) + periods.map (
-			(Period period) {
-				final Subject subject = period.subject;
-				final List<String> info = period.getInfo();
-				// ListTile has the period number, so get rid of it
-				info.removeWhere(
-					(String description) => description.startsWith("Period:")
-				);
-				return ClassPanel (
-					title: "${period.period}${subject == null ? '' : ': ${subject.name}'}",
-					children: info.map (
-						(String description) => Text (description)
-					).toList(),
-				);
-			}
-		).toList()
-	);
-}
-
-class ClassPanel extends StatelessWidget {
-	final String title;
-	final List <Widget> children;
-
-	const ClassPanel ({
-		@required this.title,
-		@required this.children,
-	});
-
-	@override Widget build (BuildContext context) => ExpansionTile (
-		title: Text(title),
-		children: [Align (
-			alignment: const Alignment (-0.75, 0),
-			child: Column (
-				crossAxisAlignment: CrossAxisAlignment.start,
-				children: children.map (
-					(Widget child) => Padding (
-						padding: const EdgeInsets.symmetric(vertical: 5),
-						child: child
-					) 
-				).toList()
-			)
-		)]
-	);
-}
+import "package:ramaz/widgets/drawer.dart";
+import "package:ramaz/widgets/class_list.dart";
 
 class SchedulePage extends StatefulWidget {
 	final Student student;

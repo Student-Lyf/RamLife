@@ -1,5 +1,8 @@
 import "package:flutter/foundation.dart";
 
+// TODO: move this import into Reader
+import "dart:convert" show jsonDecode;
+
 import "schedule.dart";
 import "times.dart";
 
@@ -19,25 +22,32 @@ Letters stringToLetter (String letter) {
 			"Letter must be one of ${Letters.values}"
 		);
 	}
-} 
+}
+const LETTERS = ["A", "B", "C", "M", "R", "E", "F"];
 
 class Student {
-	final int id;
 	final Map <Letters, Schedule> schedule;
 	final Letters homeroomDay;
 	final String homeroomMeeting;
 	final Map <Letters, String> minchaRooms;
 
 	const Student ({
-		@required this.id,
 		@required this.schedule,
 		@required this.homeroomDay,
 		@required this.homeroomMeeting,
 		@required this.minchaRooms
 	});
 
-	factory Student.fromData (Map<String, dynamic> data) => Student (
-		id: data ["id"],
+	factory Student.fromData (Map<String, dynamic> data) {
+		// For some reason, dart:convert.encodeJson() doesn't deep encode
+		// Meaning that some values are still in JSON form
+		// Here, we overwrite them with their decoded values
+		for (final String letter in LETTERS) {
+			final dynamic schedule = data [letter];
+			if (schedule is String) 			
+				data [letter] = jsonDecode(schedule);
+		}
+		return Student (
 		schedule: {
 			Letters.A: Schedule.fromData (data ["A"]),
 			Letters.B: Schedule.fromData (data ["B"]),
@@ -59,7 +69,30 @@ class Student {
 				)
 			)
 		)
-	);
+	);}
+
+	Map<String, dynamic> toJson() {
+		final Map<String, dynamic> result = {
+			"homeroomDay": homeroomDay,
+			"homeroom meeting room": homeroomMeeting,
+			"mincha rooms": minchaRooms.map (
+				(Letters letter, String room) => MapEntry (
+					letter.toString().split(".").last,
+					room
+				)
+			)
+		};
+		result.addAll (
+			schedule.map<String, dynamic>(
+				(Letters letter, Schedule schedule) => 
+					MapEntry<String, Map<String, Map<String, dynamic>>> (
+						letter.toString().split(".").last,
+						schedule.toJson()
+					)
+			)
+		);
+		return result;
+	}
 
 	List <Period> getPeriods (Day day) {
 		final List <Period> result = [];

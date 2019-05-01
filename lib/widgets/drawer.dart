@@ -1,13 +1,13 @@
 import "package:flutter/material.dart";
 import 'package:url_launcher/url_launcher.dart';
 
-import "../constants.dart";  // for route names
+import "package:ramaz/constants.dart";  // for route names
 
 class NavigationDrawer extends StatelessWidget {
 	@override Widget build (BuildContext context) => Drawer (
 		child: ListView (
 			children: [
-				DrawerHeader (child: Image.asset ("lib/logo.jpg")),
+				DrawerHeader (child: Image.asset ("images/ram_square.png")),
 				ListTile (
 					title: Text ("Home"),
 					leading: Icon (Icons.home),

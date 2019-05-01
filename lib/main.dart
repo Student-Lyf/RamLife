@@ -10,18 +10,22 @@
 // TODO: calendar
 
 // TODO: save DB data
+// VERIFY: pics across app
+// TODO: verify newspaper check times
 
 // TODOS: 
 // 	Google auth -- use Ramaz email, redesign login page
 // 	calendar
 // 	notes
 // 	sports
-// 	new logo (drawer, header, login, home screen)
-// 	lost + found chat/threads
 // 	about page (whole thing)
 // 	header for next class
 // 	Username validation on login
-// 	Save student on login 
+//  Use Cloud Functions + Cloud Messaging for lost and found
+// 		See "lost and found.jpg"
+// 	App icon
+// 	"Swipe left for schedule" (shrink to fit)
+// 	home page does not refresh every minute
 
 // DB: 
 // 	Students (labelled by username)
@@ -33,31 +37,39 @@
 // 	lost + found (labelled by ID)
 // 	timeslots (labelled by name)
 
-
-
 import "package:flutter/material.dart";
+import "dart:async";
 
-// used to mock all other pages
+// Backend
+import "services/reader.dart";
+import "services/auth.dart" as Auth;
+
+// UI
 import "widgets/drawer.dart";
-import "mock.dart" show levi;
+import "pages/home.dart" show HomePage;
+import "pages/schedule.dart" show SchedulePage;
+import "pages/login.dart" show Login;
 
 import "constants.dart";  // for route keys
-import "widgets/home.dart" show HomePage;
-import "widgets/schedule.dart" show SchedulePage;
-import "widgets/login.dart" show Login;
 
-void main () => runApp (
+final Reader reader = Reader();
+	
+Future<bool> ready() async {
+	await reader.init();
+	return await Auth.ready() && reader.ready;
+}
+
+void main () async => runApp (
 	MaterialApp (
-		// home: HomePage(levi),
-		home: Login(),
+		home: await ready() ? HomePage(reader.student) : Login(),
 		title: "Student Life",
 		routes: {
-			HOME_PAGE: (_) => HomePage(levi), 
+			HOME_PAGE: (_) => HomePage(reader.student), 
 			NEWS: placeholder ("News"),
 			LOST_AND_FOUND: placeholder ("Lost and found"),
 			SPORTS: placeholder ("Sports"),
 			ADMIN_LOGIN: placeholder ("Admin Login"),
-			SCHEDULE: (_) => SchedulePage (levi),
+			SCHEDULE: (_) => SchedulePage (reader.student),
 			LOGIN: (_) => Login()
 		}
 	)

@@ -1,10 +1,12 @@
 import "package:flutter/material.dart";
 import "package:google_sign_in/google_sign_in.dart";
 
-import "home.dart";
-import "../backend/services/firestore.dart" as Firestore;
-import "../backend/services/auth.dart" as Auth;
-import "../backend/data/student.dart";
+import "package:ramaz/pages/home.dart";
+import "package:ramaz/data/student.dart";
+
+import "package:ramaz/services/reader.dart";
+import "package:ramaz/services/firestore.dart" as Firestore;
+import "package:ramaz/services/auth.dart" as Auth;
 
 class Login extends StatefulWidget {
 	@override LoginState createState() => LoginState();
@@ -20,13 +22,14 @@ class LoginState extends State <Login> {
 	final GoogleSignIn google = GoogleSignIn (scopes: ["email"]);
 
 	bool obscure = true, ready = false;
-	Icon userSuffix;  // goes after the username prompt
 	Student student;
 	String usernameError, passwordError;
+	final Reader reader = Reader();
 
 	@override void initState() {
 		super.initState();
 		Auth.signOut();  // To log in, one must first log out  --Levi
+		reader.init().then ((_) => reader.deleteAll());
 	}
 
 	@override void dispose() {
@@ -37,7 +40,9 @@ class LoginState extends State <Login> {
 	@override
 	Widget build (BuildContext context) => Scaffold(
 		key: key,
-		appBar: AppBar (title: Text ("Login")),
+		appBar: AppBar (
+			title: Text ("Login"),
+		),
 		floatingActionButton: FloatingActionButton.extended (
 			onPressed: ready ? login : null,
 			icon: Icon (Icons.done),
@@ -55,7 +60,7 @@ class LoginState extends State <Login> {
 								height: 300,
 								width: 300
 							),
-							Image.asset ("lib/logo.jpg"),
+							Image.asset ("images/logo.jpg"),
 						]),
 						TextField (
 							keyboardType: TextInputType.text,
@@ -68,7 +73,6 @@ class LoginState extends State <Login> {
 								errorText: usernameError,
 								labelText: "Username",
 								helperText: "Enter your Ramaz username",
-								suffix: userSuffix
 							)
 						),
 						TextField (
@@ -92,9 +96,13 @@ class LoginState extends State <Login> {
 							)
 						),
 						SizedBox (height: 30),  // FAB covers textbox when keyboard is up
-						RaisedButton (
-							child: Text ("Login with Google"),
-							onPressed: googleLogin
+						ListTile (
+							title: Text ("Sign in with Google"),
+							onTap: googleLogin,
+							contentPadding: EdgeInsets.symmetric (horizontal: 20),
+							leading: CircleAvatar (
+								child: Image.asset ("images/google.png"),
+							),
 						)
 					]
 				)
@@ -131,24 +139,21 @@ class LoginState extends State <Login> {
 	}
 
 	void googleLogin() async {
-		await google.signOut();
-		final GoogleSignInAccount account = await google.signIn();
-		if (account == null) return;
-		if (!account.email.endsWith("@ramaz.org")) {
-			key.currentState.showSnackBar(
+		final account = await Auth.signInWithGoogle(
+			() => key.currentState.showSnackBar(
 				SnackBar (
 					content: Text ("You need to sign in with your Ramaz email")
 				)
-			); 
-			return;
-		}
-		await Auth.signInWithGoogle(account);
+			)
+		);
+		if (account == null) return;
 		downloadData(account.email.split("@")[0]);
 	}
 
 	void downloadData(String username) async {
 		final Map<String, dynamic> data = (await Firestore.getStudent(username)).data;
 		Student student = Student.fromData(data);
+		reader.student = student;
 		Navigator.of(context).pushReplacement(
 			MaterialPageRoute (
 				builder: (_) => HomePage (student)

@@ -1,7 +1,8 @@
 import "package:flutter/foundation.dart" show required;
 
 import "times.dart";
-import "../../mock.dart" show getSubjectByID;  // for resolving subjects from periods
+
+import "package:ramaz/mock.dart" show getSubjectByID;  // for resolving subjects from periods
 
 enum Letters {M, R, A, B, C, E, F}
 
@@ -29,6 +30,11 @@ class PeriodData {
 			room: data ["room"],
 			id: data ["id"]
 		);
+
+	Map<String, dynamic> toJson() => {
+		"room": room,
+		"id": id
+	};
 
 	@override String toString() => "PeriodData $id";
 }
@@ -82,6 +88,21 @@ class Day {
 	String get name => "${letter.toString().substring (8)} day ${
 		special == regular || special == rotate ? '' : special.name
 	}";
+
+	String get n {
+		switch (letter) {
+			case Letters.A:
+			case Letters.E:
+				return "n";
+			case Letters.B:
+			case Letters.C:
+			case Letters.M:
+			case Letters.R:
+			case Letters.F:
+				return "";
+		}
+		throw "Invalid day: $letter";
+	}
 
 	Day ({
 		@required this.letter,
@@ -177,6 +198,14 @@ class Schedule {
 			).toList()
 		);
 	}
+
+	Map<String, Map<String, dynamic>> toJson() => periods.asMap()
+		.map(
+			(int index, PeriodData data) => MapEntry (
+				index.toString(),
+				data?.toJson()
+			)
+		);
 
 	static Period homeroom (
 		Range time, 
