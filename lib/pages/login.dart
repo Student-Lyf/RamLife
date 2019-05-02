@@ -1,5 +1,4 @@
 import "package:flutter/material.dart";
-import "package:google_sign_in/google_sign_in.dart";
 
 import "package:ramaz/pages/home.dart";
 import "package:ramaz/data/student.dart";
@@ -19,7 +18,6 @@ class LoginState extends State <Login> {
 	final TextEditingController usernameController = TextEditingController();
 	final TextEditingController passwordController = TextEditingController();
 	final GlobalKey<ScaffoldState> key = GlobalKey();
-	final GoogleSignIn google = GoogleSignIn (scopes: ["email"]);
 
 	bool obscure = true, ready = false;
 	Student student;
