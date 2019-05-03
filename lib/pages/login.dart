@@ -1,13 +1,17 @@
 import "package:flutter/material.dart";
 
-import "package:ramaz/pages/home.dart";
+// Data classes to store downloaded data
 import "package:ramaz/data/student.dart";
+import "package:ramaz/data/schedule.dart";
 
+// Used to actually login
 import "package:ramaz/services/reader.dart";
 import "package:ramaz/services/firestore.dart" as Firestore;
 import "package:ramaz/services/auth.dart" as Auth;
 
 class Login extends StatefulWidget {
+	final Reader reader;
+	Login(this.reader);
 	@override LoginState createState() => LoginState();
 }
 
@@ -22,12 +26,10 @@ class LoginState extends State <Login> {
 	bool obscure = true, ready = false;
 	Student student;
 	String usernameError, passwordError;
-	final Reader reader = Reader();
 
 	@override void initState() {
 		super.initState();
 		Auth.signOut();  // To log in, one must first log out  --Levi
-		reader.init().then ((_) => reader.deleteAll());
 	}
 
 	@override void dispose() {
@@ -150,14 +152,16 @@ class LoginState extends State <Login> {
 
 	void downloadData(String username) async {
 		final Map<String, dynamic> data = (await Firestore.getStudent(username)).data;
-		Student student = Student.fromData(data);
-		reader.student = student;
-		Navigator.of(context).pushReplacement(
-			MaterialPageRoute (
-				builder: (_) => HomePage (student)
-			)
-		);
+		widget.reader.studentData = data;
+		widget.reader.student = Student.fromData(data);
 
+		final Map<int, Map<String, String>> subjectData = 
+			await Firestore.getClasses(student);
+		widget.reader.subjectData = subjectData;
+		final Map<int, Subject> subjects = Subject.getSubjects(subjectData);
+		widget.reader.subjects = subjects;
+
+		Navigator.of(context).pushReplacementNamed("home");
 	}
 
 }

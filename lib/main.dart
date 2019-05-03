@@ -38,11 +38,16 @@
 // 	timeslots (labelled by name)
 
 import "package:flutter/material.dart";
-import "dart:async";
+import "package:path_provider/path_provider.dart";
+// import "dart:async";
 
 // Backend
 import "services/reader.dart";
 import "services/auth.dart" as Auth;
+
+// Dataclasses
+import "data/student.dart";
+import "data/schedule.dart";
 
 // UI
 import "widgets/drawer.dart";
@@ -52,29 +57,34 @@ import "pages/login.dart" show Login;
 
 import "constants.dart";  // for route keys
 
-final Reader reader = Reader();
-	
-Future<bool> ready() async {
-	await reader.init();
-	return await Auth.ready() && reader.ready;
+
+void main() async {
+	final String dir = (await getApplicationDocumentsDirectory()).path;
+	final Reader reader = Reader(dir);
+	final bool ready = reader.ready && await Auth.ready();
+	if (ready) {
+		reader.student = Student.fromData(reader.studentData);
+		reader.subjects = Subject.getSubjects(reader.subjectData);
+	}
+	runApp (
+		MaterialApp (
+			home: ready 
+				? HomePage(reader)
+				: Login (reader),
+			title: "Student Life",
+			routes: {
+				LOGIN: (_) => Login(reader),
+				HOME_PAGE: (_) => HomePage(reader), 
+				SCHEDULE: (_) => SchedulePage (reader),
+				NEWS: placeholder ("News"),
+				LOST_AND_FOUND: placeholder ("Lost and found"),
+				SPORTS: placeholder ("Sports"),
+				ADMIN_LOGIN: placeholder ("Admin Login"),
+			} 
+		)
+	);
 }
-
-void main () async => runApp (
-	MaterialApp (
-		home: await ready() ? HomePage(reader.student) : Login(),
-		title: "Student Life",
-		routes: {
-			HOME_PAGE: (_) => HomePage(reader.student), 
-			NEWS: placeholder ("News"),
-			LOST_AND_FOUND: placeholder ("Lost and found"),
-			SPORTS: placeholder ("Sports"),
-			ADMIN_LOGIN: placeholder ("Admin Login"),
-			SCHEDULE: (_) => SchedulePage (reader.student),
-			LOGIN: (_) => Login()
-		}
-	)
-);
-
+	
 class PlaceholderPage extends StatelessWidget {
 	final String title;
 	PlaceholderPage (this.title);

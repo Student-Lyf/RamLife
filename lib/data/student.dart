@@ -30,12 +30,14 @@ class Student {
 	final Letters homeroomDay;
 	final String homeroomMeeting;
 	final Map <Letters, String> minchaRooms;
+	final Map<int, Subject> subjects;
 
 	const Student ({
 		@required this.schedule,
 		@required this.homeroomDay,
 		@required this.homeroomMeeting,
-		@required this.minchaRooms
+		@required this.minchaRooms,
+		@required this.subjects
 	});
 
 	factory Student.fromData (Map<String, dynamic> data) {
@@ -68,31 +70,10 @@ class Student {
 					entry.value as String
 				)
 			)
-		)
+		),
+		// This is aggragated from the "classes" collection in the DB
+		subjects: data ["subjects"]
 	);}
-
-	Map<String, dynamic> toJson() {
-		final Map<String, dynamic> result = {
-			"homeroomDay": homeroomDay,
-			"homeroom meeting room": homeroomMeeting,
-			"mincha rooms": minchaRooms.map (
-				(Letters letter, String room) => MapEntry (
-					letter.toString().split(".").last,
-					room
-				)
-			)
-		};
-		result.addAll (
-			schedule.map<String, dynamic>(
-				(Letters letter, Schedule schedule) => 
-					MapEntry<String, Map<String, Map<String, dynamic>>> (
-						letter.toString().split(".").last,
-						schedule.toJson()
-					)
-			)
-		);
-		return result;
-	}
 
 	List <Period> getPeriods (Day day) {
 		final List <Period> result = [];

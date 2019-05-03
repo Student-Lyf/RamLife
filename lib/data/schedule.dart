@@ -13,6 +13,19 @@ class Subject {
 		@required this.name,
 		@required this.teacher
 	});
+
+	factory Subject.fromJson(Map<String, dynamic> json) => Subject (
+		name: json ["name"],
+		teacher: json ["teacher"]
+	);
+
+	static Map<int, Subject> getSubjects(Map<int, Map<String, String>> data) =>
+		data.map (
+			(int id, Map<String, String> json) => MapEntry (
+				id,
+				Subject.fromJson(json)
+			)
+		);
 }
 
 class PeriodData {
@@ -30,11 +43,6 @@ class PeriodData {
 			room: data ["room"],
 			id: data ["id"]
 		);
-
-	Map<String, dynamic> toJson() => {
-		"room": room,
-		"id": id
-	};
 
 	@override String toString() => "PeriodData $id";
 }
@@ -198,14 +206,6 @@ class Schedule {
 			).toList()
 		);
 	}
-
-	Map<String, Map<String, dynamic>> toJson() => periods.asMap()
-		.map(
-			(int index, PeriodData data) => MapEntry (
-				index.toString(),
-				data?.toJson()
-			)
-		);
 
 	static Period homeroom (
 		Range time, 

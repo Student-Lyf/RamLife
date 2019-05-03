@@ -3,10 +3,12 @@ import "dart:async";
 
 // Backend tools
 import "package:ramaz/data/schedule.dart";
-import "package:ramaz/data/student.dart";
 
+// Dataclasses
+import "package:ramaz/services/reader.dart";
 import "package:ramaz/services/auth.dart" as Auth;
 
+// Misc
 import "package:ramaz/mock.dart" show getToday;
 import "package:ramaz/constants.dart" show SPORTS;
 
@@ -18,8 +20,8 @@ import "package:ramaz/widgets/lunch.dart";
 import "package:ramaz/widgets/info_card.dart";
 
 class HomePage extends StatefulWidget {
-	final Student student;
-	HomePage (this.student);
+	final Reader reader;
+	HomePage (this.reader);
 
 	@override HomePageState createState() => HomePageState();
 }
@@ -44,8 +46,8 @@ class HomePageState extends State<HomePage> {
 			)
 		);
 		timer = Timer.periodic (minute, update);
-		schedule = widget.student.schedule [today.letter];
-		periods = widget.student.getPeriods (today);
+		schedule = widget.reader.student.schedule [today.letter];
+		periods = widget.reader.student.getPeriods (today);
 		periodIndex = today.period;
 		period = periodIndex == null 
 			? null

@@ -1,31 +1,39 @@
-import "package:path_provider/path_provider.dart";
 import "dart:convert" show jsonDecode, jsonEncode;
 import "dart:io" show File;
-import "dart:async" show Future;
 
-import "package:ramaz/data/student.dart" show Student;
+import "package:ramaz/data/schedule.dart" show Subject;
+import "package:ramaz/data/student.dart";
 
 class Reader {
-	String dir;
-	File studentFile;
+	final String dir;
+	final File studentFile, subjectFile;
+	Reader(this.dir) :
+		studentFile = File ("$dir/student.json"),
+		subjectFile = File ("$dir/subjects.json");
 
-	Future<void> init() async {
-		dir = (await getApplicationDocumentsDirectory()).path;
-		studentFile = File ("$dir/student.json");
-	}
+	set studentData(Map<String, dynamic> data) => studentFile.writeAsStringSync(
+		jsonEncode(data)
+	);
 
-	set student(Student student) => studentFile.writeAsStringSync (
+	Map<String, dynamic> get studentData => jsonDecode (
+		studentFile.readAsStringSync()
+	);
+
+	Student student;
+
+	set subjectData (Map<int, Map<String, String>> subjects) => subjectFile.writeAsStringSync (
 		jsonEncode (
-			student.toJson(),
-			toEncodable: (dynamic letter) => letter.toString().split(".").last
+			subjects.map (
+				(int id, Map<String, String> json) => MapEntry (id, json)
+			)
 		)
 	);
 
-	Student get student => Student.fromData(
-		jsonDecode (
-			studentFile.readAsStringSync()
-		)
+	Map<int, Map<String, String>> get subjectData => jsonDecode(
+		subjectFile.readAsStringSync()
 	);
+
+	Map<int, Subject> subjects;  // for efficient sharing
 
 	void deleteAll() {
 		if (studentFile.existsSync())

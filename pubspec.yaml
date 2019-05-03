@@ -49,6 +49,10 @@ flutter:
     - images/ram_logo_rectangle.jpg
     - images/ram_logo_square.jpg
     - images/ram_square.png
+    - images/drive.png
+    - images/schoology.png
+    - images/outlook.jpg
+
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.io/assets-and-images/#resolution-aware.

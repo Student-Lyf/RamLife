@@ -2,14 +2,15 @@ import "package:flutter/material.dart";
 
 import "package:ramaz/data/times.dart";
 import "package:ramaz/data/schedule.dart";
-import "package:ramaz/data/student.dart";
+
+import "package:ramaz/services/reader.dart";
 
 import "package:ramaz/widgets/drawer.dart";
 import "package:ramaz/widgets/class_list.dart";
 
 class SchedulePage extends StatefulWidget {
-	final Student student;
-	SchedulePage (this.student);
+	final Reader reader;
+	SchedulePage (this.reader);
 
 	@override ScheduleState createState() => ScheduleState();
 }
@@ -77,9 +78,9 @@ class ScheduleState extends State<SchedulePage> {
 			}
 		}
 		setState(() {
-			schedule = widget.student.schedule [letter];
+			schedule = widget.reader.student.schedule [letter];
 			day = getDay (letter, special);
-			periods = widget.student.getPeriods (day);
+			periods = widget.reader.student.getPeriods (day);
 		});
 	}
 

@@ -46,26 +46,31 @@ class NavigationDrawer extends StatelessWidget {
 				SizedBox (height: 30),
 				Divider(),
 				ListTile (
+					onTap: () => launch (RAMAZ),
 					title: Text ("Ramaz.org"),
-					leading: Icon (Icons.open_in_new),
-					onTap: () => launch (RAMAZ)
+					leading: CircleAvatar (
+						child: Image.asset ("images/logo.jpg")
+					),
 				),
 				ListTile (
+					onTap: () => launch (EMAIL),
 					title: Text ("Ramaz email"),
-					leading: Icon (Icons.open_in_new),
-					onTap: () => launch (EMAIL)
+					leading: CircleAvatar(
+						child: Image.asset("images/outlook.jpg")
+					),
 				),
 				ListTile (
+					onTap: () => launch (SCHOOLOGY),
 					title: Text ("Schoology"),
-					leading: Icon (Icons.open_in_new),
-					onTap: () => launch (SCHOOLOGY)
+					leading: CircleAvatar(
+						child: Image.asset("images/schoology.png")
+					),
 				),
 				ListTile (
 					title: Text ("My Backpack"),
 					leading: Icon (Icons.open_in_new),
 					onTap: () => launch (MY_BACKPACK)
 				),
-
 			]
 		)
 	);
