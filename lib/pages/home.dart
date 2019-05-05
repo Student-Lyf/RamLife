@@ -73,7 +73,6 @@ class HomePageState extends State<HomePage> {
 			0, 
 			IconButton (
 				icon: CircleAvatar (
-					// child: Image.asset ("images/google.png"),
 					child: LoadingImage(
 						"images/google.png",
 						width: 32,
