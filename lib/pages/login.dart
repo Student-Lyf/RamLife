@@ -12,6 +12,7 @@ import "package:ramaz/services/auth.dart" as Auth;
 class Login extends StatefulWidget {
 	final Reader reader;
 	Login(this.reader);
+
 	@override LoginState createState() => LoginState();
 }
 
@@ -24,12 +25,12 @@ class LoginState extends State <Login> {
 	final GlobalKey<ScaffoldState> key = GlobalKey();
 
 	bool obscure = true, ready = false;
-	Student student;
 	String usernameError, passwordError;
 
 	@override void initState() {
 		super.initState();
 		Auth.signOut();  // To log in, one must first log out  --Levi
+		widget.reader.deleteAll();
 	}
 
 	@override void dispose() {
@@ -156,7 +157,7 @@ class LoginState extends State <Login> {
 		widget.reader.student = Student.fromData(data);
 
 		final Map<int, Map<String, String>> subjectData = 
-			await Firestore.getClasses(student);
+			await Firestore.getClasses(widget.reader.student);
 		widget.reader.subjectData = subjectData;
 		final Map<int, Subject> subjects = Subject.getSubjects(subjectData);
 		widget.reader.subjects = subjects;

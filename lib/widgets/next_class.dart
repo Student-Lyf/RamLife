@@ -6,20 +6,18 @@ import "info_card.dart";
 
 class NextClass extends StatelessWidget {
 	final Period period;
-	const NextClass(this.period);
+	final Subject subject;
+	const NextClass(this.period, this.subject);
 	static final TextStyle white = TextStyle (
 		color: Colors.white
 	);
 
-	@override Widget build (BuildContext context) {
-		final Subject subject = period?.subject;
-		return InfoCard (
-			icon: Icons.school,
-			title: period == null
-				? "School is over"
-				: "Current period: ${subject?.name ?? period.period}",
-			children: period?.getInfo(),
-			page: SCHEDULE
-		);
-	}
+	@override Widget build (BuildContext context) => InfoCard (
+		icon: Icons.school,
+		title: period == null
+			? "School is over"
+			: "Current period: ${subject?.name ?? period.period}",
+		children: period?.getInfo(subject),
+		page: SCHEDULE
+	);
 }

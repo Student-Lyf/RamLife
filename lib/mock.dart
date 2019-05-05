@@ -160,16 +160,16 @@ const int WINTER_FRIDAY_DAY_END = 1;
 // ----------------Mocked functions----------------
 
 // Derived by FB query (id -> Subject.from (Document))
-Subject getSubjectByID (int id) => PLACEHOLDER_SUBJECTS [id];
+// Subject getSubjectByID (int id) => PLACEHOLDER_SUBJECTS [id];
 
 // Derived from the calendar/date
 Day getToday() => placeholderToday;
 
 // Should actually return the corresponing password
-bool verifyUsername (String username) => username == "leschesl";
+// bool verifyUsername (String username) => username == "leschesl";
 
 // Will be replaced by return value of verifyStudent
-bool verifyPassword (bool user, String password) => password == "redcow182";
+// bool verifyPassword (bool user, String password) => password == "redcow182";
 
 // Check the Shared Preferences for user login and decide from there
 // Widget getMainPage() => HomePage(levi);

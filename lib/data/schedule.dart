@@ -2,7 +2,7 @@ import "package:flutter/foundation.dart" show required;
 
 import "times.dart";
 
-import "package:ramaz/mock.dart" show getSubjectByID;  // for resolving subjects from periods
+// import "package:ramaz/mock.dart" show getSubjectByID;  // for resolving subjects from periods
 
 enum Letters {M, R, A, B, C, E, F}
 
@@ -72,18 +72,16 @@ class Period {
 
 	@override String toString() => "Period $period";
 
-	List <String> getInfo() {
+	List <String> getInfo (Subject subject) {
 		final List <String> result = ["Time: $time"];
 		if (int.tryParse(period) != null) result.add ("Period: $period");
 		if (id ==  -1) return result;
 		if (room != null) result.add ("Room: $room");
 		if (id != null) result.add (
-				"Teacher: ${getSubjectByID (id).teacher}",
+				"Teacher: ${subject.teacher}",
 		);
 		return result;
 	}
-
-	Subject get subject => getSubjectByID(id);
 }
 
 class Day {

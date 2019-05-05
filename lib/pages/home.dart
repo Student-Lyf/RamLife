@@ -89,7 +89,10 @@ class HomePageState extends State<HomePage> {
 		drawer: NavigationDrawer(),
 		endDrawer: Drawer (
 			child: ClassList(
-				periods: periods.getRange ((periodIndex ?? -1) + 1, periods.length),
+				periods: periods.getRange (
+					(periodIndex ?? -1) + 1, periods.length
+				),
+				reader: widget.reader,
 				headerText: period == null ? "Today's Schedule" : "Upcoming Classes"
 			)
 		),
@@ -105,7 +108,7 @@ class HomePageState extends State<HomePage> {
 						textScaleFactor: 2.5
 					)
 				),
-				NextClass(period),
+				NextClass(period, widget.reader.subjects[period.id]),
 				LunchTile (lunch: today.lunch),
 				InfoCard(
 					title: "Sports coming soon!", 

@@ -1,6 +1,7 @@
 import "package:flutter/material.dart";
 
 import "package:ramaz/data/schedule.dart" show Period, Subject;
+import "package:ramaz/services/reader.dart";
 
 class ClassPanel extends StatelessWidget {
 	final String title;
@@ -34,7 +35,12 @@ class ClassPanel extends StatelessWidget {
 class ClassList extends StatelessWidget {
 	final Iterable<Period> periods;
 	final String headerText;
-	const ClassList ({@required this.periods, this.headerText});
+	final Reader reader;
+	const ClassList ({
+		@required this.periods, 
+		@required this.reader,
+		this.headerText
+	});
 
 	@override Widget build (BuildContext context) => ListView (
 		shrinkWrap: true,
@@ -53,8 +59,8 @@ class ClassList extends StatelessWidget {
 					]
 			) + periods.map (
 			(Period period) {
-				final Subject subject = period.subject;
-				final List<String> info = period.getInfo();
+				final Subject subject = reader.subjects[period.id];
+				final List<String> info = period.getInfo(subject);
 				// ListTile has the period number, so get rid of it
 				info.removeWhere(
 					(String description) => description.startsWith("Period:")

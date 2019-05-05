@@ -40,6 +40,6 @@ class Reader {
 			studentFile.deleteSync();
 	}
 
-	bool get ready => studentFile.existsSync();
+	bool get ready => studentFile.existsSync() && subjectFile.existsSync();
 
 }

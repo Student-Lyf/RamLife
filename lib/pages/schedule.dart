@@ -119,7 +119,7 @@ class ScheduleState extends State<SchedulePage> {
 				SizedBox (height: 20),
 				Divider(),
 				SizedBox (height: 20),
-				Expanded (child: ClassList(periods: periods))
+				Expanded (child: ClassList(periods: periods, reader: widget.reader))
 			]
 		)
 	);
