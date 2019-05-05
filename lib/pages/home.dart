@@ -13,9 +13,9 @@ import "package:ramaz/mock.dart" show getToday;
 import "package:ramaz/constants.dart" show SPORTS;
 
 // UI
+import "package:ramaz/pages/drawer.dart";
 import "package:ramaz/widgets/class_list.dart";
 import "package:ramaz/widgets/next_class.dart";
-import "package:ramaz/widgets/drawer.dart";
 import "package:ramaz/widgets/lunch.dart";
 import "package:ramaz/widgets/info_card.dart";
 import "package:ramaz/widgets/loading_image.dart";

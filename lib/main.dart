@@ -50,7 +50,7 @@ import "data/student.dart";
 import "data/schedule.dart";
 
 // UI
-import "widgets/drawer.dart";
+import "pages/drawer.dart";
 import "pages/home.dart" show HomePage;
 import "pages/schedule.dart" show SchedulePage;
 import "pages/login.dart" show Login;
