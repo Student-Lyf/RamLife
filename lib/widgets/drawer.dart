@@ -1,13 +1,20 @@
 import "package:flutter/material.dart";
 import 'package:url_launcher/url_launcher.dart';
 
+import "loading_image.dart";
 import "package:ramaz/constants.dart";  // for route names
 
 class NavigationDrawer extends StatelessWidget {
 	@override Widget build (BuildContext context) => Drawer (
 		child: ListView (
 			children: [
-				DrawerHeader (child: Image.asset ("images/ram_square.png")),
+				DrawerHeader (
+					child: LoadingImage(
+						"images/ram_square.png",
+						width: 272,
+						height: 137
+					)
+				),
 				ListTile (
 					title: Text ("Home"),
 					leading: Icon (Icons.home),
