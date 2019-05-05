@@ -7,24 +7,24 @@ import "data/schedule.dart";
 
 // ----------------Temporary values----------------
 
-const int PLACEHOLDER_PERIOD = 4;
-const Map <int, Subject> PLACEHOLDER_SUBJECTS = {  // ID: Subject
-	// -1: const Subject (name: "Free period", teacher: null),
-	1: const Subject (name: "Chemistry", teacher: "Dr. Rotenberg"),
-	2: const Subject (name: "Math", teacher: "Ms. Shine"),
-	3: Subject (name: "Talmud", teacher: "Rabbi Albo"),
-	4: Subject (name: "Gym", teacher: "Coach D."),
-	5: Subject (name: "History", teacher: "Ms. Newman"),
-	6: Subject (name: "Lunch", teacher: "Ms. Dashiff"),
-	7: Subject (name: "Spanish", teacher: "Mr. Kabot"),
-	8: Subject (name: "English", teacher: "Ms. Cohen"),
-	9: Subject (name: "Hebrew", teacher: "Ms. Sole-Zier"),
-	10: Subject (name: "Tech", teacher: "Ms. Joshi"),
-	11: Subject (name: "Chumash", teacher: "Ms. Benus"), 
-	12: Subject (name: "Tefillah", teacher: "Rabbi Weiser"),
-	13: Subject (name: "Art", teacher: "Ms. Rabhan"),
-	14: Subject (name: "Health", teacher: "Ms. Axel")
-};
+// const int PLACEHOLDER_PERIOD = 4;
+// const Map <int, Subject> PLACEHOLDER_SUBJECTS = {  // ID: Subject
+// 	// -1: const Subject (name: "Free period", teacher: null),
+// 	1: const Subject (name: "Chemistry", teacher: "Dr. Rotenberg"),
+// 	2: const Subject (name: "Math", teacher: "Ms. Shine"),
+// 	3: Subject (name: "Talmud", teacher: "Rabbi Albo"),
+// 	4: Subject (name: "Gym", teacher: "Coach D."),
+// 	5: Subject (name: "History", teacher: "Ms. Newman"),
+// 	6: Subject (name: "Lunch", teacher: "Ms. Dashiff"),
+// 	7: Subject (name: "Spanish", teacher: "Mr. Kabot"),
+// 	8: Subject (name: "English", teacher: "Ms. Cohen"),
+// 	9: Subject (name: "Hebrew", teacher: "Ms. Sole-Zier"),
+// 	10: Subject (name: "Tech", teacher: "Ms. Joshi"),
+// 	11: Subject (name: "Chumash", teacher: "Ms. Benus"), 
+// 	12: Subject (name: "Tefillah", teacher: "Rabbi Weiser"),
+// 	13: Subject (name: "Art", teacher: "Ms. Rabhan"),
+// 	14: Subject (name: "Health", teacher: "Ms. Axel")
+// };
 
 Day placeholderToday = Day (
 	letter: Letters.C,

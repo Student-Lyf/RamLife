@@ -1,3 +1,4 @@
+# (View this file in .yaml syntax for nice highlighting)
 Basic definition: 
 	Imagine a file where every line had 2 sections: A "key", and a "value"
 		(something like "name: Levi")
@@ -5,17 +6,17 @@ Basic definition:
 	Then you would have folders of these files. 
 	So, to record student last names, you would have: 
 	- 2019: 
-	|	- 9th grade.txt: 
-	|	| 	- Jordan: Mitler
-	|	|	- Ozzie: Kramer
-	|	- 10th grade.txt:
-	|	|	- Levi: Lesches
-	|	|	- William: Kremer
-	|	(And so on)
+		- 9th grade.txt: 
+		 	- Jordan: Mitler
+			- Ozzie: Kramer
+		- 10th grade.txt:
+			- Levi: Lesches
+			- William: Kremer
+		(And so on)
 	- 2018: 
-	|	- 9th grade.txt: 
-	| 	|	- Levi: Lesches
-	|	|	- William: Kremer
+		- 9th grade.txt: 
+	 		- Levi: Lesches
+			- William: Kremer
 	You get it
 	In Firestore (the database I'm proposing:
 		- each folder (year) would be called a "collection",
@@ -36,19 +37,15 @@ Student collection:
 		- ID: int,
 		- first: string,
 		- last: string,
-		- M: (dictionary/mapping) {
-			- 1: (dictionary/mapping) {
+		- M: (dictionary/mapping)
+			- 1: (dictionary/mapping)
 				- room: string,
 				- class ID: int
-			}
-		}
-		- R: (dictionary/mapping) {
-			- 1: (dictionary/mapping) {
+		- R: (dictionary/mapping) 
+			- 1: (dictionary/mapping)
 				- room: string,
 				- class ID: int
-			}
 			- (And so on)
-		}
 		- (And so on)
 *Lists don't have order*
 This is why I use dictionary/mapping for each schedule instead of a list
