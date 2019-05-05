@@ -26,7 +26,7 @@ class Reader {
 			subjects.map (
 				(int id, Map<String, dynamic> json) => MapEntry (
 					id.toString(), 
-					json
+					jsonEncode(json)
 				)
 			)
 		)
@@ -34,15 +34,15 @@ class Reader {
 
 	Map<int, Map<String, dynamic>> get subjectData => jsonDecode(
 		subjectFile.readAsStringSync()
-	).map (
+	).map<int, Map<String, dynamic>> (
 		(String id, dynamic json) => MapEntry (
 			int.parse(id),
-			jsonDecode(json)
+			jsonDecode(json) as Map<String, dynamic>
 		)
 	);
 
 	Map<int, Subject> subjects;
-	
+
 	void deleteAll() {
 		if (studentFile.existsSync())
 			studentFile.deleteSync();

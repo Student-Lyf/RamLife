@@ -25,7 +25,6 @@ Future<Map<int, Map<String, dynamic>>> getClasses(Student student) async {
 			ids.add(period.id);
 		}
 	}
-	print ("Getting data for ids: $ids.");
 	Map<int, Map<String, dynamic>> result = {};
 	for (final int id in ids) 
 		result [id] = (await getClass(id)).data;

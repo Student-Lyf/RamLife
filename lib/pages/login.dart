@@ -163,7 +163,6 @@ class LoginState extends State <Login> {
 			await Firestore.getClasses(widget.reader.student);
 		widget.reader.subjectData = subjectData;
 		final Map<int, Subject> subjects = Subject.getSubjects(subjectData);
-		print (subjects);
 		widget.reader.subjects = subjects;
 
 		Navigator.of(context).pushReplacementNamed("home");
