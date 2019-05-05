@@ -4,6 +4,9 @@ import "package:flutter/material.dart";
 import "package:ramaz/data/student.dart";
 import "package:ramaz/data/schedule.dart";
 
+// To display the logo
+import "package:ramaz/widgets/loading_image.dart";
+
 // Used to actually login
 import "package:ramaz/services/reader.dart";
 import "package:ramaz/services/firestore.dart" as Firestore;
@@ -57,14 +60,11 @@ class LoginState extends State <Login> {
 			child: SingleChildScrollView (
 				child: Column (
 					children: [
-						Stack (children: [
-							SizedBox (
-								child: Center (child: CircularProgressIndicator()),
-								height: 300,
-								width: 300
-							),
-							Image.asset ("images/logo.jpg"),
-						]),
+						LoadingImage (
+							"images/logo.png",
+							height: 300,
+							width: 300
+						),
 						TextField (
 							keyboardType: TextInputType.text,
 							textInputAction: TextInputAction.next,

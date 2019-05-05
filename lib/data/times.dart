@@ -12,7 +12,7 @@ class Time {
 
 	factory Time.fromDateTime (DateTime date) {
 		int hour = date.hour;
-		if (hour >= 17 || hour < 8) hour = 5;
+		if (hour >= 17 || hour < 8) hour = 5;  // garbage value
 		else if (hour > 12) hour -= 12;
 		return Time (hour, date.minute);
 	}

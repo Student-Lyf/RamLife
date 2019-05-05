@@ -90,8 +90,6 @@ class Day {
 	Special special;
 	final Lunch lunch;
 
-	static DateTime today = DateTime.now();
-
 	String get name => "${letter.toString().substring (8)} day ${
 		special == regular || special == rotate ? '' : special.name
 	}";
@@ -135,7 +133,7 @@ class Day {
 	} 
 
 	int get period {
-		final Time time = Time.fromDateTime (today);
+		final Time time = Time.fromDateTime (DateTime.now());
 		for (int index = 0; index < special.periods.length; index++) {
 			final Range range = special.periods [index];
 			if (

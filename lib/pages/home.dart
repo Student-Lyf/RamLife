@@ -18,6 +18,7 @@ import "package:ramaz/widgets/next_class.dart";
 import "package:ramaz/widgets/drawer.dart";
 import "package:ramaz/widgets/lunch.dart";
 import "package:ramaz/widgets/info_card.dart";
+import "package:ramaz/widgets/loading_image.dart";
 
 class HomePage extends StatefulWidget {
 	final Reader reader;
