@@ -57,7 +57,6 @@ import "pages/login.dart" show Login;
 
 import "constants.dart";  // for route keys
 
-
 void main() async {
 	final String dir = (await getApplicationDocumentsDirectory()).path;
 	final Reader reader = Reader(dir);

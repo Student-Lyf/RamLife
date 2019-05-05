@@ -9,7 +9,7 @@ import "data/schedule.dart";
 
 const int PLACEHOLDER_PERIOD = 4;
 const Map <int, Subject> PLACEHOLDER_SUBJECTS = {  // ID: Subject
-	-1: const Subject (name: "Free period", teacher: null),
+	// -1: const Subject (name: "Free period", teacher: null),
 	1: const Subject (name: "Chemistry", teacher: "Dr. Rotenberg"),
 	2: const Subject (name: "Math", teacher: "Ms. Shine"),
 	3: Subject (name: "Talmud", teacher: "Rabbi Albo"),

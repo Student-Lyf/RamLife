@@ -23,7 +23,6 @@ class Reader {
 
 	set subjectData (Map<int, Map<String, dynamic>> subjects) => subjectFile.writeAsStringSync (
 		jsonEncode (
-			// subjects
 			subjects.map (
 				(int id, Map<String, dynamic> json) => MapEntry (
 					id.toString(), 
@@ -42,8 +41,8 @@ class Reader {
 		)
 	);
 
-	Map<int, Subject> subjects;  // for efficient sharing
-
+	Map<int, Subject> subjects;
+	
 	void deleteAll() {
 		if (studentFile.existsSync())
 			studentFile.deleteSync();
