@@ -14,14 +14,15 @@ class Subject {
 		@required this.teacher
 	});
 
-	factory Subject.fromJson(Map<String, dynamic> json) => Subject (
-		name: json ["name"],
-		teacher: json ["teacher"]
-	);
+	factory Subject.fromJson(Map<String, dynamic> json) => json == null ? null :
+		Subject (
+			name: json ["name"],
+			teacher: json ["teacher"]
+		);
 
-	static Map<int, Subject> getSubjects(Map<int, Map<String, String>> data) =>
+	static Map<int, Subject> getSubjects(Map<int, Map<String, dynamic>> data) =>
 		data.map (
-			(int id, Map<String, String> json) => MapEntry (
+			(int id, Map<String, dynamic> json) => MapEntry (
 				id,
 				Subject.fromJson(json)
 			)
@@ -77,8 +78,8 @@ class Period {
 		if (int.tryParse(period) != null) result.add ("Period: $period");
 		if (id ==  -1) return result;
 		if (room != null) result.add ("Room: $room");
-		if (id != null) result.add (
-				"Teacher: ${subject.teacher}",
+		if (subject != null) result.add (
+			"Teacher: ${subject.teacher}",
 		);
 		return result;
 	}

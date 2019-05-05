@@ -21,16 +21,25 @@ class Reader {
 
 	Student student;
 
-	set subjectData (Map<int, Map<String, String>> subjects) => subjectFile.writeAsStringSync (
+	set subjectData (Map<int, Map<String, dynamic>> subjects) => subjectFile.writeAsStringSync (
 		jsonEncode (
+			// subjects
 			subjects.map (
-				(int id, Map<String, String> json) => MapEntry (id, json)
+				(int id, Map<String, dynamic> json) => MapEntry (
+					id.toString(), 
+					json
+				)
 			)
 		)
 	);
 
-	Map<int, Map<String, String>> get subjectData => jsonDecode(
+	Map<int, Map<String, dynamic>> get subjectData => jsonDecode(
 		subjectFile.readAsStringSync()
+	).map (
+		(String id, dynamic json) => MapEntry (
+			int.parse(id),
+			jsonDecode(json)
+		)
 	);
 
 	Map<int, Subject> subjects;  // for efficient sharing

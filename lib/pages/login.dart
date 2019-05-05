@@ -24,7 +24,7 @@ class LoginState extends State <Login> {
 	final TextEditingController passwordController = TextEditingController();
 	final GlobalKey<ScaffoldState> key = GlobalKey();
 
-	bool obscure = true, ready = false;
+	bool obscure = true, ready = false, loading = false;
 	String usernameError, passwordError;
 
 	@override void initState() {
@@ -46,9 +46,11 @@ class LoginState extends State <Login> {
 		),
 		floatingActionButton: FloatingActionButton.extended (
 			onPressed: ready ? login : null,
-			icon: Icon (Icons.done),
+			icon: loading ? CircularProgressIndicator() : Icon (Icons.done),
 			label: Text ("Submit"),
-			backgroundColor: ready ? Colors.blue : Theme.of(context).disabledColor
+			backgroundColor: ready && !loading
+				? Colors.blue 
+				: Theme.of(context).disabledColor
 		),
 		body: Padding (
 			padding: EdgeInsets.all (20),
@@ -152,14 +154,16 @@ class LoginState extends State <Login> {
 	}
 
 	void downloadData(String username) async {
+		setState(() => loading = true);
 		final Map<String, dynamic> data = (await Firestore.getStudent(username)).data;
 		widget.reader.studentData = data;
 		widget.reader.student = Student.fromData(data);
 
-		final Map<int, Map<String, String>> subjectData = 
+		final Map<int, Map<String, dynamic>> subjectData = 
 			await Firestore.getClasses(widget.reader.student);
 		widget.reader.subjectData = subjectData;
 		final Map<int, Subject> subjects = Subject.getSubjects(subjectData);
+		print (subjects);
 		widget.reader.subjects = subjects;
 
 		Navigator.of(context).pushReplacementNamed("home");

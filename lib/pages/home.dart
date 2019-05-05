@@ -108,7 +108,7 @@ class HomePageState extends State<HomePage> {
 						textScaleFactor: 2.5
 					)
 				),
-				NextClass(period, widget.reader.subjects[period.id]),
+				NextClass(period, widget.reader.subjects[period?.id]),
 				LunchTile (lunch: today.lunch),
 				InfoCard(
 					title: "Sports coming soon!", 

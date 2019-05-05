@@ -12,6 +12,7 @@
 // TODO: save DB data
 // VERIFY: pics across app
 // TODO: verify newspaper check times
+// VERIFY: Do we need My BackPack link?
 
 // TODOS: 
 // 	Google auth -- use Ramaz email, redesign login page
@@ -39,7 +40,6 @@
 
 import "package:flutter/material.dart";
 import "package:path_provider/path_provider.dart";
-// import "dart:async";
 
 // Backend
 import "services/reader.dart";
@@ -85,6 +85,7 @@ void main() async {
 	);
 }
 	
+// Placeholder
 class PlaceholderPage extends StatelessWidget {
 	final String title;
 	PlaceholderPage (this.title);

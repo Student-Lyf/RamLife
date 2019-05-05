@@ -49,28 +49,29 @@ class NavigationDrawer extends StatelessWidget {
 					onTap: () => launch (RAMAZ),
 					title: Text ("Ramaz.org"),
 					leading: CircleAvatar (
-						child: Image.asset ("images/logo.jpg")
+						backgroundImage: AssetImage ("images/logo.jpg"),
+						// radius: 20
 					),
 				),
 				ListTile (
 					onTap: () => launch (EMAIL),
 					title: Text ("Ramaz email"),
 					leading: CircleAvatar(
-						child: Image.asset("images/outlook.jpg")
+						backgroundImage: AssetImage("images/outlook.jpg")
 					),
 				),
 				ListTile (
 					onTap: () => launch (SCHOOLOGY),
 					title: Text ("Schoology"),
 					leading: CircleAvatar(
-						child: Image.asset("images/schoology.png")
+						backgroundImage: AssetImage("images/schoology.png")
 					),
 				),
-				ListTile (
-					title: Text ("My Backpack"),
-					leading: Icon (Icons.open_in_new),
-					onTap: () => launch (MY_BACKPACK)
-				),
+				// ListTile (
+				// 	title: Text ("My Backpack"),
+				// 	leading: Icon (Icons.open_in_new),
+				// 	onTap: () => launch (MY_BACKPACK)
+				// ),
 			]
 		)
 	);
