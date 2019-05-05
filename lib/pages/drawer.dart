@@ -1,7 +1,7 @@
 import "package:flutter/material.dart";
 import 'package:url_launcher/url_launcher.dart';
 
-import "loading_image.dart";
+import "package:ramaz/widgets/loading_image.dart";
 import "package:ramaz/constants.dart";  // for route names
 
 class NavigationDrawer extends StatelessWidget {

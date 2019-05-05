@@ -5,7 +5,7 @@ import "package:ramaz/data/schedule.dart";
 
 import "package:ramaz/services/reader.dart";
 
-import "package:ramaz/widgets/drawer.dart";
+import "package:ramaz/pages/drawer.dart";
 import "package:ramaz/widgets/class_list.dart";
 
 class SchedulePage extends StatefulWidget {
