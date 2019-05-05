@@ -1,22 +1,25 @@
 import "package:flutter/material.dart";
-import "dart:ui" show window;
 
-// To use this class effectively: 
-// - replace Image.asset constructors with LoadingImage
-// - wait for screen to build and check the dimensions in the terminal
-// - add the dimensions as paramters to the constructor
-// - add debug: false in the constructor to silence
+// Setup:
+// 	install devtools: flutter packages pub global activate devtools
+// 	start devtools: flutter packages pub global run devtools
+// 	start app: flutter run --track-widget-creation
+// 	open the url devtools gives with the url from flutter 
+// Usage: 
+// 	replace Image.asset with LoadingImage(String path)
+// 	in devTools: 
+// 		go to the corresponding LoadingImage widget
+// 		expand Image.semantics.renderObject.size
+// 	Enter width and heights as parameters to LoadingImage constructor
 
 class LoadingImage extends StatefulWidget {
 	final double width, height;
 	final String path;
-	final bool debug;
 	const LoadingImage(
 		this.path,
 		{
 			this.width,
 			this.height,
-			this.debug = true
 		}
 	);
 
@@ -34,22 +37,7 @@ class LoadingImageState extends State<LoadingImage> {
 		image.resolve(ImageConfiguration()).addListener(onLoad);
 	}
 
-	void onLoad(ImageInfo info, bool _) {
-		// final Size screenSize = MediaQuery.of(context).size;
-		final double ratio = window.devicePixelRatio * 10;
-		final int height = info.image.height ~/ ratio;
-		final int width = info.image.width ~/ ratio;
-		if (widget.debug) {
-			// print ("MediaQuery height: ${screenSize.height}");
-			print ("Image height: ${info.image.height}");
-			// print ("MediaQuery width: ${screenSize.width}");
-			print ("Image width: ${info.image.width}");
-			print ("(LoadingImage) Image ${widget.path} loaded");
-			print ("\tscale=${info.scale}");
-			print ("(LoadingImage) \tDimensions: height=$height. width=$width");
-		}
-		setState(() => loading = false);
-	}
+	void onLoad(ImageInfo info, bool _) => setState(() => loading = false);
 
 	@override Widget build(BuildContext context) => loading
 		? SizedBox (
