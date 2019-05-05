@@ -61,9 +61,9 @@ class LoginState extends State <Login> {
 				child: Column (
 					children: [
 						LoadingImage (
-							"images/logo.png",
-							height: 300,
-							width: 300
+							"images/logo.jpg",
+							// height: 320,
+							// width: 320
 						),
 						TextField (
 							keyboardType: TextInputType.text,

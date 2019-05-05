@@ -37,7 +37,6 @@ class ScheduleState extends State<SchedulePage> {
 	}
 
 	void update({Letters newLetter, Special newSpecial}) {
-		print ("letter: $newLetter, special: ${newSpecial?.name}");
 		if (newLetter != null) {
 			this.letter = newLetter;
 			switch (newLetter) {

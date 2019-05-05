@@ -99,8 +99,17 @@ class HomePageState extends State<HomePage> {
 		),
 		body: ListView (
 			children: [
-				Image.asset (
-					"images/ram_logo_rectangle.jpg"
+				LoadingImage(
+					"images/ram_logo_rectangle.jpg",
+					width: 350,
+					height: 120,
+					// debug: false
+				),
+				LoadingImage (
+					"images/ram_square.png",
+					height: 130,
+					width: 130,
+					// debug: false
 				),
 				Divider(),
 				Center (
