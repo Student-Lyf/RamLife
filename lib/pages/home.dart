@@ -101,15 +101,8 @@ class HomePageState extends State<HomePage> {
 			children: [
 				LoadingImage(
 					"images/ram_logo_rectangle.jpg",
-					width: 350,
-					height: 120,
-					// debug: false
-				),
-				LoadingImage (
-					"images/ram_square.png",
-					height: 130,
-					width: 130,
-					// debug: false
+					width: 360,
+					height: 124.5,
 				),
 				Divider(),
 				Center (
