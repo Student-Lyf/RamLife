@@ -1,0 +1,52 @@
+Ask the club:
+  Do we need a "my backpack" link?
+
+Implementable:
+  add coming soon labels to Drawer
+  delete mock.dart
+  add next class tile to home screen
+  app icon
+  feedback
+  fix student db entries
+  footer for *next* class
+
+TODOs:
+  invalid/non-existent password
+  invalid username
+  upload student with email + google as providers
+  handle winter friday start/end
+
+New features:
+  notes on individual period
+  calendar
+  calendar on home screen
+  sports
+  about page
+  lost and found: 
+    use Cloud Functions + Cloud Messaging
+    - see: "lost and found.jpg"
+
+Database:  # value is document name
+  - admins: username
+  - calendar: month number
+  - lost + found: ID
+  - timeslots: name
+
+
+stretch goals:
+  test(FB)
+  crashlytics(FB)
+  performance(FB)
+  make up a refresh rate with all the newspapers:
+    - online link: https://www.ramaz.org/page.cfm?p=563
+    XeVeX
+    RamMD
+    RamPage
+    Parallax
+    The Sport Report
+    Toses (hebrew name :)
+    Rise
+    Illusions
+    Breakthrough
+    Illuminations
+    RaMEDz
