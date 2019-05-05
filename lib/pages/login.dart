@@ -62,8 +62,8 @@ class LoginState extends State <Login> {
 					children: [
 						LoadingImage (
 							"images/logo.jpg",
-							// height: 320,
-							// width: 320
+							height: 320,
+							width: 320
 						),
 						TextField (
 							keyboardType: TextInputType.text,
@@ -104,7 +104,11 @@ class LoginState extends State <Login> {
 							onTap: googleLogin,
 							contentPadding: EdgeInsets.symmetric (horizontal: 20),
 							leading: CircleAvatar (
-								child: Image.asset ("images/google.png"),
+								child: LoadingImage(
+									"images/google.png",
+									width: 40,
+									height: 40
+								)
 							),
 						)
 					]
