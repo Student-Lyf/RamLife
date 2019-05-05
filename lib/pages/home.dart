@@ -46,7 +46,7 @@ class HomePageState extends State<HomePage> {
 				() => needsGoogleSignIn = value
 			)
 		);
-		timer = Timer.periodic (minute, update);
+		timer = Timer.periodic (minute, (_) => update);
 		schedule = widget.reader.student.schedule [today.letter];
 		periods = widget.reader.student.getPeriods (today);
 		periodIndex = today.period;
@@ -73,7 +73,12 @@ class HomePageState extends State<HomePage> {
 			0, 
 			IconButton (
 				icon: CircleAvatar (
-					child: Image.asset ("images/google.png"),
+					// child: Image.asset ("images/google.png"),
+					child: LoadingImage(
+						"images/google.png",
+						width: 32,
+						height: 32
+					)
 				),
 				onPressed: addGoogleSignIn
 			)
@@ -97,33 +102,36 @@ class HomePageState extends State<HomePage> {
 				headerText: period == null ? "Today's Schedule" : "Upcoming Classes"
 			)
 		),
-		body: ListView (
-			children: [
-				LoadingImage(
-					"images/ram_logo_rectangle.jpg",
-					width: 360,
-					height: 124.5,
-				),
-				Divider(),
-				Center (
-					child: Text (
-						"Today is a${today.n} ${today.name}", 
-						textScaleFactor: 2.5
-					)
-				),
-				NextClass(period, widget.reader.subjects[period?.id]),
-				LunchTile (lunch: today.lunch),
-				InfoCard(
-					title: "Sports coming soon!", 
-					icon: Icons.directions_run,
-					children: const [],
-					page: SPORTS
-				),
-			]
+		body: RefreshIndicator (
+			onRefresh: update,
+			child: ListView (
+				children: [
+					LoadingImage(
+						"images/ram_logo_rectangle.jpg",
+						width: 360,
+						height: 124.5,
+					),
+					Divider(),
+					Center (
+						child: Text (
+							"Today is a${today.n} ${today.name}", 
+							textScaleFactor: 2.5
+						)
+					),
+					NextClass(period, widget.reader.subjects[period?.id]),
+					LunchTile (lunch: today.lunch),
+					InfoCard(
+						title: "Sports coming soon!", 
+						icon: Icons.directions_run,
+						children: const [],
+						page: SPORTS
+					),
+				]
+			)
 		)
 	);
 
-	void update(_) => setState(() {
+	Future<void> update() async => setState(() {
 		periodIndex = today.period;
 		period = periodIndex == null ? null : periods [periodIndex];	
 	});
