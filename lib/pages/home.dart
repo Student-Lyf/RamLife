@@ -101,7 +101,7 @@ class HomePageState extends State<HomePage> {
 				headerText: period == null ? "Today's Schedule" : "Upcoming Classes"
 			)
 		),
-		body: RefreshIndicator (
+		body: RefreshIndicator (  // so you can refresh the period
 			onRefresh: update,
 			child: ListView (
 				children: [
