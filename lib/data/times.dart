@@ -81,6 +81,14 @@ class SchoolEvent {
 		@required this.day,
 		@required this.time
 	});
+
+	operator < (DateTime other) => DateTime.utc(  // event is in the past
+		year, month, day, time.end.hour, time.end.minutes
+	).isBefore(other);
+
+	operator > (DateTime other) => DateTime.utc(  // event is upcoming
+		year, month, day, time.start.hour, time.start.minutes
+	).isAfter(other);
 }
 
 class Special {
