@@ -1,5 +1,6 @@
 // winter fridays
-import "package:ramaz/mock.dart";  // for winter friday times
+import "package:flutter/foundation.dart" show required;
+import "package:ramaz/mock/times.dart";  // for winter friday times
 
 class Time {
 	static const List <int> clock = [
@@ -44,7 +45,7 @@ class Range {
 	final Time start, end;
 	const Range (this.start, this.end);
 
-	factory Range.nums (int start1, end1, start2, end2) => Range (
+	factory Range.nums (int start1, int end1, int start2, int end2) => Range (
 		Time (start1, end1), 
 		Time (start2, end2)
 	);
@@ -68,6 +69,18 @@ class Range {
 			this.start.minutes > other.minutes
 		)
 	);
+}
+
+class SchoolEvent {
+	// A class to represent the time for a school event
+	final Range time;
+	final int year, month, day;
+	const SchoolEvent ({
+		@required this.year,
+		@required this.month,
+		@required this.day,
+		@required this.time
+	});
 }
 
 class Special {

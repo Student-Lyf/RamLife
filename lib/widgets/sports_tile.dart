@@ -6,16 +6,16 @@ class SportsTile extends StatelessWidget {
 	final SportsGame game;
 	const SportsTile(this.game);
 
-	IconData get icon {
+	String get iconPath {
 		switch (game.sport) {
-			// case 
+			case Sports.baseball: return "images/baseball.png";
 		}
 	}
 	@override Widget build (BuildContext context) => Card (
 		child: ListTile (
 			title: Text (game.info),
 			subtitle: Text (game.timestamp),
-			leading: Icon (icon)
+			leading: Icon (iconPath)
 		)
 	);
 }

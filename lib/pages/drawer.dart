@@ -26,22 +26,22 @@ class NavigationDrawer extends StatelessWidget {
 					onTap: () => Navigator.of(context).pushReplacementNamed(SCHEDULE)
 				),
 				ListTile (
-					title: Text ("Newspapers"),
+					title: Text ("Newspapers (coming soon)"),
 					leading: Icon (Icons.new_releases),
 					onTap: () => Navigator.of(context).pushReplacementNamed(NEWS),
 				),
 				ListTile (
-					title: Text ("Lost and Found"),
+					title: Text ("Lost and Found (coming soon)"),
 					leading: Icon (Icons.help),
 					onTap: () => Navigator.of(context).pushReplacementNamed(LOST_AND_FOUND)
 				),
 				ListTile (
-					title: Text ("Sports"),
+					title: Text ("Sports (coming soon)"),
 					leading: Icon (Icons.directions_run),
 					onTap: () => Navigator.of(context).pushReplacementNamed(SPORTS)
 				),
 				ListTile (
-					title: Text ("Admin console"),
+					title: Text ("Admin console (coming soon)"),
 					leading: Icon (Icons.verified_user),
 					onTap: () => Navigator.of(context).pushReplacementNamed(ADMIN_LOGIN)
 				),
@@ -57,7 +57,6 @@ class NavigationDrawer extends StatelessWidget {
 					title: Text ("Ramaz.org"),
 					leading: CircleAvatar (
 						backgroundImage: AssetImage ("images/logo.jpg"),
-						// radius: 20
 					),
 				),
 				ListTile (

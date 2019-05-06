@@ -2,8 +2,6 @@ Ask the club:
   Do we need a "my backpack" link?
 
 Implementable:
-  add coming soon labels to Drawer
-  delete mock.dart
   add next class tile to home screen
   app icon
   feedback

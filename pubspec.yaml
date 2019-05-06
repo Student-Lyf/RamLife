@@ -29,6 +29,21 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  flutter_launcher_icons: ^0.7.0
+
+flutter_icons:
+  android: true  # overwrite
+  # ios: true  # overwrite 
+  image_path: "images/logo.jpg"  # path to the logo
+  # Or, alternatively:
+  # image_path_android
+  # image_path_ios
+
+  # We don't need a backgroun b/c we have a full image
+  # adaptive_icon_background
+  adaptive_icon_foreground: "images/ramaz_words.png"
+  adaptive_icon_background: "images/blue.jpg"
+
 
 
 # For information on the generic Dart part of this file, see the

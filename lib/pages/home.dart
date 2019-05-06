@@ -9,7 +9,7 @@ import "package:ramaz/services/reader.dart";
 import "package:ramaz/services/auth.dart" as Auth;
 
 // Misc
-import "package:ramaz/mock.dart" show getToday;
+import "package:ramaz/mock/day.dart" show getToday;
 import "package:ramaz/constants.dart" show SPORTS;
 
 // UI

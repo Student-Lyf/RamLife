@@ -1,20 +1,25 @@
 import "package:flutter/foundation.dart";
 
-enum Sports {Baseball, Basketball, Hockey, Tennis, Volleyball, Soccer}
+import "package:ramaz/data/times.dart";
+
+enum Sports {baseball, basketball, hockey, tennis, volleyball, soccer}
 
 class SportsGame {
 	final Sports sport;
 	final bool home;
 	final String opponent, timestamp, info;
-	final DateTime start, end;
+	final SchoolEvent time;
 	SportsGame({
 		@required this.sport,
 		@required this.home,
 		@required this.opponent,
-		@required this.start,
-		@required this.end		
+		@required this.time
 	}) : 
-		timestamp = "${start.hour}:${start.minute}-${end.hour}:${end.minute}",
+		timestamp = 
+			"${time.time.start.hour}:"
+			"${time.time.start.minutes}-"
+			"${time.time.end.hour}:"
+			"${time.time.end.minutes}",
 		info = home
 			? "$opponent @ Ramaz"
 			: "Ramaz @ $opponent";
