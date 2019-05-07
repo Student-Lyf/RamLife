@@ -15,6 +15,7 @@ TODOs:
   handle winter friday start/end
 
 New features:
+  add cloud function to add password when signed in with Google
   notes on individual period
   calendar
   calendar on home screen
