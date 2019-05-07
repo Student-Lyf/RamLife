@@ -9,3 +9,8 @@ def upload_students (students):
 		doc = db.collection (STUDENTS).document (student.username)
 		batch.set (doc, student.output())
 	batch.commit()
+
+def add_credentials(student):
+	students = db.collection ("credentials")
+	doc = students.document(student.username)
+	doc.set({"uid": student.uid})
