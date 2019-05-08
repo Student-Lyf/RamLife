@@ -10,7 +10,8 @@ import "package:ramaz/widgets/class_list.dart";
 
 class SchedulePage extends StatefulWidget {
 	final Reader reader;
-	SchedulePage (this.reader);
+	final bool canExit;
+	SchedulePage (this.reader, {this.canExit = false});
 
 	@override ScheduleState createState() => ScheduleState();
 }
@@ -86,7 +87,7 @@ class ScheduleState extends State<SchedulePage> {
 	@override
 	Widget build (BuildContext context) => Scaffold (
 		appBar: AppBar (title: Text ("Schedule")),
-		drawer: NavigationDrawer(),
+		drawer: widget.canExit ? null : NavigationDrawer(),
 		body: Column (
 			children: [
 				ListTile (
