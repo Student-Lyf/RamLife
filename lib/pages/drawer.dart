@@ -1,7 +1,8 @@
 import "package:flutter/material.dart";
-import 'package:url_launcher/url_launcher.dart';
 
-import "package:ramaz/widgets/loading_image.dart";
+// import "package:ramaz/widgets/linkIcon.dart";
+import "package:ramaz/widgets/icons.dart";
+
 import "package:ramaz/constants.dart";  // for route names
 
 class NavigationDrawer extends StatelessWidget {
@@ -9,11 +10,12 @@ class NavigationDrawer extends StatelessWidget {
 		child: ListView (
 			children: [
 				DrawerHeader (
-					child: LoadingImage(
-						"images/ram_square.png",
-						width: 272,
-						height: 137
-					)
+					child: RamazLogos.ram_square,
+					// child: LoadingImage(
+					// 	"images/ram_square.png",
+					// 	width: 272,
+					// 	height: 137
+					// )
 				),
 				ListTile (
 					title: Text ("Home"),
@@ -52,27 +54,45 @@ class NavigationDrawer extends StatelessWidget {
 				),
 				SizedBox (height: 30),
 				Divider(),
-				ListTile (
-					onTap: () => launch (RAMAZ),
-					title: Text ("Ramaz.org"),
-					leading: CircleAvatar (
-						backgroundImage: AssetImage ("images/logo.jpg"),
-					),
-				),
-				ListTile (
-					onTap: () => launch (EMAIL),
-					title: Text ("Ramaz email"),
-					leading: CircleAvatar(
-						backgroundImage: AssetImage("images/outlook.jpg")
-					),
-				),
-				ListTile (
-					onTap: () => launch (SCHOOLOGY),
-					title: Text ("Schoology"),
-					leading: CircleAvatar(
-						backgroundImage: AssetImage("images/schoology.png")
-					),
-				),
+				Row (
+					mainAxisSize: MainAxisSize.max,
+					crossAxisAlignment: CrossAxisAlignment.center,
+					children: [
+						Logos.ramazIcon,
+						Logos.outlook,
+						Logos.schoology,
+						Logos.drive
+					]
+				)
+				// ListTile (
+				// 	onTap: () => launch (RAMAZ),
+				// 	title: Text ("Ramaz.org"),
+				// 	// Cannot use RamazLogos here, because we need an ImageProvider
+				// 	leading: CircleAvatar (
+				// 		backgroundImage: AssetImage ("images/logos/ramaz/teal.jpg"),
+				// 	),
+				// ),
+				// ListTile (
+				// 	onTap: () => launch (EMAIL),
+				// 	title: Text ("Ramaz email"),
+				// 	leading: Logos.outlook
+				// 	// leading: CircleAvatar(
+				// 	// 	backgroundImage: AssetImage("images/outlook.jpg")
+				// 	// ),
+				// ),
+				// ListTile (
+				// 	onTap: () => launch (SCHOOLOGY),
+				// 	title: Text ("Schoology"),
+				// 	leading: Logos.schoology
+				// 	// leading: CircleAvatar(
+				// 	// 	backgroundImage: AssetImage("images/schoology.png")
+				// 	// ),
+				// ),
+				// ListTile (
+				// 	onTap: () => launch (GOOGLE_DRIVE),
+				// 	title: Text ("Google Drive"),
+				// 	leading: Logos.drive
+				// ),
 				// ListTile (
 				// 	title: Text ("My Backpack"),
 				// 	leading: Icon (Icons.open_in_new),

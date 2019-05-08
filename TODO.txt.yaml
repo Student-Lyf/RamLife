@@ -14,6 +14,13 @@ TODOs:
   upload student with email + google as providers
   handle winter friday start/end
 
+politics: 
+  student life: 
+    - publications
+  communications: 
+    - handle scheduling
+    - sports
+
 New features:
   add cloud function to add password when signed in with Google
   notes on individual period
@@ -24,13 +31,13 @@ New features:
   lost and found: 
     use Cloud Functions + Cloud Messaging
     - see: "lost and found.jpg"
+  contacts
 
 Database:  # value is document name
   - admins: username
   - calendar: month number
   - lost + found: ID
   - timeslots: name
-
 
 stretch goals:
   test(FB)

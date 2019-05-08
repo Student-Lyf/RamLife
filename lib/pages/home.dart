@@ -18,7 +18,7 @@ import "package:ramaz/widgets/class_list.dart";
 import "package:ramaz/widgets/next_class.dart";
 import "package:ramaz/widgets/lunch.dart";
 import "package:ramaz/widgets/info_card.dart";
-import "package:ramaz/widgets/loading_image.dart";
+import "package:ramaz/widgets/icons.dart";
 
 class HomePage extends StatefulWidget {
 	final Reader reader;
@@ -46,7 +46,7 @@ class HomePageState extends State<HomePage> {
 				() => needsGoogleSignIn = value
 			)
 		);
-		timer = Timer.periodic (minute, (_) => update);
+		timer = Timer.periodic (minute, update);
 		schedule = widget.reader.student.schedule [today.letter];
 		periods = widget.reader.student.getPeriods (today);
 		periodIndex = today.period;
@@ -72,13 +72,14 @@ class HomePageState extends State<HomePage> {
 		if (needsGoogleSignIn) result.insert (
 			0, 
 			IconButton (
-				icon: CircleAvatar (
-					child: LoadingImage(
-						"images/google.png",
-						width: 32,
-						height: 32
-					)
-				),
+				// icon: CircleAvatar (
+				// 	child: LoadingImage(
+				// 		"images/google.png",
+				// 		width: 32,
+				// 		height: 32
+				// 	)
+				// ),
+				icon: Logos.google,
 				onPressed: addGoogleSignIn
 			)
 		);
@@ -105,11 +106,12 @@ class HomePageState extends State<HomePage> {
 			onRefresh: update,
 			child: ListView (
 				children: [
-					LoadingImage(
-						"images/ram_logo_rectangle.jpg",
-						width: 360,
-						height: 124.5,
-					),
+					RamazLogos.ram_rectangle,
+					// LoadingImage(
+					// 	"images/ram_logo_rectangle.jpg",
+					// 	width: 360,
+					// 	height: 124.5,
+					// ),
 					Divider(),
 					Center (
 						child: Text (
@@ -130,7 +132,7 @@ class HomePageState extends State<HomePage> {
 		)
 	);
 
-	Future<void> update() async => setState(() {
+	Future<void> update([_]) async => setState(() {
 		periodIndex = today.period;
 		period = periodIndex == null ? null : periods [periodIndex];	
 	});

@@ -1,122 +1,97 @@
 import "package:flutter/material.dart";
-import "package:ramaz/widgets/loading_image.dart";
+
+import "package:ramaz/widgets/images/loading_image.dart";
+import "package:ramaz/widgets/images/link_icon.dart";
+
+import "package:ramaz/constants.dart";
 
 const double radius = 40;
 
 class SportsIcons {
 	static const Widget baseball = CircleAvatar (
-		child: LoadingImage (
-			"images/icons/baseball.png",
-			width: radius,
-			height: radius
-		)
+		backgroundImage: AssetImage ("images/icons/baseball.png"),
+		backgroundColor: Colors.white
 	);
 
 	static const Widget basketball = CircleAvatar (
-		child: LoadingImage (
-			"images/icons/basketball.png",
-			width: radius,
-			height: radius
-		)
+		backgroundImage: AssetImage ("images/icons/basketball.png"),
+		backgroundColor: Colors.white
 	);
 
 	static const Widget hockey = CircleAvatar (
-		child: LoadingImage (
-			"images/icons/hockey.png",
-			width: radius,
-			height: radius
-		)
+		backgroundImage: AssetImage ("images/icons/hockey.png"),
+		backgroundColor: Colors.white
 	);
 
 	static const Widget soccer = CircleAvatar (
-		child: LoadingImage (
-			"images/icons/soccer.png",
-			width: radius,
-			height: radius
-		)
+		backgroundImage: AssetImage ("images/icons/soccer.png"),
+		backgroundColor: Colors.white
 	);
 
-	static const Widget tennis = CircleAvatar (
-		child: LoadingImage (
-			"images/icons/tennis.png",
-			width: radius,
-			height: radius
-		)
+	static final Widget tennis = CircleAvatar (
+		child: Image.asset ("images/icons/tennis.png"),
+		backgroundColor: Colors.white
 	);
+
+	// static final Widget tennis = Image.asset (
+	// 	"images/icons/tennis.png",
+	// 	height: 30,
+	// 	width: 30
+	// );
 
 	static const Widget volleyball = CircleAvatar (
-		child: LoadingImage (
-			"images/icons/volleyball.png",
-			width: radius,
-			height: radius
-		)
+		backgroundImage: AssetImage ("images/icons/volleyball.png"),
+		backgroundColor: Colors.white
 	);
 }
 
 class Logos {
-	static const Widget drive = CircleAvatar (
-		child: LoadingImage (
-			"images/logos/drive.png",
-			width: radius,
-			height: radius
-		)
-	);
-
 	static const Widget google = CircleAvatar (
-		child: LoadingImage (
-			"images/logos/google.png",
-			width: radius,
-			height: radius
-		)
+		backgroundImage: AssetImage ("images/logos/google.png"),
+		radius: 18,
 	);
 
-	static const Widget outlook = CircleAvatar (
-		child: LoadingImage (
-			"images/logos/outlook.png",
-			width: radius,
-			height: radius
-		)
+	static const Widget drive = LinkIcon (
+		path: "images/logos/drive.png",
+		url: GOOGLE_DRIVE
 	);
 
-	static const Widget schoology = CircleAvatar (
-		child: LoadingImage (
-			"images/logos/schoology.png",
-			width: radius,
-			height: radius
-		)
+	static const Widget outlook = LinkIcon (
+		path: "images/logos/outlook.jpg",
+		url: EMAIL
+	);
+
+	static const Widget schoology = LinkIcon (
+		path: "images/logos/schoology.png",
+		url: SCHOOLOGY
+	);
+
+	static const Widget ramazIcon = LinkIcon (
+		path: "images/logos/ramaz/teal.jpg",
+		url: RAMAZ
 	);
 }
 
 class RamazLogos {
-	static const Widget teal = CircleAvatar (
-		child: LoadingImage (
-			"images/logos/ramaz/teal.png",
-			width: radius,
-			height: radius
-		)
+	static const Widget teal = LoadingImage (
+		"images/logos/ramaz/teal.jpg",
+		width: 320,
+		height: 320
 	);
 
 	static const Widget ram_square_words = CircleAvatar (
-		child: LoadingImage (
-			"images/logos/ramaz/ram_square_words.png",
-			width: radius,
-			height: radius
-		)
+		backgroundImage: AssetImage ("images/logos/ramaz/ram_square_words.png")
 	);
 
-	static const Widget ram_square = CircleAvatar (
-		child: LoadingImage (
-			"images/logos/ramaz/ram_square.png",
-			width: radius,
-			height: radius
-		)
+	static const Widget ram_square = LoadingImage(
+		"images/logos/ramaz/ram_square.png",
+		width: 272,
+		height: 137
 	);
 
-	static const Widget ram_rectangle = CircleAvatar (
-		child: LoadingImage (
-			"images/logos/ramaz/ram_rectangle.png",
-			width: radius,
-			height: radius
-		)
+	static const Widget ram_rectangle = LoadingImage (
+		"images/logos/ramaz/ram_rectangle.jpg",
+		width: 360,
+		height: 124.5
 	);
 }

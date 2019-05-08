@@ -38,7 +38,7 @@ class PeriodData {
 		@required this.id
 	});
 
-	factory PeriodData.fromData (Map<String, dynamic> data) => data == null
+	factory PeriodData.fromJson (Map<String, dynamic> data) => data == null
 		? null 
 		: PeriodData(
 			room: data ["room"],
@@ -165,41 +165,19 @@ class Lunch {
 class Schedule {
 	final List <PeriodData> periods;
 	const Schedule (this.periods);
-	factory Schedule.fromData(Map data) {
-		// Each entry has an index (as a String) as its key, and {
-		// 	id: int, 
-		// 	room: String
-		// } as its value.
+	factory Schedule.fromJson(List<dynamic> json) {
+		// Each entry is a map: 
+		// 	- id: int, 
+		// 	- room: String
 		// 
-		// Also, we can't use typedefs as these are not functions :)
+		// Also, we can't use typedefs as these are not functions :(
 
 		// The data we receive will come with other data (ints, Strings, etc.)
 		// So we have to receive it with dynamic values
 		// Here we can cast it to have a FB Map as the value
-		// 
-		// First, cast the indices from Strings to ints:
-		final List<MapEntry<int, Map<String, dynamic>>> temp = data
-			.entries
-			.map<MapEntry<int, Map<String, dynamic>>> (
-				(MapEntry entry) => MapEntry (
-					int.parse (entry.key),
-					entry.value?.cast<String, dynamic>()
-				)
-			).toList();
-
-		// Second, sort the list of entries 
-		temp.sort(
-			(
-				MapEntry<int, Map<String, dynamic>> a, 
-				MapEntry<int, Map<String, dynamic>> b
-			) => a.key.compareTo(b.key)
-		);
-
-		// Finally, loop over their values and add them to the class
 		return Schedule (
-			temp.map(
-				(MapEntry<int, Map<String, dynamic>> entry) => 
-					PeriodData.fromData (entry.value)
+			json.map (
+				(dynamic period) => PeriodData.fromJson (period?.cast<String, dynamic>())
 			).toList()
 		);
 	}

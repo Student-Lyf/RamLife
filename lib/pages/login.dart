@@ -5,7 +5,7 @@ import "package:ramaz/data/student.dart";
 import "package:ramaz/data/schedule.dart";
 
 // To display the logo
-import "package:ramaz/widgets/loading_image.dart";
+import "package:ramaz/widgets/icons.dart";
 
 // Used to actually login
 import "package:ramaz/services/reader.dart";
@@ -60,11 +60,7 @@ class LoginState extends State <Login> {
 			child: SingleChildScrollView (
 				child: Column (
 					children: [
-						LoadingImage (
-							"images/logo.jpg",
-							height: 320,
-							width: 320
-						),
+						RamazLogos.teal,
 						TextField (
 							keyboardType: TextInputType.text,
 							textInputAction: TextInputAction.next,
@@ -103,13 +99,7 @@ class LoginState extends State <Login> {
 							title: Text ("Sign in with Google"),
 							onTap: googleLogin,
 							contentPadding: EdgeInsets.symmetric (horizontal: 20),
-							leading: CircleAvatar (
-								child: LoadingImage(
-									"images/google.png",
-									width: 40,
-									height: 40
-								)
-							),
+							leading: Logos.google
 						)
 					]
 				)

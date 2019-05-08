@@ -2,20 +2,20 @@ import "package:flutter/material.dart";
 
 import "package:ramaz/data/sports.dart";
 
-import "package:ramaz/widgets/loading_image.dart";
+import "package:ramaz/widgets/icons.dart";
 
 class SportsTile extends StatelessWidget {
 	final SportsGame game;
 	const SportsTile(this.game);
 
-	String get iconPath {
+	Widget get icon {
 		switch (game.sport) {
-			case Sports.baseball: return "images/baseball.png";
-			case Sports.basketball: return "images/basketball.png";
-			case Sports.soccer: return "images/soccer.png";
-			case Sports.hockey: return "images/hockey.png";
-			case Sports.tennis: return "images/tennis.png";
-			case Sports.volleyball: return "images/volleyball.png";
+			case Sports.baseball: return SportsIcons.baseball;
+			case Sports.basketball: return SportsIcons.basketball;
+			case Sports.soccer: return SportsIcons.soccer;
+			case Sports.hockey: return SportsIcons.hockey;
+			case Sports.tennis: return SportsIcons.tennis;
+			case Sports.volleyball: return SportsIcons.volleyball;
 		}
 		return null;
 	}
@@ -24,11 +24,7 @@ class SportsTile extends StatelessWidget {
 		child: ListTile (
 			title: Text (game.info),
 			subtitle: Text (game.timestamp),
-			leading: CircleAvatar (
-				child: LoadingImage (
-					iconPath
-				)
-			)
+			leading: icon
 		)
 	);
 }

@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+
 import "package:ramaz/data/sports.dart" show SportsGame;
 import "package:ramaz/widgets/sports_tile.dart";
 
@@ -29,19 +30,29 @@ class SportsPage extends StatelessWidget {
 				title: Text ("Sports"),
 				bottom: TabBar (tabs: tabs)
 			),
+			// body: TabBarView (
+			// 	children: tabs.map (
+			// 		(Tab tab) => ListView (
+			// 			children: [recent, upcoming].map(
+			// 				(List<SportsGame> gamesList) => ListView (
+			// 					children: gamesList.map (
+			// 						(SportsGame game) => SportsTile (game)
+			// 					).toList()
+			// 				)
+			// 			).toList()
+			// 		)
+			// 	).toList()
+			// )
 			body: TabBarView (
-				children: tabs.map (
-					(Tab tab) => ListView (
-						children: [recent, upcoming].map(
-							(List<SportsGame> gamesList) => ListView (
-								children: gamesList.map (
-									(SportsGame game) => SportsTile (game)
-								).toList()
-							)
-						).toList()
-					)
-				).toList()
+				children: [
+					ListView (children: recent.map((SportsGame game) => SportsTile(game)).toList()),
+					ListView (children: upcoming.map((SportsGame game) => SportsTile(game)).toList()),
+				]
 			)
 		)
 	);
+
+	// @override Widget build(BuildContext context) => Scaffold (ListView (
+	// 	children: recent.map((SportsGame game) => SportsTile(game)).toList()
+	// );
 }

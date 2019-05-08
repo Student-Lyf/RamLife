@@ -33,16 +33,16 @@ dev_dependencies:
 
 flutter_icons:
   android: true  # overwrite
-  # ios: true  # overwrite 
-  image_path: "images/logo.jpg"  # path to the logo
+  ios: true  # overwrite 
+  image_path: "images/logos/ramaz/teal.jpg"  # path to the logo
   # Or, alternatively:
   # image_path_android
   # image_path_ios
 
   # We don't need a backgroun b/c we have a full image
   # adaptive_icon_background
-  adaptive_icon_foreground: "images/ramaz_words.png"
-  adaptive_icon_background: "images/blue.jpg"
+  # adaptive_icon_foreground: "images/ramaz_words.png"
+  # adaptive_icon_background: "images/blue.jpg"
 
 
 
@@ -73,9 +73,6 @@ flutter:
     - images/logos/ramaz/ram_square_words.jpg
     - images/logos/ramaz/ram_square.png
     - images/logos/ramaz/teal.jpg
-
-
-
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.io/assets-and-images/#resolution-aware.

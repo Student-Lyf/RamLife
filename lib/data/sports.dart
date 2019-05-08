@@ -1,3 +1,6 @@
+// TODO: girls/boys
+// TODO: get score/finished
+
 import "package:flutter/foundation.dart";
 
 import "package:ramaz/data/times.dart";
