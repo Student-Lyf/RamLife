@@ -14,10 +14,10 @@ import "pages/drawer.dart";
 import "pages/home.dart" show HomePage;
 import "pages/schedule.dart" show SchedulePage;
 import "pages/login.dart" show Login;
-import "pages/sports.dart";
+// import "pages/sports.dart";
 
 import "constants.dart";  // for route keys
-import "mock/sports.dart" show games;
+// import "mock/sports.dart" show games;
 
 void main() async {
 	final String dir = (await getApplicationDocumentsDirectory()).path;
@@ -39,8 +39,8 @@ void main() async {
 				SCHEDULE: (_) => SchedulePage (reader),
 				NEWS: placeholder ("News"),
 				LOST_AND_FOUND: placeholder ("Lost and found"),
-				// SPORTS: placeholder ("Sports"),
-				SPORTS: (_) => SportsPage (games),
+				SPORTS: placeholder ("Sports"),
+				// SPORTS: (_) => SportsPage (games),
 				ADMIN_LOGIN: placeholder ("Admin Login"),
 			} 
 		)

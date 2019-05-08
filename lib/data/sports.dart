@@ -19,7 +19,7 @@ class SportsGame {
 		@required this.time
 	}) : 
 		timestamp = 
-			"${time.time.start.hour}:"
+			"${time.time.start.hour.toString()}:"
 			"${time.time.start.minutes}-"
 			"${time.time.end.hour}:"
 			"${time.time.end.minutes}",
