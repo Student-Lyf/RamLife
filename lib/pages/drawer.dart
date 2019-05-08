@@ -57,6 +57,7 @@ class NavigationDrawer extends StatelessWidget {
 				Row (
 					mainAxisSize: MainAxisSize.max,
 					crossAxisAlignment: CrossAxisAlignment.center,
+					mainAxisAlignment: MainAxisAlignment.center,
 					children: [
 						Logos.ramazIcon,
 						Logos.outlook,

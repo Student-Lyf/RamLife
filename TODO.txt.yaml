@@ -31,7 +31,7 @@ New features:
   lost and found: 
     use Cloud Functions + Cloud Messaging
     - see: "lost and found.jpg"
-  contacts
+  directory
 
 Database:  # value is document name
   - admins: username
