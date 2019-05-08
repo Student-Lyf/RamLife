@@ -37,7 +37,7 @@ void main() async {
 				LOGIN: (_) => Login(reader),
 				HOME_PAGE: (_) => HomePage(reader), 
 				SCHEDULE: (_) => SchedulePage (reader),
-				"$SCHEDULE$CAN_EXIT": (_) => SchedulePage(reader, canExit: true),
+				SCHEDULE + CAN_EXIT: (_) => SchedulePage(reader, canExit: true),
 				NEWS: placeholder ("News"),
 				LOST_AND_FOUND: placeholder ("Lost and found"),
 				SPORTS: placeholder ("Sports"),
