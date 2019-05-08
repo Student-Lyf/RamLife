@@ -39,8 +39,8 @@ void main() async {
 				SCHEDULE: (_) => SchedulePage (reader),
 				NEWS: placeholder ("News"),
 				LOST_AND_FOUND: placeholder ("Lost and found"),
-				// SPORTS: placeholder ("Sports"),
-				SPORTS: (_) => SportsPage (games),
+				SPORTS: placeholder ("Sports"),
+				// SPORTS: (_) => SportsPage (games),
 				ADMIN_LOGIN: placeholder ("Admin Login"),
 			} 
 		)
