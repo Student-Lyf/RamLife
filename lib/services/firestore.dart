@@ -10,6 +10,7 @@ const String CLASSES = "classes";
 final Firestore firestore = Firestore.instance;
 final CollectionReference students = firestore.collection(STUDENTS);
 final CollectionReference classes = firestore.collection (CLASSES);
+final CollectionReference feedback = firestore.collection ("feedback");
 
 Future<DocumentSnapshot> getStudent (String username) async => 
 	await students.document(username).get();
@@ -30,3 +31,10 @@ Future<Map<int, Map<String, dynamic>>> getClasses(Student student) async {
 		result [id] = (await getClass(id)).data;
 	return result;
 }
+
+Future<void> sendFeedback(String message, String uid) => feedback
+	.document().setData({
+		"message": message,
+		"uid": uid,
+		"timestamp": DateTime.now()
+	});

@@ -1,5 +1,7 @@
 import "package:flutter/material.dart";
 
+import "package:ramaz/services/firestore.dart" show sendFeedback;
+
 class FeedbackPage extends StatelessWidget {
 	final TextEditingController controller = TextEditingController();
 
@@ -10,7 +12,6 @@ class FeedbackPage extends StatelessWidget {
 			child: Column (
 				mainAxisAlignment: MainAxisAlignment.center,
 				children: [
-					// SizedBox (height: 50),
 					Center (
 						child: TextField (
 							autofocus: true,
