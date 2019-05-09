@@ -1,7 +1,7 @@
 CHECK ICON FILES INTO GIT
 
 Implementable:
-  *add next class tile to home screen
+  *show all classes in the endDrawer if at the end of the day
   *app icon
   *feedback
   *invalid or on-existent password
