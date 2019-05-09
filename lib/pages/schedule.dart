@@ -88,14 +88,12 @@ class ScheduleState extends State<SchedulePage> {
 	Widget build (BuildContext context) => Scaffold (
 		appBar: AppBar (
 			title: Text ("Schedule"),
-			actions: [
+			actions: widget.canExit ? null : [
 				IconButton (
 					icon: Icon (Icons.home),
-					onPressed: () {
-						final NavigatorState nav = Navigator.of(context);
-						if(nav.canPop()) nav.pop();  // if pressed on home screen
-						nav.pushReplacementNamed("home");
-					}
+					onPressed: () => Navigator
+						.of(context)
+						.pushReplacementNamed("home")
 				)
 			]
 		),

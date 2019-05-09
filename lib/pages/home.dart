@@ -10,14 +10,12 @@ import "package:ramaz/services/auth.dart" as Auth;
 
 // Misc
 import "package:ramaz/mock/day.dart" show getToday;
-import "package:ramaz/constants.dart" show SPORTS;
 
 // UI
 import "package:ramaz/pages/drawer.dart";
 import "package:ramaz/widgets/class_list.dart";
 import "package:ramaz/widgets/next_class.dart";
 import "package:ramaz/widgets/lunch.dart";
-import "package:ramaz/widgets/info_card.dart";
 import "package:ramaz/widgets/icons.dart";
 
 class HomePage extends StatefulWidget {
@@ -114,12 +112,6 @@ class HomePageState extends State<HomePage> {
 						? Container() 
 						: Text ("COMING SOON"),
 					LunchTile (lunch: today.lunch),
-					InfoCard(
-						title: "Sports coming soon!", 
-						icon: Icons.directions_run,
-						children: const [],
-						page: SPORTS
-					),
 				]
 			)
 		)
