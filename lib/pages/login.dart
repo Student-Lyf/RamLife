@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import "package:flutter/services.dart" show PlatformException;
 
 // Data classes to store downloaded data
 import "package:ramaz/data/student.dart";
@@ -131,7 +132,22 @@ class LoginState extends State <Login> {
 	void login () async {
 		final String username = usernameController.text;
 		final String password = passwordController.text;
-		await Auth.signIn(username, password);
+		try {await Auth.signIn(username, password);}
+		on PlatformException catch (error) {
+			switch (error.code) {
+				case "ERROR_USER_NOT_FOUND":
+					setState(() => usernameError = "User does not exist");
+					break;
+				case "ERROR_WRONG_PASSWORD": 
+					// Find out if email exists
+					// setState(() {
+					// 	passwordError = "Invalid password";
+					// });
+					break;
+				default: throw "Cannot handle error: ${error.code}";
+			}
+			return;
+		}
 		downloadData(username);
 	}
 
