@@ -1,8 +1,7 @@
-CHECK ICON FILES INTO GIT
-
 Implementable:
 
 TODOs:
+  *show whole schedule on endDrawer at last period
   adaptive app icon
   handle winter friday start/end
   footer for *next* class
