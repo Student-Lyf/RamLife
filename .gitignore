@@ -1,19 +1,5 @@
+# Misc flutter files:
 .idea
-android/.gradle/
-android/app/src/debug
-android/app/src/profile
-android/app/src/main/java
-
-
-
-android/gradle/
-android/gradle.properties
-android/gradlew
-android/gradlew.bat
-android/local.properties
-android/ramaz_android.iml
-android/settings.gradle
-android/key.properties
 build
 ios
 .metadata
@@ -25,3 +11,20 @@ __pycache__
 *.json
 .gradle/
 .dart_tool
+
+# android files -- keep: 
+# 	- drawables
+# 	- AndroidManifest.xml
+# 	- both build.gradles
+android/.gradle/
+android/app/src/debug
+android/app/src/profile
+android/app/src/main/java
+android/gradle/
+android/gradle.properties
+android/gradlew
+android/gradlew.bat
+android/local.properties
+android/ramaz_android.iml
+android/settings.gradle
+android/key.properties
