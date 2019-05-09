@@ -23,9 +23,7 @@ void main() async {
 	final String dir = (await getApplicationDocumentsDirectory()).path;
 	final Reader reader = Reader(dir);
 	final bool ready = reader.ready && await Auth.ready();
-	// final bool ready = false;
 	if (ready) {
-		// print (reader.studentData);
 		reader.student = Student.fromData(reader.studentData);
 		reader.subjects = Subject.getSubjects(reader.subjectData);
 	}

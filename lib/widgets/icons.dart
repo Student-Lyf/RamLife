@@ -33,12 +33,6 @@ class SportsIcons {
 		backgroundColor: Colors.white
 	);
 
-	// static final Widget tennis = Image.asset (
-	// 	"images/icons/tennis.png",
-	// 	height: 30,
-	// 	width: 30
-	// );
-
 	static const Widget volleyball = CircleAvatar (
 		backgroundImage: AssetImage ("images/icons/volleyball.png"),
 		backgroundColor: Colors.white
@@ -72,7 +66,7 @@ class Logos {
 	);
 
 	static const senior_systems = LinkIcon (
-		path: "images/logos/senior_system.png",
+		path: "images/logos/senior_systems.png",
 		url: SENIOR_SYSTEMS
 	);
 }

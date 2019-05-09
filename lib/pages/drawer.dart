@@ -9,14 +9,7 @@ class NavigationDrawer extends StatelessWidget {
 	@override Widget build (BuildContext context) => Drawer (
 		child: ListView (
 			children: [
-				DrawerHeader (
-					child: RamazLogos.ram_square,
-					// child: LoadingImage(
-					// 	"images/ram_square.png",
-					// 	width: 272,
-					// 	height: 137
-					// )
-				),
+				DrawerHeader (child: RamazLogos.ram_square),
 				ListTile (
 					title: Text ("Home"),
 					leading: Icon (Icons.home),
@@ -54,17 +47,18 @@ class NavigationDrawer extends StatelessWidget {
 				),
 				SizedBox (height: 30),
 				Divider(),
-				Row (
-					mainAxisSize: MainAxisSize.max,
-					crossAxisAlignment: CrossAxisAlignment.center,
-					mainAxisAlignment: MainAxisAlignment.center,
-					children: [
-						Logos.ramazIcon,
-						Logos.outlook,
-						Logos.schoology,
-						Logos.drive,
-						Logos.senior_systems
-					]
+				SingleChildScrollView (
+					physics: NeverScrollableScrollPhysics(),
+					scrollDirection: Axis.horizontal,
+					child: Row (
+						children: [
+							Logos.ramazIcon,
+							Logos.outlook,
+							Logos.schoology,
+							Logos.drive,
+							Logos.senior_systems
+						]
+					)
 				)
 			]
 		)

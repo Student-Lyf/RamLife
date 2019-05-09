@@ -46,8 +46,9 @@ class Reader {
 	void deleteAll() {
 		if (studentFile.existsSync())
 			studentFile.deleteSync();
+		if (subjectFile.existsSync())
+			subjectFile.deleteSync();
 	}
 
 	bool get ready => studentFile.existsSync() && subjectFile.existsSync();
-
 }

@@ -148,10 +148,12 @@ class LoginState extends State <Login> {
 	}
 
 	void downloadData(String username) async {
-		setState(() => loading = true);
+		setState(() {
+			loading = true;
+			ready = true;
+		});
 		final Map<String, dynamic> data = (await Firestore.getStudent(username)).data;
 		widget.reader.studentData = data;
-		print (data);
 		widget.reader.student = Student.fromData(data);
 
 		final Map<int, Map<String, dynamic>> subjectData = 

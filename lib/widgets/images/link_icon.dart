@@ -7,11 +7,8 @@ class LinkIcon extends StatelessWidget {
 	const LinkIcon ({@required this.path, @required this.url});
 
 	@override Widget build(BuildContext context) => IconButton (
-		icon: CircleAvatar(
-			backgroundImage: AssetImage(path),
-			// radius: 50
-		),
-		iconSize: 50,
-		onPressed: () => launch (url)
+		iconSize: 45,
+		onPressed: () => launch (url),
+		icon: CircleAvatar(backgroundImage: AssetImage(path)),
 	);
 }
