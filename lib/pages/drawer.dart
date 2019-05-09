@@ -48,7 +48,7 @@ class NavigationDrawer extends StatelessWidget {
 				ListTile (
 					title: Text ("Send Feedback"),
 					leading: Icon (Icons.feedback),
-					onTap: () => Navigator.of(context).pushReplacementNamed(FEEDBACK)
+					onTap: () => Navigator.of(context).pushNamed(FEEDBACK)
 				),
 				SizedBox (height: 30),
 				Divider(),
