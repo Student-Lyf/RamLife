@@ -139,7 +139,7 @@ class LoginState extends State <Login> {
 					setState(() => usernameError = "User does not exist");
 					break;
 				case "ERROR_WRONG_PASSWORD": 
-					// Find out if password exists
+					// Check if we can sign in with a password
 					if ((await Auth.getSignInMethods(username)).contains ("password")) 
 						setState(() => passwordError = "Invalid password");
 					else setState(
@@ -162,10 +162,15 @@ class LoginState extends State <Login> {
 			)
 		);
 		if (account == null) return;
-		downloadData(account.email.split("@")[0]);
+		downloadData(account.email.split("@")[0], google: true);
 	}
 
-	void downloadData(String username) async {
+	void downloadData(String username, {bool google = false}) async {
+		if (google) key.currentState.showSnackBar(
+			SnackBar (
+				content: Text ("Make sure to use Google to sign in next time")
+			)
+		); 
 		setState(() {
 			loading = true;
 			ready = true;
@@ -173,7 +178,6 @@ class LoginState extends State <Login> {
 		final Map<String, dynamic> data = (await Firestore.getStudent(username)).data;
 		widget.reader.studentData = data;
 		widget.reader.student = Student.fromData(data);
-		print (widget.reader.studentData);
 
 		final Map<int, Map<String, dynamic>> subjectData = 
 			await Firestore.getClasses(widget.reader.student);

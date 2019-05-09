@@ -2,7 +2,7 @@ from main import init
 from data.student import Student, Period
 init()
 from database.students import upload_students, add_credentials
-from auth.crud import create_user, get_user
+from auth.crud import create_user, get_user, update_user
 from auth.provider import add_provider, get_record
 
 def main(students): 
@@ -12,17 +12,19 @@ def main(students):
 		try: 
 			user = create_user(student)
 		except: 
-			user = get_user(student.username + "@ramaz.org")
+			uid = get_user(student.username + "@ramaz.org").uid
+			user = update_user (uid, student)
 		records.append (get_record(user))
 		student.uid = user.uid
-		add_credentials(student)
-	add_provider(records) 
+	# Disable provider for now so users can still log in with password
+	# add_provider(records) 
+	add_credentials(students)
 
 if __name__ == '__main__':
 	first = "Levi"
 	last = "Lesches"
 	username = "leschesl"
-	password = "niceTryMister"
+	password = "redcow182"
 	A = [
 		Period (room = "Beit Knesset", id = 12).output(),
 		Period (room = "503", id = 1).output(),
