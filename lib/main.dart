@@ -1,6 +1,5 @@
 import "package:flutter/material.dart";
 import "package:path_provider/path_provider.dart";
-import "package:shared_preferences/shared_preferences.dart";
 
 // Backend
 import "services/reader.dart";
@@ -23,12 +22,6 @@ import "constants.dart";  // for route keys
 void main() async {
 	final String dir = (await getApplicationDocumentsDirectory()).path;
 	final Reader reader = Reader(dir);
-	final SharedPreferences prefs = await SharedPreferences.getInstance();
-	if (!prefs.containsKey("installed")) {
-		print ("Deleting data");
-		reader.deleteAll();
-		prefs.setBool("installed", true);
-	}
 	final bool ready = reader.ready && await Auth.ready();
 	if (ready) {
 		reader.student = Student.fromData(reader.studentData);

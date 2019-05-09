@@ -8,8 +8,10 @@ class Reader {
 	final String dir;
 	final File studentFile, subjectFile;
 	Reader(this.dir) :
-		studentFile = File ("$dir/student.json"),
-		subjectFile = File ("$dir/subjects.json");
+		// The files end with 2 because there seems to 
+		// be some sort of ghost data in the original
+		studentFile = File ("$dir/student2.json"),
+		subjectFile = File ("$dir/subjects2.json");
 
 	set studentData(Map<String, dynamic> data) => studentFile.writeAsStringSync(
 		jsonEncode(data)
