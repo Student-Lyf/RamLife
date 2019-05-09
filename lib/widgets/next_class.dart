@@ -17,7 +17,7 @@ class NextClass extends StatelessWidget {
 		icon: next ? Icons.restore : Icons.school,
 		title: period == null
 			? "School is over"
-			: "Current period: ${subject?.name ?? period.period}",
+			: "${next ? 'Next' : 'Current'} period: ${subject?.name ?? period.period}",
 		children: period?.getInfo(subject),
 		page: SCHEDULE + CAN_EXIT
 	);
