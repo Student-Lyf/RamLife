@@ -1,6 +1,11 @@
 .idea
 android/.gradle/
-android/app/src/
+android/app/src/debug
+android/app/src/profile
+android/app/src/main/java
+
+
+
 android/gradle/
 android/gradle.properties
 android/gradlew
