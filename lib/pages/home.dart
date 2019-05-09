@@ -33,7 +33,7 @@ class HomePageState extends State<HomePage> {
 
 	final GlobalKey<ScaffoldState> key = GlobalKey();
 	Schedule schedule;
-	Period period;
+	Period period, nextPeriod;
 	List<Period> periods;
 	int periodIndex;
 	Timer timer;
@@ -53,6 +53,8 @@ class HomePageState extends State<HomePage> {
 		period = periodIndex == null 
 			? null
 			: periods [periodIndex];
+		if (periodIndex != null && periodIndex < periods.length - 1)
+			nextPeriod = periods [periodIndex + 1];
 	}
 
 	@override void dispose() {
@@ -72,13 +74,6 @@ class HomePageState extends State<HomePage> {
 		if (needsGoogleSignIn) result.insert (
 			0, 
 			IconButton (
-				// icon: CircleAvatar (
-				// 	child: LoadingImage(
-				// 		"images/google.png",
-				// 		width: 32,
-				// 		height: 32
-				// 	)
-				// ),
 				icon: Logos.google,
 				onPressed: addGoogleSignIn
 			)
@@ -107,11 +102,6 @@ class HomePageState extends State<HomePage> {
 			child: ListView (
 				children: [
 					RamazLogos.ram_rectangle,
-					// LoadingImage(
-					// 	"images/ram_logo_rectangle.jpg",
-					// 	width: 360,
-					// 	height: 124.5,
-					// ),
 					Divider(),
 					Center (
 						child: Text (
@@ -120,6 +110,9 @@ class HomePageState extends State<HomePage> {
 						)
 					),
 					NextClass(period, widget.reader.subjects[period?.id]),
+					nextPeriod == null  // if school is not over, show the next class
+						? Container() 
+						: Text ("COMING SOON"),
 					LunchTile (lunch: today.lunch),
 					InfoCard(
 						title: "Sports coming soon!", 
@@ -146,7 +139,7 @@ class HomePageState extends State<HomePage> {
 			)
 		);
 		if (account == null) return;
-		showDialog (
+		else showDialog (
 			context: context,
 			builder: (BuildContext context) => AlertDialog(
 				title: Text ("Google sign in enabled"),
