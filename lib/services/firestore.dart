@@ -32,9 +32,11 @@ Future<Map<int, Map<String, dynamic>>> getClasses(Student student) async {
 	return result;
 }
 
-Future<void> sendFeedback(String message, String uid) => feedback
-	.document().setData({
+Future<void> sendFeedback(
+	String message, 
+	String name,
+) => feedback.document().setData({
 		"message": message,
-		"uid": uid,
+		"name": name,
 		"timestamp": DateTime.now()
 	});

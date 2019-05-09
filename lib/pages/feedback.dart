@@ -1,6 +1,7 @@
 import "package:flutter/material.dart";
 
 import "package:ramaz/services/firestore.dart" show sendFeedback;
+import "package:ramaz/services/auth.dart" as Auth;
 
 class FeedbackPage extends StatelessWidget {
 	final TextEditingController controller = TextEditingController();
@@ -12,12 +13,11 @@ class FeedbackPage extends StatelessWidget {
 			child: Column (
 				mainAxisAlignment: MainAxisAlignment.center,
 				children: [
-					Center (
-						child: TextField (
-							autofocus: true,
-							controller: controller,
-							maxLength: 500,
-						)
+					TextField (
+						autofocus: true,
+						controller: controller,
+						maxLength: 500,
+						textCapitalization: TextCapitalization.sentences
 					),
 					SizedBox(height: 50),
 					RaisedButton.icon(
@@ -30,8 +30,8 @@ class FeedbackPage extends StatelessWidget {
 		)
 	);
 
-	void submit() {
-		final String feedback = controller.text;
-		print (feedback);
-	}
+	void submit() async => sendFeedback (
+		controller.text,
+		(await Auth.currentUser()).displayName
+	);
 }
