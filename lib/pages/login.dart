@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import "package:flutter/services.dart" show PlatformException;
 
 // Data classes to store downloaded data
 import "package:ramaz/data/student.dart";
@@ -131,7 +132,24 @@ class LoginState extends State <Login> {
 	void login () async {
 		final String username = usernameController.text;
 		final String password = passwordController.text;
-		await Auth.signIn(username, password);
+		try {await Auth.signIn(username, password);}
+		on PlatformException catch (error) {
+			switch (error.code) {
+				case "ERROR_USER_NOT_FOUND":
+					setState(() => usernameError = "User does not exist");
+					break;
+				case "ERROR_WRONG_PASSWORD": 
+					// Check if we can sign in with a password
+					if ((await Auth.getSignInMethods(username)).contains ("password")) 
+						setState(() => passwordError = "Invalid password");
+					else setState(
+						() => passwordError = "This account has no password -- sign in with Google."
+					);
+					break;
+				default: throw "Cannot handle error: ${error.code}";
+			}
+			return;
+		}
 		downloadData(username);
 	}
 
@@ -144,10 +162,15 @@ class LoginState extends State <Login> {
 			)
 		);
 		if (account == null) return;
-		downloadData(account.email.split("@")[0]);
+		downloadData(account.email.split("@")[0], google: true);
 	}
 
-	void downloadData(String username) async {
+	void downloadData(String username, {bool google = false}) async {
+		if (google) key.currentState.showSnackBar(
+			SnackBar (
+				content: Text ("Make sure to use Google to sign in next time")
+			)
+		); 
 		setState(() {
 			loading = true;
 			ready = true;
@@ -155,7 +178,6 @@ class LoginState extends State <Login> {
 		final Map<String, dynamic> data = (await Firestore.getStudent(username)).data;
 		widget.reader.studentData = data;
 		widget.reader.student = Student.fromData(data);
-		print (widget.reader.studentData);
 
 		final Map<int, Map<String, dynamic>> subjectData = 
 			await Firestore.getClasses(widget.reader.student);

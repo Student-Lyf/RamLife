@@ -1,6 +1,25 @@
+# Misc flutter files:
 .idea
+build
+.metadata
+.packages
+pubspec.lock
+*.iml
+.flutter-plugins
+__pycache__
+firebase/admin.json
+.gradle/
+.dart_tool
+
+# android files -- keep: 
+# 	- drawables
+# 	- AndroidManifest.xml
+# 	- both build.gradles
 android/.gradle/
-android/app/src/
+android/app/src/debug
+android/app/src/profile
+android/app/src/main/java
+android/app/google-services.json
 android/gradle/
 android/gradle.properties
 android/gradlew
@@ -9,14 +28,16 @@ android/local.properties
 android/ramaz_android.iml
 android/settings.gradle
 android/key.properties
-build
-ios
-.metadata
-.packages
-pubspec.lock
-*.iml
-.flutter-plugins
-__pycache__
-*.json
-.gradle/
-.dart_tool
+
+# iOS files -- keep: 
+# 	- Runner/Assets.xcassets/LaunchImage.imageset
+ios/flutter
+ios/runner.xcodeproj
+ios/runner.xcworkspace
+ios/runner/base.lproj
+ios/runner/appDelegate.h
+ios/runner/appDelegate.m
+ios/runner/generatedPluginRegistrant.h
+ios/runner/generatedPluginRegistrant.m
+ios/runner/info.plist
+ios/runner/main.m

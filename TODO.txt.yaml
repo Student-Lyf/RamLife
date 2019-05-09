@@ -1,13 +1,9 @@
-CHECK ICON FILES INTO GIT
-
 Implementable:
-  *show all classes in the endDrawer if at the end of the day
-  *app icon
-  *feedback
-  *invalid or on-existent password
-  *invalid username
+  *show whole schedule on endDrawer at last period
+  adaptive app icon
 
 TODOs:
+  
   handle winter friday start/end
   footer for *next* class
 

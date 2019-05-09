@@ -14,6 +14,7 @@ import "pages/drawer.dart";
 import "pages/home.dart" show HomePage;
 import "pages/schedule.dart" show SchedulePage;
 import "pages/login.dart" show Login;
+import "pages/feedback.dart" show FeedbackPage;
 // import "pages/sports.dart";
 
 import "constants.dart";  // for route keys
@@ -43,6 +44,7 @@ void main() async {
 				SPORTS: placeholder ("Sports"),
 				// SPORTS: (_) => SportsPage (games),
 				ADMIN_LOGIN: placeholder ("Admin Login"),
+				FEEDBACK: (_) => FeedbackPage(),
 			} 
 		)
 	);

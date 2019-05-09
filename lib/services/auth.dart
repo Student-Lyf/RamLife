@@ -27,7 +27,10 @@ Future<bool> needsGoogleSupport() async => !(await currentUser())
 bool isValidGoogleAccount(GoogleSignInAccount account) => account
 	.email.endsWith("@ramaz.org");
 
-Future<GoogleSignInAccount> signInWithGoogle(void Function() ifInvalid) async {
+Future<GoogleSignInAccount> signInWithGoogle(
+	void Function() ifInvalid,
+	{bool link = false}
+) async {
 	final GoogleSignInAccount account = await google.signIn();
 	if (account == null) return null;
 	if (!isValidGoogleAccount(account)) {
@@ -40,6 +43,10 @@ Future<GoogleSignInAccount> signInWithGoogle(void Function() ifInvalid) async {
 		accessToken: _auth.accessToken,
 		idToken: _auth.idToken
 	);
-	await firebase.signInWithCredential(credential);
+	if (link) await firebase.linkWithCredential(credential);
+	else await firebase.signInWithCredential(credential);
 	return account;
 }
+
+Future<List<String>> getSignInMethods(String username) async =>
+	await firebase.fetchSignInMethodsForEmail(email: username + "@ramaz.org");

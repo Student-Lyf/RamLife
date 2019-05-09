@@ -132,7 +132,8 @@ class HomePageState extends State<HomePage> {
 				SnackBar (
 					content: Text ("You need to sign in with your Ramaz email")
 				)
-			)
+			),
+			link: true
 		);
 		if (account == null) return;
 		else showDialog (
@@ -141,8 +142,8 @@ class HomePageState extends State<HomePage> {
 				title: Text ("Google sign in enabled"),
 				content: ListTile (
 					title: Text (
-						"You can now sign in with your Google account\n\n"
-						"Note that you can no longer using your password"
+						"You can now sign in with your Google account"
+						// "Note that you can no longer using your password"
 					)
 				),
 				actions: [

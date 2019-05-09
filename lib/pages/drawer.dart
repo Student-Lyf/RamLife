@@ -45,6 +45,15 @@ class NavigationDrawer extends StatelessWidget {
 					leading: Icon (Icons.lock),
 					onTap: () => Navigator.of(context).pushReplacementNamed(LOGIN)
 				),
+				ListTile (
+					title: Text ("Send Feedback"),
+					leading: Icon (Icons.feedback),
+					onTap: () {
+						final NavigatorState nav = Navigator.of(context);
+						nav.pop();
+						nav.pushNamed(FEEDBACK);
+					}
+				),
 				SizedBox (height: 30),
 				Divider(),
 				SingleChildScrollView (

@@ -7,6 +7,7 @@ const String SPORTS = "sports";
 const String ADMIN_LOGIN = "admin-login";
 const String LOGIN = "login";
 const String CAN_EXIT = "?";
+const String FEEDBACK = "feedback";
 
 // urls
 const String SCHOOLOGY = "https://app.schoology.com";
