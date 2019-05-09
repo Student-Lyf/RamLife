@@ -23,15 +23,18 @@ class FeedbackPage extends StatelessWidget {
 					RaisedButton.icon(
 						label: Text ("Submit"),
 						icon: Icon (Icons.send),
-						onPressed: submit,
+						onPressed: () => submit(context),
 					)
 				]
 			)
 		)
 	);
 
-	void submit() async => sendFeedback (
-		controller.text,
-		(await Auth.currentUser()).displayName
-	);
+	void submit(BuildContext context) async {
+		sendFeedback (
+			controller.text,
+			(await Auth.currentUser()).displayName
+		);
+		Navigator.pop(context);
+	}
 }
