@@ -1,3 +1,5 @@
+CHECK ICON FILES INTO GIT
+
 Implementable:
   *add next class tile to home screen
   *app icon
@@ -30,8 +32,8 @@ politics:
     - sports
 
 Database:  # value is document name
+  - *calendar: month number
   - admins: username
-  - calendar: month number
   - lost + found: thread ID
   - timeslots: name
 

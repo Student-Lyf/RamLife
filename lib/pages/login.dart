@@ -155,6 +155,7 @@ class LoginState extends State <Login> {
 		final Map<String, dynamic> data = (await Firestore.getStudent(username)).data;
 		widget.reader.studentData = data;
 		widget.reader.student = Student.fromData(data);
+		print (widget.reader.studentData);
 
 		final Map<int, Map<String, dynamic>> subjectData = 
 			await Firestore.getClasses(widget.reader.student);

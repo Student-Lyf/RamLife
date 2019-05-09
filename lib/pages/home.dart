@@ -110,7 +110,11 @@ class HomePageState extends State<HomePage> {
 					NextClass(period, widget.reader.subjects[period?.id]),
 					nextPeriod == null  // if school is not over, show the next class
 						? Container() 
-						: Text ("COMING SOON"),
+						: NextClass (
+								nextPeriod, 
+								widget.reader.subjects[nextPeriod?.id], 
+								next: true
+							),
 					LunchTile (lunch: today.lunch),
 				]
 			)
