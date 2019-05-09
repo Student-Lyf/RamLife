@@ -139,10 +139,12 @@ class LoginState extends State <Login> {
 					setState(() => usernameError = "User does not exist");
 					break;
 				case "ERROR_WRONG_PASSWORD": 
-					// Find out if email exists
-					// setState(() {
-					// 	passwordError = "Invalid password";
-					// });
+					// Find out if password exists
+					if ((await Auth.getSignInMethods(username)).contains ("password")) 
+						setState(() => passwordError = "Invalid password");
+					else setState(
+						() => passwordError = "This account has no password -- sign in with Google."
+					);
 					break;
 				default: throw "Cannot handle error: ${error.code}";
 			}

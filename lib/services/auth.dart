@@ -43,3 +43,6 @@ Future<GoogleSignInAccount> signInWithGoogle(void Function() ifInvalid) async {
 	await firebase.signInWithCredential(credential);
 	return account;
 }
+
+Future<List<String>> getSignInMethods(String username) async =>
+	await firebase.fetchSignInMethodsForEmail(email: username + "@ramaz.org");
