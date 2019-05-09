@@ -1,13 +1,12 @@
 CHECK ICON FILES INTO GIT
 
 Implementable:
-  *add next class tile to home screen
-  *app icon
   *feedback
   *invalid or on-existent password
   *invalid username
 
 TODOs:
+  adaptive app icon
   handle winter friday start/end
   footer for *next* class
 
