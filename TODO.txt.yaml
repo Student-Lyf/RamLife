@@ -1,18 +1,25 @@
-Ask the club:
-  Do we need a "my backpack" link?
-
 Implementable:
-  add next class tile to home screen
-  app icon
-  feedback
-  fix student db entries
-  footer for *next* class
+  *add next class tile to home screen
+  *app icon
+  *feedback
+  *invalid or on-existent password
+  *invalid username
 
 TODOs:
-  invalid/non-existent password
-  invalid username
-  upload student with email + google as providers
-  handle winter friday start/end
+  footer for *next* class
+  *handle winter friday start/end
+
+New features:
+  *calendar
+  *calendar on home screen
+  about page
+  sports
+  notes on individual period
+  add cloud function to add password when signed in with Google
+  lost and found: 
+    use Cloud Functions + Cloud Messaging
+    - see: "lost and found.jpg"
+  directory
 
 politics: 
   student life: 
@@ -21,22 +28,10 @@ politics:
     - handle scheduling
     - sports
 
-New features:
-  add cloud function to add password when signed in with Google
-  notes on individual period
-  calendar
-  calendar on home screen
-  sports
-  about page
-  lost and found: 
-    use Cloud Functions + Cloud Messaging
-    - see: "lost and found.jpg"
-  directory
-
 Database:  # value is document name
   - admins: username
   - calendar: month number
-  - lost + found: ID
+  - lost + found: thread ID
   - timeslots: name
 
 stretch goals:

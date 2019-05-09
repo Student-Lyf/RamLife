@@ -70,6 +70,11 @@ class Logos {
 		path: "images/logos/ramaz/teal.jpg",
 		url: RAMAZ
 	);
+
+	static const senior_systems = LinkIcon (
+		path: "images/logos/senior_system.png",
+		url: SENIOR_SYSTEMS
+	);
 }
 
 class RamazLogos {

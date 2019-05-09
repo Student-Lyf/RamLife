@@ -45,7 +45,6 @@ flutter_icons:
   # adaptive_icon_background: "images/blue.jpg"
 
 
-
 # For information on the generic Dart part of this file, see the
 # following page: https://www.dartlang.org/tools/pub/pubspec
 
@@ -69,6 +68,7 @@ flutter:
     - images/logos/google.png
     - images/logos/outlook.jpg
     - images/logos/schoology.png
+    - images/logos/senior_systems.png
     - images/logos/ramaz/ram_rectangle.jpg
     - images/logos/ramaz/ram_square_words.jpg
     - images/logos/ramaz/ram_square.png

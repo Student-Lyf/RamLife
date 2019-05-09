@@ -62,43 +62,10 @@ class NavigationDrawer extends StatelessWidget {
 						Logos.ramazIcon,
 						Logos.outlook,
 						Logos.schoology,
-						Logos.drive
+						Logos.drive,
+						Logos.senior_systems
 					]
 				)
-				// ListTile (
-				// 	onTap: () => launch (RAMAZ),
-				// 	title: Text ("Ramaz.org"),
-				// 	// Cannot use RamazLogos here, because we need an ImageProvider
-				// 	leading: CircleAvatar (
-				// 		backgroundImage: AssetImage ("images/logos/ramaz/teal.jpg"),
-				// 	),
-				// ),
-				// ListTile (
-				// 	onTap: () => launch (EMAIL),
-				// 	title: Text ("Ramaz email"),
-				// 	leading: Logos.outlook
-				// 	// leading: CircleAvatar(
-				// 	// 	backgroundImage: AssetImage("images/outlook.jpg")
-				// 	// ),
-				// ),
-				// ListTile (
-				// 	onTap: () => launch (SCHOOLOGY),
-				// 	title: Text ("Schoology"),
-				// 	leading: Logos.schoology
-				// 	// leading: CircleAvatar(
-				// 	// 	backgroundImage: AssetImage("images/schoology.png")
-				// 	// ),
-				// ),
-				// ListTile (
-				// 	onTap: () => launch (GOOGLE_DRIVE),
-				// 	title: Text ("Google Drive"),
-				// 	leading: Logos.drive
-				// ),
-				// ListTile (
-				// 	title: Text ("My Backpack"),
-				// 	leading: Icon (Icons.open_in_new),
-				// 	onTap: () => launch (MY_BACKPACK)
-				// ),
 			]
 		)
 	);
