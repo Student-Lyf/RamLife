@@ -86,7 +86,19 @@ class ScheduleState extends State<SchedulePage> {
 
 	@override
 	Widget build (BuildContext context) => Scaffold (
-		appBar: AppBar (title: Text ("Schedule")),
+		appBar: AppBar (
+			title: Text ("Schedule"),
+			actions: [
+				IconButton (
+					icon: Icon (Icons.home),
+					onPressed: () {
+						final NavigatorState nav = Navigator.of(context);
+						if(nav.canPop()) nav.pop();  // if pressed on home screen
+						nav.pushReplacementNamed("home");
+					}
+				)
+			]
+		),
 		drawer: widget.canExit ? null : NavigationDrawer(),
 		body: Column (
 			children: [
