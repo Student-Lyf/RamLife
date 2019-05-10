@@ -54,7 +54,7 @@ class NavigationDrawer extends StatelessWidget {
 						nav.pushNamed(FEEDBACK);
 					}
 				),
-				SizedBox (height: 30),
+				SizedBox (height: 20),
 				Divider(),
 				SingleChildScrollView (
 					physics: NeverScrollableScrollPhysics(),
