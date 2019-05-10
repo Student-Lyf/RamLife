@@ -133,7 +133,8 @@ class Day {
 	} 
 
 	int get period {
-		final Time time = Time.fromDateTime (DateTime.now());
+		// final Time time = Time.fromDateTime (DateTime.now());
+		final Time time = Time(3, 30);
 		for (int index = 0; index < special.periods.length; index++) {
 			final Range range = special.periods [index];
 			if (

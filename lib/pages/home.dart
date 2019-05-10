@@ -126,6 +126,8 @@ class HomePageState extends State<HomePage> {
 	Future<void> update([_]) async => setState(() {
 		periodIndex = today.period;
 		period = periodIndex == null ? null : periods [periodIndex];	
+		if (periodIndex != null && periodIndex < periods.length - 1)
+			nextPeriod = periods [periodIndex + 1];
 	});
 
 	void addGoogleSignIn() async {
