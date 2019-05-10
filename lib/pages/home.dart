@@ -88,7 +88,9 @@ class HomePageState extends State<HomePage> {
 		drawer: NavigationDrawer(),
 		endDrawer: Drawer (
 			child: ClassList(
-				periods: periods.getRange (
+				periods: nextPeriod == null 
+					? periods
+					: periods.getRange (
 					(periodIndex ?? -1) + 1, periods.length
 				),
 				reader: widget.reader,
