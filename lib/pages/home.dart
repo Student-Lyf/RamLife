@@ -47,12 +47,7 @@ class HomePageState extends State<HomePage> {
 		timer = Timer.periodic (minute, update);
 		schedule = widget.reader.student.schedule [today.letter];
 		periods = widget.reader.student.getPeriods (today);
-		periodIndex = today.period;
-		period = periodIndex == null 
-			? null
-			: periods [periodIndex];
-		if (periodIndex != null && periodIndex < periods.length - 1)
-			nextPeriod = periods [periodIndex + 1];
+		update();
 	}
 
 	@override void dispose() {

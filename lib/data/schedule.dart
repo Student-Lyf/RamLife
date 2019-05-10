@@ -2,8 +2,6 @@ import "package:flutter/foundation.dart" show required;
 
 import "times.dart";
 
-// import "package:ramaz/mock.dart" show getSubjectByID;  // for resolving subjects from periods
-
 enum Letters {M, R, A, B, C, E, F}
 
 class Subject {
@@ -133,8 +131,8 @@ class Day {
 	} 
 
 	int get period {
-		// final Time time = Time.fromDateTime (DateTime.now());
-		final Time time = Time(3, 30);
+		final Time time = Time.fromDateTime (DateTime.now());
+		// final Time time = Time(3, 30);
 		for (int index = 0; index < special.periods.length; index++) {
 			final Range range = special.periods [index];
 			if (
