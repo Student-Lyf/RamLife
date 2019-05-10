@@ -9,7 +9,8 @@
     <application
         android:name="io.flutter.app.FlutterApplication"
         android:label="Student Life"
-        android:icon="@drawable/ic_launcher">
+        android:roundIcon="@mipmap/adaptive_ram_round"
+        android:icon="@mipmap/adaptive_ram">
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"
