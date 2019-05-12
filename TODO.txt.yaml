@@ -33,7 +33,6 @@ politics:
     - sports
 
 Database:  # value is document name
-  - *calendar: month number
   - admins: username
   - lost + found: thread ID
   - timeslots: name
