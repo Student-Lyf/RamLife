@@ -2,7 +2,6 @@ UI:
   *remove appbar title color override
   find good dark theme
 
-
 Implementable:
   *take away FAB on home screen
   *add dark theme toggle
@@ -34,7 +33,6 @@ politics:
     - sports
 
 Database:  # value is document name
-  - *calendar: month number
   - admins: username
   - lost + found: thread ID
   - timeslots: name
