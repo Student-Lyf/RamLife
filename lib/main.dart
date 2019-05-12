@@ -29,7 +29,7 @@ const Color GOLD_DARK = Color (0XFFC19A00);
 const Color GOLD_LIGHT = Color (0XFFFFFD56);
 
 const Color DARK_MODE_GOLD = Color (0xFF333300);
-const Color DARK_MODE_BLUE = Color (0XFF4AB8ED);
+const Color DARK_MODE_BLUE = Color (0XFF000033);
 
 void main() async {
 	final String dir = (await getApplicationDocumentsDirectory()).path;
@@ -55,7 +55,7 @@ class RamazApp extends StatelessWidget {
 			title: "Student Life",
 			color: BLUE,
 			theme: brightness == Brightness.light 
-				? ThemeData (
+				? ThemeData (  // light
 					brightness: Brightness.light,
 					primarySwatch: Colors.blue,
 					primaryColor: BLUE,
@@ -71,18 +71,18 @@ class RamazApp extends StatelessWidget {
 						textTheme: ButtonTextTheme.accent
 					),
 				)
-			: ThemeData(
+			: ThemeData(  // dark
 				brightness: Brightness.dark,
 				scaffoldBackgroundColor: Colors.grey[700],
 				primarySwatch: Colors.blue,
-				primaryColor: const Color (0xFF00245F),
+				// primaryColor: DARK_MODE_BLUE,
 				primaryColorBrightness: Brightness.dark,
-				primaryColorLight: const Color(0XFF4A76BE),
+				primaryColorLight: BLUE_LIGHT,
 				primaryColorDark: BLUE,
-				accentColor: GOLD,
+				accentColor: GOLD_DARK,
 				accentColorBrightness: Brightness.light,
 				textTheme: Typography.whiteMountainView.apply(
-					bodyColor: GOLD,
+					bodyColor: BLUE_LIGHT,
 					displayColor: GOLD_DARK
 				),
 				iconTheme: IconThemeData (color: GOLD),

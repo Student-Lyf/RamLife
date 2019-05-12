@@ -1,8 +1,13 @@
-adaptive app icon
-Poll the branding guy + schoology
+UI: 
+  *remove appbar title color override
+  find good dark theme
+
 
 Implementable:
-  *show whole schedule on endDrawer at last period
+  *take away FAB on home screen
+  *add dark theme toggle
+  *make app icon for ios
+  convert sportsIcons to pngs
 
 TODOs:
   handle winter friday start/end
