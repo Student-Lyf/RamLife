@@ -12,10 +12,12 @@ import "package:ramaz/widgets/icons.dart";
 import "package:ramaz/services/reader.dart";
 import "package:ramaz/services/firestore.dart" as Firestore;
 import "package:ramaz/services/auth.dart" as Auth;
+import "package:ramaz/services/preferences.dart";
 
 class Login extends StatefulWidget {
 	final Reader reader;
-	Login(this.reader);
+	final Preferences prefs;
+	Login(this.reader, this.prefs);
 
 	@override LoginState createState() => LoginState();
 }
@@ -184,6 +186,12 @@ class LoginState extends State <Login> {
 		widget.reader.subjectData = subjectData;
 		final Map<int, Subject> subjects = Subject.getSubjects(subjectData);
 		widget.reader.subjects = subjects;
+
+		final Map<String, dynamic> month = await Firestore.getMonth();
+		final Map<DateTime, Day> calendar = Day.getCalendar(month);
+		widget.reader.calendarData = month;
+		widget.reader.calendar = calendar;
+		widget.prefs.lastCalendarUpdate = DateTime.now();
 
 		Navigator.of(context).pushReplacementNamed("home");
 	}
