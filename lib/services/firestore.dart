@@ -44,5 +44,6 @@ Future<void> sendFeedback(
 		"timestamp": DateTime.now()
 	});
 
-Future<Map<String, dynamic>> getCalendarEntry() async => 
-	(await calendar.document(DateTime.now().month.toString()).get()).data;
+Future<Map<String, dynamic>> getMonth() async => (
+	await calendar.document(DateTime.now().month.toString()).get()
+).data;
