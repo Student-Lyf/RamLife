@@ -1,15 +1,11 @@
 from pathlib import Path
 from csv import DictReader as Reader
 from datetime import datetime
+from data.calendar import Day
+from firebase_admin import firestore
 
-from my_stuff.misc import init
-
-class Day: 
-	@init
-	def __init__(self, date, letter): pass
-	def __repr__(self): 
-		if (self.letter): return f"{self.date}: {self.letter}"
-		else: return f"{self.date}: No School"
+db = firestore.client()
+calendar = db.collection("calendar")
 
 def parse_entry(entry) -> Day: 
 	month, day, year = entry ["date"].split("/")
@@ -38,5 +34,15 @@ def parse_calendar(path):
 			for row in reader
 		]
 
-entries = parse_calendar(r"C:\users\levi\coding\flutter\ramaz\data\calendar\calendar.csv")
-print (entries)
+def upload_calendar(entries): 
+	batch = db.batch()
+	for month in range (1, 13): 
+		batch.set(
+			calendar.document(str (month)),
+			{}
+		)
+	for entry in entries: 
+		doc = calendar.document(str (entry.date.month))
+		batch.update(doc, entry.output())
+	batch.commit()
+
