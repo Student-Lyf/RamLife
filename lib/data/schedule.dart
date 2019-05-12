@@ -85,8 +85,8 @@ class Period {
 
 class Day {
 	final Letters letter;
-	Special special;
 	final Lunch lunch;
+	Special special;
 
 	String get name => "${letter.toString().substring (8)} day ${
 		special == regular || special == rotate ? '' : special.name
