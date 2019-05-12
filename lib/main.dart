@@ -6,6 +6,7 @@ import "package:shared_preferences/shared_preferences.dart";
 import "services/reader.dart";
 import "services/auth.dart" as Auth;
 import "services/preferences.dart";
+import "services/firestore.dart" as Firestore;
 
 // Dataclasses
 import "data/student.dart";
@@ -31,7 +32,9 @@ void main() async {
 	if (ready) {  // initialize data
 		reader.student = Student.fromData(reader.studentData);
 		reader.subjects = Subject.getSubjects(reader.subjectData);
-
+		if (preferences.shouldUpdateCalendar) {
+			final Map<String, dynamic> month = await Firestore.getCalendarEntry();
+		}
 	}
 	runApp (
 		MaterialApp (
