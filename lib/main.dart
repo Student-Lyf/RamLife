@@ -37,16 +37,17 @@ void main() async {
 			reader.calendarData = month;
 			final Map<DateTime, Day> calendar = Day.getCalendar(month);
 			reader.calendar = calendar;
+			preferences.lastCalendarUpdate = DateTime.now();
 		}
 	}
 	runApp (
 		MaterialApp (
 			home: ready 
 				? HomePage(reader)
-				: Login (reader),
+				: Login (reader, preferences),
 			title: "Student Life",
 			routes: {
-				LOGIN: (_) => Login(reader),
+				LOGIN: (_) => Login(reader, preferences),
 				HOME_PAGE: (_) => HomePage(reader), 
 				SCHEDULE: (_) => SchedulePage (reader),
 				SCHEDULE + CAN_EXIT: (_) => SchedulePage(reader, canExit: true),

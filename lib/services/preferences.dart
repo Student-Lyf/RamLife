@@ -6,6 +6,7 @@ class Preferences {
 
 	// Keys
 	static const CALENDAR_UPDATE_KEY = "lastCalendarUpdate";
+	static const FIRST_TIME = "firstTime";
 
 	// Helper function
 	static bool isToday(DateTime other) {
@@ -17,9 +18,18 @@ class Preferences {
 		);
 	}
 
+	bool get firstTime {
+		final bool result = prefs.getBool(FIRST_TIME) ?? true;
+		prefs.setBool(FIRST_TIME, false);
+		return result;
+	}
+
 	// calendar updates
-	bool get shouldUpdateCalendar => !isToday (lastCalendarUpdate);
+	bool get shouldUpdateCalendar => firstTime || !isToday (lastCalendarUpdate);
 	DateTime get lastCalendarUpdate => DateTime.parse(
 		prefs.getString(CALENDAR_UPDATE_KEY)
+	);
+	set lastCalendarUpdate (DateTime date) => prefs.setString(
+		CALENDAR_UPDATE_KEY, date.toString()
 	);
 }
