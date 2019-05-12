@@ -16,7 +16,7 @@ import "package:ramaz/pages/drawer.dart";
 import "package:ramaz/widgets/brightness.dart" show BrightnessChanger;
 import "package:ramaz/widgets/class_list.dart";
 import "package:ramaz/widgets/next_class.dart";
-import "package:ramaz/widgets/lunch.dart";
+// import "package:ramaz/widgets/lunch.dart";
 import "package:ramaz/widgets/icons.dart";
 
 class HomePage extends StatefulWidget {
@@ -27,7 +27,7 @@ class HomePage extends StatefulWidget {
 }
 
 class HomePageState extends State<HomePage> {
-	static final today = getToday();
+	static final Day today = getToday();
 	static const Duration minute = Duration (minutes: 1);
 
 	final GlobalKey<ScaffoldState> key = GlobalKey();
@@ -123,7 +123,7 @@ class HomePageState extends State<HomePage> {
 								widget.reader.subjects[nextPeriod?.id], 
 								next: true
 							),
-					LunchTile (lunch: today.lunch),
+					// LunchTile (lunch: today.lunch),
 				]
 			)
 		)
