@@ -89,7 +89,7 @@ class RamazLogos {
 	);
 
 	static const Widget ram_rectangle = LoadingImage (
-		"images/logos/ramaz/ram_rectangle.jpg",
+		"images/logos/ramaz/ram_rectangle.png",
 		width: 360,
 		height: 124.5
 	);
