@@ -15,12 +15,13 @@ import "pages/home.dart" show HomePage;
 import "pages/schedule.dart" show SchedulePage;
 import "pages/login.dart" show Login;
 import "pages/feedback.dart" show FeedbackPage;
-// import "pages/sports.dart";
+import "pages/sports.dart";
 
 import "constants.dart";  // for route keys
-// import "mock/sports.dart" show games;
+import "mock/sports.dart" show games;
 
-const Color RAMAZ_BLUE = Color(0xFF004B8D);  // (255, 0, 75, 140);
+const Color BLUE = Color(0xFF004B8D);  // (255, 0, 75, 140);
+const Color GOLD = Color(0xFFF9CA15);
 
 void main() async {
 	final String dir = (await getApplicationDocumentsDirectory()).path;
@@ -30,31 +31,7 @@ void main() async {
 		reader.student = Student.fromData(reader.studentData);
 		reader.subjects = Subject.getSubjects(reader.subjectData);
 	}
-	runApp (
-		RamazApp(ready, reader)
-	);
-	// 	MaterialApp (
-	// 		home: ready 
-	// 			? HomePage(reader)
-	// 			: Login (reader),
-	// 		title: "Student Life",
-	// 		color: RAMAZ_BLUE,
-	// 		theme: theme,
-	// 		// darkTheme: null,
-	// 		routes: {
-	// 			LOGIN: (_) => Login(reader),
-	// 			HOME_PAGE: (_) => HomePage(reader), 
-	// 			SCHEDULE: (_) => SchedulePage (reader),
-	// 			SCHEDULE + CAN_EXIT: (_) => SchedulePage(reader, canExit: true),
-	// 			NEWS: placeholder ("News"),
-	// 			LOST_AND_FOUND: placeholder ("Lost and found"),
-	// 			SPORTS: placeholder ("Sports"),
-	// 			// SPORTS: (_) => SportsPage (games),
-	// 			ADMIN_LOGIN: placeholder ("Admin Login"),
-	// 			FEEDBACK: (_) => FeedbackPage(),
-	// 		} 
-	// 	)
-	// );
+	runApp (RamazApp(ready, reader));
 }
 
 class RamazApp extends StatelessWidget {
@@ -67,16 +44,22 @@ class RamazApp extends StatelessWidget {
 			? HomePage(reader)
 			: Login (reader),
 		title: "Student Life",
-		color: RAMAZ_BLUE,
+		color: BLUE,
 		theme: ThemeData (
 			brightness: Brightness.light,
 			primarySwatch: Colors.blue,
-			primaryColor: RAMAZ_BLUE,
+			primaryColor: BLUE,
 			primaryColorBrightness: Brightness.dark,
 			primaryColorLight: const Color(0XFF4A76BE),
 			primaryColorDark: const Color (0xFF00245F),
-			accentColor: const Color (0XFFF9CA15),
+			accentColor: GOLD,
 			accentColorBrightness: Brightness.light,
+			// cardColor: GOLD,
+			buttonColor: BLUE,
+			buttonTheme: ButtonThemeData (
+				buttonColor: GOLD,
+				textTheme: ButtonTextTheme.accent
+			),
 		),
 		// darkTheme: null,
 		routes: {
@@ -87,7 +70,7 @@ class RamazApp extends StatelessWidget {
 			NEWS: placeholder ("News"),
 			LOST_AND_FOUND: placeholder ("Lost and found"),
 			SPORTS: placeholder ("Sports"),
-			// SPORTS: (_) => SportsPage (games),
+			SPORTS: (_) => SportsPage (games),
 			ADMIN_LOGIN: placeholder ("Admin Login"),
 			FEEDBACK: (_) => FeedbackPage(),
 		} 

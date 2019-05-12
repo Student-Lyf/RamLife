@@ -50,10 +50,10 @@ class LoginState extends State <Login> {
 		),
 		floatingActionButton: FloatingActionButton.extended (
 			onPressed: ready ? login : null,
-			icon: loading ? CircularProgressIndicator() : Icon (Icons.done),
-			label: Text ("Submit"),
+			icon: loading ? CircularProgressIndicator() : Icon (Icons.done, color: Theme.of(context).accentColor),
+			label: Text ("Submit", style: TextStyle(color: Theme.of(context).accentColor)),
 			backgroundColor: ready && !loading
-				? Colors.blue 
+				? Theme.of(context).buttonColor
 				: Theme.of(context).disabledColor
 		),
 		body: Padding (
@@ -130,6 +130,7 @@ class LoginState extends State <Login> {
 		.requestFocus(_passwordNode);
 
 	void login () async {
+		_passwordNode.unfocus();
 		final String username = usernameController.text;
 		final String password = passwordController.text;
 		try {await Auth.signIn(username, password);}
