@@ -20,6 +20,8 @@ import "pages/feedback.dart" show FeedbackPage;
 import "constants.dart";  // for route keys
 // import "mock/sports.dart" show games;
 
+const Color RAMAZ_BLUE = Color(0xFF004B8D);  // (255, 0, 75, 140);
+
 void main() async {
 	final String dir = (await getApplicationDocumentsDirectory()).path;
 	final Reader reader = Reader(dir);
@@ -29,24 +31,66 @@ void main() async {
 		reader.subjects = Subject.getSubjects(reader.subjectData);
 	}
 	runApp (
-		MaterialApp (
-			home: ready 
-				? HomePage(reader)
-				: Login (reader),
-			title: "Student Life",
-			routes: {
-				LOGIN: (_) => Login(reader),
-				HOME_PAGE: (_) => HomePage(reader), 
-				SCHEDULE: (_) => SchedulePage (reader),
-				SCHEDULE + CAN_EXIT: (_) => SchedulePage(reader, canExit: true),
-				NEWS: placeholder ("News"),
-				LOST_AND_FOUND: placeholder ("Lost and found"),
-				SPORTS: placeholder ("Sports"),
-				// SPORTS: (_) => SportsPage (games),
-				ADMIN_LOGIN: placeholder ("Admin Login"),
-				FEEDBACK: (_) => FeedbackPage(),
-			} 
-		)
+		RamazApp(ready, reader)
+	);
+	// 	MaterialApp (
+	// 		home: ready 
+	// 			? HomePage(reader)
+	// 			: Login (reader),
+	// 		title: "Student Life",
+	// 		color: RAMAZ_BLUE,
+	// 		theme: theme,
+	// 		// darkTheme: null,
+	// 		routes: {
+	// 			LOGIN: (_) => Login(reader),
+	// 			HOME_PAGE: (_) => HomePage(reader), 
+	// 			SCHEDULE: (_) => SchedulePage (reader),
+	// 			SCHEDULE + CAN_EXIT: (_) => SchedulePage(reader, canExit: true),
+	// 			NEWS: placeholder ("News"),
+	// 			LOST_AND_FOUND: placeholder ("Lost and found"),
+	// 			SPORTS: placeholder ("Sports"),
+	// 			// SPORTS: (_) => SportsPage (games),
+	// 			ADMIN_LOGIN: placeholder ("Admin Login"),
+	// 			FEEDBACK: (_) => FeedbackPage(),
+	// 		} 
+	// 	)
+	// );
+}
+
+class RamazApp extends StatelessWidget {
+	final bool ready;
+	final Reader reader;
+	RamazApp(this.ready, this.reader);
+	@override 
+	Widget build (BuildContext context) => MaterialApp (
+		home: ready 
+			? HomePage(reader)
+			: Login (reader),
+		title: "Student Life",
+		color: RAMAZ_BLUE,
+		theme: ThemeData (
+			brightness: Brightness.light,
+			primarySwatch: Colors.blue,
+			primaryColor: RAMAZ_BLUE,
+			primaryColorBrightness: Brightness.dark,
+			primaryColorLight: const Color(0XFF4A76BE),
+			primaryColorDark: const Color (0xFF00245F),
+			accentColor: const Color (0XFFF9CA15),
+			accentColorBrightness: Brightness.light,
+		),
+		// darkTheme: null,
+		routes: {
+			LOGIN: (_) => Login(reader),
+			HOME_PAGE: (_) => HomePage(reader), 
+			SCHEDULE: (_) => SchedulePage (reader),
+			SCHEDULE + CAN_EXIT: (_) => SchedulePage(reader, canExit: true),
+			NEWS: placeholder ("News"),
+			LOST_AND_FOUND: placeholder ("Lost and found"),
+			SPORTS: placeholder ("Sports"),
+			// SPORTS: (_) => SportsPage (games),
+			ADMIN_LOGIN: placeholder ("Admin Login"),
+			FEEDBACK: (_) => FeedbackPage(),
+		} 
 	);
 }
 	
