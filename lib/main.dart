@@ -34,7 +34,8 @@ void main() async {
 		reader.subjects = Subject.getSubjects(reader.subjectData);
 		if (preferences.shouldUpdateCalendar) {
 			final Map<String, dynamic> month = await Firestore.getMonth();
-
+			reader.calendarData = month;
+			final Map<DateTime, Day> calendar = Day.getCalendar(month);
 		}
 	}
 	runApp (
