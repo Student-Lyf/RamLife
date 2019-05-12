@@ -1,9 +1,11 @@
 import "package:flutter/material.dart";
 import "package:path_provider/path_provider.dart";
+import "package:shared_preferences/shared_preferences.dart";
 
 // Backend
 import "services/reader.dart";
 import "services/auth.dart" as Auth;
+import "services/preferences.dart";
 
 // Dataclasses
 import "data/student.dart";
@@ -21,12 +23,15 @@ import "constants.dart";  // for route keys
 // import "mock/sports.dart" show games;
 
 void main() async {
+	final SharedPreferences prefs = await SharedPreferences.getInstance();
 	final String dir = (await getApplicationDocumentsDirectory()).path;
+	final Preferences preferences = Preferences(prefs);
 	final Reader reader = Reader(dir);
 	final bool ready = reader.ready && await Auth.ready();
-	if (ready) {
+	if (ready) {  // initialize data
 		reader.student = Student.fromData(reader.studentData);
 		reader.subjects = Subject.getSubjects(reader.subjectData);
+
 	}
 	runApp (
 		MaterialApp (
