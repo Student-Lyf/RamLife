@@ -135,7 +135,12 @@ class Day {
 		lunch: null
 	);
 
-	static Map<DateTime, Day> getCalendar(Map<String, dynamic> json) => null;
+	static Map<DateTime, Day> getCalendar(Map<String, dynamic> data) {
+		final int month = DateTime.now().month;
+		for (final MapEntry<String, dynamic> entry in data) {
+			if (entry.value == "month") c
+		}
+	}
 
 	int get period {
 		final Time time = Time.fromDateTime (DateTime.now());
