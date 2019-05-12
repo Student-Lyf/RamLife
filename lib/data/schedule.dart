@@ -130,6 +130,11 @@ class Day {
 		} else this.special = special;
 	} 
 
+	factory Day.fromJson(Map<String, dynamic> json) => Day (
+		letter: json ["letter"],
+		lunch: null
+	);
+
 	int get period {
 		final Time time = Time.fromDateTime (DateTime.now());
 		// final Time time = Time(3, 30);
