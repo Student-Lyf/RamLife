@@ -36,6 +36,7 @@ void main() async {
 			final Map<String, dynamic> month = await Firestore.getMonth();
 			reader.calendarData = month;
 			final Map<DateTime, Day> calendar = Day.getCalendar(month);
+			reader.calendar = calendar;
 		}
 	}
 	runApp (

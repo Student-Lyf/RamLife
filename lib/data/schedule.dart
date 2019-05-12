@@ -135,6 +135,8 @@ class Day {
 		lunch: null
 	);
 
+	static Map<DateTime, Day> getCalendar(Map<String, dynamic> json) => null;
+
 	int get period {
 		final Time time = Time.fromDateTime (DateTime.now());
 		// final Time time = Time(3, 30);
