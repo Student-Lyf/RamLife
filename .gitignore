@@ -10,6 +10,7 @@ __pycache__
 firebase/admin.json
 .gradle/
 .dart_tool
+TODO.txt.yaml
 
 # android files -- keep: 
 # 	- drawables
