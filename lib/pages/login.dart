@@ -50,10 +50,20 @@ class LoginState extends State <Login> {
 		),
 		floatingActionButton: FloatingActionButton.extended (
 			onPressed: ready ? login : null,
-			icon: loading ? CircularProgressIndicator() : Icon (Icons.done, color: Theme.of(context).accentColor),
-			label: Text ("Submit", style: TextStyle(color: Theme.of(context).accentColor)),
+			icon: loading 
+				? CircularProgressIndicator() 
+				: Icon (
+					Icons.done, 
+					color: Theme.of(context).floatingActionButtonTheme.foregroundColor
+				),
+			label: Text (
+				"Submit", 
+				style: TextStyle(
+					color: Theme.of(context).floatingActionButtonTheme.foregroundColor
+				)
+			),
 			backgroundColor: ready && !loading
-				? Theme.of(context).buttonColor
+				? Theme.of(context).floatingActionButtonTheme.backgroundColor
 				: Theme.of(context).disabledColor
 		),
 		body: Padding (

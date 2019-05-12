@@ -10,6 +10,7 @@ import "data/student.dart";
 import "data/schedule.dart";
 
 // UI
+import "widgets/brightness.dart" show BrightnessChanger;
 import "pages/drawer.dart";
 import "pages/home.dart" show HomePage;
 import "pages/schedule.dart" show SchedulePage;
@@ -22,6 +23,13 @@ import "mock/sports.dart" show games;
 
 const Color BLUE = Color(0xFF004B8D);  // (255, 0, 75, 140);
 const Color GOLD = Color(0xFFF9CA15);
+const Color BLUE_LIGHT = Color(0XFF4A76BE);
+const Color BLUE_DARK = Color (0xFF00245F);
+const Color GOLD_DARK = Color (0XFFC19A00);
+const Color GOLD_LIGHT = Color (0XFFFFFD56);
+
+const Color DARK_MODE_GOLD = Color (0xFF333300);
+const Color DARK_MODE_BLUE = Color (0XFF4AB8ED);
 
 void main() async {
 	final String dir = (await getApplicationDocumentsDirectory()).path;
@@ -39,41 +47,65 @@ class RamazApp extends StatelessWidget {
 	final Reader reader;
 	RamazApp(this.ready, this.reader);
 	@override 
-	Widget build (BuildContext context) => MaterialApp (
-		home: ready 
-			? HomePage(reader)
-			: Login (reader),
-		title: "Student Life",
-		color: BLUE,
-		theme: ThemeData (
-			brightness: Brightness.light,
-			primarySwatch: Colors.blue,
-			primaryColor: BLUE,
-			primaryColorBrightness: Brightness.dark,
-			primaryColorLight: const Color(0XFF4A76BE),
-			primaryColorDark: const Color (0xFF00245F),
-			accentColor: GOLD,
-			accentColorBrightness: Brightness.light,
-			// cardColor: GOLD,
-			buttonColor: BLUE,
-			buttonTheme: ButtonThemeData (
-				buttonColor: GOLD,
-				textTheme: ButtonTextTheme.accent
+	Widget build (BuildContext context) => BrightnessChanger (
+		builder: (BuildContext context, Brightness brightness) => MaterialApp (
+			home: ready 
+				? HomePage(reader)
+				: Login (reader),
+			title: "Student Life",
+			color: BLUE,
+			theme: brightness == Brightness.light 
+				? ThemeData (
+					brightness: Brightness.light,
+					primarySwatch: Colors.blue,
+					primaryColor: BLUE,
+					primaryColorBrightness: Brightness.dark,
+					primaryColorLight: BLUE_LIGHT,
+					primaryColorDark: BLUE_DARK,
+					accentColor: GOLD,
+					accentColorBrightness: Brightness.light,
+					// cardColor: GOLD,
+					buttonColor: BLUE,
+					buttonTheme: ButtonThemeData (
+						buttonColor: GOLD,
+						textTheme: ButtonTextTheme.accent
+					),
+				)
+			: ThemeData(
+				brightness: Brightness.dark,
+				scaffoldBackgroundColor: Colors.grey[700],
+				primarySwatch: Colors.blue,
+				primaryColor: const Color (0xFF00245F),
+				primaryColorBrightness: Brightness.dark,
+				primaryColorLight: const Color(0XFF4A76BE),
+				primaryColorDark: BLUE,
+				accentColor: GOLD,
+				accentColorBrightness: Brightness.light,
+				textTheme: Typography.whiteMountainView.apply(
+					bodyColor: GOLD,
+					displayColor: GOLD_DARK
+				),
+				iconTheme: IconThemeData (color: GOLD),
+				primaryIconTheme: IconThemeData (color: GOLD_DARK),
+				accentIconTheme: IconThemeData (color: GOLD_DARK),
+				floatingActionButtonTheme: FloatingActionButtonThemeData(
+					backgroundColor: GOLD_DARK,
+					foregroundColor: BLUE
+				)
 			),
-		),
-		// darkTheme: null,
-		routes: {
-			LOGIN: (_) => Login(reader),
-			HOME_PAGE: (_) => HomePage(reader), 
-			SCHEDULE: (_) => SchedulePage (reader),
-			SCHEDULE + CAN_EXIT: (_) => SchedulePage(reader, canExit: true),
-			NEWS: placeholder ("News"),
-			LOST_AND_FOUND: placeholder ("Lost and found"),
-			SPORTS: placeholder ("Sports"),
-			SPORTS: (_) => SportsPage (games),
-			ADMIN_LOGIN: placeholder ("Admin Login"),
-			FEEDBACK: (_) => FeedbackPage(),
-		} 
+			routes: {
+				LOGIN: (_) => Login(reader),
+				HOME_PAGE: (_) => HomePage(reader), 
+				SCHEDULE: (_) => SchedulePage (reader),
+				SCHEDULE + CAN_EXIT: (_) => SchedulePage(reader, canExit: true),
+				NEWS: placeholder ("News"),
+				LOST_AND_FOUND: placeholder ("Lost and found"),
+				SPORTS: placeholder ("Sports"),
+				SPORTS: (_) => SportsPage (games),
+				ADMIN_LOGIN: placeholder ("Admin Login"),
+				FEEDBACK: (_) => FeedbackPage(),
+			} 
+		)
 	);
 }
 	

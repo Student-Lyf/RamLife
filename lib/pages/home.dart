@@ -13,6 +13,7 @@ import "package:ramaz/mock/day.dart" show getToday;
 
 // UI
 import "package:ramaz/pages/drawer.dart";
+import "package:ramaz/widgets/brightness.dart" show BrightnessChanger;
 import "package:ramaz/widgets/class_list.dart";
 import "package:ramaz/widgets/next_class.dart";
 import "package:ramaz/widgets/lunch.dart";
@@ -36,6 +37,7 @@ class HomePageState extends State<HomePage> {
 	int periodIndex;
 	Timer timer;
 	bool needsGoogleSignIn = false; 
+	Brightness brightness = Brightness.light;
 
 	@override void initState() {
 		super.initState();
@@ -76,6 +78,15 @@ class HomePageState extends State<HomePage> {
 
 	@override Widget build (BuildContext context) => Scaffold (
 		key: key,
+		floatingActionButton: FloatingActionButton(
+			child: Icon (Icons.brightness_5, size: 30),
+			onPressed: () {
+				brightness = brightness == Brightness.light 
+					? Brightness.dark
+					: Brightness.light;
+				BrightnessChanger.of(context).brightness = brightness;
+			}
+		),
 		appBar: AppBar (
 			title: Text ("Home"),
 			actions: actions,
