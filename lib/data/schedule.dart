@@ -137,9 +137,18 @@ class Day {
 
 	static Map<DateTime, Day> getCalendar(Map<String, dynamic> data) {
 		final int month = DateTime.now().month;
-		for (final MapEntry<String, dynamic> entry in data) {
-			if (entry.value == "month") c
+		final int year = DateTime.now().year;
+		final Map<DateTime, Day> result = {};
+		for (final MapEntry<String, dynamic> entry in data.entries) {
+			final int day = int.parse (entry.key);
+			final DateTime date = DateTime.utc(
+				year, 
+				month, 
+				day
+			);
+			result [date] = Day.fromJson(entry.value);
 		}
+		return result;
 	}
 
 	int get period {
