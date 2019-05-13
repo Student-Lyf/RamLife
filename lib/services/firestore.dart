@@ -15,11 +15,11 @@ final CollectionReference classes = firestore.collection (CLASSES);
 final CollectionReference feedback = firestore.collection (FEEDBACK);
 final CollectionReference calendar = firestore.collection(CALENDAR);
 
-Future<DocumentSnapshot> getStudent (String username) async => 
-	await students.document(username).get();
+Future<Map<String, dynamic>> getStudent (String username) async => 
+	(await students.document(username).get()).data;
 
-Future<DocumentSnapshot> getClass (int id) async => 
-	await classes.document(id.toString()).get();
+Future<Map<String, dynamic>> getClass (int id) async => 
+	(await classes.document(id.toString()).get()).data;
 
 Future<Map<int, Map<String, dynamic>>> getClasses(Student student) async {
 	Set<int> ids = {};
@@ -31,7 +31,7 @@ Future<Map<int, Map<String, dynamic>>> getClasses(Student student) async {
 	}
 	Map<int, Map<String, dynamic>> result = {};
 	for (final int id in ids) 
-		result [id] = (await getClass(id)).data;
+		result [id] = await getClass(id);
 	return result;
 }
 
