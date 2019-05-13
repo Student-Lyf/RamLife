@@ -55,6 +55,7 @@ class Reader {
 	);
 
 	Map<DateTime, Day> calendar;
+	Day today;
 
 	void deleteAll() {
 		if (studentFile.existsSync())

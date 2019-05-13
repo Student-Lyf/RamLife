@@ -5,15 +5,28 @@ import "preferences.dart";
 import "package:ramaz/data/student.dart";
 import "package:ramaz/data/schedule.dart" show Subject, Day;
 
+void setToday(Reader reader) {
+	final DateTime now = DateTime.now();
+	final DateTime today = DateTime.utc(
+		now.year, 
+		now.month,
+		now.day
+	);
+	reader.today = reader.calendar [today];
+}
+
 void initOnMain(Reader reader, Preferences prefs) async {
 	reader.student = Student.fromData(reader.studentData);
 	reader.subjects = Subject.getSubjects(reader.subjectData);
+	Map<DateTime, Day> calendar;
 	if (prefs.shouldUpdateCalendar) {
 		final Map<String, dynamic> month = await Firestore.getMonth();
-		final Map<DateTime, Day> calendar = Day.getCalendar(month);
+		calendar = Day.getCalendar(month);
 		reader.calendarData = month;
 		reader.calendar = calendar;
-	}
+	} else 
+		calendar = reader.calendar;
+		setToday(reader);
 }
 
 void initOnLogin(Reader reader, Preferences prefs, String username) async {
@@ -36,4 +49,5 @@ void initOnLogin(Reader reader, Preferences prefs, String username) async {
 	reader.calendarData = month;
 	reader.calendar = calendar;
 	prefs.lastCalendarUpdate = DateTime.now();
+	setToday(reader);
 }
