@@ -1,18 +1,14 @@
 import "package:flutter/material.dart";
 import "package:flutter/services.dart" show PlatformException;
 
-// Data classes to store downloaded data
-import "package:ramaz/data/student.dart";
-import "package:ramaz/data/schedule.dart";
-
 // To display the logo
 import "package:ramaz/widgets/icons.dart";
 
 // Used to actually login
 import "package:ramaz/services/reader.dart";
-import "package:ramaz/services/firestore.dart" as Firestore;
 import "package:ramaz/services/auth.dart" as Auth;
 import "package:ramaz/services/preferences.dart";
+import "package:ramaz/services/main.dart" show initOnLogin;
 
 class Login extends StatefulWidget {
 	final Reader reader;
@@ -177,22 +173,7 @@ class LoginState extends State <Login> {
 			loading = true;
 			ready = true;
 		});
-		final Map<String, dynamic> data = (await Firestore.getStudent(username)).data;
-		widget.reader.studentData = data;
-		widget.reader.student = Student.fromData(data);
-
-		final Map<int, Map<String, dynamic>> subjectData = 
-			await Firestore.getClasses(widget.reader.student);
-		widget.reader.subjectData = subjectData;
-		final Map<int, Subject> subjects = Subject.getSubjects(subjectData);
-		widget.reader.subjects = subjects;
-
-		final Map<String, dynamic> month = await Firestore.getMonth();
-		final Map<DateTime, Day> calendar = Day.getCalendar(month);
-		widget.reader.calendarData = month;
-		widget.reader.calendar = calendar;
-		widget.prefs.lastCalendarUpdate = DateTime.now();
-
+		initOnLogin(widget.reader, widget.prefs, username);
 		Navigator.of(context).pushReplacementNamed("home");
 	}
 

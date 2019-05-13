@@ -3,14 +3,10 @@ import "package:path_provider/path_provider.dart";
 import "package:shared_preferences/shared_preferences.dart";
 
 // Backend
-import "services/reader.dart";
 import "services/auth.dart" as Auth;
 import "services/preferences.dart";
-import "services/firestore.dart" as Firestore;
-
-// Dataclasses
-import "data/student.dart";
-import "data/schedule.dart";
+import "services/reader.dart";
+import "services/main.dart" show initOnMain;
 
 // UI
 import "pages/drawer.dart";
@@ -29,17 +25,7 @@ void main() async {
 	final Preferences preferences = Preferences(prefs);
 	final Reader reader = Reader(dir);
 	final bool ready = reader.ready && await Auth.ready();
-	if (ready) {  // initialize data
-		reader.student = Student.fromData(reader.studentData);
-		reader.subjects = Subject.getSubjects(reader.subjectData);
-		if (preferences.shouldUpdateCalendar) {
-			final Map<String, dynamic> month = await Firestore.getMonth();
-			reader.calendarData = month;
-			final Map<DateTime, Day> calendar = Day.getCalendar(month);
-			reader.calendar = calendar;
-			preferences.lastCalendarUpdate = DateTime.now();
-		}
-	}
+	if (ready) initOnMain(reader, preferences);
 	runApp (
 		MaterialApp (
 			home: ready 
