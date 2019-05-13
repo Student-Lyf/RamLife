@@ -8,12 +8,12 @@ const Lunch lunch = Lunch(
 	salad: "Greek Salad",
 );
 
-final Day placeholderToday = Day (
-	letter: Letters.C,
-	lunch: null
-);
+// final Day placeholderToday = Day (
+// 	letter: Letters.C,
+// 	lunch: null
+// );
 
 // ----------------Mocked functions----------------
 
-// Derived from the calendar/date
-Day getToday() => placeholderToday;
+// // Derived from the calendar/date
+// Day getToday() => placeholderToday;

@@ -8,9 +8,6 @@ import "package:ramaz/data/schedule.dart";
 import "package:ramaz/services/reader.dart";
 import "package:ramaz/services/auth.dart" as Auth;
 
-// Misc
-import "package:ramaz/mock/day.dart" show getToday;
-
 // UI
 import "package:ramaz/pages/drawer.dart";
 import "package:ramaz/widgets/class_list.dart";
@@ -26,19 +23,21 @@ class HomePage extends StatefulWidget {
 }
 
 class HomePageState extends State<HomePage> {
-	static final Day today = getToday();
 	static const Duration minute = Duration (minutes: 1);
 
 	final GlobalKey<ScaffoldState> key = GlobalKey();
-	Schedule schedule;
+	Timer timer;
+	
 	Period period, nextPeriod;
+	Schedule schedule;
+	Day today;
 	List<Period> periods;
 	int periodIndex;
-	Timer timer;
 	bool needsGoogleSignIn = false; 
 
 	@override void initState() {
 		super.initState();
+		today = widget.reader.today;
 		Auth.needsGoogleSupport().then (
 			(bool value) => setState(
 				() => needsGoogleSignIn = value
