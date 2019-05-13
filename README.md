@@ -1,16 +1,22 @@
-# ramaz
+# Ramaz Student Life
 
-A new Flutter project.
+This is an app to help Ramaz students navigate their student life.
+It tells you what classes you have when, the latest sports news, lost and found information, and more.
 
-## Getting Started
+## Complete list of features: 
+- ### Ramaz login
+	You can login with your Ramaz email to get your schedule sent directly to the app!
+- ### Schedule explorer
+	A complete schedule built-in to your phone. It can tell you what you have now, later, or you can specify a letter and schedule (eg, Rosh Chodesh) to explore your schedule. 
+- ### Lunch
+	A calendar with all the lunches of the year is right on your phone, so you always know what's for lunch -- and when to use your priveleges.
+- ### Sports
+	See upcoming games across all of Ramaz's sports teams. After the games you can see the score and team's overal record.
+- ### Newspapers
+	Have instant access to all of Ramaz's student publications, including RamPage, XeVeX, Breakthrough, and more.
+- ### Lost & Found
+	Tired of getting notifications every second when something is lost, but still want everyone else to be notified when **you** lose something? The Lost & Found feature introduces a chat-based system that notifies only the people involved. An image-recognition based system is coming soon, so finding your lost objects will require less effort than ever.
 
-This project is a starting point for a Flutter application.
+## Your feedback is appreciated
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.io/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.io/docs/cookbook)
-
-For help getting started with Flutter, view our 
-[online documentation](https://flutter.io/docs), which offers tutorials, 
-samples, guidance on mobile development, and a full API reference.
+We want to hear what you have to say, so please use the "Send Feedback" button in the app to tell us what you do -- and don't -- like, and we'll do our best to keep you happy.
