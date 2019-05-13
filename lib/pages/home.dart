@@ -91,6 +91,10 @@ class HomePageState extends State<HomePage> {
 				headerText: period == null ? "Today's Schedule" : "Upcoming Classes"
 			)
 		),
+		floatingActionButton: FloatingActionButton (
+			child: Icon (Icons.calendar_today),
+			onPressed: viewDay
+		),
 		body: RefreshIndicator (  // so you can refresh the period
 			onRefresh: update,
 			child: ListView (
@@ -155,5 +159,33 @@ class HomePageState extends State<HomePage> {
 				]
 			)
 		);
+	}
+
+	set day (DateTime date) {
+		today = widget.reader.calendar [date];
+		periods = widget.reader.student.getPeriods(today);
+		setState(update);
+	}
+
+	void viewDay() async {
+		final DateTime now = DateTime.now();
+		final DateTime beginningOfMonth = DateTime.utc (
+			now.year, now.month, 1
+		);
+		final DateTime endOfMonth = DateTime.utc (
+			now.year, now.month + 1, 1
+		);
+		final DateTime selected = await showDatePicker (
+			context: context,
+			initialDate: now,
+			firstDate: beginningOfMonth, 
+			lastDate: endOfMonth,
+			// For a darker theme -- set intelligently
+			// builder: (BuildContext context, Widget child) => Theme (
+			// 	data: ThemeData.dark(),
+			// 	child: child
+			// )
+		);
+		if (selected == null) return;
 	}
 }
