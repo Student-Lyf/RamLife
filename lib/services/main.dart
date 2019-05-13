@@ -15,12 +15,12 @@ void setToday(Reader reader) {
 	reader.today = reader.calendar [today];
 }
 
-void initOnMain(Reader reader, Preferences prefs) async {
+Future<void> initOnMain(Reader reader, Preferences prefs) async {
 	reader.student = Student.fromData(reader.studentData);
 	reader.subjects = Subject.getSubjects(reader.subjectData);
 	Map<DateTime, Day> calendar;
 	if (prefs.shouldUpdateCalendar) {
-		final Map<String, dynamic> month = await Firestore.getMonth();
+		final Map<String, dynamic> month = (await Firestore.getMonth());
 		calendar = Day.getCalendar(month);
 		reader.calendarData = month;
 		reader.calendar = calendar;
@@ -29,7 +29,7 @@ void initOnMain(Reader reader, Preferences prefs) async {
 		setToday(reader);
 }
 
-void initOnLogin(Reader reader, Preferences prefs, String username) async {
+Future<void> initOnLogin(Reader reader, Preferences prefs, String username) async {
 	// retrieve raw data
 	final Map<String, dynamic> studentData = await Firestore.getStudent(username);
 	final Map<String, dynamic> month = await Firestore.getMonth();

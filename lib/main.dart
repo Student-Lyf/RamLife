@@ -25,7 +25,7 @@ void main() async {
 	final Preferences preferences = Preferences(prefs);
 	final Reader reader = Reader(dir);
 	final bool ready = reader.ready && await Auth.ready();
-	if (ready) initOnMain(reader, preferences);
+	if (ready) await initOnMain(reader, preferences);
 	runApp (
 		MaterialApp (
 			home: ready 
