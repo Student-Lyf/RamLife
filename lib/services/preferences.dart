@@ -28,7 +28,9 @@ class Preferences {
 	bool get shouldUpdateCalendar => firstTime || !isToday (lastCalendarUpdate);
 	DateTime get lastCalendarUpdate => DateTime.parse(
 		prefs.getString(CALENDAR_UPDATE_KEY)
+			?? DateTime.utc (1970, 1, 1).toString() 
 	);
+
 	set lastCalendarUpdate (DateTime date) => prefs.setString(
 		CALENDAR_UPDATE_KEY, date.toString()
 	);

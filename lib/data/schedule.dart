@@ -4,6 +4,16 @@ import "times.dart";
 
 enum Letters {M, R, A, B, C, E, F}
 
+const Map<String, Letters> stringToLetters = {
+	"A": Letters.A,
+	"B": Letters.B,
+	"C": Letters.C,
+	"M": Letters.M,
+	"R": Letters.R,
+	"E": Letters.E,
+	"F": Letters.F
+};
+
 class Subject {
 	final String name, teacher;
 
@@ -130,8 +140,8 @@ class Day {
 		} else this.special = special;
 	} 
 
-	factory Day.fromJson(Map<String, dynamic> json) => Day (
-		letter: json ["letter"],
+	factory Day.fromJson(Map<dynamic, dynamic> json) => Day (
+		letter: stringToLetters [json ["letter"]],
 		lunch: null
 	);
 

@@ -47,4 +47,3 @@ Future<void> sendFeedback(
 Future<Map<String, dynamic>> getMonth() async => (
 	await calendar.document(DateTime.now().month.toString()).get()
 ).data;
-

@@ -27,7 +27,7 @@ class HomePageState extends State<HomePage> {
 
 	final GlobalKey<ScaffoldState> key = GlobalKey();
 	Timer timer;
-	
+
 	Period period, nextPeriod;
 	Schedule schedule;
 	Day today;
