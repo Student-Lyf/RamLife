@@ -62,46 +62,6 @@ class LoginState extends State <Login> {
 				child: Column (
 					children: [
 						RamazLogos.teal,
-						TextField (
-							keyboardType: TextInputType.text,
-							textInputAction: TextInputAction.next,
-							onSubmitted: transition,
-							onChanged: usernameValidate,
-							controller: usernameController,
-							decoration: InputDecoration (
-								icon: Icon (Icons.account_circle),
-								errorText: usernameError,
-								labelText: "Username",
-								helperText: "Enter your Ramaz username",
-							)
-						),
-						TextField (
-							textInputAction: TextInputAction.done,
-							focusNode: _passwordNode,
-							controller: passwordController,
-							onChanged: passwordValidator,
-							obscureText: obscure,
-							decoration: InputDecoration (
-								icon: Icon (Icons.security),
-								labelText: "Password",
-								helperText: "Enter your Ramaz password",
-								errorText: passwordError,
-								suffixIcon: IconButton (
-									icon: Icon (obscure 
-										? Icons.visibility 
-										: Icons.visibility_off
-									),
-									onPressed: () => setState (() {obscure = !obscure;})
-								)
-							)
-						),
-						SizedBox (height: 30),  // FAB covers textbox when keyboard is up
-						ListTile (
-							title: Text ("Sign in with Google"),
-							onTap: googleLogin,
-							contentPadding: EdgeInsets.symmetric (horizontal: 20),
-							leading: Logos.google
-						)
 					]
 				)
 			)
