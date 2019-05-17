@@ -23,12 +23,10 @@ class Login extends StatefulWidget {
 class LoginState extends State <Login> {
 	static final RegExp usernameRegex = RegExp ("[a-z]+");
 	static final RegExp passwordRegex = RegExp (r"([a-z]|\d)+");
-	final FocusNode _passwordNode = FocusNode();
 	final TextEditingController usernameController = TextEditingController();
 	final TextEditingController passwordController = TextEditingController();
+	final FocusNode userNode = FocusNode()..addListener(verifyUser);
 	final GlobalKey<ScaffoldState> key = GlobalKey();
-
-	bool obscure = true, ready = false, loading = false;
 	String usernameError, passwordError;
 
 	@override void initState() {
@@ -39,29 +37,49 @@ class LoginState extends State <Login> {
 
 	@override void dispose() {
 		super.dispose();
-		_passwordNode.dispose();
+		usernameController.dispose();
+		passwordController.dispose();
 	}
 
 	@override
 	Widget build (BuildContext context) => Scaffold(
 		key: key,
-		appBar: AppBar (
-			title: Text ("Login"),
-		),
-		floatingActionButton: FloatingActionButton.extended (
-			onPressed: ready ? login : null,
-			icon: loading ? CircularProgressIndicator() : Icon (Icons.done),
-			label: Text ("Submit"),
-			backgroundColor: ready && !loading
-				? Colors.blue 
-				: Theme.of(context).disabledColor
-		),
+		appBar: AppBar (title: Text ("Login")),
 		body: Padding (
 			padding: EdgeInsets.all (20),
 			child: SingleChildScrollView (
 				child: Column (
 					children: [
 						RamazLogos.teal,
+						DefaultTabController(
+							length: 3,
+							child: TabBarView (
+								physics: NeverScrollableScrollPhysics(),
+								children: [
+									Column (
+										children: [
+											TextField(
+												decoration: InputDecoration(
+													icon: Icon (Icons.verified_user),
+													labelText: "Username",
+													hintText: "Enter your Ramaz username",
+													errorText: usernameError,
+													suffix: IconButton (
+														icon: Icon (Icons.navigate_next),
+														onPressed: verifyUser
+													)
+												)
+											),
+											Center (child: Text ("OR")),
+											ListTile (
+												leading: Logos.google,
+												title: Text ("Sign in with Google"),
+											)
+										]
+									),
+								]
+							)
+						)
 					]
 				)
 			)

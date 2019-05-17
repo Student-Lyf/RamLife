@@ -4,6 +4,8 @@ from datetime import datetime
 
 from my_stuff.misc import init
 
+DATA_ROWS = [6, 13, 20, 27, 34]
+
 class Day: 
 	@init
 	def __init__(self, date, letter): pass
@@ -17,8 +19,8 @@ def parse_entry(entry) -> Day:
 	letter = entry["letter"]
 	return Day (date, letter)
 
-def parse_calendar(path): 
-	path = Path (path)
+def parse_letter_calendar(): 
+	path = Path (r"C:\users\levi\coding\flutter\ramaz\data\calendar\calendar.csv")
 	with path.open(newline = "") as file: 
 		reader = Reader (
 			file, 
@@ -38,5 +40,16 @@ def parse_calendar(path):
 			for row in reader
 		]
 
-entries = parse_calendar(r"C:\users\levi\coding\flutter\ramaz\data\calendar\calendar.csv")
-print (entries)
+def parse_full_calendar(): 
+	folder = Path(r"C:\users\levi\coding\flutter\ramaz\data\calendar")
+	for month in range (1, 13):  # months of the year
+		if month == 7 or month == 1: continue  # they skip July
+		file = folder / f"{month}.csv"
+		text = file.read_text().split("\n")
+		for row in DATA_ROWS: 
+			print (text [row - 1])
+
+		return
+
+
+print (parse_full_calendar())
