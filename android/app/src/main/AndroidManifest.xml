@@ -9,8 +9,8 @@
     <application
         android:name="io.flutter.app.FlutterApplication"
         android:label="Student Life"
-        android:roundIcon="@mipmap/adaptive_icon_round"
-        android:icon="@mipmap/adaptive_icon">
+        android:roundIcon="@mipmap/bright_yellow_round"
+        android:icon="@mipmap/bright_yellow">
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"
