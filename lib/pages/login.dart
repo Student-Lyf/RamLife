@@ -21,16 +21,19 @@ class Login extends StatefulWidget {
 class LoginState extends State <Login> {
 	static final RegExp usernameRegex = RegExp ("[a-z]+");
 	static final RegExp passwordRegex = RegExp (r"([a-z]|\d)+");
+	final PageController pageController = PageController();
 	final TextEditingController usernameController = TextEditingController();
 	final FocusNode userNode = FocusNode();
 	final GlobalKey<ScaffoldState> key = GlobalKey();
+
 	String usernameError, passwordError;
+	bool loading = false, ready = false;
 
 	@override void initState() {
 		super.initState();
 		Auth.signOut();  // To log in, one must first log out  --Levi
 		widget.reader.deleteAll();
-		userNode.addListener(verifyUser);
+		usernameController.text = "Coming soon";
 	}
 
 	@override void dispose() {
@@ -42,77 +45,70 @@ class LoginState extends State <Login> {
 	Widget build (BuildContext context) => Scaffold(
 		key: key,
 		appBar: AppBar (title: Text ("Login")),
-		body: Padding (
-			padding: EdgeInsets.all (20),
-			child: SingleChildScrollView (
-				child: Column (
-					children: [
-						RamazLogos.teal,
-						DefaultTabController(
-							length: 2,
-							child: TabBarView (
-								physics: NeverScrollableScrollPhysics(),
-								children: [
-									Column (
-										children: [
-											TextField(
-												controller: usernameController,
-												focusNode: userNode,
-												textInputAction: TextInputAction.next,
-												onChanged: validateUsername,
-												onSubmitted: verifyUser,
-												decoration: InputDecoration(
-													icon: Icon (Icons.verified_user),
-													labelText: "Username",
-													hintText: "Enter your Ramaz username",
-													errorText: usernameError,
-													suffix: IconButton (
-														icon: Icon (Icons.navigate_next),
-														onPressed: verifyUser
-													)
-												)
-											),
-											Center (child: Text ("OR")),
-											ListTile (
-												leading: Logos.google,
-												title: Text ("Sign in with Google"),
-											)
-										]
-									),
-									CircularProgressIndicator(),
-								]
+		body: ListView (  // for keyboard blocking the screen
+			shrinkWrap: true,
+			// physics: NeverScrollableScrollPhysics(),
+			children: [
+				if (loading) LinearProgressIndicator(),
+				Padding (  // things look kinda weird
+					padding: EdgeInsets.all (20),
+					child: Column (
+						children: [
+							RamazLogos.teal,
+							TextField(
+								controller: usernameController,
+								focusNode: userNode,
+								textInputAction: TextInputAction.done,
+								onChanged: validateUsername,
+								onSubmitted: verifyUser,
+								decoration: InputDecoration(
+									enabled: false,
+									icon: Icon (Icons.verified_user),
+									labelText: "Username",
+									hintText: "Enter your Ramaz username",
+									errorText: usernameError,
+									suffix: IconButton (
+										icon: Icon (Icons.done),
+										onPressed: ready ? verifyUser : null,
+										color: Colors.green,
+									)
+								)
+							),
+							SizedBox (height: 20),
+							Center (child: Text ("OR", textScaleFactor: 1)),
+							SizedBox (height: 10),
+							ListTile (
+								leading: Logos.google,
+								title: Text ("Sign in with Google"),
+								onTap: googleLogin
 							)
-						)
-					]
+						]
+					)
 				)
-			)
+			]
 		)
 	);
 
 	static bool capturesAll (String text, RegExp regex) => 
 		text.isEmpty || regex.matchAsPrefix(text)?.end == text.length;
 
-	// void passwordValidator (String pass) => setState(() {
-	// 	passwordError = capturesAll (pass, passwordRegex)
-	// 		? null
-	// 		: "Only lower case letters and numbers allowed";
-	// 	ready = pass.isNotEmpty && usernameController.text.isNotEmpty;
-	// });
-
 	void validateUsername(String text) {
 		String error;
+		ready = text.isNotEmpty;
 		if (text.contains("@"))
 			error = "Do not enter your Ramaz email, just your username";
 		else if (!capturesAll (text, usernameRegex))
 			error = "Only lower case letters allowed";
-		if (error != null) setState(() => usernameError = error);
+		else error = null;
+		if (error != null) ready = false;
+		setState(() => usernameError = error);
 	}
 
 	void verifyUser([String username]) {
 		// TODO: Check if user exists and has email set up
+		userNode.unfocus();
+		downloadData(username ?? usernameController.text);
 	}
-
-	void transition ([String username]) => DefaultTabController.of(context).animateTo(1);
 
 	void login () async {
 		// final String username = usernameController.text;
@@ -150,16 +146,24 @@ class LoginState extends State <Login> {
 	}
 
 	void downloadData(String username, {bool google = false}) async {
+		setState(() => loading = true);
 		if (google) key.currentState.showSnackBar(
 			SnackBar (
 				content: Text ("Make sure to use Google to sign in next time")
 			)
 		); 
 		setState(() {
-			loading = true;
-			ready = true;
+			// loading = true;
+			// ready = true;
 		});
-		await initOnLogin(widget.reader, widget.prefs, username);
+		try {await initOnLogin(widget.reader, widget.prefs, username);}
+		on PlatformException {
+			setState(() => loading = false);
+			key.currentState.showSnackBar(
+				SnackBar (content: Text ("Login failed"))
+			);
+			return;
+		}
 		Navigator.of(context).pushReplacementNamed("home");
 	}
 
