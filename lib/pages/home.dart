@@ -10,6 +10,7 @@ import "package:ramaz/services/auth.dart" as Auth;
 
 // UI
 import "package:ramaz/pages/drawer.dart";
+import "package:ramaz/widgets/brightness.dart" show BrightnessChanger;
 import "package:ramaz/widgets/class_list.dart";
 import "package:ramaz/widgets/next_class.dart";
 import "package:ramaz/widgets/date_picker.dart" show pickDate;
