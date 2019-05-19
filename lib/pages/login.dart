@@ -33,7 +33,7 @@ class LoginState extends State <Login> {
 		super.initState();
 		Auth.signOut();  // To log in, one must first log out  --Levi
 		widget.reader.deleteAll();
-		usernameController.text = "Coming soon";
+		usernameController.text = "Coming soon";  // TODO
 	}
 
 	@override void dispose() {
@@ -46,11 +46,10 @@ class LoginState extends State <Login> {
 		key: key,
 		appBar: AppBar (title: Text ("Login")),
 		body: ListView (  // for keyboard blocking the screen
-			shrinkWrap: true,
-			// physics: NeverScrollableScrollPhysics(),
+			shrinkWrap: true,  // solves everything
 			children: [
 				if (loading) LinearProgressIndicator(),
-				Padding (  // things look kinda weird
+				Padding (
 					padding: EdgeInsets.all (20),
 					child: Column (
 						children: [
@@ -152,10 +151,6 @@ class LoginState extends State <Login> {
 				content: Text ("Make sure to use Google to sign in next time")
 			)
 		); 
-		setState(() {
-			// loading = true;
-			// ready = true;
-		});
 		try {await initOnLogin(widget.reader, widget.prefs, username);}
 		on PlatformException {
 			setState(() => loading = false);
