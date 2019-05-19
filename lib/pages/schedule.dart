@@ -7,6 +7,7 @@ import "package:ramaz/services/reader.dart";
 
 import "package:ramaz/pages/drawer.dart";
 import "package:ramaz/widgets/class_list.dart";
+import "package:ramaz/widgets/date_picker.dart" show pickDate;
 
 class SchedulePage extends StatefulWidget {
 	final Reader reader;
@@ -20,11 +21,15 @@ class ScheduleState extends State<SchedulePage> {
 	static const Letters defaultLetter = Letters.M;
 	static final Special defaultSpecial = regular;
 
-	Letters letter = defaultLetter;
-	Special special = defaultSpecial;
-	Day day = getDay (defaultLetter, defaultSpecial);
+	final GlobalKey<ScaffoldState> key = GlobalKey();
+
+	Day day;
+	Letters letter;
+	Special special;
 	Schedule schedule;
+	DateTime selectedDay = DateTime.now();
 	List<Period> periods;
+	Map<DateTime, Day> calendar;
 
 	static Day getDay (Letters letter, Special special) => Day (
 		letter: letter,
@@ -34,7 +39,31 @@ class ScheduleState extends State<SchedulePage> {
 
 	@override void initState () {
 		super.initState();
+		final Day readerDay = widget.reader.currentDay;
+		if (readerDay == null || readerDay.letter == null) 
+			day = getDay (defaultLetter, defaultSpecial);
+		else day = readerDay;
+		letter = day.letter;
+		special = day.special;
+
+		try {date = DateTime.now();}
+		on ArgumentError {}
 		update();
+	}
+
+	set date (DateTime date) {
+		final DateTime dateTime = DateTime.utc(
+			date.year, 
+			date.month, 
+			date.day
+		);
+		final Day selected = widget.reader.calendar [dateTime];
+		if (selected.letter == null) throw ArgumentError();
+		widget.reader.currentDay = selected;
+		update(
+			newLetter: selected.letter, 
+			newSpecial: selected.special
+		);
 	}
 
 	void update({Letters newLetter, Special newSpecial}) {
@@ -84,11 +113,33 @@ class ScheduleState extends State<SchedulePage> {
 		});
 	}
 
+	void viewDay() async {
+		final DateTime selected = await pickDate (
+			context: context,
+			initialDate: selectedDay
+		);
+		if (selected == null) return;
+		selectedDay = selected;
+		try {date = selected;}
+		on ArgumentError {
+			key.currentState.showSnackBar(
+				SnackBar (
+					content: Text ("There is no school on this day")
+				)
+			);
+		}
+	}
+
 	@override
 	Widget build (BuildContext context) => Scaffold (
+		key: key,
 		appBar: AppBar (
 			title: Text ("Schedule"),
 			actions: widget.canExit ? null : [
+				IconButton (
+					icon: Icon (Icons.calendar_today),
+					onPressed: viewDay
+				),
 				IconButton (
 					icon: Icon (Icons.home),
 					onPressed: () => Navigator

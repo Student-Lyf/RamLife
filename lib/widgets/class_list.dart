@@ -52,7 +52,8 @@ class ClassList extends StatelessWidget {
 							child: Center (
 								child: Text (
 									headerText,
-									textScaleFactor: 2
+									textScaleFactor: 2,
+									textAlign: TextAlign.center,
 								)
 							)
 						)
@@ -65,8 +66,12 @@ class ClassList extends StatelessWidget {
 				info.removeWhere(
 					(String description) => description.startsWith("Period:")
 				);
+				String title = period.period;
+				if (period.id == -1) title += ": Free period";
+				else if (subject != null) title += ": ${subject.name}";
 				return ClassPanel (
-					title: "${period.period}${subject == null ? '' : ': ${subject.name}'}",
+					// title: "${period.period}${subject == null ? '' : ': ${subject.name}'}",
+					title: title,
 					children: info.map (
 						(String description) => Text (description)
 					).toList(),

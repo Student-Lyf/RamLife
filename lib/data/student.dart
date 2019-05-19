@@ -67,6 +67,7 @@ class Student {
 	);}
 
 	List <Period> getPeriods (Day day) {
+		if (day.letter == null) return null;
 		final List <Period> result = [];
 		final List <PeriodData> periods = schedule [day.letter].periods;
 		final Special special = day.special;
