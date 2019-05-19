@@ -16,8 +16,7 @@ class InfoCard extends StatelessWidget {
 		child: ListTile (
 			leading: Icon (icon),
 			title: Text (title, textScaleFactor: 1.2),
-			onTap: page == null ? null : 
-				() => Navigator.of(context).pushNamed(page),
+			onTap: () => Navigator.of(context).pushNamed(page),
 			subtitle: children == null ? null : Align (
 				alignment: const Alignment (-0.75, 0),
 				child: Column (

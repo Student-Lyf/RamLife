@@ -173,7 +173,7 @@ class LoginState extends State <Login> {
 			loading = true;
 			ready = true;
 		});
-		initOnLogin(widget.reader, widget.prefs, username);
+		await initOnLogin(widget.reader, widget.prefs, username);
 		Navigator.of(context).pushReplacementNamed("home");
 	}
 

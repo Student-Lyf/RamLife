@@ -12,6 +12,7 @@ import "package:ramaz/services/auth.dart" as Auth;
 import "package:ramaz/pages/drawer.dart";
 import "package:ramaz/widgets/class_list.dart";
 import "package:ramaz/widgets/next_class.dart";
+import "package:ramaz/widgets/date_picker.dart" show pickDate;
 // import "package:ramaz/widgets/lunch.dart";
 import "package:ramaz/widgets/icons.dart";
 
@@ -31,13 +32,19 @@ class HomePageState extends State<HomePage> {
 	Period period, nextPeriod;
 	Schedule schedule;
 	Day today;
+	DateTime selectedDay;
 	List<Period> periods;
 	int periodIndex;
-	bool needsGoogleSignIn = false; 
+	bool needsGoogleSignIn = false, school; 
 
 	@override void initState() {
 		super.initState();
-		today = widget.reader.today;
+		if (widget.reader.currentDay != null)
+			today = widget.reader.currentDay;
+		else today = widget.reader.today;
+		selectedDay = DateTime.now();
+		widget.reader.currentDay = today;
+		school = today.letter != null;
 		Auth.needsGoogleSupport().then (
 			(bool value) => setState(
 				() => needsGoogleSignIn = value
@@ -54,41 +61,34 @@ class HomePageState extends State<HomePage> {
 		super.dispose();
 	}
 
-	List<Widget> get actions {
-		List<Widget> result = [
-			FlatButton (
-				child: Text (
-					"Swipe left for schedule",
-					style: TextStyle (color: Colors.white)),
-				onPressed: () => key.currentState.openEndDrawer()
-			),
-		];
-		if (needsGoogleSignIn) result.insert (
-			0, 
-			IconButton (
-				icon: Logos.google,
-				onPressed: addGoogleSignIn
-			)
-		);
-		return result;
-	}
-
 	@override Widget build (BuildContext context) => Scaffold (
 		key: key,
 		appBar: AppBar (
 			title: Text ("Home"),
-			actions: actions,
+			actions: [
+				if (needsGoogleSignIn) IconButton (
+					icon: Logos.google,
+					onPressed: addGoogleSignIn,
+				),
+				if (school) FlatButton (
+					child: Text ("Swipe left for schedule"),
+					textColor: Colors.white,
+					onPressed: () => key.currentState.openEndDrawer
+				)
+			],
 		),
 		drawer: NavigationDrawer(),
-		endDrawer: Drawer (
+		endDrawer: !school ? null : Drawer (
 			child: ClassList(
 				periods: nextPeriod == null 
 					? periods
 					: periods.getRange (
-					(periodIndex ?? -1) + 1, periods.length
-				),
+						(periodIndex ?? -1) + 1, periods.length
+					),
 				reader: widget.reader,
-				headerText: period == null ? "Today's Schedule" : "Upcoming Classes"
+				headerText: period == null 
+					? "Today's Schedule" 
+					: "Upcoming Classes"
 			)
 		),
 		floatingActionButton: FloatingActionButton (
@@ -96,36 +96,43 @@ class HomePageState extends State<HomePage> {
 			onPressed: viewDay
 		),
 		body: RefreshIndicator (  // so you can refresh the period
-			onRefresh: update,
+			onRefresh: () async => update(),
 			child: ListView (
 				children: [
 					RamazLogos.ram_rectangle,
 					Divider(),
-					Center (
-						child: Text (
-							"Today is a${today.n} ${today.name}", 
-							textScaleFactor: 2.5
-						)
+					Text (
+						school
+							? "Today is a${today.n} ${today.name}"
+							: "There is no school today",
+						textScaleFactor: 2,
+						textAlign: TextAlign.center
 					),
-					NextClass(period, widget.reader.subjects[period?.id]),
-					nextPeriod == null  // if school is not over, show the next class
-						? Container() 
-						: NextClass (
-								nextPeriod, 
-								widget.reader.subjects[nextPeriod?.id], 
-								next: true
-							),
+					if (school)
+						NextClass(period, widget.reader.subjects[period?.id]),
+					if (nextPeriod != null)  // if school is not over, show the next class
+						NextClass (
+							nextPeriod, 
+							widget.reader.subjects[nextPeriod?.id], 
+							next: true
+						),
 					// LunchTile (lunch: today.lunch),
 				]
 			)
 		)
 	);
 
-	Future<void> update([_]) async => setState(() {
+	void update([_]) => setState(() {
+		if (!school) {
+			nextPeriod = null;
+			return;
+		}
 		periodIndex = today.period;
+		// print (periodIndex);
 		period = periodIndex == null ? null : periods [periodIndex];	
 		if (periodIndex != null && periodIndex < periods.length - 1)
 			nextPeriod = periods [periodIndex + 1];
+		else nextPeriod = null;
 	});
 
 	void addGoogleSignIn() async {
@@ -145,7 +152,6 @@ class HomePageState extends State<HomePage> {
 				content: ListTile (
 					title: Text (
 						"You can now sign in with your Google account"
-						// "Note that you can no longer using your password"
 					)
 				),
 				actions: [
@@ -162,30 +168,25 @@ class HomePageState extends State<HomePage> {
 	}
 
 	set day (DateTime date) {
-		today = widget.reader.calendar [date];
+		DateTime day = DateTime.utc(
+			date.year, 
+			date.month, 
+			date.day
+		);
+		today = widget.reader.calendar [day];
+		widget.reader.currentDay = today;
 		periods = widget.reader.student.getPeriods(today);
-		setState(update);
+		school = today.letter != null;
+		update();
 	}
 
 	void viewDay() async {
-		final DateTime now = DateTime.now();
-		final DateTime beginningOfMonth = DateTime.utc (
-			now.year, now.month, 1
-		);
-		final DateTime endOfMonth = DateTime.utc (
-			now.year, now.month + 1, 1
-		);
-		final DateTime selected = await showDatePicker (
+		final DateTime selected = await pickDate (
 			context: context,
-			initialDate: now,
-			firstDate: beginningOfMonth, 
-			lastDate: endOfMonth,
-			// For a darker theme -- set intelligently
-			// builder: (BuildContext context, Widget child) => Theme (
-			// 	data: ThemeData.dark(),
-			// 	child: child
-			// )
-		);
+			initialDate: selectedDay
+		);	
 		if (selected == null) return;
+		selectedDay = selected;
+		day = selected;
 	}
 }
