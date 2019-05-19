@@ -4,6 +4,16 @@ import "times.dart";
 
 enum Letters {M, R, A, B, C, E, F}
 
+const Map<String, Letters> stringToLetters = {
+	"A": Letters.A,
+	"B": Letters.B,
+	"C": Letters.C,
+	"M": Letters.M,
+	"R": Letters.R,
+	"E": Letters.E,
+	"F": Letters.F
+};
+
 class Subject {
 	final String name, teacher;
 
@@ -88,9 +98,11 @@ class Day {
 	final Lunch lunch;
 	Special special;
 
-	String get name => "${letter.toString().substring (8)} day ${
-		special == regular || special == rotate ? '' : special.name
-	}";
+	String get name => letter == null 
+		? "No school"
+		: "${letter.toString().substring (8)} day ${
+			special == regular || special == rotate ? '' : special.name
+		}";
 
 	String get n {
 		switch (letter) {
@@ -130,10 +142,26 @@ class Day {
 		} else this.special = special;
 	} 
 
-	factory Day.fromJson(Map<String, dynamic> json) => Day (
-		letter: json ["letter"],
+	factory Day.fromJson(Map<dynamic, dynamic> json) => Day (
+		letter: stringToLetters [json ["letter"]],
 		lunch: null
 	);
+
+	static Map<DateTime, Day> getCalendar(Map<String, dynamic> data) {
+		final int month = DateTime.now().month;
+		final int year = DateTime.now().year;
+		final Map<DateTime, Day> result = {};
+		for (final MapEntry<String, dynamic> entry in data.entries) {
+			final int day = int.parse (entry.key);
+			final DateTime date = DateTime.utc(
+				year, 
+				month, 
+				day
+			);
+			result [date] = Day.fromJson(entry.value);
+		}
+		return result;
+	}
 
 	int get period {
 		final Time time = Time.fromDateTime (DateTime.now());

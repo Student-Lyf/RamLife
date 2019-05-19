@@ -1,21 +1,19 @@
 import "package:flutter/material.dart";
 import "package:flutter/services.dart" show PlatformException;
 
-// Data classes to store downloaded data
-import "package:ramaz/data/student.dart";
-import "package:ramaz/data/schedule.dart";
-
 // To display the logo
 import "package:ramaz/widgets/icons.dart";
 
 // Used to actually login
 import "package:ramaz/services/reader.dart";
-import "package:ramaz/services/firestore.dart" as Firestore;
 import "package:ramaz/services/auth.dart" as Auth;
+import "package:ramaz/services/preferences.dart";
+import "package:ramaz/services/main.dart" show initOnLogin;
 
 class Login extends StatefulWidget {
 	final Reader reader;
-	Login(this.reader);
+	final Preferences prefs;
+	Login(this.reader, this.prefs);
 
 	@override LoginState createState() => LoginState();
 }
@@ -157,16 +155,11 @@ class LoginState extends State <Login> {
 				content: Text ("Make sure to use Google to sign in next time")
 			)
 		); 
-		final Map<String, dynamic> data = (await Firestore.getStudent(username)).data;
-		widget.reader.studentData = data;
-		widget.reader.student = Student.fromData(data);
-
-		final Map<int, Map<String, dynamic>> subjectData = 
-			await Firestore.getClasses(widget.reader.student);
-		widget.reader.subjectData = subjectData;
-		final Map<int, Subject> subjects = Subject.getSubjects(subjectData);
-		widget.reader.subjects = subjects;
-
+		setState(() {
+			loading = true;
+			ready = true;
+		});
+		await initOnLogin(widget.reader, widget.prefs, username);
 		Navigator.of(context).pushReplacementNamed("home");
 	}
 
