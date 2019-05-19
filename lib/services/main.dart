@@ -24,9 +24,8 @@ Future<void> initOnMain(Reader reader, Preferences prefs) async {
 		calendar = Day.getCalendar(month);
 		reader.calendarData = month;
 		reader.calendar = calendar;
-	} else 
-		calendar = reader.calendar;
-		setToday(reader);
+	} else reader.calendar = Day.getCalendar(reader.calendarData);
+	setToday(reader);
 }
 
 Future<void> initOnLogin(Reader reader, Preferences prefs, String username) async {

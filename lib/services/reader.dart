@@ -65,4 +65,6 @@ class Reader {
 	}
 
 	bool get ready => studentFile.existsSync() && subjectFile.existsSync();
+
+	Day currentDay;  // for easy passing of selected day
 }

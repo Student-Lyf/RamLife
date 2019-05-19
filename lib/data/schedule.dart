@@ -98,9 +98,11 @@ class Day {
 	final Lunch lunch;
 	Special special;
 
-	String get name => "${letter.toString().substring (8)} day ${
-		special == regular || special == rotate ? '' : special.name
-	}";
+	String get name => letter == null 
+		? "No school"
+		: "${letter.toString().substring (8)} day ${
+			special == regular || special == rotate ? '' : special.name
+		}";
 
 	String get n {
 		switch (letter) {

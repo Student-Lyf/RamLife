@@ -24,6 +24,7 @@ void main() async {
 	final String dir = (await getApplicationDocumentsDirectory()).path;
 	final Preferences preferences = Preferences(prefs);
 	final Reader reader = Reader(dir);
+	// reader.deleteAll();
 	final bool ready = reader.ready && await Auth.ready();
 	if (ready) await initOnMain(reader, preferences);
 	runApp (
