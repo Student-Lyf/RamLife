@@ -1,12 +1,12 @@
 import "package:flutter/material.dart";
 
 class BrightnessChanger extends StatefulWidget {
-	// final Widget Function(BuildContext context, ThemeData theme) builder;
-	final void Function (ThemeData) onChanged;
+	final Widget Function(BuildContext context, ThemeData theme) builder;
+	// final void Function (ThemeData) onChanged;
 	final ThemeData light, dark;
 	final Map<String, ThemeData> themes;
 	BrightnessChanger({
-		@required this.onChanged, 
+		@required this.builder, 
 		this.light,
 		this.dark,
 		this.themes
@@ -48,6 +48,6 @@ class BrightnessChangerState extends State<BrightnessChanger> {
 		setState(() => _theme = widget.themes[key]);
 	}
 
-	// @override Widget build(BuildContext context) => 
-	// 	widget.builder(context, _theme);
+	@override Widget build(BuildContext context) => 
+		widget.builder(context, _theme);
 }

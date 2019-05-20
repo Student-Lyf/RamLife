@@ -10,6 +10,7 @@ import "services/main.dart" show initOnMain;
 
 // UI
 import "widgets/brightness.dart" show BrightnessChanger;
+import "pages/splash.dart" show SplashScreen;
 import "pages/drawer.dart";
 import "pages/home.dart" show HomePage;
 import "pages/schedule.dart" show SchedulePage;
@@ -31,6 +32,12 @@ const Color DARK_MODE_GOLD = Color (0xFF333300);
 const Color DARK_MODE_BLUE = Color (0XFF000033);
 
 void main() async {
+	Brightness brightness;
+	runApp (
+		SplashScreen(
+			setBrightness: (Brightness platform) => brightness = platform
+		)
+	);
 	final SharedPreferences prefs = await SharedPreferences.getInstance();
 	final String dir = (await getApplicationDocumentsDirectory()).path;
 	final Preferences preferences = Preferences(prefs);
