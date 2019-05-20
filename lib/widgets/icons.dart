@@ -78,8 +78,8 @@ class RamazLogos {
 		height: 320
 	);
 
-	static const Widget ram_square_words = CircleAvatar (
-		backgroundImage: AssetImage ("images/logos/ramaz/ram_square_words.png")
+	static final Widget ram_square_words = Image.asset (
+		"images/logos/ramaz/ram_square_words.png"
 	);
 
 	static const Widget ram_square = LoadingImage(
@@ -89,7 +89,7 @@ class RamazLogos {
 	);
 
 	static const Widget ram_rectangle = LoadingImage (
-		"images/logos/ramaz/ram_rectangle.jpg",
+		"images/logos/ramaz/ram_rectangle.png",
 		width: 360,
 		height: 124.5
 	);
