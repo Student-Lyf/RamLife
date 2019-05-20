@@ -15,10 +15,10 @@ import "pages/home.dart" show HomePage;
 import "pages/schedule.dart" show SchedulePage;
 import "pages/login.dart" show Login;
 import "pages/feedback.dart" show FeedbackPage;
-import "pages/sports.dart";
+// import "pages/sports.dart";
 
 import "constants.dart";  // for route keys
-import "mock/sports.dart" show games;
+// import "mock/sports.dart" show games;
 
 const Color BLUE = Color(0xFF004B8D);  // (255, 0, 75, 140);
 const Color GOLD = Color(0xFFF9CA15);
@@ -37,65 +37,65 @@ void main() async {
 	final Reader reader = Reader(dir);
 	// reader.deleteAll();
 	final bool ready = reader.ready && await Auth.ready();
-	if (ready)
-		await initOnMain(reader, preferences);
-	runApp (RamazApp (ready, reader));
+	if (ready) await initOnMain(reader, preferences);
+	runApp (RamazApp (ready, reader, preferences));
 }
 
 class RamazApp extends StatelessWidget {
 	final bool ready;
 	final Reader reader;
-	RamazApp (this.ready, this.reader);
+	final Preferences prefs;
+	RamazApp (this.ready, this.reader, this.prefs);
 
 	@override 
 	Widget build (BuildContext context) => BrightnessChanger (
-		builder: (BuildContext context, Brightness brightness) => MaterialApp (
+		light: ThemeData (  // light
+			brightness: Brightness.light,
+			primarySwatch: Colors.blue,
+			primaryColor: BLUE,
+			primaryColorBrightness: Brightness.dark,
+			primaryColorLight: BLUE_LIGHT,
+			primaryColorDark: BLUE_DARK,
+			accentColor: GOLD,
+			accentColorBrightness: Brightness.light,
+			// cardColor: GOLD,
+			buttonColor: BLUE,
+			buttonTheme: ButtonThemeData (
+				buttonColor: GOLD,
+				textTheme: ButtonTextTheme.accent
+			),
+		),
+		dark: ThemeData(  // dark
+			brightness: Brightness.dark,
+			scaffoldBackgroundColor: Colors.grey[700],
+			primarySwatch: Colors.blue,
+			// primaryColor: DARK_MODE_BLUE,
+			primaryColorBrightness: Brightness.dark,
+			primaryColorLight: BLUE_LIGHT,
+			primaryColorDark: BLUE,
+			accentColor: GOLD_DARK,
+			accentColorBrightness: Brightness.light,
+			textTheme: Typography.whiteMountainView.apply(
+				bodyColor: BLUE_LIGHT,
+				displayColor: GOLD_DARK
+			),
+			iconTheme: IconThemeData (color: GOLD),
+			primaryIconTheme: IconThemeData (color: GOLD_DARK),
+			accentIconTheme: IconThemeData (color: GOLD_DARK),
+			floatingActionButtonTheme: FloatingActionButtonThemeData(
+				backgroundColor: GOLD_DARK,
+				foregroundColor: BLUE
+			)
+		),
+		builder: (BuildContext context, ThemeData theme) => MaterialApp (
 			home: ready 
 				? HomePage(reader)
-				: Login (reader, preferences),
+				: Login (reader, prefs),
 			title: "Student Life",
 			color: BLUE,
-			theme: brightness == Brightness.light 
-				? ThemeData (  // light
-					brightness: Brightness.light,
-					primarySwatch: Colors.blue,
-					primaryColor: BLUE,
-					primaryColorBrightness: Brightness.dark,
-					primaryColorLight: BLUE_LIGHT,
-					primaryColorDark: BLUE_DARK,
-					accentColor: GOLD,
-					accentColorBrightness: Brightness.light,
-					// cardColor: GOLD,
-					buttonColor: BLUE,
-					buttonTheme: ButtonThemeData (
-						buttonColor: GOLD,
-						textTheme: ButtonTextTheme.accent
-					),
-				)
-			: ThemeData(  // dark
-				brightness: Brightness.dark,
-				scaffoldBackgroundColor: Colors.grey[700],
-				primarySwatch: Colors.blue,
-				// primaryColor: DARK_MODE_BLUE,
-				primaryColorBrightness: Brightness.dark,
-				primaryColorLight: BLUE_LIGHT,
-				primaryColorDark: BLUE,
-				accentColor: GOLD_DARK,
-				accentColorBrightness: Brightness.light,
-				textTheme: Typography.whiteMountainView.apply(
-					bodyColor: BLUE_LIGHT,
-					displayColor: GOLD_DARK
-				),
-				iconTheme: IconThemeData (color: GOLD),
-				primaryIconTheme: IconThemeData (color: GOLD_DARK),
-				accentIconTheme: IconThemeData (color: GOLD_DARK),
-				floatingActionButtonTheme: FloatingActionButtonThemeData(
-					backgroundColor: GOLD_DARK,
-					foregroundColor: BLUE
-				)
-			),
+			theme: theme,
 			routes: {
-				LOGIN: (_) => Login(reader, preferences),
+				LOGIN: (_) => Login(reader, prefs),
 				HOME_PAGE: (_) => HomePage(reader), 
 				SCHEDULE: (_) => SchedulePage (reader),
 				SCHEDULE + CAN_EXIT: (_) => SchedulePage(reader, canExit: true),
