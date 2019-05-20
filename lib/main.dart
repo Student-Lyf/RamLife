@@ -9,6 +9,7 @@ import "services/reader.dart";
 import "services/main.dart" show initOnMain;
 
 // UI
+import "pages/splash.dart" show SplashScreen;
 import "pages/drawer.dart";
 import "pages/home.dart" show HomePage;
 import "pages/schedule.dart" show SchedulePage;
@@ -20,6 +21,13 @@ import "constants.dart";  // for route keys
 // import "mock/sports.dart" show games;
 
 void main() async {
+	Brightness brightness;
+	runApp (
+		SplashScreen(
+			setBrightness: (Brightness platform) => brightness = platform
+		)
+	);
+	await Future.delayed (Duration (seconds: 5));
 	final SharedPreferences prefs = await SharedPreferences.getInstance();
 	final String dir = (await getApplicationDocumentsDirectory()).path;
 	final Preferences preferences = Preferences(prefs);
