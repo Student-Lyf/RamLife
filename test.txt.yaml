@@ -1,0 +1,38 @@
+theme: 
+  - changing theme
+  - color/contrast
+
+login: 
+  - image size (big & small)
+  - sign in with google: 
+    fail
+    sucess
+  - loading/warning
+
+home: 
+  - size of header
+  - overall layout
+  - endDrawer
+  - appBar
+
+navDrawer: 
+  - link icon -- cut off?
+
+schedule: 
+  - appBar -- icons
+  - scrolling schefule list
+
+feedback: 
+  - layout
+  - focus
+
+splash screen: 
+  - center?
+  - no lag
+
+# quick actions: 
+#   - icon
+#   - functionality
+
+icon
+placeholder
