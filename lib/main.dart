@@ -9,7 +9,7 @@ import "services/reader.dart";
 import "services/main.dart" show initOnMain;
 
 // UI
-import "widgets/brightness.dart" show BrightnessChanger;
+import "widgets/theme_changer.dart" show ThemeChanger;
 import "pages/splash.dart" show SplashScreen;
 import "pages/drawer.dart";
 import "pages/home.dart" show HomePage;
@@ -35,27 +35,52 @@ void main() async {
 	Brightness brightness;
 	runApp (
 		SplashScreen(
-			setBrightness: (Brightness platform) => brightness = platform
+			setBrightness: (Brightness platform) {
+				brightness = platform;
+			}
 		)
 	);
 	final SharedPreferences prefs = await SharedPreferences.getInstance();
 	final String dir = (await getApplicationDocumentsDirectory()).path;
 	final Preferences preferences = Preferences(prefs);
+	final bool savedBrightness = preferences.brightness;
+	if (savedBrightness != null) 
+		brightness = savedBrightness
+			? Brightness.light
+			: Brightness.dark;
 	final Reader reader = Reader(dir);
-	// reader.deleteAll();
+	// To download, and login or go to main
 	final bool ready = reader.ready && await Auth.ready();
 	if (ready) await initOnMain(reader, preferences);
-	runApp (RamazApp (ready, reader, preferences));
+	runApp (
+		RamazApp (
+			ready: ready,
+			brightness: brightness,
+			reader: reader, 
+			prefs: preferences
+		)
+	);
 }
 
-class RamazApp extends StatelessWidget {
-	final bool ready;
+class RamazApp extends StatefulWidget {
+	final Brightness brightness;
 	final Reader reader;
 	final Preferences prefs;
-	RamazApp (this.ready, this.reader, this.prefs);
+	final bool ready;
+	RamazApp ({
+		@required this.brightness,
+		@required this.reader,
+		@required this.prefs,
+		@required this.ready,
+	});
 
+	@override MainAppState createState() => MainAppState();
+}
+
+class MainAppState extends State<RamazApp> {
 	@override 
-	Widget build (BuildContext context) => BrightnessChanger (
+	Widget build (BuildContext context) => ThemeChanger (
+		defaultBrightness: widget.brightness,
 		light: ThemeData (  // light
 			brightness: Brightness.light,
 			primarySwatch: Colors.blue,
@@ -69,12 +94,12 @@ class RamazApp extends StatelessWidget {
 			buttonColor: BLUE,
 			buttonTheme: ButtonThemeData (
 				buttonColor: GOLD,
-				textTheme: ButtonTextTheme.accent
+				textTheme: ButtonTextTheme.normal,
 			),
 		),
 		dark: ThemeData(  // dark
 			brightness: Brightness.dark,
-			scaffoldBackgroundColor: Colors.grey[700],
+			scaffoldBackgroundColor: Colors.grey[850],
 			primarySwatch: Colors.blue,
 			// primaryColor: DARK_MODE_BLUE,
 			primaryColorBrightness: Brightness.dark,
@@ -82,35 +107,45 @@ class RamazApp extends StatelessWidget {
 			primaryColorDark: BLUE,
 			accentColor: GOLD_DARK,
 			accentColorBrightness: Brightness.light,
-			textTheme: Typography.whiteMountainView.apply(
-				bodyColor: BLUE_LIGHT,
-				displayColor: GOLD_DARK
-			),
-			iconTheme: IconThemeData (color: GOLD),
+			iconTheme: IconThemeData (color: GOLD_DARK),
 			primaryIconTheme: IconThemeData (color: GOLD_DARK),
 			accentIconTheme: IconThemeData (color: GOLD_DARK),
 			floatingActionButtonTheme: FloatingActionButtonThemeData(
 				backgroundColor: GOLD_DARK,
 				foregroundColor: BLUE
-			)
+			),
+			cardTheme: CardTheme (
+				color: Colors.grey[820]
+			),
+			buttonTheme: ButtonThemeData (
+				buttonColor: BLUE, 
+				textTheme: ButtonTextTheme.accent,
+			),
 		),
 		builder: (BuildContext context, ThemeData theme) => MaterialApp (
-			home: ready 
-				? HomePage(reader)
-				: Login (reader, prefs),
+			home: widget.ready
+				? HomePage(reader: widget.reader, prefs: widget.prefs)
+				: Login (widget.reader, widget.prefs),
 			title: "Student Life",
 			color: BLUE,
 			theme: theme,
 			routes: {
-				LOGIN: (_) => Login(reader, prefs),
-				HOME_PAGE: (_) => HomePage(reader), 
-				SCHEDULE: (_) => SchedulePage (reader),
-				SCHEDULE + CAN_EXIT: (_) => SchedulePage(reader, canExit: true),
-				NEWS: placeholder ("News"),
-				LOST_AND_FOUND: placeholder ("Lost and found"),
-				SPORTS: placeholder ("Sports"),
+				LOGIN: (_) => Login(widget.reader, widget.prefs),
+				HOME_PAGE: (_) => HomePage(reader: widget.reader, prefs: widget.prefs), 
+				SCHEDULE: (_) => SchedulePage (
+					reader: widget.reader, 
+					prefs: widget.prefs
+				),
+				SCHEDULE + CAN_EXIT: (_) => SchedulePage(
+					reader: widget.reader, 
+					prefs: widget.prefs,
+					canExit: true
+				),
+				NEWS: placeholder (widget.prefs, "News"),
+				LOST_AND_FOUND: placeholder (widget.prefs, "Lost and found"),
+				SPORTS: placeholder (widget.prefs, "Sports"),
 				// SPORTS: (_) => SportsPage (games),
-				ADMIN_LOGIN: placeholder ("Admin Login"),
+				ADMIN_LOGIN: placeholder (widget.prefs, "Admin Login"),
 				FEEDBACK: (_) => FeedbackPage(),
 			} 
 		)
@@ -119,11 +154,12 @@ class RamazApp extends StatelessWidget {
 	
 // Placeholder
 class PlaceholderPage extends StatelessWidget {
+	final Preferences prefs;
 	final String title;
-	PlaceholderPage (this.title);
+	PlaceholderPage (this.prefs, this.title);
 
 	@override Widget build (BuildContext context) => Scaffold (
-		drawer: NavigationDrawer(),
+		drawer: NavigationDrawer(prefs),
 		appBar: AppBar (
 			title: Text (title),
 			actions: [
@@ -137,5 +173,5 @@ class PlaceholderPage extends StatelessWidget {
 	);
 }
 
-Widget Function(BuildContext) placeholder(String text) => 
-	(BuildContext context) => PlaceholderPage (text);
+Widget Function(BuildContext) placeholder(Preferences prefs, String text) => 
+	(BuildContext context) => PlaceholderPage (prefs, text);

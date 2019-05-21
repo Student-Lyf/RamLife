@@ -7,6 +7,7 @@ class Preferences {
 	// Keys
 	static const CALENDAR_UPDATE_KEY = "lastCalendarUpdate";
 	static const FIRST_TIME = "firstTime";
+	static const LIGHT_MODE = "lightMode";
 
 	// Helper function
 	static bool isToday(DateTime other) {
@@ -34,4 +35,8 @@ class Preferences {
 	set lastCalendarUpdate (DateTime date) => prefs.setString(
 		CALENDAR_UPDATE_KEY, date.toString()
 	);
+
+	// Preferred brightness
+	bool get brightness => prefs.getBool(LIGHT_MODE);
+	set brightness (bool value) => prefs.setBool(LIGHT_MODE, value); 
 }

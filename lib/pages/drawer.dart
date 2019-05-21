@@ -1,12 +1,35 @@
 import "package:flutter/material.dart";
 
-// import "package:ramaz/widgets/linkIcon.dart";
 import "package:ramaz/widgets/icons.dart";
+import "package:ramaz/widgets/theme_changer.dart";
+
+import "package:ramaz/services/preferences.dart";
 
 import "package:ramaz/constants.dart";  // for route names
 
-class NavigationDrawer extends StatelessWidget {
+class NavigationDrawer extends StatefulWidget {
+	final Preferences prefs;
+	NavigationDrawer(this.prefs, {Key key}) : super (key: key);
+
+	@override
+	DrawerState createState() => DrawerState();
+}
+
+class DrawerState extends State<NavigationDrawer> {
+	Brightness brightness;
+
+	@override void initState() {
+		super.initState();
+		print ("Seting up the drawer");
+		final bool userPreference = widget.prefs.brightness;
+		print ("User wants a $userPreference theme");
+		if (userPreference != null) brightness = userPreference 
+			? Brightness.light
+			: Brightness.dark;
+	}
+
 	@override Widget build (BuildContext context) => Drawer (
+		key: widget.key,
 		child: ListView (
 			children: [
 				DrawerHeader (child: RamazLogos.ram_square),
@@ -54,21 +77,81 @@ class NavigationDrawer extends StatelessWidget {
 						nav.pushNamed(FEEDBACK);
 					}
 				),
-				SizedBox (height: 20),
-				Divider(),
-				SingleChildScrollView (
-					physics: NeverScrollableScrollPhysics(),
-					scrollDirection: Axis.horizontal,
-					child: Row (
-						children: [
-							Logos.ramazIcon,
-							Logos.outlook,
-							Logos.schoology,
-							Logos.drive,
-							Logos.senior_systems
+				ListTile (
+					title: Text ("Change theme"),
+					leading: Icon (
+						brightness == null 
+							? Icons.brightness_auto
+							: brightness == Brightness.light
+								? Icons.brightness_5
+								: Icons.brightness_4
+					),
+					trailing: DropdownButton<Brightness> (
+						onChanged: (Brightness value) => setState(() {
+							ThemeChanger.of(context).brightness = value
+								?? MediaQuery.of(context).platformBrightness;
+							if (value == null) {
+								brightness = null;
+								widget.prefs.brightness = null;
+							}
+							else {
+								widget.prefs.brightness = value == Brightness.light;
+								brightness = value;
+							}
+						}),
+						value: brightness,
+						items: [
+							DropdownMenuItem<Brightness> (
+								value: null,
+								child: Text ("Automatic")
+							),
+							DropdownMenuItem<Brightness> (
+								value: Brightness.light,
+								child: Text ("Light theme")
+							),
+							DropdownMenuItem<Brightness> (
+								value: Brightness.dark,
+								child: Text ("Dark theme"),
+							),
 						]
 					)
+				),
+				AboutListTile (
+					icon: Icon (Icons.info),
+					child: Text ("About"),
+					applicationName: "Ramaz Student Life",
+					applicationVersion: "0.5",
+					applicationIcon: Logos.ramazIcon,
+					aboutBoxChildren: [
+						Text ("Created by Levi Lesches, Sophia Kremer, and Sam Lowe")
+					]
+				),
+				SizedBox (height: 10),
+				Divider(),
+				ListView (
+					physics: NeverScrollableScrollPhysics(),
+					scrollDirection: Axis.horizontal,
+					children: [
+						Logos.ramazIcon,
+						Logos.outlook,
+						Logos.schoology,
+						Logos.drive,
+						Logos.senior_systems
+					]
 				)
+				// SingleChildScrollView (
+				// 	physics: NeverScrollableScrollPhysics(),
+				// 	scrollDirection: Axis.horizontal,
+				// 	child: Row (
+				// 		children: [
+				// 			Logos.ramazIcon,
+				// 			Logos.outlook,
+				// 			Logos.schoology,
+				// 			Logos.drive,
+				// 			Logos.senior_systems
+				// 		]
+				// 	)
+				// )
 			]
 		)
 	);

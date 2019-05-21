@@ -13,7 +13,7 @@ const String FEEDBACK = "feedback";
 const String SCHOOLOGY = "https://app.schoology.com";
 const String EMAIL = "http://mymail.ramaz.org";
 const String RAMAZ = "https://www.ramaz.org";
-const String GOOGLE_DRIVE = "https://drive.google.com";
+const String GOOGLE_DRIVE = "http://drive.google.com";
 const String SENIOR_SYSTEMS = "https://my.ramaz.org/SeniorApps/facelets/home/home.xhtml";  // TODO 
 
 // Firebase

@@ -7,6 +7,7 @@ import "package:ramaz/data/schedule.dart";
 // Dataclasses
 import "package:ramaz/services/reader.dart";
 import "package:ramaz/services/auth.dart" as Auth;
+import "package:ramaz/services/preferences.dart";
 
 // UI
 import "package:ramaz/pages/drawer.dart";
@@ -18,7 +19,11 @@ import "package:ramaz/widgets/icons.dart";
 
 class HomePage extends StatefulWidget {
 	final Reader reader;
-	HomePage (this.reader);
+	final Preferences prefs;
+	HomePage ({
+		@required this.reader,
+		@required this.prefs
+	});
 
 	@override HomePageState createState() => HomePageState();
 }
@@ -26,7 +31,8 @@ class HomePage extends StatefulWidget {
 class HomePageState extends State<HomePage> {
 	static const Duration minute = Duration (minutes: 1);
 
-	final GlobalKey<ScaffoldState> key = GlobalKey();
+	final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
+	final GlobalKey<DrawerState> drawerKey = GlobalKey();
 	Timer timer;
 
 	Period period, nextPeriod;
@@ -62,7 +68,7 @@ class HomePageState extends State<HomePage> {
 	}
 
 	@override Widget build (BuildContext context) => Scaffold (
-		key: key,
+		key: scaffoldKey,
 		appBar: AppBar (
 			title: Text ("Home"),
 			actions: [
@@ -73,11 +79,11 @@ class HomePageState extends State<HomePage> {
 				if (school) FlatButton (
 					child: Text ("Swipe left for schedule"),
 					textColor: Colors.white,
-					onPressed: () => key.currentState.openEndDrawer
+					onPressed: () => scaffoldKey.currentState.openEndDrawer()
 				)
 			],
 		),
-		drawer: NavigationDrawer(),
+		drawer: NavigationDrawer(widget.prefs, key: drawerKey),
 		endDrawer: !school ? null : Drawer (
 			child: ClassList(
 				periods: nextPeriod == null 
@@ -108,6 +114,7 @@ class HomePageState extends State<HomePage> {
 						textScaleFactor: 2,
 						textAlign: TextAlign.center
 					),
+					SizedBox (height: 20),
 					if (school)
 						NextClass(period, widget.reader.subjects[period?.id]),
 					if (nextPeriod != null)  // if school is not over, show the next class
@@ -137,7 +144,7 @@ class HomePageState extends State<HomePage> {
 
 	void addGoogleSignIn() async {
 		final account = await Auth.signInWithGoogle(
-			() => key.currentState.showSnackBar(
+			() => scaffoldKey.currentState.showSnackBar(
 				SnackBar (
 					content: Text ("You need to sign in with your Ramaz email")
 				)

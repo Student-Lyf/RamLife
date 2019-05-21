@@ -10,8 +10,7 @@ class SplashScreen extends StatelessWidget {
 		home: Scaffold (
 			body: Builder (
 				builder: (BuildContext context) {
-					Future.delayed (
-						Duration.zero, 
+					Future (
 						() => setBrightness(
 							MediaQuery.of(context).platformBrightness
 						)

@@ -4,6 +4,7 @@ import "package:ramaz/data/times.dart";
 import "package:ramaz/data/schedule.dart";
 
 import "package:ramaz/services/reader.dart";
+import "package:ramaz/services/preferences.dart";
 
 import "package:ramaz/pages/drawer.dart";
 import "package:ramaz/widgets/class_list.dart";
@@ -11,8 +12,13 @@ import "package:ramaz/widgets/date_picker.dart" show pickDate;
 
 class SchedulePage extends StatefulWidget {
 	final Reader reader;
+	final Preferences prefs;
 	final bool canExit;
-	SchedulePage (this.reader, {this.canExit = false});
+	SchedulePage ({
+		@required this.prefs,
+		@required this.reader,
+		this.canExit = false,
+	});
 
 	@override ScheduleState createState() => ScheduleState();
 }
@@ -148,7 +154,7 @@ class ScheduleState extends State<SchedulePage> {
 				)
 			]
 		),
-		drawer: widget.canExit ? null : NavigationDrawer(),
+		drawer: widget.canExit ? null : NavigationDrawer(widget.prefs),
 		body: Column (
 			children: [
 				ListTile (
