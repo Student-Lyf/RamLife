@@ -24,7 +24,7 @@ if __name__ == '__main__':
 	first = "Levi"
 	last = "Lesches"
 	username = "leschesl"
-	password = "redcow182"
+	password = "helloMyDudes"
 	A = [
 		Period (room = "Beit Knesset", id = 12).output(),
 		Period (room = "503", id = 1).output(),

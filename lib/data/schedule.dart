@@ -108,12 +108,12 @@ class Day {
 		switch (letter) {
 			case Letters.A:
 			case Letters.E:
-				return "n";
-			case Letters.B:
-			case Letters.C:
 			case Letters.M:
 			case Letters.R:
 			case Letters.F:
+				return "n";
+			case Letters.B:
+			case Letters.C:
 				return "";
 		}
 		throw "Invalid day: $letter";

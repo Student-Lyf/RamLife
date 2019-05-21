@@ -1,8 +1,8 @@
 import "package:flutter/material.dart";
 import "package:flutter/services.dart" show PlatformException;
 
-// To display the logo
 import "package:ramaz/widgets/icons.dart";
+import "package:ramaz/widgets/theme_changer.dart";
 
 // Used to actually login
 import "package:ramaz/services/reader.dart";
@@ -53,7 +53,9 @@ class LoginState extends State <Login> {
 					padding: EdgeInsets.all (20),
 					child: Column (
 						children: [
-							RamazLogos.teal,
+							ThemeChanger.of(context).brightness == Brightness.light 
+								? RamazLogos.teal
+								: RamazLogos.ram_square_words, 
 							TextField(
 								controller: usernameController,
 								focusNode: userNode,

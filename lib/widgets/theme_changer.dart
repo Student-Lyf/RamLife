@@ -1,53 +1,51 @@
 import "package:flutter/material.dart";
 
-class BrightnessChanger extends StatefulWidget {
-	final Widget Function(BuildContext context, ThemeData theme) builder;
-	// final void Function (ThemeData) onChanged;
+typedef ThemeBuilder = Widget Function (BuildContext, ThemeData);
+
+class ThemeChanger extends StatefulWidget {
+	final ThemeBuilder builder;
+	final Brightness defaultBrightness;
 	final ThemeData light, dark;
 	final Map<String, ThemeData> themes;
-	BrightnessChanger({
-		@required this.builder, 
-		this.light,
-		this.dark,
-		this.themes
+
+	ThemeChanger ({
+		@required this.builder,
+		@required this.defaultBrightness,
+		@required this.light, 
+		@required this.dark,
+		this.themes,
 	});
 
-	@override BrightnessChangerState createState() => BrightnessChangerState();
+	@override ThemeChangerState createState() => ThemeChangerState();
 
-	static BrightnessChangerState of (BuildContext context) => 
-		context.ancestorStateOfType(TypeMatcher<BrightnessChangerState>());
+	static ThemeChangerState of (BuildContext context) => 
+		context.ancestorStateOfType(TypeMatcher<ThemeChangerState>());
 }
 
-class BrightnessChangerState extends State<BrightnessChanger> {
+class ThemeChangerState extends State<ThemeChanger> {
 	ThemeData _theme;
+	Brightness _brightness;
 
-	// @override void initState() {
-	// 	super.initState();
-	// 	if (widget.light != null && widget.dark != null) 
-	// 			brightness = MediaQuery.of(context).platformBrightness;
-	// }
-
-	set brightness (Brightness brightness) => 
-		setState(() => _theme = brightness == Brightness.light
-		 ? widget.light
-		 : widget.dark
-		);
-
-	void toggleBrightness() => setState(
-		() {
-			if (_theme == widget.light) _theme = widget.dark;
-			else _theme = widget.light;
-		}
-	);
-
-	set theme (ThemeData data) => setState(() => _theme = data);
-	ThemeData get theme => _theme;
-
-	set themeName (String key) {
-		if (widget.themes == null) return;
-		setState(() => _theme = widget.themes[key]);
+	@override void initState() {
+		super.initState();
+		brightness = widget.defaultBrightness;
 	}
 
-	@override Widget build(BuildContext context) => 
-		widget.builder(context, _theme);
+	set brightness(Brightness value) {
+		setState(() => _theme = value == Brightness.light
+			? widget.light : widget.dark
+		);
+		_brightness = value;
+	}
+	Brightness get brightness => _brightness;
+
+	set theme(ThemeData data) => setState(() => _theme = data);
+	ThemeData get theme => _theme;
+
+	set themeName (String key) => setState(() => 
+		_theme = (widget.themes ?? {}) [key]
+	);
+
+	@override Widget build (BuildContext context) =>
+		widget.builder (context, _theme);
 }
