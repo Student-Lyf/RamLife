@@ -128,30 +128,19 @@ class DrawerState extends State<NavigationDrawer> {
 				),
 				SizedBox (height: 10),
 				Divider(),
-				ListView (
+				SingleChildScrollView (
 					physics: NeverScrollableScrollPhysics(),
 					scrollDirection: Axis.horizontal,
-					children: [
-						Logos.ramazIcon,
-						Logos.outlook,
-						Logos.schoology,
-						Logos.drive,
-						Logos.senior_systems
-					]
+					child: Row (
+						children: [
+							Logos.ramazIcon,
+							Logos.outlook,
+							Logos.schoology,
+							Logos.drive,
+							Logos.senior_systems
+						]
+					)
 				)
-				// SingleChildScrollView (
-				// 	physics: NeverScrollableScrollPhysics(),
-				// 	scrollDirection: Axis.horizontal,
-				// 	child: Row (
-				// 		children: [
-				// 			Logos.ramazIcon,
-				// 			Logos.outlook,
-				// 			Logos.schoology,
-				// 			Logos.drive,
-				// 			Logos.senior_systems
-				// 		]
-				// 	)
-				// )
 			]
 		)
 	);

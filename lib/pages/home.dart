@@ -32,7 +32,7 @@ class HomePageState extends State<HomePage> {
 	static const Duration minute = Duration (minutes: 1);
 
 	final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
-	final GlobalKey<DrawerState> drawerKey = GlobalKey();
+	final UniqueKey drawerKey = UniqueKey();
 	Timer timer;
 
 	Period period, nextPeriod;
