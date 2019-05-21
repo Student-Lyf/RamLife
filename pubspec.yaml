@@ -30,12 +30,12 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_launcher_icons: ^0.7.0
+  # flutter_launcher_icons: ^0.7.0
 
-flutter_icons:
-  android: true  # overwrite
-  ios: true  # overwrite 
-  image_path: "images/logos/ramaz/teal.jpg"  # path to the logo
+# flutter_icons:
+#  android: true  # overwrite
+#  ios: true  # overwrite 
+#  image_path: "images/logos/ramaz/teal.jpg"  # path to the logo
   # Or, alternatively:
   # image_path_android
   # image_path_ios
