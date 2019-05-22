@@ -1,23 +1,22 @@
 import "package:flutter/material.dart"; 
-import "package:ramaz/widgets/icons.dart" show RamazLogos;
+// import "package:ramaz/widgets/icons.dart" show RamazLogos;
 
 class SplashScreen extends StatelessWidget {
-	final void Function (Brightness) setBrightness;
-	SplashScreen({this.setBrightness});
+	// final void Function (Brightness) setBrightness;
+	// SplashScreen({this.setBrightness});
 
 	@override Widget build (BuildContext context) => MaterialApp (
 		// color: Colors.blue,
 		home: Scaffold (
 			body: Builder (
-				builder: (BuildContext context) {
-					Future.delayed (
-						Duration.zero, 
-						() => setBrightness(
-							MediaQuery.of(context).platformBrightness
-						)
-					);
-					return Center (child: RamazLogos.ram_square_words);
-				}
+				builder: (BuildContext context) => 
+					// Future.delayed (
+					// 	Duration.zero, 
+					// 	() => setBrightness(
+					// 		MediaQuery.of(context).platformBrightness
+					// 	)
+					// );
+					Center (child: FlutterLogo())
 			)
 		)
 	);

@@ -17,22 +17,20 @@ import "pages/splash.dart" show SplashScreen;
 // import "pages/feedback.dart" show FeedbackPage;
 // import "pages/sports.dart";
 
-import "constants.dart";  // for route keys
+// import "constants.dart";  // for route keys
 // import "mock/sports.dart" show games;
 
 void main() async {
-	Brightness brightness;
+	// Brightness brightness;
 	runApp (
 		SplashScreen(
-			setBrightness: (Brightness platform) => brightness = platform
+			// setBrightness: (Brightness platform) => brightness = platform
 		)
 	);
-	// await Future.delayed (Duration (seconds: 5));
 	// final SharedPreferences prefs = await SharedPreferences.getInstance();
 	// final String dir = (await getApplicationDocumentsDirectory()).path;
 	// final Preferences preferences = Preferences(prefs);
 	// final Reader reader = Reader(dir);
-	// // reader.deleteAll();
 	// final bool ready = reader.ready && await Auth.ready();
 	// if (ready) await initOnMain(reader, preferences);
 	// runApp (
