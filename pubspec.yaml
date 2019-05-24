@@ -58,22 +58,22 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  #assets:
-    #- images/icons/baseball.png
-    #- images/icons/basketball.png
-    #- images/icons/hockey.png
-    #- images/icons/soccer.png
-    #- images/icons/tennis.png
-    #- images/icons/volleyball.png
-    #- images/logos/drive.png
-    #- images/logos/google.png
-    #- images/logos/outlook.jpg
-    #- images/logos/schoology.png
-    #- images/logos/senior_systems.png
-    #- images/logos/ramaz/ram_rectangle.png
-    #- images/logos/ramaz/ram_square_words.png
-    #- images/logos/ramaz/ram_square.png
-    #- images/logos/ramaz/teal.jpg
+  assets:
+    - images/icons/baseball.png
+    - images/icons/basketball.png
+    - images/icons/hockey.png
+    - images/icons/soccer.png
+    - images/icons/tennis.png
+    - images/icons/volleyball.png
+    - images/logos/drive.png
+    - images/logos/google.png
+    - images/logos/outlook.jpg
+    - images/logos/schoology.png
+    - images/logos/senior_systems.png
+    - images/logos/ramaz/ram_rectangle.png
+    - images/logos/ramaz/ram_square_words.png
+    - images/logos/ramaz/ram_square.png
+    - images/logos/ramaz/teal.jpg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.io/assets-and-images/#resolution-aware.
