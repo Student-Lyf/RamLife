@@ -5,21 +5,16 @@ import "dart:async" show Future;
 final FirebaseAuth firebase = FirebaseAuth.instance;
 final GoogleSignIn google = GoogleSignIn();
 
-// Can't just do username + password, so use Ramaz email
-Future<void> signIn(String username, String password) async => await firebase
-	.signInWithEmailAndPassword(
-		email: username + "@ramaz.org",
-		password: password
-	);
-
 Future<FirebaseUser> currentUser() async => await firebase.currentUser();
+
 Future<bool> ready() async => await currentUser() != null;
+
 Future<void> signOut() async {
 	await firebase.signOut();
 	await google.signOut();
 }
 
-Future<bool> needsGoogleSupport() async => !(await currentUser())
+Future<bool> supportsGoogle() async => !(await currentUser())
 	.providerData.any (
 		(UserInfo provider) => provider.providerId == "google.com"
 	);
@@ -48,5 +43,14 @@ Future<GoogleSignInAccount> signInWithGoogle(
 	return account;
 }
 
-Future<List<String>> getSignInMethods(String username) async =>
-	await firebase.fetchSignInMethodsForEmail(email: username + "@ramaz.org");
+Future<void> signInWithEmail(String email) async {
+	await firebase.sendSignInWithEmailLink(
+		email: email, 
+		url: "https://ramaz.page.link/email-login",
+		handleCodeInApp: true, 
+		iOSBundleID: "com.ramaz.student-life", 
+		androidPackageName: "com.ramaz.student_life",
+		androidInstallIfNotAvailable: true, 
+		androidMinimumVersion: "21"
+	);
+}
