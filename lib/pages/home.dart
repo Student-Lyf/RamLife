@@ -51,9 +51,9 @@ class HomePageState extends State<HomePage> {
 		selectedDay = DateTime.now();
 		widget.reader.currentDay = today;
 		school = today.letter != null;
-		Auth.needsGoogleSupport().then (
+		Auth.supportsGoogle().then (
 			(bool value) => setState(
-				() => needsGoogleSignIn = value
+				() => needsGoogleSignIn = !value
 			)
 		);
 		timer = Timer.periodic (minute, update);
