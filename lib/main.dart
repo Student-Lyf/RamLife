@@ -147,7 +147,7 @@ class MainAppState extends State<RamazApp> {
 				// SPORTS: (_) => SportsPage (games),
 				ADMIN_LOGIN: placeholder (widget.prefs, "Admin Login"),
 				FEEDBACK: (_) => FeedbackPage(),
-			} 
+			}
 		)
 	);
 }
