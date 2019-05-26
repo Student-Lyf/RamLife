@@ -79,8 +79,9 @@
 .flutter-plugins
 .packages
 .pub-cache/
-.pub/
+.pub
 /build/
+test
 
 # Android related
 **/android/**/gradle-wrapper.jar
