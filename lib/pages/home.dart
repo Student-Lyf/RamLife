@@ -38,7 +38,7 @@ class HomePageState extends State<HomePage> {
 	Period period, nextPeriod;
 	Schedule schedule;
 	Day today;
-	DateTime selectedDay;
+	DateTime selectedDay, now = DateTime.now();
 	List<Period> periods;
 	int periodIndex;
 	bool needsGoogleSignIn = false, school; 
@@ -72,13 +72,15 @@ class HomePageState extends State<HomePage> {
 		appBar: AppBar (
 			title: Text ("Home"),
 			actions: [
-				if (true) IconButton (
-				// if (needsGoogleSignIn) IconButton (
+				if (needsGoogleSignIn) IconButton (
 					icon: Logos.google,
 					onPressed: addGoogleSignIn,
+				)
+				else if (selectedDay.day != now.day) IconButton (
+					icon: Icon (Icons.today),
+					onPressed: () => day = now
 				),
-				if (true) FlatButton (
-				// if (school) FlatButton (
+				if (school) FlatButton (
 					child: Text ("Swipe left for schedule"),
 					textColor: Colors.white,
 					onPressed: () => scaffoldKey.currentState.openEndDrawer()
@@ -177,6 +179,7 @@ class HomePageState extends State<HomePage> {
 	}
 
 	set day (DateTime date) {
+		selectedDay = date;
 		DateTime day = DateTime.utc(
 			date.year, 
 			date.month, 
@@ -189,13 +192,8 @@ class HomePageState extends State<HomePage> {
 		update();
 	}
 
-	void viewDay() async {
-		final DateTime selected = await pickDate (
-			context: context,
-			initialDate: selectedDay
-		);	
-		if (selected == null) return;
-		selectedDay = selected;
-		day = selected;
-	}
+	void viewDay() async => day = await pickDate (
+		context: context,
+		initialDate: selectedDay
+	) ?? selectedDay;
 }
