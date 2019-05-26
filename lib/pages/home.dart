@@ -14,7 +14,7 @@ import "package:ramaz/pages/drawer.dart";
 import "package:ramaz/widgets/class_list.dart";
 import "package:ramaz/widgets/next_class.dart";
 import "package:ramaz/widgets/date_picker.dart" show pickDate;
-// import "package:ramaz/widgets/lunch.dart";
+//import "package:ramaz/widgets/lunch.dart";
 import "package:ramaz/widgets/icons.dart";
 
 class HomePage extends StatefulWidget {
@@ -156,7 +156,7 @@ class HomePageState extends State<HomePage> {
 			link: true
 		);
 		if (account == null) return;
-		else showDialog (
+		else await  showDialog (
 			context: context,
 			builder: (BuildContext context) => AlertDialog(
 				title: Text ("Google sign in enabled"),
