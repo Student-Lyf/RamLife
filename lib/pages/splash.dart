@@ -6,7 +6,6 @@ class SplashScreen extends StatelessWidget {
 	SplashScreen({this.setBrightness});
 
 	@override Widget build (BuildContext context) => MaterialApp (
-		// color: Colors.blue,
 		home: Scaffold (
 			body: Builder (
 				builder: (BuildContext context) {

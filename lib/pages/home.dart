@@ -72,11 +72,13 @@ class HomePageState extends State<HomePage> {
 		appBar: AppBar (
 			title: Text ("Home"),
 			actions: [
-				if (needsGoogleSignIn) IconButton (
+				if (true) IconButton (
+				// if (needsGoogleSignIn) IconButton (
 					icon: Logos.google,
 					onPressed: addGoogleSignIn,
 				),
-				if (school) FlatButton (
+				if (true) FlatButton (
+				// if (school) FlatButton (
 					child: Text ("Swipe left for schedule"),
 					textColor: Colors.white,
 					onPressed: () => scaffoldKey.currentState.openEndDrawer()
