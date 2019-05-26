@@ -56,6 +56,7 @@
 .buildlog/
 .history
 .svn/
+*.txt.yaml
 
 # android
 # .metadata
