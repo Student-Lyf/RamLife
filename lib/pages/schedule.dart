@@ -53,7 +53,7 @@ class ScheduleState extends State<SchedulePage> {
 		special = day.special;
 
 		try {date = DateTime.now();}
-		on ArgumentError {}
+		on ArgumentError {/* So what? */}
 		update();
 	}
 
