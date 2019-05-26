@@ -20,9 +20,7 @@ class DrawerState extends State<NavigationDrawer> {
 
 	@override void initState() {
 		super.initState();
-		print ("Seting up the drawer");
 		final bool userPreference = widget.prefs.brightness;
-		print ("User wants a $userPreference theme");
 		if (userPreference != null) brightness = userPreference 
 			? Brightness.light
 			: Brightness.dark;
