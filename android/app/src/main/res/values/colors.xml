@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<!-- This has to be one of the below colors -->
+    <color name="ic_launcher_background">#004B8D</color>
+<!-- 
+		<color name="bright_yellow">#FFD732</color>
+    <color name="gold">#F9CA15</color>
+
+    <color name="white">#FFFFFF</color>
+
+    <color name="blue">#004B8D</color>
+    <color name="light_blue">#8FDEFE</color>
+    <color name="teal">#44AEDE</color>
+ -->
+</resources>
