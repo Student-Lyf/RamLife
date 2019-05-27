@@ -74,7 +74,7 @@ class LoginState extends State <Login> {
 								onChanged: validateUsername,
 								onSubmitted: login,
 								decoration: InputDecoration(
-									// enabled: false,
+									enabled: false,
 									icon: Icon (Icons.verified_user),
 									labelText: "Username",
 									hintText: "Enter your Ramaz username",
