@@ -121,7 +121,15 @@ class DrawerState extends State<NavigationDrawer> {
 					applicationVersion: "0.5",
 					applicationIcon: Logos.ramazIcon,
 					aboutBoxChildren: [
-						Text ("Created by Levi Lesches, Sophia Kremer, and Sam Lowe")
+						Text (
+							"Created by the Ramaz Coding Club (Levi Lesches, Sophia Kremer, "
+							"and Sam Low) with the support of the Ramaz administration. "
+						),
+						SizedBox (height: 20),
+						Text (
+							"A special thanks to Mr. Vovsha for helping us go from idea to "
+							"reality."
+						),
 					]
 				),
 				SizedBox (height: 10),
