@@ -47,10 +47,14 @@ Future<void> signInWithEmail(String email) async {
 	await firebase.sendSignInWithEmailLink(
 		email: email, 
 		url: "https://ramaz.page.link/email-login",
+		// url: "https://www.ramaz.org/page.cfm?p=114",
 		handleCodeInApp: true, 
 		iOSBundleID: "com.ramaz.student-life", 
 		androidPackageName: "com.ramaz.student_life",
-		androidInstallIfNotAvailable: true, 
+		androidInstallIfNotAvailable: false, 
 		androidMinimumVersion: "21"
 	);
 }
+
+Future<bool> isSignInLink(String link) async => 
+	await firebase.isSignInWithEmailLink(link);
