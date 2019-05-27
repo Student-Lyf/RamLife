@@ -8,6 +8,7 @@ import "package:ramaz/widgets/theme_changer.dart";
 import "package:ramaz/services/reader.dart";
 import "package:ramaz/services/auth.dart" as Auth;
 import "package:ramaz/services/preferences.dart";
+import "package:ramaz/services/dynamic_links.dart" as DynamicLinks;
 import "package:ramaz/services/main.dart" show initOnLogin;
 
 class Login extends StatefulWidget {
@@ -30,10 +31,20 @@ class LoginState extends State <Login> {
 	bool loading = false, ready = false;
 
 	@override void initState() {
+		DynamicLinks.getLink().then (
+			(Uri uri) {
+				if (uri == null) 
+					print ("There is no dynamic link");
+				else {
+					print (uri.toString());
+					print (Auth.isSignInLink(uri.toString()));
+				}
+			}
+		);
 		super.initState();
 		Auth.signOut();  // To log in, one must first log out  --Levi
 		widget.reader.deleteAll();
-		usernameController.text = "Coming soon";  // TODO
+		// usernameController.text = "Coming soon";  // TODO
 	}
 
 	@override void dispose() {
@@ -61,16 +72,16 @@ class LoginState extends State <Login> {
 								focusNode: userNode,
 								textInputAction: TextInputAction.done,
 								onChanged: validateUsername,
-								onSubmitted: verifyUser,
+								onSubmitted: login,
 								decoration: InputDecoration(
-									enabled: false,
+									// enabled: false,
 									icon: Icon (Icons.verified_user),
 									labelText: "Username",
 									hintText: "Enter your Ramaz username",
 									errorText: usernameError,
 									suffix: IconButton (
 										icon: Icon (Icons.done),
-										onPressed: ready ? verifyUser : null,
+										onPressed: ready ? login : null,
 										color: Colors.green,
 									)
 								)
@@ -105,13 +116,12 @@ class LoginState extends State <Login> {
 		setState(() => usernameError = error);
 	}
 
-	void verifyUser([String username]) {
+	void login ([String username]) async {
 		// TODO: Check if user exists and has email set up
 		userNode.unfocus();
-		downloadData(username ?? usernameController.text);
-	}
+		await Auth.signInWithEmail("leschesl@ramaz.org");
+		// downloadData(username ?? usernameController.text);
 
-	void login () async {
 		// final String username = usernameController.text;
 		// try {await Auth.signIn(username, password);}
 		// on PlatformException catch (error) {
