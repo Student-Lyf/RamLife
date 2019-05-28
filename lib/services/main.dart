@@ -15,11 +15,12 @@ void setToday(Reader reader) {
 		now.day
 	);
 	reader.today = reader.calendar [today];
-	Timer.periodic (
-		Duration (minutes: 1),
-		(Timer timer) => reader.period = 
-			reader.student.getPeriods(reader.today) [reader.today.period]
-	);
+	if (reader.today != null)
+		Timer.periodic (
+			Duration (minutes: 1),
+			(Timer timer) => reader.period = 
+				reader.student.getPeriods(reader.today) [reader.today.period]
+		);
 }
 
 Future<void> initOnMain(Reader reader, Preferences prefs) async {
