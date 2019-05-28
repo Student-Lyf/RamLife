@@ -1,7 +1,7 @@
 import "dart:convert" show jsonDecode, jsonEncode;
 import "dart:io" show File;
 
-import "package:ramaz/data/schedule.dart" show Subject, Day;
+import "package:ramaz/data/schedule.dart";
 import "package:ramaz/data/student.dart";
 
 class Reader {
@@ -66,5 +66,10 @@ class Reader {
 
 	bool get ready => studentFile.existsSync() && subjectFile.existsSync();
 
-	Day currentDay;  // for easy passing of selected day
+	// This next section is so that we can pass information between screens
+	// remember that all navigation happens through RamazApp.routes
+	Day currentDay;
+	Period period;
+	Subject get subject => subjects [period?.id];
+
 }
