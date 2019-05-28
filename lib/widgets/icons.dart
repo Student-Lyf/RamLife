@@ -78,7 +78,7 @@ class RamazLogos {
 		height: 320
 	);
 
-	static final Widget ram_square_words = Image.asset (
+	static final Widget ram_square_words = LoadingImage (
 		"images/logos/ramaz/ram_square_words.png"
 	);
 

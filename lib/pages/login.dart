@@ -8,7 +8,7 @@ import "package:ramaz/widgets/theme_changer.dart";
 import "package:ramaz/services/reader.dart";
 import "package:ramaz/services/auth.dart" as Auth;
 import "package:ramaz/services/preferences.dart";
-import "package:ramaz/services/dynamic_links.dart" as DynamicLinks;
+// import "package:ramaz/services/dynamic_links.dart" as DynamicLinks;
 import "package:ramaz/services/main.dart" show initOnLogin;
 
 class Login extends StatefulWidget {
@@ -31,16 +31,16 @@ class LoginState extends State <Login> {
 	bool loading = false, ready = false;
 
 	@override void initState() {
-		DynamicLinks.getLink().then (
-			(Uri uri) {
-				if (uri == null) 
-					print ("There is no dynamic link");
-				else {
-					print (uri.toString());
-					print (Auth.isSignInLink(uri.toString()));
-				}
-			}
-		);
+		// DynamicLinks.getLink().then (
+		// 	(Uri uri) {
+		// 		if (uri == null) 
+		// 			print ("There is no dynamic link");
+		// 		else {
+		// 			print (uri.toString());
+		// 			print (Auth.isSignInLink(uri.toString()));
+		// 		}
+		// 	}
+		// );
 		super.initState();
 		Auth.signOut();  // To log in, one must first log out  --Levi
 		widget.reader.deleteAll();
@@ -67,32 +67,39 @@ class LoginState extends State <Login> {
 							ThemeChanger.of(context).brightness == Brightness.light 
 								? RamazLogos.teal
 								: RamazLogos.ram_square_words, 
-							TextField(
-								controller: usernameController,
-								focusNode: userNode,
-								textInputAction: TextInputAction.done,
-								onChanged: validateUsername,
-								onSubmitted: login,
-								decoration: InputDecoration(
-									enabled: false,
-									icon: Icon (Icons.verified_user),
-									labelText: "Username",
-									hintText: "Enter your Ramaz username",
-									errorText: usernameError,
-									suffix: IconButton (
-										icon: Icon (Icons.done),
-										onPressed: ready ? login : null,
-										color: Colors.green,
+							// TextField(
+							// 	controller: usernameController,
+							// 	focusNode: userNode,
+							// 	textInputAction: TextInputAction.done,
+							// 	onChanged: validateUsername,
+							// 	onSubmitted: login,
+							// 	decoration: InputDecoration(
+							// 		enabled: false,
+							// 		icon: Icon (Icons.verified_user),
+							// 		labelText: "Username",
+							// 		hintText: "Enter your Ramaz username",
+							// 		errorText: usernameError,
+							// 		suffix: IconButton (
+							// 			icon: Icon (Icons.done),
+							// 			onPressed: ready ? login : null,
+							// 			color: Colors.green,
+							// 		)
+							// 	)
+							// ),
+							// SizedBox (height: 20),
+							// Center (child: Text ("OR", textScaleFactor: 1)),
+							// SizedBox (height: 10),
+							Container (
+								decoration: ShapeDecoration (
+									shape: RoundedRectangleBorder(
+										borderRadius: BorderRadius.circular(20)
 									)
+								),
+								child: ListTile (
+									leading: Logos.google,
+									title: Text ("Sign in with Google"),
+									onTap: googleLogin
 								)
-							),
-							SizedBox (height: 20),
-							Center (child: Text ("OR", textScaleFactor: 1)),
-							SizedBox (height: 10),
-							ListTile (
-								leading: Logos.google,
-								title: Text ("Sign in with Google"),
-								onTap: googleLogin
 							)
 						]
 					)
