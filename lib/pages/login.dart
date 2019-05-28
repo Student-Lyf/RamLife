@@ -27,6 +27,7 @@ class LoginState extends State <Login> {
 	final FocusNode userNode = FocusNode();
 	final GlobalKey<ScaffoldState> key = GlobalKey();
 
+	Brightness brightness;
 	String usernameError, passwordError;
 	bool loading = false, ready = false;
 
@@ -44,6 +45,10 @@ class LoginState extends State <Login> {
 		super.initState();
 		Auth.signOut();  // To log in, one must first log out  --Levi
 		widget.reader.deleteAll();
+		bool userPreference = widget.prefs.brightness;
+		if (brightness != null) brightness = userPreference
+			? Brightness.light
+			: Brightness.dark;
 		// usernameController.text = "Coming soon";  // TODO
 	}
 
@@ -55,7 +60,21 @@ class LoginState extends State <Login> {
 	@override
 	Widget build (BuildContext context) => Scaffold(
 		key: key,
-		appBar: AppBar (title: Text ("Login")),
+		appBar: AppBar (
+			title: Text ("Login"),
+			actions: [
+				IconButton (
+					icon: Icon (
+						brightness == null
+							?	Icons.brightness_auto
+							: brightness == Brightness.light
+								? Icons.brightness_5
+								: Icons.brightness_4
+					),
+					onPressed: toggleBrightness
+				)
+			]
+		),
 		body: Column (
 			children: [
 				if (loading) LinearProgressIndicator(),
@@ -181,4 +200,21 @@ class LoginState extends State <Login> {
 		Navigator.of(context).pushReplacementNamed("home");
 	}
 
+	void toggleBrightness() {
+		switch (brightness) {
+			case Brightness.light: 
+				setState(() => brightness = Brightness.dark);
+				widget.prefs.brightness = false;
+				break;
+			case Brightness.dark: 
+				setState(() => brightness = null);
+				widget.prefs.brightness = null;
+				break;
+			default: 
+				setState (() => brightness = Brightness.light);
+				widget.prefs.brightness = true;
+				break;
+		}
+		ThemeChanger.of(context).brightness = brightness;
+	}
 }
