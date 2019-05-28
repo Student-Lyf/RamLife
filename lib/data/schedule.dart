@@ -79,6 +79,10 @@ class Period {
 		id: data.id
 	);
 
+	String getName(Subject subject) => id == -1
+		? "Free period"
+		: subject?.name ?? "";
+
 	@override String toString() => "Period $period";
 
 	List <String> getInfo (Subject subject) {

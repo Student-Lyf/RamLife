@@ -44,21 +44,20 @@ class ClassList extends StatelessWidget {
 
 	@override Widget build (BuildContext context) => ListView (
 		shrinkWrap: true,
-		children: 
-			(headerText == null 
-					? const <Widget> [] 
-					: <Widget>[
-						DrawerHeader (
-							child: Center (
-								child: Text (
-									headerText,
-									textScaleFactor: 2,
-									textAlign: TextAlign.center,
-								)
-							)
+		children: (headerText == null 
+			? const <Widget> [] 
+			: <Widget>[
+				DrawerHeader (
+					child: Center (
+						child: Text (
+							headerText,
+							textScaleFactor: 2,
+							textAlign: TextAlign.center,
 						)
-					]
-			) + periods.map (
+					)
+				)
+			]
+		) + periods.map (
 			(Period period) {
 				final Subject subject = reader.subjects[period.id];
 				final List<String> info = period.getInfo(subject);
@@ -66,12 +65,12 @@ class ClassList extends StatelessWidget {
 				info.removeWhere(
 					(String description) => description.startsWith("Period:")
 				);
-				String title = period.period;
-				if (period.id == -1) title += ": Free period";
-				else if (subject != null) title += ": ${subject.name}";
 				return ClassPanel (
-					// title: "${period.period}${subject == null ? '' : ': ${subject.name}'}",
-					title: title,
+					title: (
+						"${period.period}"
+						"${period.id != null ? ': ' : ''}"
+						"${period.getName(subject)}"
+					),
 					children: info.map (
 						(String description) => Text (description)
 					).toList(),
