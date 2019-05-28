@@ -60,6 +60,7 @@ class HomePageState extends State<HomePage> {
 		schedule = widget.reader.student.schedule [today.letter];
 		periods = widget.reader.student.getPeriods (today);
 		update();
+		widget.reader.period = nextPeriod;
 	}
 
 	@override void dispose() {
@@ -139,11 +140,11 @@ class HomePageState extends State<HomePage> {
 			return;
 		}
 		periodIndex = today.period;
-		// print (periodIndex);
 		period = periodIndex == null ? null : periods [periodIndex];	
 		if (periodIndex != null && periodIndex < periods.length - 1)
 			nextPeriod = periods [periodIndex + 1];
-		else nextPeriod = null;
+		else
+			nextPeriod = null;
 	});
 
 	void addGoogleSignIn() async {
