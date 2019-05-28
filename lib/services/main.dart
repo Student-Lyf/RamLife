@@ -1,3 +1,5 @@
+import "dart:async";
+
 import "firestore.dart" as Firestore;
 import "reader.dart";
 import "preferences.dart";
@@ -13,6 +15,11 @@ void setToday(Reader reader) {
 		now.day
 	);
 	reader.today = reader.calendar [today];
+	Timer.periodic (
+		Duration (minutes: 1),
+		(Timer timer) => reader.period = 
+			reader.student.getPeriods(reader.today) [reader.today.period]
+	);
 }
 
 Future<void> initOnMain(Reader reader, Preferences prefs) async {
@@ -33,7 +40,7 @@ Future<void> initOnLogin(Reader reader, Preferences prefs, String username) asyn
 	final Map<String, dynamic> studentData = await Firestore.getStudent(username);
 	final Map<String, dynamic> month = await Firestore.getMonth();
 
-	// use the data to comput more data
+	// use the data to compute more data
 	final Student student = Student.fromData(studentData);
 	final Map<int, Map<String, dynamic>> subjectData = 
 		await Firestore.getClasses(student);

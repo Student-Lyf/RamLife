@@ -7,6 +7,7 @@ import "package:ramaz/services/reader.dart";
 import "package:ramaz/services/preferences.dart";
 
 import "package:ramaz/pages/drawer.dart";
+import "package:ramaz/widgets/footer.dart";
 import "package:ramaz/widgets/class_list.dart";
 import "package:ramaz/widgets/date_picker.dart" show pickDate;
 
@@ -153,6 +154,10 @@ class ScheduleState extends State<SchedulePage> {
 						.pushReplacementNamed("home")
 				)
 			]
+		),
+		bottomSheet: Footer (
+			period: widget.reader.period,
+			subject: widget.reader.subject
 		),
 		drawer: widget.canExit ? null : NavigationDrawer(widget.prefs),
 		body: Column (
