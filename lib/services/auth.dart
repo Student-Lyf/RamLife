@@ -14,7 +14,7 @@ Future<void> signOut() async {
 	await google.signOut();
 }
 
-Future<bool> supportsGoogle() async => !(await currentUser())
+Future<bool> supportsGoogle() async => (await currentUser())
 	.providerData.any (
 		(UserInfo provider) => provider.providerId == "google.com"
 	);

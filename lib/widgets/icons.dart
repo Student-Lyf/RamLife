@@ -87,13 +87,11 @@ class RamazLogos {
 
 	static const Widget ram_square = LoadingImage(
 		"images/logos/ramaz/ram_square.png",
-		// width: 272,
-		// height: 137
+		aspectRatio: 1.0666666666666667
 	);
 
 	static const Widget ram_rectangle = LoadingImage (
 		"images/logos/ramaz/ram_rectangle.png",
-		// width: 360,
-		// height: 124.5
+		aspectRatio: 2.8915864378401004
 	);
 }
