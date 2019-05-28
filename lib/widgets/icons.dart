@@ -72,25 +72,28 @@ class Logos {
 }
 
 class RamazLogos {
-	static const Widget teal = LoadingImage (
-		"images/logos/ramaz/teal.jpg",
-		width: 320,
-		height: 320
+	static final Widget teal = ClipRRect (
+		borderRadius: BorderRadius.circular (20),
+		child: LoadingImage (
+			"images/logos/ramaz/teal.jpg",
+			aspectRatio: 1
+		)
 	);
 
 	static final Widget ram_square_words = LoadingImage (
-		"images/logos/ramaz/ram_square_words.png"
+		"images/logos/ramaz/ram_square_words.png",
+		aspectRatio: 0.9276218611521418
 	);
 
 	static const Widget ram_square = LoadingImage(
 		"images/logos/ramaz/ram_square.png",
-		width: 272,
-		height: 137
+		// width: 272,
+		// height: 137
 	);
 
 	static const Widget ram_rectangle = LoadingImage (
 		"images/logos/ramaz/ram_rectangle.png",
-		width: 360,
-		height: 124.5
+		// width: 360,
+		// height: 124.5
 	);
 }

@@ -56,8 +56,7 @@ class LoginState extends State <Login> {
 	Widget build (BuildContext context) => Scaffold(
 		key: key,
 		appBar: AppBar (title: Text ("Login")),
-		body: ListView (  // for keyboard blocking the screen
-			shrinkWrap: true,  // solves everything
+		body: Column (
 			children: [
 				if (loading) LinearProgressIndicator(),
 				Padding (
@@ -88,17 +87,18 @@ class LoginState extends State <Login> {
 							// ),
 							// SizedBox (height: 20),
 							// Center (child: Text ("OR", textScaleFactor: 1)),
-							// SizedBox (height: 10),
-							Container (
-								decoration: ShapeDecoration (
-									shape: RoundedRectangleBorder(
-										borderRadius: BorderRadius.circular(20)
+							SizedBox (height: 50),
+							Center (
+								child: Container (
+									decoration: BoxDecoration (
+										border: Border.all(color: Colors.blue),
+										borderRadius: BorderRadius.circular(20),
+									),
+									child: ListTile (
+										leading: Logos.google,
+										title: Text ("Sign in with Google"),
+										onTap: googleLogin
 									)
-								),
-								child: ListTile (
-									leading: Logos.google,
-									title: Text ("Sign in with Google"),
-									onTap: googleLogin
 								)
 							)
 						]

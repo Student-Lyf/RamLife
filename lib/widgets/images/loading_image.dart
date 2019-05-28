@@ -13,14 +13,11 @@ import "package:flutter/material.dart";
 // 	Enter width and heights as parameters to LoadingImage constructor
 
 class LoadingImage extends StatefulWidget {
-	final double width, height;
+	final double aspectRatio;
 	final String path;
 	const LoadingImage(
 		this.path,
-		{
-			this.width,
-			this.height,
-		}
+		{this.aspectRatio}
 	);
 
 	@override 
@@ -30,24 +27,39 @@ class LoadingImage extends StatefulWidget {
 class LoadingImageState extends State<LoadingImage> {
 	ImageProvider image;
 	bool loading = true;
+	ImageStream stream;
+	double aspectRatio;
 
 	@override void initState() {
 		super.initState();
 		image = AssetImage(widget.path);
-		image.resolve(ImageConfiguration()).addListener(onLoad);
+		stream = image.resolve(ImageConfiguration());
+		stream.addListener(onLoad);
 	}
 
-	void onLoad(ImageInfo info, bool _) => setState(() => loading = false);
+	void onLoad(ImageInfo info, bool _) {
+		setState(() => loading = false);
+		final Size size = Size (
+			info.image.width.toDouble(), 
+			info.image.height.toDouble()
+		);
+		aspectRatio = size.aspectRatio;
+		if (widget.aspectRatio == null)
+			print ("LoadingImage: Aspect ratio for ${widget.path} is $aspectRatio");
+	}
 
 	@override Widget build(BuildContext context) => loading
-		? SizedBox (
+		? AspectRatio (
 			child: Center (child: CircularProgressIndicator()),
-			height: widget.height,
-			width: widget.width
+			aspectRatio: widget.aspectRatio ?? 1
 		)
-		: Image(
-			image: image, 
-			height: widget.height,
-			width: widget.width
+		: AspectRatio (
+			aspectRatio: aspectRatio,
+			child: Image (image: image)
 		);
+
+	@override void dispose () {
+		stream.removeListener(onLoad);
+		super.dispose();
+	}
 }
