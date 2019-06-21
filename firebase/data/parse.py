@@ -15,7 +15,7 @@ DAYS = {
 	"E": 7, 
 	"F": 7, 
 }
-cd: Path = Path().cwd()
+cd: Path = Path().cwd().parent.parent / "data"
 
 class Student: 
 	"""
@@ -70,14 +70,37 @@ class DefaultDict (dict):
 			return value
 		else: return super().__getitem__(key)
 
-def csv(filename: str) -> DictReader: 
-	return DictReader (open (cd / (filename + ".csv")))
+class CSVReader: 
+	"""
+	This is a convenience class that wraps csv files in an iterator
+	To use it, use the following code: 
+
+	for entry in CSVReader (filename): 
+		pass  # parse entry here as normal
+
+	Now, the file will close while still providing iterator access
+	"""
+	@init
+	def __init__(self, filename): 
+		self.file = None
+		self.reader = None
+
+	def __iter__(self): 
+		self.file = open (cd / (self.filename + ".csv"))
+		self.reader = DictReader(self.file)
+		return self
+
+	def __next__(self): 
+		try: return next (self.reader)
+		except StopIteration: 
+			self.file.close()
+			raise StopIteration from None
 
 def get_email(first: str, last: str) -> str: return last + first [0]
 
 def get_students() -> {"student_id": Student}:
 	result = {}
-	for entry in csv ("students"): 
+	for entry in CSVReader ("students"): 
 		first = entry ["First Name"]
 		last = entry ["Last Name"]
 		email = get_email (first, last)
@@ -93,17 +116,18 @@ def get_students() -> {"student_id": Student}:
 
 def get_class_names() -> {"course_id": "course_name"}: return {
 	entry ["ID"]: entry ["FULL_NAME"]
-	for entry in csv ("courses")
+	for entry in CSVReader ("courses")
 }
-
-def get_teachers() -> {"course id": "teacher"}: return {
-	entry ["SECTION_ID"]: entry ["FACULTY_FULL_NAME"]
-	for entry in csv ("section")
-}
+	
+def get_teachers() -> {"course id": "teacher"}: 
+	return {
+		entry ["SECTION_ID"]: entry ["FACULTY_FULL_NAME"]
+		for entry in CSVReader ("section")
+	}
 
 def get_periods() -> {"class id": [Period]}: 
 	result = DefaultDict(lambda key: [])
-	for entry in csv ("section_schedule"): 
+	for entry in CSVReader ("section_schedule"): 
 		class_id = entry ["SECTION_ID"]
 		day = entry ["WEEKDAY_NAME"]
 		period = entry ["BLOCK_NAME"]
@@ -121,7 +145,7 @@ def get_schedule(
 ) -> {Student: {"letter": ["json"]}}: 
 
 	result = DefaultDict(lambda key: DefaultDict (lambda key: [None] * DAYS [key]))
-	for entry in csv ("schedule"):
+	for entry in CSVReader ("schedule"):
 		# Filter out lower/middle school (for now) and empty entries
 		if entry ["SCHOOL_ID_SORT"] != "3" or entry ["STUDENT_ID"] in EXPELLED: continue
 		student = students [entry ["STUDENT_ID"]]
