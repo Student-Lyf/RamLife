@@ -1,0 +1,15 @@
+filter on: 
+- year
+- division
+
+section.csv: 
+name -> faculty ID
+
+schedule.csv: 
+student id -> [class id]
+
+rg-section
+section id 
+
+
+rg-sched NOT NEEDED
