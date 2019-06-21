@@ -83,7 +83,10 @@ class LoginState extends State <Login> {
 					child: Column (
 						children: [
 							ThemeChanger.of(context).brightness == Brightness.light 
-								? RamazLogos.teal
+								? ClipRRect (
+									borderRadius: BorderRadius.circular (20),
+									child: RamazLogos.teal
+								)
 								: RamazLogos.ram_square_words, 
 							// TextField(
 							// 	controller: usernameController,

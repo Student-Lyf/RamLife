@@ -72,15 +72,12 @@ class Logos {
 }
 
 class RamazLogos {
-	static final Widget teal = ClipRRect (
-		borderRadius: BorderRadius.circular (20),
-		child: LoadingImage (
-			"images/logos/ramaz/teal.jpg",
-			aspectRatio: 1
-		)
+	static const Widget teal = LoadingImage (
+		"images/logos/ramaz/teal.jpg",
+		aspectRatio: 1
 	);
 
-	static final Widget ram_square_words = LoadingImage (
+	static const Widget ram_square_words = LoadingImage (
 		"images/logos/ramaz/ram_square_words.png",
 		aspectRatio: 0.9276218611521418
 	);

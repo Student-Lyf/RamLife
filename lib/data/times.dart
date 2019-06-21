@@ -142,7 +142,7 @@ final Special roshChodesh = Special (
 		Range (Time (12, 20), Time (12, 55)),
 		Range (Time (1, 00), Time (1, 35)),
 		Range (Time (1, 40), Time (2, 15)),
-		Range (Time (2, 30), Time (4, 00)),
+		Range (Time (2, 30), Time (3, 00)),
 		Range (Time (3, 00), Time (3, 20)),
 		Range (Time (3, 20), Time (4, 00)),
 		Range (Time (4, 05), Time (4, 45))
