@@ -102,7 +102,7 @@ def get_teachers() -> {"course id": "teacher"}: return {
 }
 
 def get_periods() -> {"class id": [Period]}: 
-	result = defaultdict(list)
+	result = DefaultDict(lambda key: [])
 	for entry in csv ("section_schedule"): 
 		class_id = entry ["SECTION_ID"]
 		day = entry ["WEEKDAY_NAME"]
@@ -111,8 +111,8 @@ def get_periods() -> {"class id": [Period]}:
 		except: continue
 		room = entry ["ROOM"]
 		period = Period (day = day, period = period, room = room)
-		result` [class_id].append (period)
-	return result`
+		result [class_id].append (period)
+	return result
 
 def get_schedule(
 	students:    {"student-id": Student     },
@@ -122,17 +122,21 @@ def get_schedule(
 
 	result = DefaultDict(lambda key: DefaultDict (lambda key: [None] * DAYS [key]))
 	for entry in csv ("schedule"):
+		# Filter out lower/middle school (for now) and empty entries
 		if entry ["SCHOOL_ID_SORT"] != "3" or entry ["STUDENT_ID"] in EXPELLED: continue
 		student = students [entry ["STUDENT_ID"]]
-		class_id = entry ["SECTION_ID"]
-		course_id = class_id[:class_id.find ("-")] if "-" in class_id else class_id
+		section_id = entry ["SECTION_ID"]
+		course_id = (
+			section_id[:section_id.find ("-")] 
+			if "-" in section_id else section_id
+		)
 		try: course_id = str (int (course_id))  # 09... -> 9...
 		except: pass
-		times = periods [class_id]
+		times = periods [section_id]
 		name = class_names [course_id]  # skip section (eg, -20, -10)
 		for period in times: 
 			result [student] [period.day] [int (period.period) - 1] = {
-				"id": class_id,
+				"id": section_id,
 				"room": period.room
 			}
 
