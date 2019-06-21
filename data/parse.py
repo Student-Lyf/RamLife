@@ -1,11 +1,11 @@
 from pathlib import Path
 from csv import DictReader
-from collections import defaultdict
 
 from my_stuff.misc import init
 
 # I think these are Atara, Daniella Symonds, and one other senior
 EXPELLED = ["721110", "721958", "719951", "5"]  # last should be a typo
+# Periods in each day
 DAYS = {
 	"A": 11, 
 	"B": 11, 
@@ -18,29 +18,53 @@ DAYS = {
 cd: Path = Path().cwd()
 
 class Student: 
+	"""
+	This class models a student. Contains: 
+		- first: first name
+		- last: last name
+		- email: email address (w/o @ramaz.org)
+		- id: student id
+	""" 
 	@init
-	def __init__(self, first, last, email, id): 
-		self.classes: [int] = []
-		self.subjects: [Subject] = []
+	def __init__(self, first, last, email, id): pass
 	def __repr__(self): return f"{self.first} {self.last} ({self.id})"
 
 class Period: 
+	"""
+	This class models a time/location for a class to meet. Attributes: 
+		- day: letter/weekday of the period
+		- period: period that the class meets on the given day
+		- room: where the class meets
+	"""
 	@init
 	def __init__(self, day, period, room): pass
 	def __repr__(self): return f"{self.day}{self.period} ({self.room})"
 
-class Subject: 
-	@init
-	def __init__(self, id, name, teacher, times: [Period]): pass
-	def __repr__(self): return f"{self.name} ({self.teacher})"
-
-class DefaultDict (dict):  # can make an empty list of DAYS length
+class DefaultDict (dict):
+	"""
+	The standard defaultdict is not enough in our case. 
+	We have two uses for it: 
+		1) To initialize a value to an empty list
+		2) To initialize the schedule to a list of periods in the day
+	Reasons we need to make our own DefaultDict: 
+		1) We cannot initialize anything in a defaultdict (it is read-only)
+		2) We cannot access the key in the default factory
+	Usage: same as defaultdict except this time you can access the key as an arg
+	"""
 	@init
 	def __init__(self, factory): super().__init__(self)
 	def __missing__(self, key): 
+		"""
+		Provides the missing value using self.factory
+		For some reason this is different than __setitem__. 
+		"""
 		return self.factory (key)
 	def __getitem__(self, key): 
-		if key not in self: 
+		"""
+		By setting a value if it doesn't already exist, we can simplify code 
+		that depends on keys existing by reading and writing at the same time 
+		"""
+		if key not in self:  # set it's default value and return
 			value = self.factory (key)
 			self [key] = value
 			return value
@@ -77,8 +101,8 @@ def get_teachers() -> {"course id": "teacher"}: return {
 	for entry in csv ("section")
 }
 
-def get_periods(): 
-	periods: {"class_id": [Period]} = defaultdict(list)
+def get_periods() -> {"class id": [Period]}: 
+	result = defaultdict(list)
 	for entry in csv ("section_schedule"): 
 		class_id = entry ["SECTION_ID"]
 		day = entry ["WEEKDAY_NAME"]
@@ -87,13 +111,14 @@ def get_periods():
 		except: continue
 		room = entry ["ROOM"]
 		period = Period (day = day, period = period, room = room)
-		periods [class_id].append (period)
-	return periods
+		result` [class_id].append (period)
+	return result`
 
-def get_schedule() -> {Student: {"letter": ["json"]}}: 
-	students:    {"student-id": Student     } = get_students()
-	class_names: {"class_id"  : "class name"} = get_class_names()
-	periods:     {"class_id"  : [Period]    } = get_periods()
+def get_schedule(
+	students:    {"student-id": Student     },
+	class_names: {"class_id"  : "class name"},
+	periods:     {"class_id"  : [Period]    },
+) -> {Student: {"letter": ["json"]}}: 
 
 	result = DefaultDict(lambda key: DefaultDict (lambda key: [None] * DAYS [key]))
 	for entry in csv ("schedule"):
@@ -103,14 +128,8 @@ def get_schedule() -> {Student: {"letter": ["json"]}}:
 		course_id = class_id[:class_id.find ("-")] if "-" in class_id else class_id
 		try: course_id = str (int (course_id))  # 09... -> 9...
 		except: pass
-		# if course_id in MISSING_CLASSES: continue
 		times = periods [class_id]
 		name = class_names [course_id]  # skip section (eg, -20, -10)
-		# subject = Subject (
-		# 	id = class_id, 
-		# 	name = name, 
-		# 	times = times
-		# )
 		for period in times: 
 			result [student] [period.day] [int (period.period) - 1] = {
 				"id": class_id,
@@ -121,9 +140,9 @@ def get_schedule() -> {Student: {"letter": ["json"]}}:
 
 
 if __name__ == '__main__':
-	# students = get_students()
-	# teachers: {"class_id": "teacher"} = get_teachers()
-	# class_names: {"class_id": "class name"} = get_class_names()
-	# periods = get_periods()
-	schedule = get_schedule()
+	students = get_students()
+	teachers: {"class_id": "teacher"} = get_teachers()
+	class_names: {"class_id": "class name"} = get_class_names()
+	periods = get_periods()
+	schedule = get_schedule(students, class_names, periods)
 	print (schedule)
