@@ -57,6 +57,7 @@
 .history
 .svn/
 *.txt.yaml
+data
 
 # android
 # .metadata
