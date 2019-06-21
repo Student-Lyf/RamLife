@@ -5,49 +5,16 @@ from collections import defaultdict
 from my_stuff.misc import init
 
 # I think these are Atara, Daniella Symonds, and one other senior
-EXPELLED = ["721110", "721958", "719951", "5"]
-MISSING_CLASSES = [  # I don't even know any more
-	"093041", 
-	"093034",
-	"099001",
-	"099014", 
-	"099013", 
-	"094011", 
-	"093031",
-	"090170", 
-	"096411", 
-	"090080", 
-	"095001", 
-	"097002", 
-	"090370", 
-	"094013", 
-	"096413", 
-	"090270", 
-	"093044", 
-	"090070", 
-	"099002", 
-	"091000", 
-	"098013", 
-	"097013", 
-	"094012", 
-	"097001", 
-	"096001", 
-	"095003", 
-	"093042",
-	"093042",
-	"099003",
-	"095011",
-	"095400",
-	"094010",
-	"092000",
-	"096513",
-	"094048",
-	"096003",
-	"095002",
-	"094014",
-	"096002"
-]
-
+EXPELLED = ["721110", "721958", "719951", "5"]  # last should be a typo
+DAYS = {
+	"A": 11, 
+	"B": 11, 
+	"C": 11, 
+	"M": 11, 
+	"R": 11, 
+	"E": 7, 
+	"F": 7, 
+}
 cd: Path = Path().cwd()
 
 class Student: 
@@ -67,6 +34,17 @@ class Subject:
 	def __init__(self, id, name, teacher, times: [Period]): pass
 	def __repr__(self): return f"{self.name} ({self.teacher})"
 
+class DefaultDict (dict):  # can make an empty list of DAYS length
+	@init
+	def __init__(self, factory): super().__init__(self)
+	def __missing__(self, key): 
+		return self.factory (key)
+	def __getitem__(self, key): 
+		if key not in self: 
+			value = self.factory (key)
+			self [key] = value
+			return value
+		else: return super().__getitem__(key)
 
 def csv(filename: str) -> DictReader: 
 	return DictReader (open (cd / (filename + ".csv")))
@@ -100,57 +78,52 @@ def get_teachers() -> {"course id": "teacher"}: return {
 }
 
 def get_periods(): 
-	periods: {"class_id": [Period]} = defaultdict(lambda: [])
+	periods: {"class_id": [Period]} = defaultdict(list)
 	for entry in csv ("section_schedule"): 
 		class_id = entry ["SECTION_ID"]
 		day = entry ["WEEKDAY_NAME"]
-		period = entry ["BLOCK_NO"]
+		period = entry ["BLOCK_NAME"]
+		try: int (period)  # "Mincha" will fail
+		except: continue
 		room = entry ["ROOM"]
 		period = Period (day = day, period = period, room = room)
 		periods [class_id].append (period)
 	return periods
 
-def get_student_classes(
-	students:    {"student-id": Student    },
-	teachers:    {"class_id"  : "teacher"   },
-	class_names: {"class_id"  : "class name"},
-	periods:     {"class_id"  : [Period]    }
-) -> {Student: [Subject]}: 
-	
-	result = defaultdict(lambda: [])
+def get_schedule() -> {Student: {"letter": ["json"]}}: 
+	students:    {"student-id": Student     } = get_students()
+	class_names: {"class_id"  : "class name"} = get_class_names()
+	periods:     {"class_id"  : [Period]    } = get_periods()
+
+	result = DefaultDict(lambda key: DefaultDict (lambda key: [None] * DAYS [key]))
 	for entry in csv ("schedule"):
 		if entry ["SCHOOL_ID_SORT"] != "3" or entry ["STUDENT_ID"] in EXPELLED: continue
 		student = students [entry ["STUDENT_ID"]]
 		class_id = entry ["SECTION_ID"]
 		course_id = class_id[:class_id.find ("-")] if "-" in class_id else class_id
-		if course_id in MISSING_CLASSES: continue
+		try: course_id = str (int (course_id))  # 09... -> 9...
+		except: pass
+		# if course_id in MISSING_CLASSES: continue
 		times = periods [class_id]
-		teacher = teachers [class_id]
 		name = class_names [course_id]  # skip section (eg, -20, -10)
-		subject = Subject (
-			id = class_id, 
-			name = name, 
-			teacher = teacher,
-			times = times
-		)
-		result [student].append (subject)
+		# subject = Subject (
+		# 	id = class_id, 
+		# 	name = name, 
+		# 	times = times
+		# )
+		for period in times: 
+			result [student] [period.day] [int (period.period) - 1] = {
+				"id": class_id,
+				"room": period.room
+			}
 
-	if MISSING_CLASSES: 
-		print ("Could not find names for classes:")
-		print (", ".join (MISSING_CLASSES))
-		print()
 	return result
 
 
 if __name__ == '__main__':
-	students = get_students()
-	teachers: {"class_id": "teacher"} = get_teachers()
-	class_names: {"class_id": "class name"} = get_class_names()
-	periods = get_periods()
-	classes = get_student_classes(
-		students = students,
-		teachers = teachers,
-		class_names = class_names,
-		periods = periods
-	)
-	print (classes)
+	# students = get_students()
+	# teachers: {"class_id": "teacher"} = get_teachers()
+	# class_names: {"class_id": "class name"} = get_class_names()
+	# periods = get_periods()
+	schedule = get_schedule()
+	print (schedule)
