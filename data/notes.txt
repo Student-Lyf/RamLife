@@ -3,13 +3,10 @@ filter on:
 - division
 
 section.csv: 
-name -> faculty ID
+class id -> faculty
 
 schedule.csv: 
 student id -> [class id]
 
-rg-section
-section id 
-
-
-rg-sched NOT NEEDED
+section_schedule
+class id -> day, period
