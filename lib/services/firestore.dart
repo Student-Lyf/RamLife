@@ -18,19 +18,19 @@ final CollectionReference calendar = firestore.collection(CALENDAR);
 Future<Map<String, dynamic>> getStudent (String username) async => 
 	(await students.document(username).get()).data;
 
-Future<Map<String, dynamic>> getClass (int id) async => 
-	(await classes.document(id.toString()).get()).data;
+Future<Map<String, dynamic>> getClass (String id) async => 
+	(await classes.document(id).get()).data;
 
-Future<Map<int, Map<String, dynamic>>> getClasses(Student student) async {
-	Set<int> ids = {};
+Future<Map<String, Map<String, dynamic>>> getClasses(Student student) async {
+	Set<String> ids = {};
 	for (final Schedule schedule in student.schedule.values) {
 		for (final PeriodData period in schedule.periods) {
 			if (period == null) continue;  // skip free periods
 			ids.add(period.id);
 		}
 	}
-	Map<int, Map<String, dynamic>> result = {};
-	for (final int id in ids) 
+	Map<String, Map<String, dynamic>> result = {};
+	for (final String id in ids) 
 		result [id] = await getClass(id);
 	return result;
 }

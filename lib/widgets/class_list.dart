@@ -68,7 +68,7 @@ class ClassList extends StatelessWidget {
 				return ClassPanel (
 					title: (
 						"${period.period}"
-						"${period.id != null ? ': ' : ''}"
+						"${int.tryParse (period.period) == null ? "" : ": "}"
 						"${period.getName(subject)}"
 					),
 					children: info.map (

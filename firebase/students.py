@@ -1,6 +1,6 @@
 from main import init
-from data.student import Student, Period
 init()
+from data.student import Student, Period
 from database.students import upload_students, add_credentials
 from auth.crud import create_user, get_user, update_user
 from auth.provider import add_provider, get_record

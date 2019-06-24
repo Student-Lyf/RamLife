@@ -1,6 +1,8 @@
 import "package:flutter/material.dart";
 import "package:flutter/services.dart" show PlatformException;
 
+import "package:url_launcher/url_launcher.dart";
+
 import "package:ramaz/widgets/icons.dart";
 import "package:ramaz/widgets/theme_changer.dart";
 
@@ -145,44 +147,74 @@ class LoginState extends State <Login> {
 		setState(() => usernameError = error);
 	}
 
-	void login ([String username]) async {
-		// TODO: Check if user exists and has email set up
-		userNode.unfocus();
-		await Auth.signInWithEmail("leschesl@ramaz.org");
-		// downloadData(username ?? usernameController.text);
+	// void login ([String username]) async {
+	// 	// TODO: Check if user exists and has email set up
+	// 	userNode.unfocus();
+	// 	await Auth.signInWithEmail("leschesl@ramaz.org");
+	// 	// downloadData(username ?? usernameController.text);
 
-		// final String username = usernameController.text;
-		// try {await Auth.signIn(username, password);}
-		// on PlatformException catch (error) {
-		// 	switch (error.code) {
-		// 		case "ERROR_USER_NOT_FOUND":
-		// 			setState(() => usernameError = "User does not exist");
-		// 			break;
-		// 		case "ERROR_WRONG_PASSWORD": 
-		// 			// Check if we can sign in with a password
-		// 			if ((await Auth.getSignInMethods(username)).contains ("password")) 
-		// 				setState(() => passwordError = "Invalid password");
-		// 			else setState(
-		// 				() => passwordError = "This account has no password -- sign in with Google."
-		// 			);
-		// 			break;
-		// 		default: throw "Cannot handle error: ${error.code}";
-		// 	}
-		// 	return;
-		// }
-		// downloadData(username);
-	}
+	// 	// final String username = usernameController.text;
+	// 	// try {await Auth.signIn(username, password);}
+	// 	// on PlatformException catch (error) {
+	// 	// 	switch (error.code) {
+	// 	// 		case "ERROR_USER_NOT_FOUND":
+	// 	// 			setState(() => usernameError = "User does not exist");
+	// 	// 			break;
+	// 	// 		case "ERROR_WRONG_PASSWORD": 
+	// 	// 			// Check if we can sign in with a password
+	// 	// 			if ((await Auth.getSignInMethods(username)).contains ("password")) 
+	// 	// 				setState(() => passwordError = "Invalid password");
+	// 	// 			else setState(
+	// 	// 				() => passwordError = "This account has no password -- sign in with Google."
+	// 	// 			);
+	// 	// 			break;
+	// 	// 		default: throw "Cannot handle error: ${error.code}";
+	// 	// 	}
+	// 	// 	return;
+	// 	// }
+	// 	// downloadData(username);
+	// }
 
 	void googleLogin() async {
-		final account = await Auth.signInWithGoogle(
-			() => key.currentState.showSnackBar(
-				SnackBar (
-					content: Text ("You need to sign in with your Ramaz email")
+		try {
+			final account = await Auth.signInWithGoogle(
+				() => key.currentState.showSnackBar(
+					SnackBar (
+						content: Text ("You need to sign in with your Ramaz email")
+					)
 				)
-			)
-		);
-		if (account == null) return;
-		downloadData(account.email.split("@")[0], google: true);
+			);
+			if (account == null) return;
+			await downloadData(account.email.split("@")[0], google: true);
+		}
+		catch (error) {
+			setState(() => loading = false);
+			showDialog (
+				context: context,
+				builder: (_) => AlertDialog (
+					title: Text ("Account corrupted"),
+					content: Column (
+						mainAxisSize: MainAxisSize.min,
+						children: [
+							Text (
+								"Due to technical difficulties, your account cannot be accessed.\n"
+								"Please contact Mr. Vovsha or Levi Lesches (class of '21) for help:"
+								// "\n\n\tvovshae@ramaz.org\n\n\tlevilesches@gmail.com"
+							),
+							FlatButton (
+								child: Text ("vovshae@ramaz.org"),
+								onPressed: () => launch ("mailto:vovshae@ramaz.org")
+							),
+							FlatButton (
+								child: Text ("levilesches@gmail.com"),
+								onPressed: () => launch ("mailto:levilesches@gmail.com")
+							)
+						]
+					)
+				)
+			);
+			rethrow;
+		}
 	}
 
 	void downloadData(String username, {bool google = false}) async {

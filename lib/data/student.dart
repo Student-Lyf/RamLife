@@ -28,14 +28,14 @@ class Student {
 	final Map <Letters, Schedule> schedule;
 	final Letters homeroomDay;
 	final String homeroomMeeting;
-	final Map <Letters, String> minchaRooms;
+	// final Map <Letters, String> minchaRooms;
 	final Map<int, Subject> subjects;
 
 	const Student ({
 		@required this.schedule,
 		@required this.homeroomDay,
 		@required this.homeroomMeeting,
-		@required this.minchaRooms,
+		// @required this.minchaRooms,
 		@required this.subjects
 	});
 
@@ -54,14 +54,14 @@ class Student {
 		// We need to find out how Ramaz stores them
 		homeroomDay: Letters.B,  // I think this is standard
 		homeroomMeeting: data ["homeroom meeting room"],
-		minchaRooms: Map.fromEntries (
-			data ["mincha rooms"].entries.map<MapEntry<Letters, String>> (
-				(MapEntry<dynamic, dynamic> entry) => MapEntry<Letters, String> (
-					stringToLetter (entry.key as String),
-					entry.value as String
-				)
-			)
-		),
+		// minchaRooms: Map.fromEntries (
+		// 	data ["mincha rooms"].entries.map<MapEntry<Letters, String>> (
+		// 		(MapEntry<dynamic, dynamic> entry) => MapEntry<Letters, String> (
+		// 			stringToLetter (entry.key as String),
+		// 			entry.value as String
+		// 		)
+			// )
+		// ),
 		// This is aggragated from the "classes" collection in the DB
 		subjects: data ["subjects"]
 	);}
@@ -83,14 +83,15 @@ class Student {
 					room: getHomeroomMeeting(day)
 				)
 			); else if (special.mincha == index) result.add (
-				Schedule.mincha (range, minchaRooms [day.letter])
+				// Schedule.mincha (range, minchaRooms [day.letter])
+				Schedule.mincha(range)
 			); else {
 				final PeriodData period = periods [periodIndex]; 
 				if (period == null) result.add (
 					Period (
 						PeriodData (
 							room: null,
-							id: -1
+							id: null
 						),
 						period: (periodIndex + 1).toString(),
 						time: range,

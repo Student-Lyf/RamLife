@@ -28,9 +28,9 @@ class Subject {
 			teacher: json ["teacher"]
 		);
 
-	static Map<int, Subject> getSubjects(Map<int, Map<String, dynamic>> data) =>
+	static Map<String, Subject> getSubjects(Map<String, Map<String, dynamic>> data) =>
 		data.map (
-			(int id, Map<String, dynamic> json) => MapEntry (
+			(String id, Map<String, dynamic> json) => MapEntry (
 				id,
 				Subject.fromJson(json)
 			)
@@ -39,7 +39,7 @@ class Subject {
 
 class PeriodData {
 	final String room;
-	final int id;
+	final String id;
 
 	const PeriodData ({
 		@required this.room,
@@ -60,7 +60,7 @@ class Period {
 	final Range time;
 	final String room; 
 	final String period;
-	final int id;
+	final String id;
 
 	const Period._ ({
 		@required this.time, 
@@ -79,16 +79,17 @@ class Period {
 		id: data.id
 	);
 
-	String getName(Subject subject) => id == -1
-		? "Free period"
-		: subject?.name ?? "";
+	String getName(Subject subject) => 
+		int.tryParse (period) != null && id == null
+			? "Free period"
+			: subject?.name ?? "";
 
 	@override String toString() => "Period $period";
 
 	List <String> getInfo (Subject subject) {
 		final List <String> result = ["Time: $time"];
 		if (int.tryParse(period) != null) result.add ("Period: $period");
-		if (id ==  -1) return result;
+		if (id ==  null) return result;
 		if (room != null) result.add ("Room: $room");
 		if (subject != null) result.add (
 			"Teacher: ${subject.teacher}",
@@ -230,9 +231,10 @@ class Schedule {
 		time: time
 	);
 
-	static Period mincha (Range time, String room) => Period (
+	// static Period mincha (Range time, String room) => Period (
+	static Period mincha (Range time) => Period (
 		PeriodData (
-			room: room, 
+			room: null,
 			id: null,
 		),
 		period: "Mincha",

@@ -15,7 +15,7 @@ void setToday(Reader reader) {
 		now.day
 	);
 	reader.today = reader.calendar [today];
-	if (reader.today != null)
+	if (reader.today != null && reader.today.letter != null)
 		Timer.periodic (
 			Duration (minutes: 1),
 			(Timer timer) => reader.period = 
@@ -43,9 +43,9 @@ Future<void> initOnLogin(Reader reader, Preferences prefs, String username) asyn
 
 	// use the data to compute more data
 	final Student student = Student.fromData(studentData);
-	final Map<int, Map<String, dynamic>> subjectData = 
+	final Map<String, Map<String, dynamic>> subjectData = 
 		await Firestore.getClasses(student);
-	final Map<int, Subject> subjects = Subject.getSubjects(subjectData);
+	final Map<String, Subject> subjects = Subject.getSubjects(subjectData);
 	final Map<DateTime, Day> calendar = Day.getCalendar(month);
 
 	// save the data
