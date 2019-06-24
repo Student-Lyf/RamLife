@@ -1,16 +1,12 @@
 # TODO: integrate Student classes seamlessly
 # TODO: Log properly
 
-print ("Initializing...")
-from pathlib import Path
-from csv import DictReader
-
 from main import init
-from data.student import Student as StudentRecord, Period as PeriodRecord
 init()
+from utils import CSVReader
+import auth as FirebaseAuth
+from data.student import Student as StudentRecord, Period as PeriodRecord
 from database.students import upload_students, add_credentials
-from auth.crud import create_user, get_user, update_user, auth as FirebaseAuth
-from auth.provider import add_provider, get_record, get_users
 
 from my_stuff.misc import init
 
@@ -27,7 +23,6 @@ DAYS = {
 	"E": 7, 
 	"F": 7, 
 }
-cd: Path = Path().cwd().parent / "data"
 
 class Student: 
 	"""
@@ -78,32 +73,6 @@ class DefaultDict (dict):
 			return value
 		else: return super().__getitem__(key)
 
-class CSVReader: 
-	"""
-	This is a convenience class that wraps csv files in an iterator
-	To use it, use the following code: 
-
-	for entry in CSVReader (filename): 
-		pass  # parse entry here as normal
-
-	Now, the file will close while still providing iterator access
-	"""
-	@init
-	def __init__(self, filename): 
-		self.file = None
-		self.reader = None
-
-	def __iter__(self): 
-		self.file = open (cd / (self.filename + ".csv"))
-		self.reader = DictReader(self.file)
-		return self
-
-	def __next__(self): 
-		try: return next (self.reader)
-		except StopIteration: 
-			self.file.close()
-			raise StopIteration from None
-
 def get_email(first: str, last: str) -> str: return last + first [0]
 
 def get_students() -> {"student_id": Student}:
@@ -121,17 +90,6 @@ def get_students() -> {"student_id": Student}:
 		)
 		result [student_id] = student
 	return result
-
-def get_class_names() -> {"course_id": "course_name"}: return {
-	entry ["ID"]: entry ["FULL_NAME"]
-	for entry in CSVReader ("courses")
-}
-	
-def get_teachers() -> {"course id": "teacher"}: 
-	return {
-		entry ["SECTION_ID"]: entry ["FACULTY_FULL_NAME"]
-		for entry in CSVReader ("section")
-	}
 
 def get_periods() -> (dict): 
 	result = DefaultDict(lambda key: [])
@@ -214,20 +172,15 @@ def main(students, upload, auth, create):
 		records = []
 		if create: 
 			for student in students.values(): 
-				try: user = create_user(student)
-				except FirebaseAuth.AuthError: pass 
-					# uid = get_user(student.username + "@ramaz.org").uid
-					# user = update_user (uid, student)
-				else: 
-					student.uid = user.uid
-					records.append (get_record(user))
-		for user in get_users(): 
+				try: user = FirebaseAuth.create_user(student)
+				except FirebaseAuth.Firebase.AuthError: pass 
+		for user in FirebaseAuth.get_users(): 
 			student = students [user.email]
 			student.uid = user.uid
-			record = get_record(user)
+			record = FirebaseAuth.get_record(user)
 			records.append (record)
 		print ("Adding Google as a provider...")
-		add_provider(records) 
+		FirebaseAuth.add_provider(records) 
 		if create: 
 			print ("Saving credentials to the database...")
 			add_credentials(students.values())
@@ -235,6 +188,7 @@ def main(students, upload, auth, create):
 		print (f"Successfully configured {len (students)} students.")
 
 if __name__ == '__main__':
+	print ("Gathering data...")
 	from argparse import ArgumentParser
 	parser = ArgumentParser()
 	parser.add_argument(
@@ -253,10 +207,9 @@ if __name__ == '__main__':
 		help = "Whether or not to recreate student email accounts. This takes time"
 	)
 	args = parser.parse_args()
-	print ("Gathering data...")
+
 	students = get_students()
 	periods, homerooms = get_periods()
-	# print (homerooms)
 	schedules = get_schedule(students, periods)
 	if MISSING_ROOMS:
 		print ("Missing room #'s for courses:")
