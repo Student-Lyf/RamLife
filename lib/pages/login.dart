@@ -145,33 +145,33 @@ class LoginState extends State <Login> {
 		setState(() => usernameError = error);
 	}
 
-	void login ([String username]) async {
-		// TODO: Check if user exists and has email set up
-		userNode.unfocus();
-		await Auth.signInWithEmail("leschesl@ramaz.org");
-		// downloadData(username ?? usernameController.text);
+	// void login ([String username]) async {
+	// 	// TODO: Check if user exists and has email set up
+	// 	userNode.unfocus();
+	// 	await Auth.signInWithEmail("leschesl@ramaz.org");
+	// 	// downloadData(username ?? usernameController.text);
 
-		// final String username = usernameController.text;
-		// try {await Auth.signIn(username, password);}
-		// on PlatformException catch (error) {
-		// 	switch (error.code) {
-		// 		case "ERROR_USER_NOT_FOUND":
-		// 			setState(() => usernameError = "User does not exist");
-		// 			break;
-		// 		case "ERROR_WRONG_PASSWORD": 
-		// 			// Check if we can sign in with a password
-		// 			if ((await Auth.getSignInMethods(username)).contains ("password")) 
-		// 				setState(() => passwordError = "Invalid password");
-		// 			else setState(
-		// 				() => passwordError = "This account has no password -- sign in with Google."
-		// 			);
-		// 			break;
-		// 		default: throw "Cannot handle error: ${error.code}";
-		// 	}
-		// 	return;
-		// }
-		// downloadData(username);
-	}
+	// 	// final String username = usernameController.text;
+	// 	// try {await Auth.signIn(username, password);}
+	// 	// on PlatformException catch (error) {
+	// 	// 	switch (error.code) {
+	// 	// 		case "ERROR_USER_NOT_FOUND":
+	// 	// 			setState(() => usernameError = "User does not exist");
+	// 	// 			break;
+	// 	// 		case "ERROR_WRONG_PASSWORD": 
+	// 	// 			// Check if we can sign in with a password
+	// 	// 			if ((await Auth.getSignInMethods(username)).contains ("password")) 
+	// 	// 				setState(() => passwordError = "Invalid password");
+	// 	// 			else setState(
+	// 	// 				() => passwordError = "This account has no password -- sign in with Google."
+	// 	// 			);
+	// 	// 			break;
+	// 	// 		default: throw "Cannot handle error: ${error.code}";
+	// 	// 	}
+	// 	// 	return;
+	// 	// }
+	// 	// downloadData(username);
+	// }
 
 	void googleLogin() async {
 		final account = await Auth.signInWithGoogle(

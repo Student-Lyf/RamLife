@@ -15,16 +15,19 @@ void setToday(Reader reader) {
 		now.day
 	);
 	reader.today = reader.calendar [today];
-	if (reader.today != null)
+	reader.today ??= Day (letter: null, lunch: null);
+	if (reader.today != null && reader.today.letter != null)
 		Timer.periodic (
 			Duration (minutes: 1),
 			(Timer timer) => reader.period = 
 				reader.student.getPeriods(reader.today) [reader.today.period]
 		);
+
 }
 
 Future<void> initOnMain(Reader reader, Preferences prefs) async {
 	reader.student = Student.fromData(reader.studentData);
+	print (reader.subjectData);
 	reader.subjects = Subject.getSubjects(reader.subjectData);
 	Map<DateTime, Day> calendar;
 	if (prefs.shouldUpdateCalendar) {
@@ -39,12 +42,14 @@ Future<void> initOnMain(Reader reader, Preferences prefs) async {
 Future<void> initOnLogin(Reader reader, Preferences prefs, String username) async {
 	// retrieve raw data
 	final Map<String, dynamic> studentData = await Firestore.getStudent(username);
+	print (studentData);
 	final Map<String, dynamic> month = await Firestore.getMonth();
 
 	// use the data to compute more data
 	final Student student = Student.fromData(studentData);
 	final Map<int, Map<String, dynamic>> subjectData = 
 		await Firestore.getClasses(student);
+	print (subjectData);
 	final Map<int, Subject> subjects = Subject.getSubjects(subjectData);
 	final Map<DateTime, Day> calendar = Day.getCalendar(month);
 

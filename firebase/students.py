@@ -140,7 +140,7 @@ def setup(
 	homerooms: {"id": "rooms"},
 ) -> [StudentRecord]: return [
 	StudentRecord (
-		username = student.email,
+		username = student.email.lower(),
 		first = student.first,
 		last = student.last,
 		# homeroom = homerooms [student.id],
