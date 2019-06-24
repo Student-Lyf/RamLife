@@ -58,6 +58,7 @@
 .svn/
 *.txt.yaml
 data
+doc
 
 # android
 # .metadata
