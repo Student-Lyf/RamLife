@@ -5,7 +5,7 @@ class Period:  # convenience for entering student data
 	def __init__(
 		self, 
 		room: str,
-		id: int
+		id: str
 	): pass
 
 	def output(self): return {
@@ -21,22 +21,22 @@ class Student:
 		first: str, 
 		last: str,
 		homeroom: str,
-		mincha_rooms: {str: str},
-		password: str,
-		A: {int: {str}},
-		B: {int: {str}},
-		C: {int: {str}},
-		E: {int: {str}},
-		F: {int: {str}},
-		M: {int: {str}},
-		R: {int: {str}},
+		# mincha_rooms: {str: str},
+		# password: str,
+		A: ["JSON"],
+		B: ["JSON"],
+		C: ["JSON"],
+		E: ["JSON"],
+		F: ["JSON"],
+		M: ["JSON"],
+		R: ["JSON"],
 	): self.verify()
 
 	def __repr__(self): return f"Student({self.first} {self.last})"
 
 	def verify(self): 
-		assert type (self.password) is str
-		assert type (self.mincha_rooms) is dict
+		# assert type (self.password) is str
+		# assert type (self.mincha_rooms) is dict
 		assert type (self.homeroom) is str
 		assert type (self.username) is str
 		assert type (self.first) is str
@@ -52,7 +52,7 @@ class Student:
 		assert type (first) is dict
 		assert "id" in first
 		assert "room" in first
-		assert type (first ["id"]) is int
+		assert type (first ["id"]) is str
 		assert type (first ["room"]) is str
 
 	def output(self): return {
@@ -65,6 +65,6 @@ class Student:
 		"R": self.R,
 		"first": self.first,
 		"last": self.last,
-		"mincha rooms": self.mincha_rooms,
+		# "mincha rooms": self.mincha_rooms,
 		"homeroom meeting room": self.homeroom
 	}

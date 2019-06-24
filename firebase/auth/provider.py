@@ -20,3 +20,5 @@ def get_record(record): return auth.ImportUserRecord (
 )
 
 def add_provider(users): auth.import_users (users)
+
+def get_users(): return auth.list_users().iterate_all()
