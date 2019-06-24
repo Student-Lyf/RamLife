@@ -23,6 +23,7 @@ DAYS = {
 	"E": 7, 
 	"F": 7, 
 }
+JUNIORS = set()
 
 class Student: 
 	"""
@@ -111,19 +112,24 @@ def get_periods() -> (dict):
 def get_schedule(
 	students:    {"student-id": Student     },
 	periods:     {"class_id"  : [Period]    },
-) -> {Student: {"letter": ["json"]}}: 
-
+	homerooms:   {"section_id": "room"      },
+) -> ({Student: {"letter": ["json"]}}, {Student: "homeroom location"}): 
+	student_homerooms = {}
 	result = DefaultDict(lambda key: DefaultDict (lambda key: [None] * DAYS [key]))
 	for entry in CSVReader ("schedule"):
 		# Filter out lower/middle school (for now) and empty entries
 		if entry ["SCHOOL_ID_SORT"] != "3" or entry ["STUDENT_ID"] in EXPELLED: continue
 		student = students [entry ["STUDENT_ID"]]
 		section_id = entry ["SECTION_ID"]
+		if section_id.startswith("11") or section_id.startswith("12"): JUNIORS.add(student)
 		broken = False  # workaround for classes not in section_schedule.csv
 		try: times = periods [section_id]
 		except KeyError: 
 			course_id = section_id
 			if "-" in course_id: course_id = course_id [:course_id.find ("-")]
+			if section_id.startswith("UADV") and not section_id.startswith("UADV11"): 
+				student_homerooms [student] = homerooms [section_id]
+				continue
 			MISSING_ROOMS.add(course_id)
 			broken = True
 			continue
@@ -132,31 +138,32 @@ def get_schedule(
 				"id": section_id,
 				"room": period.room if not broken else None
 			}
-
-	return result
+	return result, student_homerooms
 
 def setup(
 	schedules: {Student: {"letter": ["JSON"]}},
-	homerooms: {"id": "rooms"},
-) -> [StudentRecord]: return [
-	StudentRecord (
-		username = student.email.lower(),
-		first = student.first,
-		last = student.last,
-		# homeroom = homerooms [student.id],
-		homeroom = "TESTING",
-		**{  # A, B, C, M, R, E, F
-			day: [
-				(None if period is None else 
-					PeriodRecord (room = period ["room"], id = period ["id"]).output()
-				)
-				for period in day_schedule
-			]
-			for day, day_schedule in schedule.items()
-		}
-	)
-	for student, schedule in schedules.items()
-]
+	homerooms: {Student: "room"},
+) -> [StudentRecord]: 
+	result = []
+	for student, schedule in schedules.items():
+		result.append (
+			StudentRecord (
+				username = student.email.lower(),
+				first = student.first,
+				last = student.last,
+				homeroom = homerooms [student] if student not in JUNIORS else "N/A",
+				**{  # A, B, C, M, R, E, F
+					day: [
+						(None if period is None else 
+							PeriodRecord (room = period ["room"], id = period ["id"]).output()
+						)
+						for period in day_schedule
+					]
+					for day, day_schedule in schedule.items()
+				}
+			)
+		)
+	return result
 
 def main(students, upload, auth, create): 
 	if upload: 
@@ -210,11 +217,11 @@ if __name__ == '__main__':
 
 	students = get_students()
 	periods, homerooms = get_periods()
-	schedules = get_schedule(students, periods)
+	schedules, student_homerooms = get_schedule(students, periods, homerooms)
 	if MISSING_ROOMS:
 		print ("Missing room #'s for courses:")
 		print (MISSING_ROOMS)
-	students = setup(schedules, homerooms)
+	students = setup(schedules, student_homerooms)
 	print ("Setting up Firebase...")
 	main(students, upload = args.upload, auth = args.auth, create = args.create)
 	print ("Finished!")
