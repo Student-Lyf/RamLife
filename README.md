@@ -20,3 +20,77 @@ It tells you what classes you have when, the latest sports news, lost and found 
 ## Your feedback is appreciated
 
 We want to hear what you have to say, so please use the "Send Feedback" button in the app to tell us what you do -- and don't -- like, and we'll do our best to keep you happy.
+
+# Contributing
+
+This repo is to be modified *only* by the Ramaz Coding Club. It follows a simple yet sophisticated structure, in addition to the standard Flutter folders. Here is a rundown of everything you need to know: 
+
+- ## The `android` folder: 
+
+	This folder contains Android=specific implementation details. The only notable files in it are the gradle configurations: `gradle.properties`, `build.gradle`, and `app\build.gradle` (which have been changed to configured Firebase). An adjustment was made to `gradle\wrapper\gradle-wrapper.properties` to upgrade to the latest version of Gradle. Android-specific assets are stored under `app\src\main\res`, and modifications have been made to `AndroidManifest.xml` accordingly.
+
+- ## The `data` folder: 
+
+	This folder is not meant to be public. It is basically a collection of `.csv` versions of the Ramaz database. The naming convention here is simple: make everything lowercase, remove `RG_`, and make abbreviations into the full word. For example, `RG_SECT_SCHED` should be saved as `data\section_schedule.csv`. This is essential for the data processing (in the `firebase` folder) to work.
+
+- ## The `doc` folder: 
+
+	OK, so this folder is also absent from GitHub. But it's super simple to generate. Just run `dartdoc` in this repo and the full documentation will be saved here.
+
+- ## The `firebase` folder: 
+
+	This folder contains scripts whose sole purpose is to configure Google Firebase. This basically means configuring the database and authentication services based on data from the Ramaz database. It contains two more folders, `data` and `database` whose jobs are to handle data modeling and database configuration, respectively. Another notable file here is `auth.py`, which manages the FirebaseAuth API. 
+
+- ## The `images` folder: 
+
+	This folder contains image assets for the project. They are imported in the `pubspec.yaml` file. There are two child folders: 
+
+	- ### The `icons` folder: 
+		This folder contains basic icons used throughout the app
+
+	- ### The `logos` folder: 
+		This folder contains logos used for various services throughout the app. Note that despite the use of this iconography, excluding Ramaz, we do not claim any ownership whatsoever of these brands. The `ramaz` folder contains Ramaz-specific branding.
+
+- ## The `ios` folder: 
+	
+	This folder contains iOS-specific modifications, including Firebase configuration and asset bundling. 
+
+- ## The `lib` folder: 
+	
+	This is, of course, where the main Dart code lies. This will be discussed in detail next section. 
+
+## Code related folders:
+
+  Inside `lib\`, there are five folders, each of which define a different part of the structure of the app: 
+
+  - ### The `data` folder: 
+
+  	This folder contains data models for everything in the app, separated into files by topic. Here, all the business logic is implemented either as complex factories or methods. 
+
+  - ### The `mock` folder: 
+
+  	This is a temporary folder to hold any constant data that needs to be mocked out for testing. The only reason this folder will make it into production is so that we do not have to keep deleting it. But no file inside should be used during production -- they are simply placeholders. 
+
+  - ### The `pages` folder: 
+
+  	This folder contains all the screens of the app, separated into files. These files may import data models (from `data\`), APIs (from `services\`), or other UI elements (from `widgets\`). 
+
+  - ### The `services` folder: 
+
+  	This folder contains abstractions over many different APIs (data sources), separated into files by API. It contains a file, `main.dart` which holds two functions: `initOnMain`, to initialize the services when the app launches, and `initOnLogin`, which calls upon different APIs for the login flow. 
+
+  - ### The `widgets` folder: 
+
+  	This folder contains UI elements ("widgets") that are independent enough from the rest of the screen to be able to be imported and used reliably anywhere in the app (even if they in reality aren't). 
+
+ ## Running the app: 
+
+ To run the app, make sure you have [Flutter](https://flutter.dev) installed, and run these commands: 
+	<pre>
+		git clone https://github.com/Levi-Lesches/ramaz.git
+		cd ramaz
+	</pre>
+
+To be able to run and debug the app, run `flutter run`. To simply download it, run `flutter build apk` or `flutter build ios`, plug in your phone and run `flutter install`.
+
+**NOTE THAT THE iOS VERSION IS CURRENTLY BROKEN AND WILL NOT BUILD**
