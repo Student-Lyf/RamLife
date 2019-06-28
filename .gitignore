@@ -59,8 +59,8 @@
 *.txt.yaml
 data
 doc
-ios/Flutter/Debug.xcconfig
-ios/Flutter/Release.xcconfig
+# ios/Flutter/Debug.xcconfig
+# ios/Flutter/Release.xcconfig
 
 # android
 # .metadata
