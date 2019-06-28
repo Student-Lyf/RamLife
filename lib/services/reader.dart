@@ -57,17 +57,6 @@ class Reader {
 	Map<DateTime, Day> calendar;
 	Day today;
 
-	set calendarData (Map<String, dynamic> data) => calendarFile.writeAsStringSync(
-		jsonEncode(data)
-	);
-
-	Map<String, dynamic> get calendarData => jsonDecode(
-		calendarFile.readAsStringSync()
-	);
-
-	Map<DateTime, Day> calendar;
-	Day today;
-
 	void deleteAll() {
 		if (studentFile.existsSync())
 			studentFile.deleteSync();
