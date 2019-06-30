@@ -31,7 +31,7 @@ This repo is to be modified *only* by the Ramaz Coding Club. It follows a simple
 
 - ## The `data` folder: 
 
-	This folder is not meant to be public. It is basically a collection of `.csv` versions of the Ramaz database. The naming convention here is simple: make everything lowercase, remove `RG_`, and make abbreviations into the full word. For example, `RG_SECT_SCHED` should be saved as `data\section_schedule.csv`. This is essential for the data processing (in the `firebase` folder) to work.
+	This folder is not meant to be public. It is basically a collection of `.csv` versions of the Ramaz database. The naming convention here is simple: make everything lowercase, remove `RG_`, and make abbreviations into the full word. For example, `RG_SECT_SCHED` should be saved as `data\section_schedule.csv`. This is essential for the data processing (in the `firebase` folder) to work. Also included is the `calendar.csv` file needed for calendar parsing.
 
 - ## The `doc` folder: 
 
