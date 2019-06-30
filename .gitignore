@@ -20,7 +20,6 @@
 # android/app/src/debug
 # android/app/src/profile
 # android/app/src/main/java
-# android/app/google-services.json
 # android/gradle/
 # android/gradle.properties
 # android/gradlew
@@ -59,8 +58,8 @@
 *.txt.yaml
 data
 doc
-# ios/Flutter/Debug.xcconfig
-# ios/Flutter/Release.xcconfig
+android/key.properties
+firebase/admin.json
 
 # android
 # .metadata
@@ -96,7 +95,6 @@ pubspec.lock
 **/android/gradlew.bat
 **/android/local.properties
 **/android/**/GeneratedPluginRegistrant.java
-android/app/google-services.json
 
 # iOS/XCode related
 **/ios/**/*.mode1v3
