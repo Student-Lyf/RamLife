@@ -13,7 +13,7 @@ import "package:ramaz/services/preferences.dart";
 import "package:ramaz/pages/drawer.dart";
 import "package:ramaz/widgets/class_list.dart";
 import "package:ramaz/widgets/next_class.dart";
-import "package:ramaz/widgets/date_picker.dart" show pickDate;
+// import "package:ramaz/widgets/date_picker.dart" show pickDate;
 //import "package:ramaz/widgets/lunch.dart";
 import "package:ramaz/widgets/icons.dart";
 
@@ -38,17 +38,14 @@ class HomePageState extends State<HomePage> {
 	Period period, nextPeriod;
 	Schedule schedule;
 	Day today;
-	DateTime selectedDay, now = DateTime.now();
+	DateTime now = DateTime.now();
 	List<Period> periods;
 	int periodIndex;
 	bool needsGoogleSignIn = false, school; 
 
 	@override void initState() {
 		super.initState();
-		if (widget.reader.currentDay != null)
-			today = widget.reader.currentDay;
-		else today = widget.reader.today;
-		selectedDay = DateTime.now();
+		today = widget.reader.today;
 		widget.reader.currentDay = today;
 		school = today.letter != null;
 		Auth.supportsGoogle().then (
@@ -76,10 +73,6 @@ class HomePageState extends State<HomePage> {
 				if (needsGoogleSignIn) IconButton (
 					icon: Logos.google,
 					onPressed: addGoogleSignIn,
-				)
-				else if (selectedDay.day != now.day) IconButton (
-					icon: Icon (Icons.today),
-					onPressed: () => day = now
 				),
 				if (school) FlatButton (
 					child: Text ("Swipe left for schedule"),
@@ -101,10 +94,6 @@ class HomePageState extends State<HomePage> {
 					? "Today's Schedule" 
 					: "Upcoming Classes"
 			)
-		),
-		floatingActionButton: FloatingActionButton (
-			child: Icon (Icons.calendar_today),
-			onPressed: viewDay
 		),
 		body: RefreshIndicator (  // so you can refresh the period
 			onRefresh: () async => update(),
@@ -178,23 +167,4 @@ class HomePageState extends State<HomePage> {
 			)
 		);
 	}
-
-	set day (DateTime date) {
-		selectedDay = date;
-		DateTime day = DateTime.utc(
-			date.year, 
-			date.month, 
-			date.day
-		);
-		today = widget.reader.calendar [day];
-		widget.reader.currentDay = today;
-		periods = widget.reader.student.getPeriods(today);
-		school = today.letter != null;
-		update();
-	}
-
-	void viewDay() async => day = await pickDate (
-		context: context,
-		initialDate: selectedDay
-	) ?? selectedDay;
 }

@@ -144,10 +144,6 @@ class ScheduleState extends State<SchedulePage> {
 			title: Text ("Schedule"),
 			actions: widget.canExit ? null : [
 				IconButton (
-					icon: Icon (Icons.calendar_today),
-					onPressed: viewDay
-				),
-				IconButton (
 					icon: Icon (Icons.home),
 					onPressed: () => Navigator
 						.of(context)
@@ -158,6 +154,10 @@ class ScheduleState extends State<SchedulePage> {
 		bottomSheet: Footer (
 			period: widget.reader.period,
 			subject: widget.reader.subject
+		),
+		floatingActionButton: FloatingActionButton (
+			child: Icon (Icons.calendar_today),
+			onPressed: viewDay
 		),
 		drawer: widget.canExit ? null : NavigationDrawer(widget.prefs),
 		body: Column (
