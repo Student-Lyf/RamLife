@@ -3,7 +3,7 @@
 
 from main import init
 init()
-from utils import CSVReader
+from utils import CSVReader, DefaultDict
 import auth as FirebaseAuth
 from data.student import Student as StudentRecord, Period as PeriodRecord
 from database.students import upload_students, add_credentials
@@ -47,32 +47,6 @@ class Period:
 	@init
 	def __init__(self, day, period, room): pass
 	def __repr__(self): return f"{self.day}{self.period} ({self.room})"
-
-class DefaultDict (dict):
-	"""
-	The standard defaultdict is not enough in our case. 
-	We have to initialize the schedule to a list of periods in the day,
-	so we need to be able to access the	key in the factory (as an argument)
-	Usage: same as defaultdict except this time you can access the key as an arg
-	"""
-	@init
-	def __init__(self, factory): super().__init__(self)
-	def __missing__(self, key): 
-		"""
-		Provides the missing value using self.factory
-		For some reason this is different than __setitem__. 
-		"""
-		return self.factory (key)
-	def __getitem__(self, key): 
-		"""
-		By setting a value if it doesn't already exist, we can simplify code 
-		that depends on keys existing by reading and writing at the same time 
-		"""
-		if key not in self:  # set it's default value and return
-			value = self.factory (key)
-			self [key] = value
-			return value
-		else: return super().__getitem__(key)
 
 def get_email(first: str, last: str) -> str: return last + first [0]
 
