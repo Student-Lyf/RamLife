@@ -92,5 +92,3 @@ This repo is to be modified *only* by the Ramaz Coding Club. It follows a simple
 	</pre>
 
 To be able to run and debug the app, run `flutter run`. To simply download it, run `flutter build apk` or `flutter build ios`, plug in your phone and run `flutter install`.
-
-**NOTE THAT THE iOS VERSION IS CURRENTLY BROKEN AND WILL NOT BUILD**
