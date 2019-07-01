@@ -3,8 +3,14 @@ import "package:flutter/material.dart";
 import "package:ramaz/services/firestore.dart" show sendFeedback;
 import "package:ramaz/services/auth.dart" as Auth;
 
-class FeedbackPage extends StatelessWidget {
+class FeedbackPage extends StatefulWidget {
+	@override 
+	FeedbackState createState() => FeedbackState();
+}
+
+class FeedbackState extends State<FeedbackPage> {
 	final TextEditingController controller = TextEditingController();
+	bool ready = false;
 
 	@override Widget build (BuildContext context) => Scaffold (
 		appBar: AppBar (title: Text ("Send Feedback")),
@@ -16,6 +22,9 @@ class FeedbackPage extends StatelessWidget {
 					TextField (
 						autofocus: true,
 						controller: controller,
+						onChanged: (String text) => setState(() => 
+							ready = text.trim().isNotEmpty
+						), 
 						maxLength: 500,
 						textCapitalization: TextCapitalization.sentences
 					),
@@ -23,7 +32,7 @@ class FeedbackPage extends StatelessWidget {
 					RaisedButton.icon(
 						label: Text ("Submit"),
 						icon: Icon (Icons.send),
-						onPressed: () => submit(context),
+						onPressed: ready ? () => submit(context) : null
 					)
 				]
 			)
