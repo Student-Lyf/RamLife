@@ -5,17 +5,21 @@ Future<DateTime> pickDate({
 	@required DateTime initialDate
 }) async {
 	final DateTime now = DateTime.now();
-	final DateTime beginningOfMonth = DateTime.utc(
+	final DateTime beginningOfMonth = DateTime(
 		now.year, now.month, 1
 	);
-	final DateTime endOfMonth = DateTime.utc (
-		now.year, now.month + 1, 1
+	final DateTime endOfMonth = DateTime (
+		now.year, now.month + 1, 0
 	);
+	print (initialDate);
+	print (endOfMonth);
+	print (DateTime.now().isBefore(DateTime (2019, 7, 1)));
 	return await showDatePicker(
 		context: context,
 		initialDate: initialDate,
 		firstDate: beginningOfMonth,
 		lastDate: endOfMonth,
+
 		// For a darker theme -- set intelligently
 		// builder: (BuildContext context, Widget child) => Theme (
 		// 	data: ThemeData.dark(),

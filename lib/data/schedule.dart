@@ -86,16 +86,12 @@ class Period {
 
 	@override String toString() => "Period $period";
 
-	List <String> getInfo (Subject subject) {
-		final List <String> result = ["Time: $time"];
-		if (int.tryParse(period) != null) result.add ("Period: $period");
-		if (id ==  null) return result;
-		if (room != null) result.add ("Room: $room");
-		if (subject != null) result.add (
-			"Teacher: ${subject.teacher}",
-		);
-		return result;
-	}
+	List <String> getInfo (Subject subject) => [
+		"Time: $time",
+		if (int.tryParse(period) != null) "Period: $period",
+		if (room != null) "Room: $room",
+		if (subject != null) "Teacher: ${subject.teacher}",
+	];
 }
 
 class Day {

@@ -83,7 +83,6 @@ class Student {
 					room: getHomeroomMeeting(day)
 				)
 			); else if (special.mincha == index) result.add (
-				// Schedule.mincha (range, minchaRooms [day.letter])
 				Schedule.mincha(range)
 			); else {
 				final PeriodData period = periods [periodIndex]; 
