@@ -117,8 +117,9 @@ class MainAppState extends State<RamazApp> {
 			cardTheme: CardTheme (
 				color: Colors.grey[820]
 			),
+			buttonColor: GOLD,
 			buttonTheme: ButtonThemeData (
-				buttonColor: BLUE, 
+				buttonColor: BLUE_DARK, 
 				textTheme: ButtonTextTheme.accent,
 			),
 		),

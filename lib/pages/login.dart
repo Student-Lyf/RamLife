@@ -185,32 +185,40 @@ class LoginState extends State <Login> {
 				)
 			);
 			if (account == null) return;
-			await downloadData(account.email.split("@")[0], google: true);
+			await downloadData(account.email.toLowerCase().split("@")[0], google: true);
 		}
 		catch (error) {
 			setState(() => loading = false);
 			showDialog (
 				context: context,
-				builder: (_) => AlertDialog (
+				builder: (dialogContext) => AlertDialog (
 					title: Text ("Account corrupted"),
 					content: Column (
 						mainAxisSize: MainAxisSize.min,
 						children: [
 							Text (
 								"Due to technical difficulties, your account cannot be accessed.\n"
-								"Please contact Mr. Vovsha or Levi Lesches (class of '21) for help:"
+								// "Please contact Mr. Vovsha or Levi Lesches (class of '21) for help:"
+								"Please contact Levi Lesches (class of '21) for help" 
 								// "\n\n\tvovshae@ramaz.org\n\n\tlevilesches@gmail.com"
 							),
-							FlatButton (
-								child: Text ("vovshae@ramaz.org"),
-								onPressed: () => launch ("mailto:vovshae@ramaz.org")
-							),
-							FlatButton (
-								child: Text ("levilesches@gmail.com"),
-								onPressed: () => launch ("mailto:levilesches@gmail.com")
-							)
-						]
-					)
+						],
+					),
+					actions: [
+						FlatButton (
+							child: Text ("Cancel"),
+							onPressed: Navigator.of(dialogContext).pop
+						),
+						// FlatButton (
+						// 	child: Text ("vovshae@ramaz.org"),
+						// 	onPressed: () => launch ("mailto:vovshae@ramaz.org")
+						// ),
+						RaisedButton (
+							child: Text ("levilesches@gmail.com"),
+							onPressed: () => launch ("mailto:levilesches@gmail.com"),
+							color: const Color(0XFF4A76BE)  // light Ramaz blue
+						)
+					]
 				)
 			);
 			rethrow;
@@ -230,7 +238,7 @@ class LoginState extends State <Login> {
 			key.currentState.showSnackBar(
 				SnackBar (content: Text ("Login failed"))
 			);
-			return;
+			rethrow;
 		}
 		Navigator.of(context).pushReplacementNamed("home");
 	}
