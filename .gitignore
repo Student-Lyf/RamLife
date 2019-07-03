@@ -84,7 +84,7 @@ firebase/admin.json
 .pub-cache/
 .pub
 /build/
-test
+# test
 pubspec.lock
 
 # Android related
