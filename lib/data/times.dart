@@ -47,7 +47,7 @@ class Range {
 
 	factory Range.nums (int start1, int end1, int start2, int end2) => Range (
 		Time (start1, end1), 
-		Time (start2, end2)
+		Time (start2, end2),
 	);
 
 	bool contains (Time other) => start <= other && other <= end;

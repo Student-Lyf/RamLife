@@ -78,12 +78,12 @@ class Student {
 			while ((special?.skip ?? const []).contains(periodIndex + 1))
 				periodIndex++; 
 			if (special.homeroom == index) result.add (
-				Schedule.homeroom (
+				Period.homeroom (
 					range,
 					room: getHomeroomMeeting(day)
 				)
 			); else if (special.mincha == index) result.add (
-				Schedule.mincha(range)
+				Period.mincha(range)
 			); else {
 				final PeriodData period = periods [periodIndex]; 
 				if (period == null) result.add (

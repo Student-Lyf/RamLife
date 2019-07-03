@@ -58,16 +58,33 @@ class PeriodData {
 	const PeriodData ({
 		@required this.room,
 		@required this.id
-	});
-
-	factory PeriodData.fromJson (Map<String, dynamic> data) => data == null
-		? null 
-		: PeriodData(
-			room: data ["room"],
-			id: data ["id"]
+	}) : 
+		assert (
+			(room != null && id != null) || (id == null && room == null),
+			"Room and id must both be null or not."
 		);
 
+	const PeriodData.free() : 
+		room = null,
+		id = null;
+
+	factory PeriodData.fromJson (Map<String, dynamic> json) {
+		if (json == null) return null;
+		final String room = json ["room"], id = json ["id"];
+		if (room == null || id == null) 
+			throw JsonUnsupportedObjectError (json);
+		return PeriodData(
+			room: json ["room"],
+			id: json ["id"]
+		);
+	}
+
 	@override String toString() => "PeriodData $id";
+	@override operator == (dynamic other) => (
+		other is PeriodData &&
+		other.id == id &&
+		other.room == room
+	);
 }
 
 class Period {
@@ -93,12 +110,42 @@ class Period {
 		id: data.id
 	);
 
+	factory Period.homeroom (
+		Range time, 
+		{String room, String id}
+	) => Period (
+		PeriodData (
+			room: room,
+			id: id,
+		),
+		period: "Homeroom",
+		time: time
+	);
+
+	factory Period.mincha (Range time) => Period (
+		PeriodData (
+			room: null,
+			id: null,
+		),
+		period: "Mincha",
+		time: time
+	);
+
+
+	@override String toString() => "Period $period";
+	@override operator == (other) => (
+		other is Period && 
+		other.time == time &&
+		other.room == room && 
+		other.period == period && 
+		other.id == id
+	);
+
 	String getName(Subject subject) => 
 		int.tryParse (period) != null && id == null
 			? "Free period"
 			: subject?.name ?? "";
 
-	@override String toString() => "Period $period";
 
 	List <String> getInfo (Subject subject) => [
 		"Time: $time",
@@ -228,26 +275,4 @@ class Schedule {
 			).toList()
 		);
 	}
-
-	static Period homeroom (
-		Range time, 
-		{String room}
-	) => Period (
-		PeriodData (
-			room: room,
-			id: null,
-		),
-		period: "Homeroom",
-		time: time
-	);
-
-	// static Period mincha (Range time, String room) => Period (
-	static Period mincha (Range time) => Period (
-		PeriodData (
-			room: null,
-			id: null,
-		),
-		period: "Mincha",
-		time: time
-	);
 }
