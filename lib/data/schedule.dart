@@ -1,4 +1,5 @@
 import "package:flutter/foundation.dart" show required;
+import "dart:convert" show JsonUnsupportedObjectError;
 
 import "times.dart";
 
@@ -22,11 +23,17 @@ class Subject {
 		@required this.teacher
 	});
 
-	factory Subject.fromJson(Map<String, dynamic> json) => json == null ? null :
-		Subject (
-			name: json ["name"],
-			teacher: json ["teacher"]
+	factory Subject.fromJson(Map<String, dynamic> json) {
+		if (json == null) return null;
+		final String name = json ["name"], teacher = json ["teacher"];
+		if (name == null || teacher == null) 
+			throw JsonUnsupportedObjectError (json.toString());
+			// throw Error();
+		return Subject (
+			name: name,
+			teacher: teacher,
 		);
+	}
 
 	static Map<String, Subject> getSubjects(Map<String, Map<String, dynamic>> data) =>
 		data.map (
@@ -35,6 +42,13 @@ class Subject {
 				Subject.fromJson(json)
 			)
 		);
+
+	@override String toString() => "$name ($teacher)";
+	@override operator == (dynamic other) => (
+		other is Subject && 
+		other.name == name &&
+		other.teacher == teacher
+	);
 }
 
 class PeriodData {

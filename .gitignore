@@ -56,7 +56,7 @@
 .history
 .svn/
 *.txt.yaml
-data
+/data
 doc
 android/key.properties
 firebase/admin.json
