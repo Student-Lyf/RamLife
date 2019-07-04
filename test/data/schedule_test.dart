@@ -226,33 +226,22 @@ class DayTester {
 	static const Map<String, dynamic> nullJson = const {"letter": null};
 	static const Map<String, dynamic> gJson = const {"letter": "G"};
 	static const Letters letter = Letters.M;
-	static const Lunch lunch = Lunch (
-		main: "Fish Tacos",
-		soup: "Navy Bean soup",
-		side1: "Roasted Broccoli",
-		side2: "Sweet Potato Wedges",
-		salad: "Greek Salad",
-	);
 	static const Special special = roshChodesh;
 	static Day day1 = Day (
 		letter: letter,
-		lunch: null, 
 		special: special
 	);
 	static Day day2 = Day (
 		letter: letter,
-		lunch: null
 	);
 	static Day day3 = Day (
 		letter: null,
-		lunch: null
 	);
 
 	static void equalityTest() {
 		compare<Day> (
 			Day (
 				letter: letter,
-				lunch: null,
 				special: special
 			),
 			day1
@@ -260,14 +249,12 @@ class DayTester {
 		compare<Day> (
 			Day (
 				letter: letter,
-				lunch: null
 			),
 			day2
 		);
 		compare<Day> (
 			Day (
 				letter: null,
-				lunch: null
 			),
 			day3
 		);
@@ -293,7 +280,7 @@ class DayTester {
 		compare<String> (day1.n, "n");
 		compare<String> (day3.n, "");
 		compare<String> (
-			Day (letter: Letters.B, lunch: lunch).n,
+			Day (letter: Letters.B).n,
 			""
 		);
 	}

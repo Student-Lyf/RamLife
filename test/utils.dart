@@ -26,3 +26,13 @@ void willThrow<Error> (VoidCallback function) => expect (
 void compareList<E> (List<E> a, List<E> b) => expect (
 	a, pairwiseCompare<E, E> (b, (E a2, E b2) => a2 == b2, "Equality")
 );
+
+void compareDeepMaps<Key, ListValue> (
+	Map<Key, List<ListValue>> a, Map<Key, List<ListValue>> b
+) {
+	for (MapEntry<Key, List<ListValue>> entry in a.entries) {
+		// compareList<
+		compare<bool> (b.containsKey(entry.key), true);
+		compareList<ListValue> (b[entry.key], entry.value);
+	}
+}

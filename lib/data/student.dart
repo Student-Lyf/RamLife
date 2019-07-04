@@ -1,70 +1,58 @@
 import "package:flutter/foundation.dart";
-
-// TODO: move this import into Reader
+import "dart:convert" show JsonUnsupportedObjectError;
 
 import "schedule.dart";
 import "times.dart";
 
-// helper function to resolve issue of storing days in the DB:
-Letters stringToLetter (String letter) {
-	switch (letter) {
-		case "A": return Letters.A;
-		case "B": return Letters.B;
-		case "C": return Letters.C;
-		case "M": return Letters.M;
-		case "R": return Letters.R;
-		case "E": return Letters.E;
-		case "F": return Letters.F;
-		default: throw ArgumentError.value (
-			letter,  // invalid value
-			"stringToLetter",  // Function name
-			"Letter must be one of ${Letters.values}"
-		);
-	}
-}
-const LETTERS = ["A", "B", "C", "M", "R", "E", "F"];
-
 class Student {
 	final Map <Letters, Schedule> schedule;
-	final Letters homeroomDay;
-	final String homeroomMeeting;
-	// final Map <Letters, String> minchaRooms;
-	final Map<int, Subject> subjects;
+	final String homeroom;
 
 	const Student ({
 		@required this.schedule,
-		@required this.homeroomDay,
-		@required this.homeroomMeeting,
-		// @required this.minchaRooms,
-		@required this.subjects
+		@required this.homeroom,
 	});
 
-	factory Student.fromData (Map<String, dynamic> data) {
+	@override String toString() => schedule.toString();
+	@override operator == (other) => (
+		other is Student && other.schedule == schedule && other.homeroom == homeroom
+	);
+
+	factory Student.fromJson (Map<String, dynamic> json) {
+		// Fun Fact: ALl this is error checking. 
+		// Your welcome. 
+
+		// Check for null homeroom
+		const String homeroomKey = "homeroom meeting room";
+		if (!json.containsKey(homeroomKey)) 
+			throw JsonUnsupportedObjectError(json, cause: "No homeroom present");
+		final String homeroom = json [homeroomKey];
+		if (homeroom == null) throw ArgumentError.notNull(homeroomKey);
+
+		// Check for null schedules
+		const List<String> letters = ["A", "B", "C", "E", "F", "M", "R"];
+		for (final String letter in letters) {
+			if (!json.containsKey (letter)) throw JsonUnsupportedObjectError(
+				json, cause: "Cannot find letter $letter"
+			);
+			if (json [letter] == null) 
+				throw ArgumentError.notNull ("$letter has no schedule");
+		}
+		
+		// Real code starts here
 		return Student (
-		schedule: {
-			Letters.A: Schedule.fromJson (data ["A"]),
-			Letters.B: Schedule.fromJson (data ["B"]),
-			Letters.C: Schedule.fromJson (data ["C"]),
-			Letters.E: Schedule.fromJson (data ["E"]),
-			Letters.F: Schedule.fromJson (data ["F"]),
-			Letters.M: Schedule.fromJson (data ["M"]),
-			Letters.R: Schedule.fromJson (data ["R"]),
-		},
-		// These entries are not actually in the database yet
-		// We need to find out how Ramaz stores them
-		homeroomDay: Letters.B,  // I think this is standard
-		homeroomMeeting: data ["homeroom meeting room"],
-		// minchaRooms: Map.fromEntries (
-		// 	data ["mincha rooms"].entries.map<MapEntry<Letters, String>> (
-		// 		(MapEntry<dynamic, dynamic> entry) => MapEntry<Letters, String> (
-		// 			stringToLetter (entry.key as String),
-		// 			entry.value as String
-		// 		)
-			// )
-		// ),
-		// This is aggragated from the "classes" collection in the DB
-		subjects: data ["subjects"]
-	);}
+			homeroom: homeroom,
+			schedule: {
+				Letters.A: Schedule.fromJson (json ["A"]),
+				Letters.B: Schedule.fromJson (json ["B"]),
+				Letters.C: Schedule.fromJson (json ["C"]),
+				Letters.E: Schedule.fromJson (json ["E"]),
+				Letters.F: Schedule.fromJson (json ["F"]),
+				Letters.M: Schedule.fromJson (json ["M"]),
+				Letters.R: Schedule.fromJson (json ["R"]),
+			},
+		);
+	}
 
 	List <Period> getPeriods (Day day) {
 		if (day.letter == null) return null;
@@ -108,6 +96,6 @@ class Student {
 		return result;
 	}
 
-	String getHomeroomMeeting(Day day) => day.letter == homeroomDay 
-		? homeroomMeeting : null;
+	String getHomeroomMeeting(Day day) => day.letter == Letters.B 
+		? homeroom : null;
 }

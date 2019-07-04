@@ -162,12 +162,12 @@ class Period {
 
 class Day {
 	final Letters letter;
-	final Lunch lunch;
+	// final Lunch lunch;
 	Special special;
 
 	Day ({
 		@required this.letter,
-		@required this.lunch,
+		// @required this.lunch,
 		special
 	}) {
 		if (special == null) {
@@ -200,7 +200,7 @@ class Day {
 		final Letters letter = stringToLetters [jsonLetter];
 		return Day (
 			letter: letter,
-			lunch: null
+			// lunch: null
 		);
 	}
 
@@ -225,7 +225,7 @@ class Day {
 	@override operator == (other) => (
 		other is Day && 
 		other.letter == letter &&
-		other.lunch == lunch &&
+		// other.lunch == lunch &&
 		other.special == special
 	);
 
