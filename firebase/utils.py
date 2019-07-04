@@ -21,7 +21,7 @@ class CSVReader:
 		self.reader = None
 
 	def __iter__(self): 
-		self.file = open (cd / (self.filename + ".csv"))
+		self.file = open (self.filename)
 		self.reader = DictReader(self.file)
 		return self
 

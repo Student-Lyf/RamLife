@@ -21,6 +21,7 @@ class Student:
 		first: str, 
 		last: str,
 		homeroom: str,
+		homeroom_location: str,
 		# mincha_rooms: {str: str},
 		# password: str,
 		A: ["JSON"],
@@ -37,7 +38,11 @@ class Student:
 	def verify(self): 
 		# assert type (self.password) is str
 		# assert type (self.mincha_rooms) is dict
-		assert type (self.homeroom) is str
+		assert (
+			self.homeroom_location is None or 
+			type (self.homeroom_location) is str
+		)
+		assert (self.homeroom is None or type (self.homeroom) is str)
 		assert type (self.username) is str
 		assert type (self.first) is str
 		assert type (self.last) is str
@@ -66,5 +71,6 @@ class Student:
 		"first": self.first,
 		"last": self.last,
 		# "mincha rooms": self.mincha_rooms,
-		"homeroom meeting room": self.homeroom
+		"homeroom meeting room": self.homeroom_location,
+		"homeroom": self.homeroom
 	}
