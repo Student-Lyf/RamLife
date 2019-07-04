@@ -12,7 +12,8 @@ const Map<String, Letters> stringToLetters = {
 	"M": Letters.M,
 	"R": Letters.R,
 	"E": Letters.E,
-	"F": Letters.F
+	"F": Letters.F,
+	null: null
 };
 
 class Subject {
@@ -55,11 +56,12 @@ class PeriodData {
 	final String room;
 	final String id;
 
+
 	const PeriodData ({
 		@required this.room,
 		@required this.id
 	}) : 
-		assert (
+		assert (  // This will only run in dev mode, but whatever
 			(room != null && id != null) || (id == null && room == null),
 			"Room and id must both be null or not."
 		);
@@ -67,6 +69,9 @@ class PeriodData {
 	const PeriodData.free() : 
 		room = null,
 		id = null;
+
+	void fync() {}
+
 
 	factory PeriodData.fromJson (Map<String, dynamic> json) {
 		if (json == null) return null;
@@ -79,7 +84,7 @@ class PeriodData {
 		);
 	}
 
-	@override String toString() => "PeriodData $id";
+	@override String toString() => "PeriodData ($id, $room)";
 	@override operator == (dynamic other) => (
 		other is PeriodData &&
 		other.id == id &&
@@ -160,27 +165,6 @@ class Day {
 	final Lunch lunch;
 	Special special;
 
-	String get name => letter == null 
-		? "No school"
-		: "${letter.toString().substring (8)} day ${
-			special == regular || special == rotate ? '' : special.name
-		}";
-
-	String get n {
-		switch (letter) {
-			case Letters.A:
-			case Letters.E:
-			case Letters.M:
-			case Letters.R:
-			case Letters.F:
-				return "n";
-			case Letters.B:
-			case Letters.C:
-				return "";
-		}
-		throw "Invalid day: $letter";
-	}
-
 	Day ({
 		@required this.letter,
 		@required this.lunch,
@@ -204,10 +188,21 @@ class Day {
 		} else this.special = special;
 	} 
 
-	factory Day.fromJson(Map<dynamic, dynamic> json) => Day (
-		letter: stringToLetters [json ["letter"]],
-		lunch: null
-	);
+	factory Day.fromJson(Map<dynamic, dynamic> json) {
+		if (!json.containsKey("letter")) throw JsonUnsupportedObjectError(json);
+		final String jsonLetter = json ["letter"];
+		if (!stringToLetters.containsKey (jsonLetter)) 
+			throw ArgumentError.value(
+				jsonLetter,  // invalid value
+				"letter",  // arg name
+				"$jsonLetter is not a valid letter"
+			);  // message
+		final Letters letter = stringToLetters [jsonLetter];
+		return Day (
+			letter: letter,
+			lunch: null
+		);
+	}
 
 	static Map<DateTime, Day> getCalendar(Map<String, dynamic> data) {
 		final int month = DateTime.now().month;
@@ -223,6 +218,36 @@ class Day {
 			result [date] = Day.fromJson(entry.value);
 		}
 		return result;
+	}
+
+	// @override String toString() => name;
+	@override String toString() => "$letter $special";	
+	@override operator == (other) => (
+		other is Day && 
+		other.letter == letter &&
+		other.lunch == lunch &&
+		other.special == special
+	);
+
+	String get name => letter == null
+		? null
+		: "${letter.toString().substring (8)} day${
+			special == regular || special == rotate ? '' : ' ' + special.name
+		}";
+
+	String get n {
+		switch (letter) {
+			case Letters.A:
+			case Letters.E:
+			case Letters.M:
+			case Letters.R:
+			case Letters.F:
+				return "n";
+			case Letters.B:
+			case Letters.C:
+			default: 
+				return "";
+		}
 	}
 
 	int get period {
@@ -259,20 +284,28 @@ class Lunch {
 class Schedule {
 	final List <PeriodData> periods;
 	const Schedule (this.periods);
-	factory Schedule.fromJson(List<dynamic> json) {
-		// Each entry is a map: 
-		// 	- id: int, 
-		// 	- room: String
-		// 
-		// Also, we can't use typedefs as these are not functions :(
 
-		// The data we receive will come with other data (ints, Strings, etc.)
-		// So we have to receive it with dynamic values
-		// Here we can cast it to have a FB Map as the value
-		return Schedule (
-			json.map (
-				(dynamic period) => PeriodData.fromJson (period?.cast<String, dynamic>())
-			).toList()
-		);
-	}
+	@override String toString() => "Schedule ($periods)";
+	@override operator == (other) => throw UnsupportedError(
+		"Cannot equate two Schedules. Compare Schedule.periods instead"
+	);
+		// other is Schedule && ListEquality().equals (other.periods, periods);
+		// other is Schedule && other.periods == periods;
+
+	// Each entry is a map: 
+	// 	- id: int, 
+	// 	- room: String
+	// 
+	// Also, we can't use typedefs as these are not functions :(
+
+	// The data we receive will come with other data (ints, Strings, etc.)
+	// So we have to receive it with dynamic values
+	// Here we can cast it to have a FB Map as the value
+	factory Schedule.fromJson(List json) => Schedule (
+		json.map (
+			(dynamic period) => PeriodData.fromJson (
+				period?.cast<String, dynamic>()
+			)
+		).toList()
+	);
 }

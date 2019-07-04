@@ -1,13 +1,11 @@
-import "package:flutter_test/flutter_test.dart";
-import "package:matcher/matcher.dart";
-import "../compare.dart";
-
 import "dart:convert" show JsonUnsupportedObjectError;
 
-import "package:ramaz/data/schedule.dart";
-import "package:ramaz/data/times.dart" show Range;
+import "../utils.dart";
 
-const Map<String, dynamic> incorrectJson = {
+import "package:ramaz/data/schedule.dart";
+import "package:ramaz/data/times.dart";
+
+const Map<String, dynamic> invalidJson = {
 	"This": "is",
 	"very": false,
 };
@@ -15,7 +13,7 @@ const Map<String, dynamic> incorrectJson = {
 void main() => test_suite (
 	{
 		"Subject": {
-			 "Equality test": SubjectTester.equalityTest,
+			"Equality test": SubjectTester.equalityTest,
 			"Factory from JSON": SubjectTester.factoryTest,
 			"Parse JSON of subjects": SubjectTester.jsonTest,
 		},
@@ -34,6 +32,10 @@ void main() => test_suite (
 			"'n' test": DayTester.nTest,
 			"Factory test": DayTester.factoryTest,
 			"Calendar test": DayTester.calendarTest,
+		},
+		"Schedule": {
+			"Equality test": ScheduleTester.equalityTest,
+			"Factory test": ScheduleTester.factoryTest,
 		}
 	}
 );
@@ -72,9 +74,8 @@ class SubjectTester {
 		);
 
 		compare<Subject> (Subject.fromJson (null), null);
-		willThrow (
-			() => Subject.fromJson (incorrectJson),
-			const TypeMatcher<JsonUnsupportedObjectError>()
+		willThrow<JsonUnsupportedObjectError> (
+			() => Subject.fromJson (invalidJson),
 		);
 	}
 
@@ -117,9 +118,8 @@ class PeriodDataTester {
 			period
 		);
 		compare<PeriodData> (PeriodData.fromJson (null), null);
-		willThrow (
-			() => PeriodData.fromJson (incorrectJson),
-			const TypeMatcher<JsonUnsupportedObjectError>()
+		willThrow<JsonUnsupportedObjectError> (
+			() => PeriodData.fromJson (invalidJson),
 		);
 	}
 }
@@ -222,23 +222,139 @@ class PeriodTester {
 }
 
 class DayTester {
-	static void equalityTest() {
+	static const Map<String, dynamic> mJson = const {"letter": "M"};
+	static const Map<String, dynamic> nullJson = const {"letter": null};
+	static const Map<String, dynamic> gJson = const {"letter": "G"};
+	static const Letters letter = Letters.M;
+	static const Lunch lunch = Lunch (
+		main: "Fish Tacos",
+		soup: "Navy Bean soup",
+		side1: "Roasted Broccoli",
+		side2: "Sweet Potato Wedges",
+		salad: "Greek Salad",
+	);
+	static const Special special = roshChodesh;
+	static Day day1 = Day (
+		letter: letter,
+		lunch: null, 
+		special: special
+	);
+	static Day day2 = Day (
+		letter: letter,
+		lunch: null
+	);
+	static Day day3 = Day (
+		letter: null,
+		lunch: null
+	);
 
+	static void equalityTest() {
+		compare<Day> (
+			Day (
+				letter: letter,
+				lunch: null,
+				special: special
+			),
+			day1
+		);
+		compare<Day> (
+			Day (
+				letter: letter,
+				lunch: null
+			),
+			day2
+		);
+		compare<Day> (
+			Day (
+				letter: null,
+				lunch: null
+			),
+			day3
+		);
+		compareNot(day1, "HELLO");
 	}
 
 	static void nameTest() {
-
+		compare<String> (
+			day1.name,
+			"M day Rosh Chodesh"
+		);
+		compare<String> (
+			day2.name,
+			"M day"
+		);
+		compare<String> (
+			day3.name,
+			null
+		);
 	}
 
 	static void nTest() {
-
+		compare<String> (day1.n, "n");
+		compare<String> (day3.n, "");
+		compare<String> (
+			Day (letter: Letters.B, lunch: lunch).n,
+			""
+		);
 	}
 
 	static void factoryTest() {
-
+		compare<Day> (
+			Day.fromJson(mJson),
+			day2,
+		);
+		compare<Day> (
+			Day.fromJson (nullJson),
+			day3
+		);
+		willThrow<ArgumentError> (
+			() => Day.fromJson (gJson),
+		);
+		willThrow<JsonUnsupportedObjectError> (
+			() => Day.fromJson (invalidJson), 
+		);
 	}
 
 	static void calendarTest() {
-
+		const Map<String, dynamic> json = {
+			"1": mJson, "2": nullJson,
+		};
+		final DateTime now = DateTime.now();
+		compare<Map<DateTime, Day>> (
+			Day.getCalendar (json),
+			{
+				DateTime.utc (now.year, now.month, 1): day2,
+				DateTime.utc (now.year, now.month, 2): day3
+			},
+		);
 	}
+}
+
+class ScheduleTester {
+	static final List<PeriodData> periods = [
+		PeriodDataTester.period,
+		PeriodTester.periodData,
+	];
+	static final Schedule schedule = Schedule (periods);
+	static const List json = [
+		{
+			PeriodDataTester.idKey: PeriodDataTester.id,
+			PeriodDataTester.roomKey: PeriodDataTester.room,
+		},
+		{
+			PeriodDataTester.idKey: PeriodTester.id,
+			PeriodDataTester.roomKey: PeriodTester.room,
+		}
+	];
+
+	static void equalityTest() {
+		willThrow<UnsupportedError> (() => schedule == Schedule (periods));
+		compareList<PeriodData> (Schedule (periods).periods, periods);
+	}
+
+	// Schedule is basically a list. So let's do something more complicated. 
+	static void factoryTest() => compareList<PeriodData> (
+		Schedule.fromJson (json).periods,
+		periods,
+	);
 }

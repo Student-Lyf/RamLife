@@ -128,9 +128,15 @@ class Special {
 			else return friday;
 		} else throw "Cannot get friday schedule for summer month ($month)";
 	}
+
+	@override String toString() => name;
+	@override operator == (other) => (
+		other is Special && 
+		other.name == name
+	);
 }
 
-final Special roshChodesh = Special (
+const Special roshChodesh = Special (
 	"Rosh Chodesh", 
 	[
 		Range (Time (8, 00), Time (9, 05)),
@@ -151,7 +157,7 @@ final Special roshChodesh = Special (
 	mincha: 10,
 );
 
-final Special fastDay = Special (
+const Special fastDay = Special (
 	"Tzom",
 	[
 		Range (Time (8, 00), Time (8, 55)),
@@ -168,7 +174,7 @@ final Special fastDay = Special (
 	skip: const [6, 7, 8]
 );
 
-final Special friday = Special (
+const Special friday = Special (
 	"Friday",
 	[
 		Range (Time (8, 00), Time (8, 45)),
@@ -183,155 +189,155 @@ final Special friday = Special (
 	homeroom: 4
 );
 
-final Special fridayRoshChodesh = Special (
+const Special fridayRoshChodesh = Special (
 	"Friday Rosh Chodesh",
 	[
-		Range.nums(8, 00, 9, 05),
-		Range.nums(9, 10, 9, 45),
-		Range.nums(9, 50, 10, 25),
-		Range.nums(10, 30, 11, 05),
-		Range.nums(11, 05, 11, 25),
-		Range.nums(11, 25, 12, 00),
-		Range.nums(12, 05, 12, 40),
-		Range.nums(12, 45, 1, 20)
+		Range(Time (8, 00), Time (9, 05)),
+		Range(Time (9, 10), Time (9, 45)),
+		Range(Time (9, 50), Time (10, 25)),
+		Range(Time (10, 30), Time (11, 05)),
+		Range(Time (11, 05), Time (11, 25)),
+		Range(Time (11, 25), Time (12, 00)),
+		Range(Time (12, 05), Time (12, 40)),
+		Range(Time (12, 45), Time (1, 20))
 	],
 	homeroom: 4
 );
 
-final Special winterFriday = Special (
+const Special winterFriday = Special (
 	"Winter Friday",
 	[
-		Range.nums(8, 00, 9, 45),
-		Range.nums(8, 50, 9, 25), 
-		Range.nums(9, 30, 10, 05), 
-		Range.nums(10, 10, 10, 45),
-		Range.nums(10, 45, 11, 05), 
-		Range.nums(11, 05, 11, 40),
-		Range.nums(11, 45, 12, 20),
-		Range.nums(12, 25, 1, 00)
+		Range(Time (8, 00), Time (9, 45)),
+		Range(Time (8, 50), Time (9, 25)), 
+		Range(Time (9, 30), Time (10, 05)), 
+		Range(Time (10, 10), Time (10, 45)),
+		Range(Time (10, 45), Time (11, 05)), 
+		Range(Time (11, 05), Time (11, 40)),
+		Range(Time (11, 45), Time (12, 20)),
+		Range(Time (12, 25), Time (1, 00))
 	],
 	homeroom: 4
 );
 
-final Special winterFridayRoshChodesh = Special (
+const Special winterFridayRoshChodesh = Special (
 	"Winter Friday Rosh Chodesh",
 	[
-		Range.nums(8, 00, 9, 05),
-		Range.nums(9, 10, 9, 40),
-		Range.nums(9, 45, 10, 15),
-		Range.nums(10, 20, 10, 50), 
-		Range.nums(10, 50, 11, 10),
-		Range.nums(11, 10, 11, 40),
-		Range.nums(11, 45, 12, 15),
-		Range.nums(12, 20, 12, 50)
+		Range(Time (8, 00), Time (9, 05)),
+		Range(Time (9, 10), Time (9, 40)),
+		Range(Time (9, 45), Time (10, 15)),
+		Range(Time (10, 20), Time (10, 50)), 
+		Range(Time (10, 50), Time (11, 10)),
+		Range(Time (11, 10), Time (11, 40)),
+		Range(Time (11, 45), Time (12, 15)),
+		Range(Time (12, 20), Time (12, 50))
 	],
 	homeroom: 4
 );
 
-final Special amAssembly = Special (
+const Special amAssembly = Special (
 	"AM Assembly",
 	[
-		Range.nums(8, 00, 8, 50),
-		Range.nums(8, 55, 9, 30),
-		Range.nums(9, 35, 10, 10),
-		Range.nums(10, 10, 11, 10),
-		Range.nums(11, 10, 11, 45), 
-		Range.nums(11, 50, 12, 25),
-		Range.nums(12, 30, 1, 05),
-		Range.nums(1, 10, 1, 45),
-		Range.nums(1, 50, 2, 25),
-		Range.nums(2, 30, 3, 05),
-		Range.nums(3, 05, 3, 25), 
-		Range.nums(3, 25, 4, 00),
-		Range.nums(4, 05, 4, 45)
+		Range(Time (8, 00), Time (8, 50)),
+		Range(Time (8, 55), Time (9, 30)),
+		Range(Time (9, 35), Time (10, 10)),
+		Range(Time (10, 10), Time (11, 10)),
+		Range(Time (11, 10), Time (11, 45)), 
+		Range(Time (11, 50), Time (12, 25)),
+		Range(Time (12, 30), Time (1, 05)),
+		Range(Time (1, 10), Time (1, 45)),
+		Range(Time (1, 50), Time (2, 25)),
+		Range(Time (2, 30), Time (3, 05)),
+		Range(Time (3, 05), Time (3, 25)), 
+		Range(Time (3, 25), Time (4, 00)),
+		Range(Time (4, 05), Time (4, 45))
 	],
 	homeroom: 3,
 	mincha: 10
 );
 
-final Special pmAssembly = Special (
+const Special pmAssembly = Special (
 	"PM Assembly",
 	[
-		Range.nums(8, 00, 8, 50), 
-		Range.nums(8, 55, 9, 30),
-		Range.nums(9, 35, 10, 10),
-		Range.nums(10, 15, 10, 50),
-		Range.nums(10, 55, 11, 30),
-		Range.nums(11, 35, 12, 10),
-		Range.nums(12, 15, 12, 50),
-		Range.nums(12, 55, 1, 30),
-		Range.nums(1, 35, 2, 10), 
-		Range.nums(2, 10, 3, 30),
-		Range.nums(3, 30, 4, 05),
-		Range.nums(4, 10, 4, 45)
+		Range(Time (8, 00), Time (8, 50)), 
+		Range(Time (8, 55), Time (9, 30)),
+		Range(Time (9, 35), Time (10, 10)),
+		Range(Time (10, 15), Time (10, 50)),
+		Range(Time (10, 55), Time (11, 30)),
+		Range(Time (11, 35), Time (12, 10)),
+		Range(Time (12, 15), Time (12, 50)),
+		Range(Time (12, 55), Time (1, 30)),
+		Range(Time (1, 35), Time (2, 10)), 
+		Range(Time (2, 10), Time (3, 30)),
+		Range(Time (3, 30), Time (4, 05)),
+		Range(Time (4, 10), Time (4, 45))
 	],
 	mincha: 9
 );
 
-final Special regular = Special (
+const Special regular = Special (
 	"M or R day",
 	[
-		Range.nums(8, 00, 8, 50),
-		Range.nums(8, 55, 9, 35),
-		Range.nums(9, 40, 10, 20),
-		Range.nums(10, 20, 10, 35),
-		Range.nums(10, 35, 11, 15), 
-		Range.nums(11, 20, 12, 00),
-		Range.nums(12, 05, 12, 45),
-		Range.nums(12, 50, 1, 30),
-		Range.nums(1, 35, 2, 15), 
-		Range.nums(2, 20, 3, 00),
-		Range.nums(3, 00, 3, 20), 
-		Range.nums(3, 20, 4, 00),
-		Range.nums(4, 05, 4, 45)
+		Range(Time (8, 00), Time (8, 50)),
+		Range(Time (8, 55), Time (9, 35)),
+		Range(Time (9, 40), Time (10, 20)),
+		Range(Time (10, 20), Time (10, 35)),
+		Range(Time (10, 35), Time (11, 15)), 
+		Range(Time (11, 20), Time (12, 00)),
+		Range(Time (12, 05), Time (12, 45)),
+		Range(Time (12, 50), Time (1, 30)),
+		Range(Time (1, 35), Time (2, 15)), 
+		Range(Time (2, 20), Time (3, 00)),
+		Range(Time (3, 00), Time (3, 20)), 
+		Range(Time (3, 20), Time (4, 00)),
+		Range(Time (4, 05), Time (4, 45))
 	],
 	homeroom: 3,
 	mincha: 10
 );
 
-final Special rotate = Special (
+const Special rotate = Special (
 	"A, B, or C day",
 	[
-		Range.nums(8, 00, 8, 45), 
-		Range.nums(8, 50, 9, 30),
-		Range.nums(9, 35, 10, 15),
-		Range.nums(10, 15, 10, 35),
-		Range.nums(10, 35, 11, 15),
-		Range.nums(11, 20, 12, 00),
-		Range.nums(12, 05, 12, 45),
-		Range.nums(12, 50, 1, 30),
-		Range.nums(1, 35, 2, 15),
-		Range.nums(2, 20, 3, 00),
-		Range.nums(3, 00, 3, 20),
-		Range.nums(3, 20, 4, 00),
-		Range.nums(4, 05, 4, 45)
+		Range(Time (8, 00), Time (8, 45)), 
+		Range(Time (8, 50), Time (9, 30)),
+		Range(Time (9, 35), Time (10, 15)),
+		Range(Time (10, 15), Time (10, 35)),
+		Range(Time (10, 35), Time (11, 15)),
+		Range(Time (11, 20), Time (12, 00)),
+		Range(Time (12, 05), Time (12, 45)),
+		Range(Time (12, 50), Time (1, 30)),
+		Range(Time (1, 35), Time (2, 15)),
+		Range(Time (2, 20), Time (3, 00)),
+		Range(Time (3, 00), Time (3, 20)),
+		Range(Time (3, 20), Time (4, 00)),
+		Range(Time (4, 05), Time (4, 45))
 	],
 	homeroom: 3,
 	mincha: 10
 );
 
-final Special early = Special (
+const Special early = Special (
 	"Early Dismissal",
 	[
-		Range.nums(8, 00, 8, 45),
-		Range.nums(8, 50, 9, 25), 
-		Range.nums(9, 30, 10, 05),
-		Range.nums(10, 05, 10, 20),
-		Range.nums(10, 20, 10, 55),
-		Range.nums(11, 00, 11, 35),
-		Range.nums(11, 40, 12, 15),
-		Range.nums(12, 20, 12, 55),
-		Range.nums(1, 00, 1, 35), 
-		Range.nums(1, 40, 2, 15),
-		Range.nums(2, 15, 2, 35),
-		Range.nums(2, 35, 3, 10),
-		Range.nums(3, 15, 3, 50)
+		Range(Time (8, 00), Time (8, 45)),
+		Range(Time (8, 50), Time (9, 25)), 
+		Range(Time (9, 30), Time (10, 05)),
+		Range(Time (10, 05), Time (10, 20)),
+		Range(Time (10, 20), Time (10, 55)),
+		Range(Time (11, 00), Time (11, 35)),
+		Range(Time (11, 40), Time (12, 15)),
+		Range(Time (12, 20), Time (12, 55)),
+		Range(Time (1, 00), Time (1, 35)), 
+		Range(Time (1, 40), Time (2, 15)),
+		Range(Time (2, 15), Time (2, 35)),
+		Range(Time (2, 35), Time (3, 10)),
+		Range(Time (3, 15), Time (3, 50))
 	],
 	homeroom: 3,
 	mincha: 10
 );
 
-final List<Special> specials = [
+const List<Special> specials = [
 	regular,
 	roshChodesh,
 	fastDay,

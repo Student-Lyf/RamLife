@@ -1,9 +1,10 @@
 import "package:flutter_test/flutter_test.dart";
-import "package:matcher/matcher.dart";
+import "package:matcher/matcher.dart" show TypeMatcher;
 
 typedef VoidCallback = void Function();
 
 void compare<T> (T target, T result) => expect (target, result);
+void compareNot<T> (T target, T result) => expect (target, isNot (result));
 
 void test_suite(Map<String, Map<String, VoidCallback>> suite) {
 	for (MapEntry<String, Map<String, VoidCallback>> entry in suite.entries) {
@@ -18,6 +19,10 @@ void test_suite(Map<String, Map<String, VoidCallback>> suite) {
 	}
 }
 
-void willThrow (VoidCallback function, TypeMatcher error) => expect (
-	function, throwsA (error)
+void willThrow<Error> (VoidCallback function) => expect (
+	function, throwsA (TypeMatcher<Error>())
+);
+
+void compareList<E> (List<E> a, List<E> b) => expect (
+	a, pairwiseCompare<E, E> (b, (E a2, E b2) => a2 == b2, "Equality")
 );
