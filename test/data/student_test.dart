@@ -4,7 +4,6 @@ import "dart:convert" show JsonUnsupportedObjectError;
 
 import "package:ramaz/data/student.dart";
 import "package:ramaz/data/schedule.dart";
-import "package:ramaz/data/times.dart" show Range;
 
 const Map<String, dynamic> invalidJson = {
 	"this": "is",
@@ -41,15 +40,18 @@ class StudentTester {
 		Letters.F: Schedule (periods),
 	};
 
-	static const String homeroom = "U507";
+	static const String homeroomLocation = "U507";
+	static const String homeroom = "UADV-5";
 
 	static final Student student = Student (
+		homeroomLocation: homeroomLocation,
 		homeroom: homeroom,
 		schedule: schedule
 	);
 
 	static final Map<String, dynamic> json = {
-		"homeroom meeting room": homeroom,
+		"homeroom meeting room": homeroomLocation,
+		"homeroom": homeroom,
 		"A": periodListJson,
 		"B": periodListJson,
 		"C": periodListJson,
@@ -74,7 +76,11 @@ class StudentTester {
 
 	static void equalityTest() {
 		compare<Student> (
-			Student (homeroom: homeroom, schedule: schedule),
+			Student (
+				homeroomLocation: homeroomLocation, 
+				schedule: schedule, 
+				homeroom: homeroom
+			),
 			student, 
 		);
 	}
@@ -90,7 +96,8 @@ class StudentTester {
 		willThrow<ArgumentError> (
 			() => Student.fromJson (
 				const <String, dynamic> {
-					"homeroom meeting room": homeroom, 
+					"homeroom meeting room": homeroomLocation, 
+					"homeroom": "UADV-5",
 					"A": null, 
 				}
 			)
@@ -98,16 +105,12 @@ class StudentTester {
 	}
 
 	static void periodsTest() {
-		compare<List<Period>> (
-			student.getPeriods(day),
-			[
-				Period (
-					period,
-					period: "7",
-					time: Range.nums (8, 00, 8, 50)
-				)
-			]
-		);
+		final List<Period> periods = student.getPeriods(day);
+		compare<int> (periods.length, 13);
+		for (final Period period in periods) {
+			if (int.tryParse (period.period) == null) continue;
+			compare<String> (period.id, StudentTester.period.id);
+		}
 		compare<List<Period>> (
 			student.getPeriods(noSchool),
 			null
@@ -115,12 +118,15 @@ class StudentTester {
 	}
 
 	static void homeroomTest() {
-		compare<String> (
-			student.getHomeroomMeeting(day), 
-			homeroom
+		compare<PeriodData> (
+			student.getHomeroom(day), 
+			PeriodData (
+				room: homeroomLocation,
+				id: homeroom
+			),
 		);
-		compare<String> (
-			student.getHomeroomMeeting(noSchool),
+		compare<PeriodData> (
+			student.getHomeroom(noSchool),
 			null
 		);
 	}

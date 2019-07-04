@@ -6,16 +6,19 @@ import "times.dart";
 
 class Student {
 	final Map <Letters, Schedule> schedule;
-	final String homeroom;
+	final String homeroomLocation, homeroom;
 
 	const Student ({
 		@required this.schedule,
+		@required this.homeroomLocation,
 		@required this.homeroom,
 	});
 
 	@override String toString() => schedule.toString();
 	@override operator == (other) => (
-		other is Student && other.schedule == schedule && other.homeroom == homeroom
+		other is Student && 
+		other.schedule == schedule && 
+		other.homeroomLocation == homeroomLocation
 	);
 
 	factory Student.fromJson (Map<String, dynamic> json) {
@@ -23,8 +26,17 @@ class Student {
 		// Your welcome. 
 
 		// Check for null homeroom
-		const String homeroomKey = "homeroom meeting room";
-		if (!json.containsKey(homeroomKey)) 
+		const String homeroomLocationKey = "homeroom meeting room";
+		if (!json.containsKey(homeroomLocationKey)) 
+			throw JsonUnsupportedObjectError(
+				json, cause: "No homeroom location present"
+			);
+		final String homeroomLocation = json [homeroomLocationKey];
+		if (homeroomLocation == null) 
+			throw ArgumentError.notNull(homeroomLocationKey);
+
+		const String homeroomKey = "homeroom";
+		if (!json.containsKey (homeroomKey)) 
 			throw JsonUnsupportedObjectError(json, cause: "No homeroom present");
 		final String homeroom = json [homeroomKey];
 		if (homeroom == null) throw ArgumentError.notNull(homeroomKey);
@@ -38,9 +50,10 @@ class Student {
 			if (json [letter] == null) 
 				throw ArgumentError.notNull ("$letter has no schedule");
 		}
-		
+
 		// Real code starts here
 		return Student (
+			homeroomLocation: homeroomLocation,
 			homeroom: homeroom,
 			schedule: {
 				Letters.A: Schedule.fromJson (json ["A"]),
@@ -66,9 +79,10 @@ class Student {
 			while ((special?.skip ?? const []).contains(periodIndex + 1))
 				periodIndex++; 
 			if (special.homeroom == index) result.add (
-				Period.homeroom (
-					range,
-					room: getHomeroomMeeting(day)
+				Period (
+					getHomeroom(day),
+					time: range,
+					period: "Homeroom",
 				)
 			); else if (special.mincha == index) result.add (
 				Period.mincha(range)
@@ -96,6 +110,6 @@ class Student {
 		return result;
 	}
 
-	String getHomeroomMeeting(Day day) => day.letter == Letters.B 
-		? homeroom : null;
+	PeriodData getHomeroom(Day day) => day.letter == Letters.B 
+		? PeriodData (room: homeroomLocation, id: homeroom) : null;
 }

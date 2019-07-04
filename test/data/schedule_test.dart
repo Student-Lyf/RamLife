@@ -141,10 +141,13 @@ class PeriodTester {
 		period: periodNum
 	);
 
-	static final Period homeroom = Period.homeroom(
-		range,
-		room: periodData.room,  // shhh...
-		id: periodData.id,
+	static final Period homeroom = Period(
+		PeriodData (
+			room: periodData.room,  // shhh...
+			id: periodData.id,
+		),
+		time: range,
+		period: "Homeroom",
 	);
 
 	static final Period free = Period (

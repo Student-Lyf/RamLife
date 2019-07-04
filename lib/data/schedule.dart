@@ -115,18 +115,6 @@ class Period {
 		id: data.id
 	);
 
-	factory Period.homeroom (
-		Range time, 
-		{String room, String id}
-	) => Period (
-		PeriodData (
-			room: room,
-			id: id,
-		),
-		period: "Homeroom",
-		time: time
-	);
-
 	factory Period.mincha (Range time) => Period (
 		PeriodData (
 			room: null,
