@@ -41,7 +41,6 @@ class ScheduleState extends State<SchedulePage> {
 	static Day getDay (Letters letter, Special special) => Day (
 		letter: letter,
 		special: special,
-		lunch : null
 	);
 
 	@override void initState () {

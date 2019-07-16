@@ -29,6 +29,7 @@ Future<Map<String, Map<String, dynamic>>> getClasses(Student student) async {
 			ids.add(period.id);
 		}
 	}
+	ids.add (student.homeroom);
 	Map<String, Map<String, dynamic>> result = {};
 	for (final String id in ids) 
 		result [id] = await getClass(id);

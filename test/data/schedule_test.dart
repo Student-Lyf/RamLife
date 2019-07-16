@@ -1,6 +1,6 @@
 import "dart:convert" show JsonUnsupportedObjectError;
 
-import "../utils.dart";
+import "../unit.dart";
 
 import "package:ramaz/data/schedule.dart";
 import "package:ramaz/data/times.dart";

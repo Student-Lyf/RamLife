@@ -28,9 +28,6 @@ const Color BLUE_DARK = Color (0xFF00245F);
 const Color GOLD_DARK = Color (0XFFC19A00);
 const Color GOLD_LIGHT = Color (0XFFFFFD56);
 
-const Color DARK_MODE_GOLD = Color (0xFF333300);
-const Color DARK_MODE_BLUE = Color (0XFF000033);
-
 void main() async {
 	Brightness brightness;
 	runApp (
@@ -81,7 +78,7 @@ class MainAppState extends State<RamazApp> {
 	@override 
 	Widget build (BuildContext context) => ThemeChanger (
 		defaultBrightness: widget.brightness,
-		light: ThemeData (  // light
+		light: ThemeData (
 			brightness: Brightness.light,
 			primarySwatch: Colors.blue,
 			primaryColor: BLUE,
@@ -90,18 +87,16 @@ class MainAppState extends State<RamazApp> {
 			primaryColorDark: BLUE_DARK,
 			accentColor: GOLD,
 			accentColorBrightness: Brightness.light,
-			// cardColor: GOLD,
 			buttonColor: BLUE,
 			buttonTheme: ButtonThemeData (
 				buttonColor: GOLD,
 				textTheme: ButtonTextTheme.normal,
 			),
 		),
-		dark: ThemeData(  // dark
+		dark: ThemeData(
 			brightness: Brightness.dark,
 			scaffoldBackgroundColor: Colors.grey[850],
 			primarySwatch: Colors.blue,
-			// primaryColor: DARK_MODE_BLUE,
 			primaryColorBrightness: Brightness.dark,
 			primaryColorLight: BLUE_LIGHT,
 			primaryColorDark: BLUE,
