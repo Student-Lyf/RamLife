@@ -1,19 +1,24 @@
 import "package:flutter/foundation.dart" show ChangeNotifier, required;
+import "dart:async" show Timer;
 
 import "package:ramaz/data/schedule.dart";
+import "package:ramaz/services/auth.dart" as Auth;
 import "package:ramaz/services/reader.dart";
 import "package:ramaz/services/preferences.dart";
-import "package:ramaz/services/auth.dart" as Auth;
 
 class HomeModel with ChangeNotifier {
+	static const Duration minute = Duration (minutes: 1);
+
 	final Reader reader;
 	final Preferences prefs;
 	Period period, nextPeriod; 
 	Schedule schedule;
 	Day today;
+
+	Timer timer;
 	List<Period> periods;
 	int periodIndex;
-	bool googleSupport;
+	bool googleSupport = true;
 
 	HomeModel ({
 		@required this.reader,	
@@ -23,12 +28,22 @@ class HomeModel with ChangeNotifier {
 		reader.currentDay = today;
 		schedule = reader.student.schedule [today.letter];
 		periods = reader.student.getPeriods(today);
+		periodIndex = today.period;
+		updatePeriod();
 		reader.period = nextPeriod;
+		timer = Timer.periodic (minute, updatePeriod);
+		checkGoogleSupport();
+	}
+
+	@override void dispose() {
+		timer.cancel();
+		super.dispose();
 	}
 
 	Subject getSubject(Period period) => reader.subjects[period.id];
+	bool get school => today.school;
 
-	void updatePeriod() {
+	Future<void> updatePeriod([_]) async {  // pull-to-refresh wants a Future
 		if (!today.school) {
 			period = null;
 			nextPeriod = null;
@@ -49,12 +64,11 @@ class HomeModel with ChangeNotifier {
 	}
 
 	void addGoogleSupport({
-		void Function() callback, Future<void> Function() onSuccess
+		@required void Function() onFailure,
+		@required void Function() onSuccess,
 	}) async {
-		final account = await Auth.signInWithGoogle(callback);
+		final account = await Auth.signInWithGoogle(onFailure, link: true);
 		if (account == null) return;
-		googleSupport = true;
-		notifyListeners();
-		await onSuccess();
+		onSuccess();
 	}
 }

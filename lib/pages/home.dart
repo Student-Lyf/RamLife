@@ -1,16 +1,10 @@
 import "package:flutter/material.dart";
-import "dart:async";
+import "package:provider/provider.dart" show Consumer;
 
-// Backend tools
-import "package:ramaz/data/schedule.dart";
-
-// Dataclasses
-import "package:ramaz/services/reader.dart";
-import "package:ramaz/services/auth.dart" as Auth;
-import "package:ramaz/services/preferences.dart";
 
 // UI
 import "package:ramaz/pages/drawer.dart";
+import "package:ramaz/models/home.dart" show HomeModel;
 import "package:ramaz/widgets/class_list.dart";
 import "package:ramaz/widgets/next_class.dart";
 // import "package:ramaz/widgets/date_picker.dart" show pickDate;
@@ -18,153 +12,98 @@ import "package:ramaz/widgets/next_class.dart";
 import "package:ramaz/widgets/icons.dart";
 
 class HomePage extends StatefulWidget {
-	final Reader reader;
-	final Preferences prefs;
-	HomePage ({
-		@required this.reader,
-		@required this.prefs
-	});
-
 	@override HomePageState createState() => HomePageState();
 }
 
 class HomePageState extends State<HomePage> {
-	static const Duration minute = Duration (minutes: 1);
-
 	final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
 	final UniqueKey drawerKey = UniqueKey();
-	Timer timer;
+	bool needsGoogleSignIn;
 
-	Period period, nextPeriod;
-	Schedule schedule;
-	Day today;
-	DateTime now = DateTime.now();
-	List<Period> periods;
-	int periodIndex;
-	bool needsGoogleSignIn = false, school; 
-
-	@override void initState() {
-		super.initState();
-		today = widget.reader.today;
-		widget.reader.currentDay = today;
-		school = today.letter != null;
-		Auth.supportsGoogle().then (
-			(bool value) => setState(
-				() => needsGoogleSignIn = !value
-			)
-		);
-		timer = Timer.periodic (minute, update);
-		schedule = widget.reader.student.schedule [today.letter];
-		periods = widget.reader.student.getPeriods (today);
-		update();
-		widget.reader.period = nextPeriod;
-	}
-
-	@override void dispose() {
-		timer.cancel();
-		super.dispose();
-	}
-
-	@override Widget build (BuildContext context) => Scaffold (
-		key: scaffoldKey,
-		appBar: AppBar (
-			title: Text ("Home"),
-			actions: [
-				if (needsGoogleSignIn) IconButton (
-					icon: Logos.google,
-					onPressed: addGoogleSignIn,
-				),
-				if (school) FlatButton (
-					child: Text ("Swipe left for schedule"),
-					textColor: Colors.white,
-					onPressed: () => scaffoldKey.currentState.openEndDrawer()
-				)
-			],
-		),
-		drawer: NavigationDrawer(widget.prefs, key: drawerKey),
-		endDrawer: !school ? null : Drawer (
-			child: ClassList(
-				periods: nextPeriod == null 
-					? periods
-					: periods.getRange (
-						(periodIndex ?? -1) + 1, periods.length
+	@override 
+	Widget build (BuildContext context) => Consumer<HomeModel> (
+		builder: (BuildContext context, HomeModel model, Widget _) => Scaffold (
+			key: scaffoldKey,
+			appBar: AppBar (
+				title: Text ("Home"),
+				actions: [
+					if (needsGoogleSignIn == true) IconButton (
+						icon: Logos.google,
+						onPressed: () => model.addGoogleSupport(
+							onFailure: () => scaffoldKey.currentState.showSnackBar(
+								SnackBar (
+									content: Text ("You need to sign in with your Ramaz email")
+								)
+							),
+							onSuccess: () => showDialog (
+								context: context,
+								builder: (BuildContext context) => AlertDialog(
+									title: Text ("Google sign in enabled"),
+									content: ListTile (
+										title: Text (
+											"You can now sign in with your Google account"
+										)
+									),
+									actions: [
+										FlatButton (
+											child: Text ("OK"),
+											onPressed: () {
+												setState(() => needsGoogleSignIn = false);
+												Navigator.of(context).pop();
+											}
+										)
+									]
+								)
+							)
+						)
 					),
-				reader: widget.reader,
-				headerText: period == null 
-					? "Today's Schedule" 
-					: "Upcoming Classes"
-			)
-		),
-		body: RefreshIndicator (  // so you can refresh the period
-			onRefresh: () async => update(),
-			child: ListView (
-				children: [
-					RamazLogos.ram_rectangle,
-					Divider(),
-					Text (
-						school
-							? "Today is a${today.n} ${today.name}"
-							: "There is no school today",
-						textScaleFactor: 2,
-						textAlign: TextAlign.center
-					),
-					SizedBox (height: 20),
-					if (school)
-						NextClass(period, widget.reader.subjects[period?.id]),
-					if (nextPeriod != null)  // if school is not over, show the next class
-						NextClass (
-							nextPeriod, 
-							widget.reader.subjects[nextPeriod?.id], 
-							next: true
+					if (model.school) FlatButton (
+						child: Text ("Swipe left for schedule"),
+						textColor: Colors.white,
+						onPressed: () => scaffoldKey.currentState.openEndDrawer()
+					)
+				],
+			),
+			drawer: NavigationDrawer(model.prefs, key: drawerKey),
+			endDrawer: !model.school ? null : Drawer (
+				child: ClassList(
+					periods: model.nextPeriod == null 
+						? model.periods
+						: model.periods.getRange (
+							(model.periodIndex ?? -1) + 1, model.periods.length
 						),
-					// LunchTile (lunch: today.lunch),
-				]
+					reader: model.reader,
+					headerText: model.period == null 
+						? "Today's Schedule" 
+						: "Upcoming Classes"
+				)
+			),
+			body: RefreshIndicator (  // so you can refresh the period
+				onRefresh: model.updatePeriod,
+				child: ListView (
+					children: [
+						RamazLogos.ram_rectangle,
+						Divider(),
+						Text (
+							model.school
+								? "Today is a${model.today.n} ${model.today.name}"
+								: "There is no school today",
+							textScaleFactor: 2,
+							textAlign: TextAlign.center
+						),
+						SizedBox (height: 20),
+						if (model.school)
+							NextClass(model.period, model.reader.subjects[model.period?.id]),
+						if (model.nextPeriod != null)  // if school is not over, show the next class
+							NextClass (
+								model.nextPeriod, 
+								model.reader.subjects[model.nextPeriod?.id], 
+								next: true
+							),
+						// LunchTile (lunch: today.lunch),
+					]
+				)
 			)
 		)
 	);
-
-	void update([_]) => setState(() {
-		if (!school) {
-			nextPeriod = null;
-			return;
-		}
-		periodIndex = today.period;
-		period = periodIndex == null ? null : periods [periodIndex];	
-		if (periodIndex != null && periodIndex < periods.length - 1)
-			nextPeriod = periods [periodIndex + 1];
-		else
-			nextPeriod = null;
-	});
-
-	void addGoogleSignIn() async {
-		final account = await Auth.signInWithGoogle(
-			() => scaffoldKey.currentState.showSnackBar(
-				SnackBar (
-					content: Text ("You need to sign in with your Ramaz email")
-				)
-			),
-			link: true
-		);
-		if (account == null) return;
-		else await showDialog (
-			context: context,
-			builder: (BuildContext context) => AlertDialog(
-				title: Text ("Google sign in enabled"),
-				content: ListTile (
-					title: Text (
-						"You can now sign in with your Google account"
-					)
-				),
-				actions: [
-					FlatButton (
-						child: Text ("OK"),
-						onPressed: () {
-							setState(() => needsGoogleSignIn = false);
-							Navigator.of(context).pop();
-						}
-					)
-				]
-			)
-		);
-	}
 }

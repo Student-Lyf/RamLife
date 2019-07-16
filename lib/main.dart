@@ -127,7 +127,7 @@ class MainAppState extends State<RamazApp> {
 						prefs: widget.prefs, 
 						reader: widget.reader,
 					),
-					child: HomePage(reader: widget.reader, prefs: widget.prefs)
+					child: HomePage()
 				)
 				: Login (widget.reader, widget.prefs),
 			title: "Student Life",
@@ -140,7 +140,7 @@ class MainAppState extends State<RamazApp> {
 						prefs: widget.prefs, 
 						reader: widget.reader,
 					),
-					child: HomePage(reader: widget.reader, prefs: widget.prefs), 
+					child: HomePage(), 
 				),
 				SCHEDULE: (_) => SchedulePage (
 					reader: widget.reader, 

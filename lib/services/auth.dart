@@ -43,6 +43,14 @@ Future<GoogleSignInAccount> signInWithGoogle(
 	return account;
 }
 
+void addGoogleSupport({
+	void Function() callback, Future<void> Function() onSuccess
+}) async {
+	final account = await signInWithGoogle(callback);
+	if (account == null) return;
+	await onSuccess();
+}
+
 // This is a test for Firebase passwordless sign in:
 // click button -> send email -> click link 
 // -> open app -> read dynamic link -> sign in
