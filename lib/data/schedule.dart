@@ -70,9 +70,6 @@ class PeriodData {
 		room = null,
 		id = null;
 
-	void fync() {}
-
-
 	factory PeriodData.fromJson (Map<String, dynamic> json) {
 		if (json == null) return null;
 		final String room = json ["room"], id = json ["id"];
@@ -237,6 +234,8 @@ class Day {
 				return "";
 		}
 	}
+
+	bool get school => letter != null;
 
 	int get period {
 		final Time time = Time.fromDateTime (DateTime.now());

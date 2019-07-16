@@ -146,7 +146,7 @@ class HomePageState extends State<HomePage> {
 			link: true
 		);
 		if (account == null) return;
-		else await  showDialog (
+		else await showDialog (
 			context: context,
 			builder: (BuildContext context) => AlertDialog(
 				title: Text ("Google sign in enabled"),

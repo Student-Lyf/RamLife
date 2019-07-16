@@ -1,6 +1,7 @@
 import "package:flutter/material.dart";
 import "package:path_provider/path_provider.dart";
 import "package:shared_preferences/shared_preferences.dart";
+import "package:provider/provider.dart" show ChangeNotifierProvider;
 
 // Backend
 import "services/auth.dart" as Auth;
@@ -9,6 +10,7 @@ import "services/reader.dart";
 import "services/main.dart" show initOnMain;
 
 // UI
+import "models/home.dart" show HomeModel;
 import "widgets/theme_changer.dart" show ThemeChanger;
 import "pages/splash.dart" show SplashScreen;
 import "pages/drawer.dart";
@@ -120,14 +122,26 @@ class MainAppState extends State<RamazApp> {
 		),
 		builder: (BuildContext context, ThemeData theme) => MaterialApp (
 			home: widget.ready
-				? HomePage(reader: widget.reader, prefs: widget.prefs)
+				? ChangeNotifierProvider (
+					builder: (_) => HomeModel (
+						prefs: widget.prefs, 
+						reader: widget.reader,
+					),
+					child: HomePage(reader: widget.reader, prefs: widget.prefs)
+				)
 				: Login (widget.reader, widget.prefs),
 			title: "Student Life",
 			color: BLUE,
 			theme: theme,
 			routes: {
 				LOGIN: (_) => Login(widget.reader, widget.prefs),
-				HOME_PAGE: (_) => HomePage(reader: widget.reader, prefs: widget.prefs), 
+				HOME_PAGE: (_) => ChangeNotifierProvider (
+					builder: (_) => HomeModel (
+						prefs: widget.prefs, 
+						reader: widget.reader,
+					),
+					child: HomePage(reader: widget.reader, prefs: widget.prefs), 
+				),
 				SCHEDULE: (_) => SchedulePage (
 					reader: widget.reader, 
 					prefs: widget.prefs

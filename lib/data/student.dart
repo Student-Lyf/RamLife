@@ -68,8 +68,8 @@ class Student {
 	}
 
 	List <Period> getPeriods (Day day) {
-		if (day.letter == null) return null;
 		final List <Period> result = [];
+		if (!day.school) return result;
 		final List <PeriodData> periods = schedule [day.letter].periods;
 		final Special special = day.special;
 		int periodIndex = 0;
@@ -111,5 +111,6 @@ class Student {
 	}
 
 	PeriodData getHomeroom(Day day) => day.letter == Letters.B 
-		? PeriodData (room: homeroomLocation, id: homeroom) : null;
+		? PeriodData (room: homeroomLocation, id: homeroom) 
+		: PeriodData.free();
 }
