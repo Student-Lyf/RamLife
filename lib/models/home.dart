@@ -69,6 +69,8 @@ class HomeModel with ChangeNotifier {
 	}) async {
 		final account = await Auth.signInWithGoogle(onFailure, link: true);
 		if (account == null) return;
+		googleSupport = true;
+		notifyListeners();
 		onSuccess();
 	}
 }

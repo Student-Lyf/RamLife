@@ -1,24 +1,16 @@
 import "package:flutter/material.dart";
 import "package:provider/provider.dart" show Consumer;
 
-
 // UI
 import "package:ramaz/pages/drawer.dart";
 import "package:ramaz/models/home.dart" show HomeModel;
 import "package:ramaz/widgets/class_list.dart";
 import "package:ramaz/widgets/next_class.dart";
-// import "package:ramaz/widgets/date_picker.dart" show pickDate;
-//import "package:ramaz/widgets/lunch.dart";
 import "package:ramaz/widgets/icons.dart";
 
-class HomePage extends StatefulWidget {
-	@override HomePageState createState() => HomePageState();
-}
-
-class HomePageState extends State<HomePage> {
+class HomePage extends StatelessWidget {
 	final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
 	final UniqueKey drawerKey = UniqueKey();
-	bool needsGoogleSignIn;
 
 	@override 
 	Widget build (BuildContext context) => Consumer<HomeModel> (
@@ -27,7 +19,7 @@ class HomePageState extends State<HomePage> {
 			appBar: AppBar (
 				title: Text ("Home"),
 				actions: [
-					if (needsGoogleSignIn == true) IconButton (
+					if (!model.googleSupport) IconButton (
 						icon: Logos.google,
 						onPressed: () => model.addGoogleSupport(
 							onFailure: () => scaffoldKey.currentState.showSnackBar(
@@ -47,10 +39,7 @@ class HomePageState extends State<HomePage> {
 									actions: [
 										FlatButton (
 											child: Text ("OK"),
-											onPressed: () {
-												setState(() => needsGoogleSignIn = false);
-												Navigator.of(context).pop();
-											}
+											onPressed: Navigator.of(context).pop
 										)
 									]
 								)
@@ -94,7 +83,8 @@ class HomePageState extends State<HomePage> {
 						SizedBox (height: 20),
 						if (model.school)
 							NextClass(model.period, model.reader.subjects[model.period?.id]),
-						if (model.nextPeriod != null)  // if school is not over, show the next class
+						// if school is not over, show the next class
+						if (model.nextPeriod != null)  
 							NextClass (
 								model.nextPeriod, 
 								model.reader.subjects[model.nextPeriod?.id], 
