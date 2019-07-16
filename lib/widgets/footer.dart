@@ -24,10 +24,7 @@ class Footer extends StatelessWidget {
 						mainAxisAlignment: MainAxisAlignment.center,
 						children: [
 							Text (
-								(
-									"Next: " + 
-									period.getName (subject)
-								),
+								"Next: ${period.getName (subject)}",
 								textScaleFactor: textScale
 							),
 							Text (

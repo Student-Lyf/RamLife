@@ -11,6 +11,7 @@ import "services/main.dart" show initOnMain;
 
 // UI
 import "models/home.dart" show HomeModel;
+import "models/schedule.dart" show ScheduleModel;
 import "widgets/theme_changer.dart" show ThemeChanger;
 import "pages/splash.dart" show SplashScreen;
 import "pages/drawer.dart";
@@ -122,7 +123,7 @@ class MainAppState extends State<RamazApp> {
 		),
 		builder: (BuildContext context, ThemeData theme) => MaterialApp (
 			home: widget.ready
-				? ChangeNotifierProvider (
+				? ChangeNotifierProvider<HomeModel> (
 					builder: (_) => HomeModel (
 						prefs: widget.prefs, 
 						reader: widget.reader,
@@ -135,21 +136,26 @@ class MainAppState extends State<RamazApp> {
 			theme: theme,
 			routes: {
 				LOGIN: (_) => Login(widget.reader, widget.prefs),
-				HOME_PAGE: (_) => ChangeNotifierProvider (
+				HOME_PAGE: (_) => ChangeNotifierProvider<HomeModel> (
 					builder: (_) => HomeModel (
 						prefs: widget.prefs, 
 						reader: widget.reader,
 					),
 					child: HomePage(), 
 				),
-				SCHEDULE: (_) => SchedulePage (
-					reader: widget.reader, 
-					prefs: widget.prefs
+				SCHEDULE: (_) => ChangeNotifierProvider<ScheduleModel> (
+					builder: (_) => ScheduleModel (
+						reader: widget.reader,
+						prefs: widget.prefs,
+					),
+					child: SchedulePage (),
 				),
-				SCHEDULE + CAN_EXIT: (_) => SchedulePage(
-					reader: widget.reader, 
-					prefs: widget.prefs,
-					canExit: true
+				SCHEDULE + CAN_EXIT: (_) => ChangeNotifierProvider<ScheduleModel> (
+					builder: (_) => ScheduleModel (
+						reader: widget.reader,
+						prefs: widget.prefs,
+					),
+					child: SchedulePage(canExit: true),
 				),
 				NEWS: placeholder (widget.prefs, "News"),
 				LOST_AND_FOUND: placeholder (widget.prefs, "Lost and found"),
