@@ -28,7 +28,7 @@ class HomeModel with ChangeNotifier {
 		reader.currentDay = today;
 		schedule = reader.student.schedule [today.letter];
 		periods = reader.student.getPeriods(today);
-		periodIndex = today.period;
+		// periodIndex = today.period;
 		updatePeriod();
 		reader.period = nextPeriod;
 		timer = Timer.periodic (minute, updatePeriod);
