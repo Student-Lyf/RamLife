@@ -15,11 +15,13 @@ void setToday(Reader reader) {
 		now.day
 	);
 	reader.today = reader.calendar [today];
-	// if (reader.today != null && reader.today.letter != null)
 	if (reader.today?.name != null) Timer.periodic (
 		Duration (minutes: 1),
-		(Timer timer) => reader.period = 
-			reader.student.getPeriods(reader.today) [reader.today.period]
+		(Timer timer) {
+			final int index = reader.today.period;
+			if (index == null) return;
+			reader.period = reader.student.getPeriods(reader.today) [index];
+		}
 	);
 }
 
