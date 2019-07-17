@@ -86,11 +86,11 @@ class DrawerState extends State<NavigationDrawer> {
 					),
 					trailing: DropdownButton<Brightness> (
 						onChanged: (Brightness value) => setState(() {
-							(
-								context.ancestorStateOfType(
-									const TypeMatcher<DrawerControllerState>()
-								) as DrawerControllerState
-							).close();
+							// (
+							// 	context.ancestorStateOfType(
+							// 		const TypeMatcher<DrawerControllerState>()
+							// 	) as DrawerControllerState
+							// ).close();
 							ThemeChanger.of(context).brightness = value
 								?? MediaQuery.of(context).platformBrightness;
 							if (value == null) {

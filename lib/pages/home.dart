@@ -8,13 +8,17 @@ import "package:ramaz/widgets/class_list.dart";
 import "package:ramaz/widgets/next_class.dart";
 import "package:ramaz/widgets/icons.dart";
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
+	@override HomePageState createState() => HomePageState();
+}
+
+class HomePageState extends State<HomePage> {
 	final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
 	final UniqueKey drawerKey = UniqueKey();
 
 	@override 
 	Widget build (BuildContext context) => Consumer<HomeModel> (
-		builder: (BuildContext context, HomeModel model, Widget _) => Scaffold (
+		builder: (BuildContext context, HomeModel model, _) => Scaffold (
 			key: scaffoldKey,
 			appBar: AppBar (
 				title: Text ("Home"),
