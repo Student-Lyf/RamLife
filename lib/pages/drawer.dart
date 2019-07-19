@@ -33,26 +33,26 @@ class NavigationDrawer extends StatelessWidget {
 						leading: Icon (Icons.schedule),
 						onTap: () => Navigator.of(context).pushReplacementNamed(SCHEDULE)
 					),
-					ListTile (
-						title: Text ("Newspapers (coming soon)"),
-						leading: Icon (Icons.new_releases),
-						onTap: () => Navigator.of(context).pushReplacementNamed(NEWS),
-					),
-					ListTile (
-						title: Text ("Lost and Found (coming soon)"),
-						leading: Icon (Icons.help),
-						onTap: () => Navigator.of(context).pushReplacementNamed(LOST_AND_FOUND)
-					),
-					ListTile (
-						title: Text ("Sports (coming soon)"),
-						leading: Icon (Icons.directions_run),
-						onTap: () => Navigator.of(context).pushReplacementNamed(SPORTS)
-					),
-					ListTile (
-						title: Text ("Admin console (coming soon)"),
-						leading: Icon (Icons.verified_user),
-						onTap: () => Navigator.of(context).pushReplacementNamed(ADMIN_LOGIN)
-					),
+					// ListTile (
+					// 	title: Text ("Newspapers (coming soon)"),
+					// 	leading: Icon (Icons.new_releases),
+					// 	onTap: () => Navigator.of(context).pushReplacementNamed(NEWS),
+					// ),
+					// ListTile (
+					// 	title: Text ("Lost and Found (coming soon)"),
+					// 	leading: Icon (Icons.help),
+					// 	onTap: () => Navigator.of(context).pushReplacementNamed(LOST_AND_FOUND)
+					// ),
+					// ListTile (
+					// 	title: Text ("Sports (coming soon)"),
+					// 	leading: Icon (Icons.directions_run),
+					// 	onTap: () => Navigator.of(context).pushReplacementNamed(SPORTS)
+					// ),
+					// ListTile (
+					// 	title: Text ("Admin console (coming soon)"),
+					// 	leading: Icon (Icons.verified_user),
+					// 	onTap: () => Navigator.of(context).pushReplacementNamed(ADMIN_LOGIN)
+					// ),
 					ListTile (
 						title: Text ("Logout"),
 						leading: Icon (Icons.lock),

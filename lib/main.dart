@@ -14,7 +14,7 @@ import "models/home.dart" show HomeModel;
 import "models/schedule.dart" show ScheduleModel;
 import "widgets/theme_changer.dart" show ThemeChanger;
 import "pages/splash.dart" show SplashScreen;
-import "pages/drawer.dart";
+// import "pages/drawer.dart";
 import "pages/home.dart" show HomePage;
 import "pages/schedule.dart" show SchedulePage;
 import "pages/login.dart" show Login;
@@ -157,11 +157,11 @@ class MainAppState extends State<RamazApp> {
 					),
 					child: SchedulePage(canExit: true),
 				),
-				NEWS: placeholder (widget.prefs, "News"),
-				LOST_AND_FOUND: placeholder (widget.prefs, "Lost and found"),
-				SPORTS: placeholder (widget.prefs, "Sports"),
+				// NEWS: placeholder (widget.prefs, "News"),
+				// LOST_AND_FOUND: placeholder (widget.prefs, "Lost and found"),
+				// SPORTS: placeholder (widget.prefs, "Sports"),
 				// SPORTS: (_) => SportsPage (games),
-				ADMIN_LOGIN: placeholder (widget.prefs, "Admin Login"),
+				// ADMIN_LOGIN: placeholder (widget.prefs, "Admin Login"),
 				FEEDBACK: (_) => FeedbackPage(),
 			}
 		)
@@ -169,25 +169,25 @@ class MainAppState extends State<RamazApp> {
 }
 	
 // Placeholder
-class PlaceholderPage extends StatelessWidget {
-	final Preferences prefs;
-	final String title;
-	PlaceholderPage (this.prefs, this.title);
+// class PlaceholderPage extends StatelessWidget {
+// 	final Preferences prefs;
+// 	final String title;
+// 	PlaceholderPage (this.prefs, this.title);
 
-	@override Widget build (BuildContext context) => Scaffold (
-		drawer: NavigationDrawer(prefs),
-		appBar: AppBar (
-			title: Text (title),
-			actions: [
-				IconButton (
-					icon: Icon (Icons.home),
-					onPressed: () => Navigator.of(context).pushReplacementNamed(HOME_PAGE)
-				)
-			]
-		),
-		body: Center (child: Text ("This page is coming soon!", textScaleFactor: 2))
-	);
-}
+// 	@override Widget build (BuildContext context) => Scaffold (
+// 		drawer: NavigationDrawer(prefs),
+// 		appBar: AppBar (
+// 			title: Text (title),
+// 			actions: [
+// 				IconButton (
+// 					icon: Icon (Icons.home),
+// 					onPressed: () => Navigator.of(context).pushReplacementNamed(HOME_PAGE)
+// 				)
+// 			]
+// 		),
+// 		body: Center (child: Text ("This page is coming soon!", textScaleFactor: 2))
+// 	);
+// }
 
-Widget Function(BuildContext) placeholder(Preferences prefs, String text) => 
-	(BuildContext context) => PlaceholderPage (prefs, text);
+// Widget Function(BuildContext) placeholder(Preferences prefs, String text) => 
+// 	(BuildContext context) => PlaceholderPage (prefs, text);
