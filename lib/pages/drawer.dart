@@ -20,7 +20,7 @@ class NavigationDrawer extends StatelessWidget {
 	@override Widget build (BuildContext context) => ValueListenableBuilder (
 		valueListenable: brightnessChanger,
 		builder: (BuildContext context, Brightness brightness, Widget child) => Drawer (
-			child: ListView (
+			child: Column (
 				children: [
 					DrawerHeader (child: RamazLogos.ram_square),
 					ListTile (
@@ -120,18 +120,26 @@ class NavigationDrawer extends StatelessWidget {
 							),
 						]
 					),
-					SizedBox (height: 10),
-					Divider(),
-					SingleChildScrollView (
-						physics: NeverScrollableScrollPhysics(),
-						scrollDirection: Axis.horizontal,
-						child: Row (
+					// SizedBox (height: 10),
+					Spacer(),
+					Align (
+						alignment: Alignment.bottomCenter,
+						child: Column (
 							children: [
-								Logos.ramazIcon,
-								Logos.outlook,
-								Logos.schoology,
-								Logos.drive,
-								Logos.senior_systems
+								Divider(),
+								SingleChildScrollView (
+									// physics: NeverScrollableScrollPhysics(),
+									scrollDirection: Axis.horizontal,
+									child: Row (
+										children: [
+											Logos.ramazIcon,
+											Logos.outlook,
+											Logos.schoology,
+											Logos.drive,
+											Logos.senior_systems
+										]
+									)
+								)
 							]
 						)
 					)
