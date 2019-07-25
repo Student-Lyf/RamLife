@@ -14,7 +14,7 @@ void test_suite(Map<String, WidgetTesterCallback> suite) {
 Finder findText (String text) => find.text (text);
 Finder findWidget (Widget widget) => find.byWidget(widget);
 Finder findAncestor(Finder of, Finder matching) => 
-	find.findAncestor()
+	find.ancestor(of: of, matching: matching);
 
 void findOne(Finder finder) => expect (finder, findsOneWidget);
 void findNone(Finder finder) => expect (finder, findsNothing);

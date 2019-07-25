@@ -49,6 +49,6 @@ class NextClassTester {
 			MaterialApp (
 				home: Center (child: next)
 			)
-		)
+		);
 	}
 }

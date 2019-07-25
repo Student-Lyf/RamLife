@@ -26,18 +26,20 @@ class LoadingImage extends StatefulWidget {
 
 class LoadingImageState extends State<LoadingImage> {
 	ImageProvider image;
-	bool loading = true;
+	ImageStreamListener listener;
 	ImageStream stream;
+	bool loading = true;
 	double aspectRatio;
 
 	@override void initState() {
 		super.initState();
 		image = AssetImage(widget.path);
 		stream = image.resolve(ImageConfiguration());
-		stream.addListener(onLoad);
+		listener = ImageStreamListener (onLoad);
+		stream.addListener(listener);
 	}
 
-	void onLoad(ImageInfo info, bool _) {
+	void onLoad (ImageInfo info, bool _) {
 		setState(() => loading = false);
 		final Size size = Size (
 			info.image.width.toDouble(), 
@@ -59,7 +61,7 @@ class LoadingImageState extends State<LoadingImage> {
 		);
 
 	@override void dispose () {
-		stream.removeListener(onLoad);
+		stream.removeListener(listener);
 		super.dispose();
 	}
 }
