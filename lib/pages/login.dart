@@ -5,6 +5,7 @@ import "package:url_launcher/url_launcher.dart";
 
 import "package:ramaz/widgets/icons.dart";
 import "package:ramaz/widgets/theme_changer.dart";
+import "package:ramaz/widgets/brightness_changer.dart" show BrightnessChanger;
 
 // Used to actually login
 import "package:ramaz/services/reader.dart";
@@ -65,16 +66,17 @@ class LoginState extends State <Login> {
 		appBar: AppBar (
 			title: Text ("Login"),
 			actions: [
-				IconButton (
-					icon: Icon (
-						brightness == null
-							?	Icons.brightness_auto
-							: brightness == Brightness.light
-								? Icons.brightness_5
-								: Icons.brightness_4
-					),
-					onPressed: toggleBrightness
-				)
+				BrightnessChanger.iconButton(prefs: widget.prefs),
+				// IconButton (
+				// 	icon: Icon (
+				// 		brightness == null
+				// 			?	Icons.brightness_auto
+				// 			: brightness == Brightness.light
+				// 				? Icons.brightness_5
+				// 				: Icons.brightness_4
+				// 	),
+				// 	onPressed: toggleBrightness
+				// )
 			]
 		),
 		body: Column (

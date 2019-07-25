@@ -1,7 +1,8 @@
 import "package:flutter/material.dart";
 
 import "package:ramaz/widgets/icons.dart";
-import "package:ramaz/widgets/theme_changer.dart";
+// import "package:ramaz/widgets/theme_changer.dart";
+import "package:ramaz/widgets/brightness_changer.dart" show BrightnessChanger;
 
 import "package:ramaz/services/preferences.dart";
 
@@ -67,41 +68,42 @@ class NavigationDrawer extends StatelessWidget {
 							nav.pushNamed(FEEDBACK);
 						}
 					),
-					ListTile (
-						title: Text ("Change theme"),
-						leading: Icon (
-							brightness == null 
-								? Icons.brightness_auto
-								: brightness == Brightness.light
-									? Icons.brightness_5
-									: Icons.brightness_4
-						),
-						trailing: DropdownButton<Brightness> (
-							onChanged: (Brightness value) {
-								ThemeChanger.of(context).brightness = value
-									?? MediaQuery.of(context).platformBrightness;
+					BrightnessChanger.dropdown(prefs: prefs),
+					// ListTile (
+					// 	title: Text ("Change theme"),
+					// 	leading: Icon (
+					// 		brightness == null 
+					// 			? Icons.brightness_auto
+					// 			: brightness == Brightness.light
+					// 				? Icons.brightness_5
+					// 				: Icons.brightness_4
+					// 	),
+					// 	trailing: DropdownButton<Brightness> (
+					// 		onChanged: (Brightness value) {
+					// 			ThemeChanger.of(context).brightness = value
+					// 				?? MediaQuery.of(context).platformBrightness;
 
-								brightnessChanger.value = value;
-								prefs.brightness = value == null 
-									? null : value == Brightness.light;
-							},
-							value: brightness,
-							items: [
-								DropdownMenuItem<Brightness> (
-									value: null,
-									child: Text ("Automatic")
-								),
-								DropdownMenuItem<Brightness> (
-									value: Brightness.light,
-									child: Text ("Light theme")
-								),
-								DropdownMenuItem<Brightness> (
-									value: Brightness.dark,
-									child: Text ("Dark theme"),
-								),
-							]
-						)
-					),
+					// 			brightnessChanger.value = value;
+					// 			prefs.brightness = value == null 
+					// 				? null : value == Brightness.light;
+					// 		},
+					// 		value: brightness,
+					// 		items: [
+					// 			DropdownMenuItem<Brightness> (
+					// 				value: null,
+					// 				child: Text ("Automatic")
+					// 			),
+					// 			DropdownMenuItem<Brightness> (
+					// 				value: Brightness.light,
+					// 				child: Text ("Light theme")
+					// 			),
+					// 			DropdownMenuItem<Brightness> (
+					// 				value: Brightness.dark,
+					// 				child: Text ("Dark theme"),
+					// 			),
+					// 		]
+					// 	)
+					// ),
 					AboutListTile (
 						icon: Icon (Icons.info),
 						child: Text ("About"),
