@@ -8,10 +8,17 @@ enum BrightnessChangerForm {button, dropdown}
 class BrightnessChanger extends StatelessWidget {
 	final Preferences prefs;
 	final BrightnessChangerForm form;
-	final ValueNotifier<bool> brightnessNotifier;
+	final Icon icon;
 
 	BrightnessChanger({@required this.prefs, @required this.form}) : 
-		brightnessNotifier = ValueNotifier<bool>(prefs.brightness),
+		icon = Icon (
+			caseConverter<IconData>(
+				value: prefs.brightness,
+				onNull: Icons.brightness_auto,
+				onTrue: Icons.brightness_high,
+				onFalse: Icons.brightness_low,
+			)
+		),
 		assert (prefs != null),
 		assert (form != null);
 
@@ -29,55 +36,44 @@ class BrightnessChanger extends StatelessWidget {
 	}) => value == null ? onNull
 		: value ? onTrue : onFalse;
 
-	@override Widget build (BuildContext context) => ValueListenableBuilder(
-		valueListenable: brightnessNotifier,
-		builder: (BuildContext context, bool brightness, Widget child) {
-			final Icon icon = Icon (
-				caseConverter<IconData>(
-					value: brightness,
-					onNull: Icons.brightness_auto,
-					onTrue: Icons.brightness_high,
-					onFalse: Icons.brightness_low,
+	@override Widget build (BuildContext context) {
+		switch (form) {
+			case BrightnessChangerForm.button: return IconButton (
+				icon: icon,
+				onPressed: () => buttonToggle(context),
+			);
+
+			case BrightnessChangerForm.dropdown: return ListTile (
+				title: Text ("Change theme"),
+				leading: icon, 
+				trailing: DropdownButton<bool>(
+					onChanged: (bool value) => setBrightness(context, value),
+					value: prefs.brightness, 
+					items: [
+						DropdownMenuItem<bool> (
+							value: null,
+							child: Text ("Automatic")
+						),
+						DropdownMenuItem<bool> (
+							value: true,
+							child: Text ("Light theme")
+						),
+						DropdownMenuItem<bool> (
+							value: false,
+							child: Text ("Dark theme"),
+						),
+					],
 				)
 			);
-			switch (form) {
-				case BrightnessChangerForm.button: return IconButton (
-					icon: icon,
-					onPressed: () => buttonToggle(context),
-				);
 
-				case BrightnessChangerForm.dropdown: return ListTile (
-					title: Text ("Change theme"),
-					leading: icon, 
-					trailing: DropdownButton<bool>(
-						onChanged: (bool value) => setBrightness(context, value),
-						value: brightness, 
-						items: [
-							DropdownMenuItem<bool> (
-								value: null,
-								child: Text ("Automatic")
-							),
-							DropdownMenuItem<bool> (
-								value: true,
-								child: Text ("Light theme")
-							),
-							DropdownMenuItem<bool> (
-								value: false,
-								child: Text ("Dark theme"),
-							),
-						],
-					)
-				);
-
-				default: return null;  // somehow got null
-			}
+			default: return null;  // somehow got null
 		}
-	);
+	}
 
 	void buttonToggle(BuildContext context) => setBrightness(
 		context, 
 		caseConverter<bool>(
-			value: brightnessNotifier.value,
+			value: prefs.brightness,
 			onTrue: false,
 			onFalse: null,
 			onNull: true,
@@ -91,6 +87,7 @@ class BrightnessChanger extends StatelessWidget {
 			onFalse: Brightness.dark,
 			onNull: MediaQuery.of(context).platformBrightness,
 		);
-		brightnessNotifier.value = value;  // trigger rebuild
+		prefs.brightness = value;
+		// brightnessNotifier.value = value;  // trigger rebuild
 	}
 }

@@ -32,7 +32,7 @@ class ThemeChangerState extends State<ThemeChanger> {
 	}
 
 	set brightness(Brightness value) {
-		if (brightness == null) return;
+		// if (brightness == null) return;
 		setState(() => _theme = value == Brightness.light
 			? widget.light : widget.dark
 		);

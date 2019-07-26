@@ -2,7 +2,7 @@ import "package:flutter/material.dart";
 
 class ChangeNotifierListener<Model extends ChangeNotifier> extends StatefulWidget {
   final Model model;
-  final Widget Function (BuildContext, Model, Widget) builder;
+  final ValueWidgetBuilder<Model> builder;
   final Widget child;
   const ChangeNotifierListener ({
     @required this.model,
@@ -19,6 +19,14 @@ class ChangeNotifierState extends State<ChangeNotifierListener> {
   @override void initState() {
     super.initState();
     widget.model.addListener(listener);
+  }
+
+  @override void didUpdateWidget (ChangeNotifierListener<ChangeNotifier> old) {
+    if (old.model != widget.model) {
+      old.model.dispose();
+      widget.model.addListener(listener);
+    }
+    super.didUpdateWidget(old);
   }
 
   @override void dispose() {
