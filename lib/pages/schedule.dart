@@ -1,5 +1,4 @@
 import "package:flutter/material.dart";
-// import "package:provider/provider.dart" show Consumer;
 
 import "package:ramaz/models/schedule.dart";
 import "package:ramaz/services/preferences.dart";
