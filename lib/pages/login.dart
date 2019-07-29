@@ -13,6 +13,8 @@ import "package:ramaz/services/auth.dart" as Auth;
 import "package:ramaz/services/preferences.dart";
 import "package:ramaz/services/main.dart" show initOnLogin;
 
+/// This widget is only stateful so it doesn't get disposed when 
+/// the theme changes, and then we can keep using the BuildContext
 class Login extends StatefulWidget {
 	final Reader reader;
 	final Preferences prefs;

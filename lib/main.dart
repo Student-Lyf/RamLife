@@ -143,20 +143,15 @@ class MainAppState extends State<RamazApp> {
 					),
 					child: HomePage(), 
 				),
-				SCHEDULE: (_) => ChangeNotifierProvider<ScheduleModel> (
-					builder: (_) => ScheduleModel (
+				SCHEDULE: (_) => SchedulePage (
+					reader: widget.reader,
+					prefs: widget.prefs,
+				),
+				SCHEDULE + CAN_EXIT: (_) => SchedulePage (
 						reader: widget.reader,
 						prefs: widget.prefs,
+						canExit: true,
 					),
-					child: SchedulePage (),
-				),
-				SCHEDULE + CAN_EXIT: (_) => ChangeNotifierProvider<ScheduleModel> (
-					builder: (_) => ScheduleModel (
-						reader: widget.reader,
-						prefs: widget.prefs,
-					),
-					child: SchedulePage(canExit: true),
-				),
 				// NEWS: placeholder (widget.prefs, "News"),
 				// LOST_AND_FOUND: placeholder (widget.prefs, "Lost and found"),
 				// SPORTS: placeholder (widget.prefs, "Sports"),

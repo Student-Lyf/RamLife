@@ -1,12 +1,15 @@
 import "package:flutter/material.dart";
-import "package:provider/provider.dart" show Consumer;
+// import "package:provider/provider.dart" show Consumer;
 
 import "package:ramaz/models/schedule.dart";
+import "package:ramaz/services/preferences.dart";
+import "package:ramaz/services/reader.dart";
 
 import "package:ramaz/data/times.dart";
 import "package:ramaz/data/schedule.dart" show Letters;
 
 import "package:ramaz/pages/drawer.dart";
+import "package:ramaz/widgets/change_notifier_listener.dart";
 import "package:ramaz/widgets/footer.dart";
 import "package:ramaz/widgets/class_list.dart";
 import "package:ramaz/widgets/date_picker.dart" show pickDate;
@@ -14,9 +17,13 @@ import "package:ramaz/widgets/date_picker.dart" show pickDate;
 class SchedulePage extends StatelessWidget {
 	// final GlobalKey<ScaffoldState> key = GlobalKey();
 	final bool canExit;
-	final ScheduleModel model = null;
+	final ScheduleModel model;
 
-	SchedulePage ({this.canExit = false});
+	SchedulePage ({
+		@required Reader reader,
+		@required Preferences prefs,
+		this.canExit = false
+	}) : model = ScheduleModel (prefs: prefs, reader: reader);
 
 	void viewDay(ScheduleModel model, BuildContext context) async {
 		final DateTime selected = await pickDate (
@@ -35,7 +42,8 @@ class SchedulePage extends StatelessWidget {
 	}
 
 	@override
-	Widget build (BuildContext context) => 	Consumer <ScheduleModel> (
+	Widget build (BuildContext context) => ChangeNotifierListener<ScheduleModel>(
+		model: model,
 		builder: (BuildContext context, ScheduleModel model, Widget _) => Scaffold(
 			appBar: AppBar (
 				title: Text ("Schedule"),
@@ -102,3 +110,5 @@ class SchedulePage extends StatelessWidget {
 		)
 	);
 }
+
+class Temp extends ChangeNotifier {}

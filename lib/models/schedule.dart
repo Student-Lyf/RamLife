@@ -69,7 +69,7 @@ class ScheduleModel with ChangeNotifier {
 		Special special = day.special;
 		if (newLetter != null) {
 			letter = newLetter;
-			if (newSpecial != null) {  // set the special again
+			if (newSpecial == null) {  // set the special again
 				switch (letter) {
 					case Letters.A: 
 					case Letters.B:
