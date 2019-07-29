@@ -1,66 +1,60 @@
 import "package:flutter/material.dart";
-import "package:provider/provider.dart" show Consumer;
+
+import "package:ramaz/services/reader.dart";
+import "package:ramaz/services/preferences.dart";
+
+import "package:ramaz/models/home.dart";
 
 // UI
-import "package:ramaz/models/home.dart";
 import "package:ramaz/pages/drawer.dart";
 import "package:ramaz/widgets/change_notifier_listener.dart";
 import "package:ramaz/widgets/class_list.dart";
 import "package:ramaz/widgets/next_class.dart";
 import "package:ramaz/widgets/icons.dart";
 
-// class HomePage extends StatefulWidget {
-// 	@override HomePageState createState() => HomePageState();
-// }
-
 class HomePage extends StatelessWidget {//<HomePage> {
-	final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
-	final UniqueKey drawerKey = UniqueKey();
+	final Reader reader;
+	final Preferences prefs;
+	const HomePage({
+		@required this.reader,
+		@required this.prefs,
+	});
 
 	@override 
-	Widget build (BuildContext context) => Consumer<HomeModel> (
-	 // ChangeNotifierListener<HomeModel>( 
+	Widget build (BuildContext context) => ChangeNotifierListener<HomeModel>( 
+		model: HomeModel (reader: reader, prefs: prefs),
 		builder: (BuildContext context, HomeModel model, _) => Scaffold (
-		// model: HomeModel
-			key: scaffoldKey,
+			// key: scaffoldKey,
 			appBar: AppBar (
 				title: Text ("Home"),
 				actions: [
-					if (!model.googleSupport) IconButton (
-						icon: Logos.google,
-						onPressed: () => model.addGoogleSupport(
-							onFailure: () => scaffoldKey.currentState.showSnackBar(
-								SnackBar (
-									content: Text ("You need to sign in with your Ramaz email")
-								)
-							),
-							onSuccess: () => showDialog (
-								context: context,
-								builder: (BuildContext context) => AlertDialog(
-									title: Text ("Google sign in enabled"),
-									content: ListTile (
-										title: Text (
-											"You can now sign in with your Google account"
-										)
+					if (!model.googleSupport) Builder (
+						builder: (BuildContext context) => IconButton (
+							icon: Logos.google,
+							onPressed: () => model.addGoogleSupport(
+								onFailure: () => Scaffold.of(context).showSnackBar(
+									SnackBar (
+										content: Text ("You need to sign in with your Ramaz email")
+									)
+								),
+								onSuccess: () => Scaffold.of(context).showSnackBar(
+									SnackBar (
+										content: Text ("Google account linked"),
 									),
-									actions: [
-										FlatButton (
-											child: Text ("OK"),
-											onPressed: Navigator.of(context).pop
-										)
-									]
-								)
-							)
-						)
+								),
+							),
+						),
 					),
-					if (model.school) FlatButton (
-						child: Text ("Swipe left for schedule"),
-						textColor: Colors.white,
-						onPressed: () => scaffoldKey.currentState.openEndDrawer()
+					if (model.school) Builder (
+						builder: (BuildContext context) => FlatButton(
+							child: Text ("Swipe left for schedule"),
+							textColor: Colors.white,
+							onPressed: () => Scaffold.of(context).openEndDrawer()
+						)
 					)
 				],
 			),
-			drawer: NavigationDrawer(model.prefs, key: drawerKey),
+			drawer: NavigationDrawer(model.prefs),
 			endDrawer: !model.school ? null : Drawer (
 				child: ClassList(
 					periods: model.nextPeriod == null 
@@ -97,7 +91,6 @@ class HomePage extends StatelessWidget {//<HomePage> {
 								model.reader.subjects[model.nextPeriod?.id], 
 								next: true
 							),
-						// LunchTile (lunch: today.lunch),
 					]
 				)
 			)
