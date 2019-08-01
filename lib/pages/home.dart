@@ -24,7 +24,6 @@ class HomePage extends StatelessWidget {//<HomePage> {
 	Widget build (BuildContext context) => ChangeNotifierListener<HomeModel>( 
 		model: HomeModel (reader: reader, prefs: prefs),
 		builder: (BuildContext context, HomeModel model, _) => Scaffold (
-			// key: scaffoldKey,
 			appBar: AppBar (
 				title: Text ("Home"),
 				actions: [

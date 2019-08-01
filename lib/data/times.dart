@@ -207,7 +207,7 @@ const Special fridayRoshChodesh = Special (
 const Special winterFriday = Special (
 	"Winter Friday",
 	[
-		Range(Time (8, 00), Time (9, 45)),
+		Range(Time (8, 00), Time (8, 45)),
 		Range(Time (8, 50), Time (9, 25)), 
 		Range(Time (9, 30), Time (10, 05)), 
 		Range(Time (10, 10), Time (10, 45)),

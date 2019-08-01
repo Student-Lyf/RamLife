@@ -26,6 +26,13 @@ class Login extends StatefulWidget {
 class LoginState extends State<Login> {
 	final ValueNotifier<bool> loadingNotifier = ValueNotifier(false);
 
+	@override void initState() {
+		super.initState();
+		// Log out first
+		Auth.signOut();
+		widget.reader.deleteAll();
+	}
+
 	@override
 	Widget build (BuildContext widgetContext) => ValueListenableBuilder(
 		valueListenable: loadingNotifier,
