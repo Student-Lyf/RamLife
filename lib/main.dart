@@ -7,6 +7,7 @@ import "services/auth.dart" as Auth;
 import "services/main.dart" show initOnMain;
 import "services/preferences.dart";
 import "services/reader.dart";
+import "services/fcm.dart" show registerNotifications;
 
 // UI
 import "widgets/theme_changer.dart" show ThemeChanger;
@@ -35,6 +36,7 @@ void main() async {
 			}
 		)
 	);
+	registerNotifications();
 	final SharedPreferences prefs = await SharedPreferences.getInstance();
 	final String dir = (await getApplicationDocumentsDirectory()).path;
 	final Preferences preferences = Preferences(prefs);
