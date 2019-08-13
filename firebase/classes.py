@@ -1,5 +1,5 @@
 from main import init
-init()
+data_dir = init().parent / "data"
 from utils import CSVReader
 from data.subjects import Subject
 from database.classes import batch_upload
@@ -8,14 +8,14 @@ SPECIAL_CASES = ["126000-0-00"]  # see notes
 
 def get_class_names() -> {"course_id": "course_name"}: return {
 	entry ["ID"]: entry ["FULL_NAME"]
-	for entry in CSVReader ("courses")
+	for entry in CSVReader (data_dir / "courses.csv")
 	if entry ["SCHOOL_ID"] == "Upper"
 }
 	
 def get_teachers() -> {"section_id": "teacher"}: 
 	result = {}
 	last = None
-	for entry in CSVReader ("section"):
+	for entry in CSVReader (data_dir / "section.csv"):
 		if entry ["SCHOOL_ID"] != "Upper": continue
 		section_id = entry ["SECTION_ID"]
 		teacher = entry ["FACULTY_FULL_NAME"]

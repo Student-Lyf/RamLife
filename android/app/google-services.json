@@ -38,6 +38,13 @@
             {
               "client_id": "267381428578-s9bsc6bqvfebqimv3th6cjp7qildrpsc.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "267381428578-cpk8lv86lc3dcq62iegfc98dr3c0tt3u.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.authTest"
+              }
             }
           ]
         }
