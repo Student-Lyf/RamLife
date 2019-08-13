@@ -36,7 +36,7 @@ void main() async {
 			}
 		)
 	);
-	registerNotifications();
+	Future(registerNotifications);
 	final SharedPreferences prefs = await SharedPreferences.getInstance();
 	final String dir = (await getApplicationDocumentsDirectory()).path;
 	final Preferences preferences = Preferences(prefs);
