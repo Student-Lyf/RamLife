@@ -5,6 +5,16 @@ import "times.dart";
 
 enum Letters {M, R, A, B, C, E, F}
 
+const Map<Letters, String> lettersToString = {
+	Letters.A: "A",
+	Letters.B: "B",
+	Letters.C: "C",
+	Letters.M: "M",
+	Letters.R: "R",
+	Letters.E: "E",
+	Letters.F: "F",
+};
+
 const Map<String, Letters> stringToLetters = {
 	"A": Letters.A,
 	"B": Letters.B,
@@ -216,7 +226,7 @@ class Day {
 
 	String get name => letter == null
 		? null
-		: "${letter.toString().substring (8)} day${
+		: "${lettersToString [letter]} day ${
 			special == regular || special == rotate ? '' : ' ' + special.name
 		}";
 
