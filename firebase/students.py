@@ -155,7 +155,7 @@ def main(students, upload, auth, create):
 		print ("Authenticating students...")
 		print ("Indexing students...")
 		students = {
-			student.username.lower() + "@ramaz.org": student
+			student.username.lower(): student
 			for student in students
 		}
 		records = []
@@ -170,9 +170,8 @@ def main(students, upload, auth, create):
 			records.append (record)
 		print ("Adding Google as a provider...")
 		FirebaseAuth.add_provider(records) 
-		if create: 
-			print ("Saving credentials to the database...")
-			add_credentials(students.values())
+		print ("Saving credentials to the database...")
+		add_credentials(students.values())
 	if upload or auth: 
 		print (f"Successfully configured {len (students)} students.")
 
