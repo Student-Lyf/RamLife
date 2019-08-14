@@ -59,13 +59,19 @@ class Reader {
 	Map<DateTime, Day> calendar;
 	Day today;
 
-	List<Map<String, dynamic>> get notesData => jsonDecode(
+	List get notesData => jsonDecode(
 		notesFile.readAsStringSync()
 	);
 
-	set notesData(List<Map<String, dynamic>> data) => notesFile.writeAsStringSync(
-		jsonEncode(data)
-	);
+	set notesData(List data) {
+		final List result = [];
+		for (final dynamic note in data) {
+			result.add(note.toJson());
+		}
+		notesFile.writeAsStringSync(
+			jsonEncode(result)
+		);
+}
 
 	void deleteAll() {
 		if (studentFile.existsSync())

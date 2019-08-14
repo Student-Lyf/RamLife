@@ -14,22 +14,26 @@ class Note {
 		this.date,
 	});
 
-	static Note fromJson(Map<String, dynamic> json) => Note (
-		message: json ["message"],
-		period: json ["period"],
-		letter: json ["letter"],
-		date: json ["date"],
-	);
+	static Note fromJson(Map<dynamic, dynamic> json) {
+		return Note (
+			message: json ["message"],
+			period: json ["period"],
+			letter: json ["letter"],
+			date: json ["data"] == null ? null : DateTime.parse(json ["date"].toDate()),
+		);
+	}
 
-	static List<Note> fromList(List<Map<String, dynamic>> notes) => 
-		notes.map(Note.fromJson).toList();
+	static List<Note> fromList(List notes) => 
+		notes.map((dynamic json) => Note.fromJson(json as Map)).toList();
 
 	Map<String, dynamic> toJson() => {
 		"message": message,
 		"period": period,
 		"letter": lettersToString [letter],
-		"date": date,
+		"date": date?.toString(),
 	};
+
+	@override String toString() => message;
 
 	bool get repeats => date == null;
 }

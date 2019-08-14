@@ -45,7 +45,7 @@ Future<void> initOnLogin(Reader reader, Preferences prefs, String email) async {
 	// retrieve raw data
 	final Map<String, dynamic> studentData = await Firestore.getStudent(email);
 	final Map<String, dynamic> month = await Firestore.getMonth();
-	final List<Map<String, dynamic>> notesList = await Firestore.getNotes(email);
+	final List notesList = await Firestore.getNotes(email);
 
 	// use the data to compute more data
 	final Student student = Student.fromJson(studentData);
@@ -63,7 +63,7 @@ Future<void> initOnLogin(Reader reader, Preferences prefs, String email) async {
 	reader.calendarData = month;
 	reader.calendar = calendar;
 	reader.notes = notes;
-	reader.notesData = notesList;
+	reader.notesData = notes;
 	prefs.lastCalendarUpdate = DateTime.now();
 	setToday(reader);
 }

@@ -51,5 +51,5 @@ Future<Map<String, dynamic>> getMonth() async => (
 	await calendar.document(DateTime.now().month.toString()).get()
 ).data;
 
-Future<List<Map<String, dynamic>>> getNotes(String email) async => 
+Future<List> getNotes(String email) async => 
 	(await notes.document(email).get()).data ["notes"];
