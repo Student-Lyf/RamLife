@@ -78,9 +78,16 @@ class Reader {
 			studentFile.deleteSync();
 		if (subjectFile.existsSync())
 			subjectFile.deleteSync();
+		if (calendarFile.existsSync())
+			calendarFile.deleteSync();
+		if (notesFile.existsSync())
+			notesFile.deleteSync();
 	}
 
-	bool get ready => studentFile.existsSync() && subjectFile.existsSync();
+	bool get ready => (
+		studentFile.existsSync() && subjectFile.existsSync() 
+		&& notesFile.existsSync() && calendarFile.existsSync()
+	);
 
 	// This next section is so that we can pass information between screens
 	// remember that all navigation happens through RamazApp.routes
