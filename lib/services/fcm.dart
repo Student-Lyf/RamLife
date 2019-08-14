@@ -63,11 +63,13 @@ Future<void> registerNotifications({
 	/// data payload of the notification. 
 	Future<void> callback(Map<String, dynamic> message) async {
 		print ("Message received!");
-		final Map<String, dynamic> data = message["data"];
-		if (data == null) throw JsonUnsupportedObjectError(
-			message,
-			cause: "No 'data' field in the message",
-		);
+		// DO NOT TEY TO GIVE THIS TYPE ARGUMENTS
+		// For some reason adding Map<String, dynamic> won't let the code 
+		// continue, not even throwing an error. I think I spent like an 
+		// hour debugging this with 0 progress whatsoever. Attempt at 
+		// your own risk, but you've been warned.
+		final Map data = message["data"] ?? message;
+
 		final String command = data ["command"];
 		if (command == null) throw JsonUnsupportedObjectError(
 			message, 
@@ -81,7 +83,10 @@ Future<void> registerNotifications({
 			"Command",
 			"The 'command' field of the Firebase Cloud Message must be one of: " + 
 				commands.keys.toList().join(", "),
-		); else function();
+		); else {
+			print ("Executing command: $command");
+			function();
+		}
 	}
 
 	// Register the callback
