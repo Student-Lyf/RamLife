@@ -28,27 +28,47 @@ const Color GOLD_DARK = Color (0XFFC19A00);
 const Color GOLD_LIGHT = Color (0XFFFFFD56);
 
 void main() async {
+	// This shows a splash screen but secretly 
+	// determines the desired `platformBrightness`
 	Brightness brightness;
 	runApp (
 		SplashScreen(
-			setBrightness: (Brightness platform) {
-				brightness = platform;
-			}
+			setBrightness: 
+				(Brightness platform) => brightness = platform
 		)
 	);
-	Future(registerNotifications);
+
+	// Initialize basic backend
+
+	// First, get the raw materials. 
+	// 	This is done here since they are `Future`s, and this is
+	// 	the only place those `Future`s can be reliably `await`ed. 
 	final SharedPreferences prefs = await SharedPreferences.getInstance();
 	final String dir = (await getApplicationDocumentsDirectory()).path;
+
+	// Now, actually initialize the backend services.
 	final Preferences preferences = Preferences(prefs);
-	final bool savedBrightness = preferences.brightness;
-	if (savedBrightness != null) 
-		brightness = savedBrightness
-			? Brightness.light
-			: Brightness.dark;
 	final Reader reader = Reader(dir);
+	
+	// Determine the appropriate brightness. 
+	final bool savedBrightness = preferences.brightness;
+	if (savedBrightness != null) brightness = savedBrightness
+		? Brightness.light
+		: Brightness.dark;
+
 	// To download, and login or go to main
 	final bool ready = reader.ready && await Auth.ready();
 	if (ready) await initOnMain(reader, preferences);
+	
+	// Register for FCM notifications. 
+	Future(
+		() => registerNotifications(
+			reader: reader, 
+			prefs: preferences,
+		)
+	);
+
+	// Now we are ready to run the app
 	runApp (
 		RamazApp (
 			ready: ready,
