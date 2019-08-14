@@ -7,6 +7,11 @@ final GoogleSignIn google = GoogleSignIn();
 
 Future<FirebaseUser> currentUser() async => await firebase.currentUser();
 
+Future<String> getEmail() async {
+	final FirebaseUser user = await currentUser();
+	return user == null ? null : user.email;
+}
+
 Future<bool> ready() async => await currentUser() != null;
 
 Future<void> signOut() async {
