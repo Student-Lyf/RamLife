@@ -29,6 +29,8 @@ void setToday(Reader reader) {
 Future<void> initOnMain(Reader reader, Preferences prefs) async {
 	reader.student = Student.fromJson(reader.studentData);
 	reader.subjects = Subject.getSubjects(reader.subjectData);
+	reader.notes = Note.fromList(reader.notesData);
+
 	Map<DateTime, Day> calendar;
 	if (prefs.shouldUpdateCalendar) {
 		final Map<String, dynamic> month = (await Firestore.getMonth());
