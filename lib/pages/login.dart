@@ -79,9 +79,10 @@ class LoginState extends State<Login> {
 		)
 	);
 
-	// This function needs two contexts. The first one can locate the ambient 
-	// Scaffold. But since that will rebuild (because of loading = true), 
-	// we need another context that is higher up the tree than that
+	/// This function needs two contexts. The first one can locate the ambient 
+	/// Scaffold. But since that will rebuild (because of loading = true), 
+	/// we need another context that is higher up the tree than that.
+	/// For that we use the implicit `BuildContext` with `StatefulWidget`
 	void googleLogin(BuildContext scaffoldContext) async {
 		try {
 			final account = await Auth.signInWithGoogle(
@@ -93,7 +94,7 @@ class LoginState extends State<Login> {
 			);
 			if (account == null) return;
 			loadingNotifier.value = true;
-			await downloadData(account.email.toLowerCase().split("@")[0]);
+			await downloadData(account.email.toLowerCase());
 		}
 		on PlatformException catch (error) {
 			if (error.code == "ERROR_NETWORK_REQUEST_FAILED") {

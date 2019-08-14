@@ -38,9 +38,9 @@ Future<void> initOnMain(Reader reader, Preferences prefs) async {
 	setToday(reader);
 }
 
-Future<void> initOnLogin(Reader reader, Preferences prefs, String username) async {
+Future<void> initOnLogin(Reader reader, Preferences prefs, String email) async {
 	// retrieve raw data
-	final Map<String, dynamic> studentData = await Firestore.getStudent(username);
+	final Map<String, dynamic> studentData = await Firestore.getStudent(email);
 	final Map<String, dynamic> month = await Firestore.getMonth();
 
 	// use the data to compute more data
