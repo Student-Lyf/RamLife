@@ -14,12 +14,15 @@ class Note {
 		this.date,
 	});
 
-	factory Note.fromJson(Map<String, dynamic> json) => Note (
+	static Note fromJson(Map<String, dynamic> json) => Note (
 		message: json ["message"],
 		period: json ["period"],
 		letter: json ["letter"],
 		date: json ["date"],
 	);
+
+	static List<Note> fromList(List<Map<String, dynamic>> notes) => 
+		notes.map(Note.fromJson).toList();
 
 	Map<String, dynamic> toJson() => {
 		"message": message,

@@ -8,12 +8,14 @@ const String STUDENTS = "students";
 const String CLASSES = "classes";
 const String CALENDAR = "calendar";
 const String FEEDBACK = "feedback";
+const String NOTES = "notes";
 
 final Firestore firestore = Firestore.instance;
 final CollectionReference students = firestore.collection(STUDENTS);
 final CollectionReference classes = firestore.collection (CLASSES);
 final CollectionReference feedback = firestore.collection (FEEDBACK);
 final CollectionReference calendar = firestore.collection(CALENDAR);
+final CollectionReference notes = firestore.collection (NOTES);
 
 Future<Map<String, dynamic>> getStudent (String username) async => 
 	(await students.document(username).get()).data;
@@ -40,11 +42,14 @@ Future<void> sendFeedback(
 	String message, 
 	String name,
 ) => feedback.document().setData({
-		"message": message,
-		"name": name,
-		"timestamp": DateTime.now()
-	});
+	"message": message,
+	"name": name,
+	"timestamp": DateTime.now()
+});
 
 Future<Map<String, dynamic>> getMonth() async => (
 	await calendar.document(DateTime.now().month.toString()).get()
 ).data;
+
+Future<List<Map<String, dynamic>>> getNotes(String email) async => 
+	(await notes.document(email).get()).data ["notes"];

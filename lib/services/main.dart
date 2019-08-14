@@ -6,6 +6,7 @@ import "preferences.dart";
 
 import "package:ramaz/data/student.dart";
 import "package:ramaz/data/schedule.dart" show Subject, Day;
+import "package:ramaz/data/note.dart" show Note;
 
 void setToday(Reader reader) {
 	final DateTime now = DateTime.now();
@@ -42,6 +43,7 @@ Future<void> initOnLogin(Reader reader, Preferences prefs, String email) async {
 	// retrieve raw data
 	final Map<String, dynamic> studentData = await Firestore.getStudent(email);
 	final Map<String, dynamic> month = await Firestore.getMonth();
+	final List<Map<String, dynamic>> notesList = await Firestore.getNotes(email);
 
 	// use the data to compute more data
 	final Student student = Student.fromJson(studentData);
@@ -49,6 +51,7 @@ Future<void> initOnLogin(Reader reader, Preferences prefs, String email) async {
 		await Firestore.getClasses(student);
 	final Map<String, Subject> subjects = Subject.getSubjects(subjectData);
 	final Map<DateTime, Day> calendar = Day.getCalendar(month);
+	final List<Note> notes = Note.fromList(notesList);
 
 	// save the data
 	reader.studentData = studentData;
