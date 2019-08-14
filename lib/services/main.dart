@@ -60,6 +60,8 @@ Future<void> initOnLogin(Reader reader, Preferences prefs, String email) async {
 	reader.subjects = subjects;
 	reader.calendarData = month;
 	reader.calendar = calendar;
+	reader.notes = notes;
+	reader.notesData = notesList;
 	prefs.lastCalendarUpdate = DateTime.now();
 	setToday(reader);
 }

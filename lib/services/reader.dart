@@ -3,16 +3,18 @@ import "dart:io" show File;
 
 import "package:ramaz/data/schedule.dart";
 import "package:ramaz/data/student.dart";
+import "package:ramaz/data/note.dart";
 
 class Reader {
 	final String dir;
-	final File studentFile, subjectFile, calendarFile;
+	final File studentFile, subjectFile, calendarFile, notesFile;
 	Reader(this.dir) :
 		// The files end with 2 because there seems to 
 		// be some sort of ghost data in the original
 		studentFile = File ("$dir/student2.json"),
 		subjectFile = File ("$dir/subjects2.json"),
-		calendarFile = File ("$dir/calendar.json");
+		calendarFile = File ("$dir/calendar.json"),
+		notesFile = File ("$dir/notes.json");
 
 	set studentData(Map<String, dynamic> data) => studentFile.writeAsStringSync(
 		jsonEncode(data)
@@ -57,6 +59,14 @@ class Reader {
 	Map<DateTime, Day> calendar;
 	Day today;
 
+	List<Map<String, dynamic>> get notesData => jsonDecode(
+		notesFile.readAsStringSync()
+	);
+
+	set notesData(List<Map<String, dynamic>> data) => notesFile.writeAsStringSync(
+		jsonEncode(data)
+	);
+
 	void deleteAll() {
 		if (studentFile.existsSync())
 			studentFile.deleteSync();
@@ -71,5 +81,5 @@ class Reader {
 	Day currentDay;
 	Period period;
 	Subject get subject => subjects [period?.id];
-
+	List<Note> notes;
 }
