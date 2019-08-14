@@ -79,64 +79,82 @@ class LoginState extends State<Login> {
 		)
 	);
 
+	void onError(BuildContext context) {
+		loadingNotifier.value = false;
+		showDialog (
+			context: context,
+			builder: (dialogContext) => AlertDialog (
+				title: Text ("Cannot connect"),
+				content: Text (
+					"Due to technical difficulties, your account cannot be accessed.\n\n"
+					"If the problem persists, please contact Levi Lesches "
+					"(class of '21) for help" 
+				),
+				actions: [
+					FlatButton (
+						child: Text ("Cancel"),
+						onPressed: Navigator.of(dialogContext).pop
+					),
+					RaisedButton (
+						child: Text ("levilesches@gmail.com"),
+						onPressed: () => launch ("mailto:levilesches@gmail.com"),
+						color: Theme.of(dialogContext).primaryColorLight
+					)
+				]
+			)
+		);
+	}
+
+	void safely({
+		@required Future<void> Function() function, 
+		@required void Function() onSuccess,
+		@required BuildContext scaffoldContext,
+	}) async {
+		try {await function();} 
+		on PlatformException catch (error) {
+			if (error.code == "ERROR_NETWORK_REQUEST_FAILED") {
+				Scaffold.of(context).showSnackBar (
+					SnackBar (content: Text ("No internet")),
+				);
+				loadingNotifier.value = false;
+				return;
+			} else {
+				onError(context);
+				rethrow;
+			}
+		} catch (error) {
+			onError(context);
+			rethrow;
+		}
+		onSuccess();
+	}
+
+	void downloadData(String username, BuildContext scaffoldContext) async => safely(
+		function: () async => 
+			await initOnLogin(widget.reader, widget.prefs, username),
+		onSuccess: () => Navigator.of(context).pushReplacementNamed("home"),
+		scaffoldContext: scaffoldContext,
+	);
+	
 	/// This function needs two contexts. The first one can locate the ambient 
 	/// Scaffold. But since that will rebuild (because of loading = true), 
 	/// we need another context that is higher up the tree than that.
 	/// For that we use the implicit `BuildContext` with `StatefulWidget`
-	void googleLogin(BuildContext scaffoldContext) async {
-		try {
-			final account = await Auth.signInWithGoogle(
-				() => Scaffold.of(scaffoldContext).showSnackBar(
-					SnackBar (
-						content: Text ("You need to sign in with your Ramaz email")
-					)
+	void googleLogin(BuildContext scaffoldContext) async => safely(
+		function: () async => Auth.signInWithGoogle(
+			() => Scaffold.of(scaffoldContext).showSnackBar(
+				SnackBar (
+					content: Text ("You need to sign in with your Ramaz email")
 				)
-			);
-			if (account == null) return;
+			)
+		),
+		onSuccess: () async {
+			final String email = await Auth.getEmail();
+			if (email == null) return;
 			loadingNotifier.value = true;
-			await downloadData(account.email.toLowerCase());
-		}
-		on PlatformException catch (error) {
-			if (error.code == "ERROR_NETWORK_REQUEST_FAILED") {
-				Scaffold.of(scaffoldContext).showSnackBar (
-					SnackBar (content: Text ("No internet")),
-				);
-				return;
-			}
-			loadingNotifier.value = false;
-			showDialog (
-				context: context,
-				builder: (dialogContext) => AlertDialog (
-					title: Text ("Cannot connect"),
-					content: Text (
-						"Due to technical difficulties, your account cannot be accessed. "
-						"Please check your internet connection and try again.\n\n"
-						"If the problem persists, please contact Levi Lesches "
-						"(class of '21) for help" 
-					),
-					actions: [
-						FlatButton (
-							child: Text ("Cancel"),
-							onPressed: Navigator.of(dialogContext).pop
-						),
-						RaisedButton (
-							child: Text ("levilesches@gmail.com"),
-							onPressed: () => launch ("mailto:levilesches@gmail.com"),
-							color: Theme.of(dialogContext).primaryColorLight
-						)
-					]
-				)
-			);
-			rethrow;
-		}
-	}
+			await downloadData(email.toLowerCase(), scaffoldContext);
+		},
+		scaffoldContext: scaffoldContext,
+	);
 
-	void downloadData(String username) async {
-		try {await initOnLogin(widget.reader, widget.prefs, username);}
-		on PlatformException {
-			loadingNotifier.value = false;
-			rethrow;
-		}
-		Navigator.of(context).pushReplacementNamed("home");
-	}
 }
