@@ -48,7 +48,8 @@ class Period:
 	def __init__(self, day, period, room): pass
 	def __repr__(self): return f"{self.day}{self.period} ({self.room})"
 
-def get_email(first: str, last: str) -> str: return last + first [0]
+def get_email(first: str, last: str) -> str: 
+	return last + first [0] + "@ramaz.org"
 
 def get_students() -> {"student_id": Student}:
 	result = {}
@@ -128,7 +129,11 @@ def setup(
 				first = student.first,
 				last = student.last,
 				homeroom = homerooms [student] if student not in JUNIORS else None,
-				homeroom_location = homeroom_locations [homerooms [student]] if student not in JUNIORS else None,
+				homeroom_location = (
+					homeroom_locations [homerooms [student]] 
+					if student not in JUNIORS else 
+					None
+				),
 				**{  # A, B, C, M, R, E, F
 					day: [
 						(None if period is None else 
@@ -183,7 +188,10 @@ if __name__ == '__main__':
 	parser.add_argument(
 		"--auth", 
 		action = "store_true",
-		help = "Whether or not to authenticate everyone"
+		help = (
+			"Whether or not to authenticate everyone "
+			"(eg, save credentials to the database)"
+		)
 	)
 	parser.add_argument(
 		"--create", 
@@ -194,7 +202,6 @@ if __name__ == '__main__':
 
 	students = get_students()
 	periods, homeroom_locations = get_periods()
-	# schedules, student_homerooms = get_schedule(students, periods, homeroom_locations)
 	schedules, homerooms = get_schedule (students, periods)
 	if MISSING_ROOMS:
 		print ("Missing room #'s for courses:")

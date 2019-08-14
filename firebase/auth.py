@@ -3,7 +3,7 @@ from data.student import Student
 
 def create_user (student): return Firebase.create_user (
 	email = student.username + "@ramaz.org",
-	# password = student.password,
+	# This will be overridden by adding Google as a provider
 	password = "ThisShouldNotBeUsed",
 	display_name = student.first + student.last,
 	email_verified = False,
@@ -22,11 +22,6 @@ def get_record(record): return Firebase.ImportUserRecord (
 			email = record.email,
 			uid = record.uid
 		),
-		Firebase.UserProvider (
-			provider_id = "password",
-			email = record.email,
-			uid = record.uid
-		)
 	]
 )
 
