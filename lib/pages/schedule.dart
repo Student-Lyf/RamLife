@@ -14,15 +14,18 @@ import "package:ramaz/widgets/class_list.dart";
 import "package:ramaz/widgets/date_picker.dart" show pickDate;
 
 class SchedulePage extends StatelessWidget {
-	// final GlobalKey<ScaffoldState> key = GlobalKey();
-	final bool canExit;
 	final ScheduleModel model;
+	final NavigationDrawer drawer;
+	
+	final bool canExit;
 
 	SchedulePage ({
 		@required Reader reader,
 		@required Preferences prefs,
 		this.canExit = false
-	}) : model = ScheduleModel (prefs: prefs, reader: reader);
+	}) : 
+		drawer = NavigationDrawer(prefs),
+		model = ScheduleModel (reader: reader);
 
 	void viewDay(ScheduleModel model, BuildContext context) async {
 		final DateTime selected = await pickDate (
@@ -65,7 +68,7 @@ class SchedulePage extends StatelessWidget {
 					onPressed: () => viewDay (model, context)
 				)
 			),
-			drawer: canExit ? null : NavigationDrawer(model.prefs),
+			drawer: canExit ? null : drawer,
 			body: Column (
 				children: [
 					ListTile (
@@ -109,5 +112,3 @@ class SchedulePage extends StatelessWidget {
 		)
 	);
 }
-
-class Temp extends ChangeNotifier {}
