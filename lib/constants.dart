@@ -1,6 +1,7 @@
 // routes
 const String HOME_PAGE = "home";
 const String SCHEDULE = "schedule";
+const String NOTES = "notes";
 const String NEWS = "news";
 const String LOST_AND_FOUND = "lost-and-found";
 const String SPORTS = "sports";

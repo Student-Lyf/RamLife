@@ -16,6 +16,7 @@ import "pages/home.dart" show HomePage;
 import "pages/schedule.dart" show SchedulePage;
 import "pages/login.dart" show Login;
 import "pages/feedback.dart" show FeedbackPage;
+import "pages/notes.dart" show NotesPage;
  
 import "constants.dart";  // for route keys
 //import "mock/sports.dart" show games;
@@ -159,10 +160,14 @@ class MainAppState extends State<RamazApp> {
 					prefs: widget.prefs,
 				),
 				SCHEDULE + CAN_EXIT: (_) => SchedulePage (
-						reader: widget.reader,
-						prefs: widget.prefs,
-						canExit: true,
-					),
+					reader: widget.reader,
+					prefs: widget.prefs,
+					canExit: true,
+				),
+				NOTES: (_) => NotesPage (
+					reader: widget.reader,
+					prefs: widget.prefs
+				),
 				// NEWS: placeholder (widget.prefs, "News"),
 				// LOST_AND_FOUND: placeholder (widget.prefs, "Lost and found"),
 				// SPORTS: placeholder (widget.prefs, "Sports"),

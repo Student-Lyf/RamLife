@@ -26,6 +26,11 @@ class NavigationDrawer extends StatelessWidget {
 					leading: Icon (Icons.schedule),
 					onTap: () => Navigator.of(context).pushReplacementNamed(SCHEDULE)
 				),
+				ListTile (
+					title: Text ("Notes"),
+					leading: Icon (Icons.note),
+					onTap: () => Navigator.of(context).pushReplacementNamed(NOTES)
+				),
 				// ListTile (
 				// 	title: Text ("Newspapers (coming soon)"),
 				// 	leading: Icon (Icons.new_releases),
