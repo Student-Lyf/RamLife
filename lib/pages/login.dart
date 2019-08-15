@@ -113,7 +113,7 @@ class LoginState extends State<Login> {
 		try {await function();} 
 		on PlatformException catch (error) {
 			if (error.code == "ERROR_NETWORK_REQUEST_FAILED") {
-				Scaffold.of(context).showSnackBar (
+				Scaffold.of(scaffoldContext).showSnackBar (
 					SnackBar (content: Text ("No internet")),
 				);
 				loadingNotifier.value = false;
@@ -149,9 +149,9 @@ class LoginState extends State<Login> {
 			)
 		),
 		onSuccess: () async {
+			loadingNotifier.value = true;
 			final String email = await Auth.getEmail();
 			if (email == null) return;
-			loadingNotifier.value = true;
 			await downloadData(email.toLowerCase(), scaffoldContext);
 		},
 		scaffoldContext: scaffoldContext,
