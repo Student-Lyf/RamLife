@@ -1,7 +1,6 @@
 import "package:flutter/foundation.dart" show ChangeNotifier, required;
 
 import "package:ramaz/services/reader.dart";
-import "package:ramaz/services/preferences.dart";
 
 import "package:ramaz/data/times.dart";
 import "package:ramaz/data/schedule.dart";
@@ -18,16 +17,13 @@ class ScheduleModel with ChangeNotifier {
 
 
 	final Reader reader;
-	final Preferences prefs;
 	Day day;
-	Schedule schedule;
 	DateTime selectedDay = DateTime.now();
 	List<Period> periods;
 	Map<DateTime, Day> calendar;
 
 	ScheduleModel ({
 		@required this.reader,
-		@required this.prefs,
 	}) {
 		// Order to determine which day to show:
 		// 	Valid day stored in reader? 
@@ -64,9 +60,15 @@ class ScheduleModel with ChangeNotifier {
 		update (newLetter: selected.letter, newSpecial: selected.special);
 	}
 
-	void update({Letters newLetter, Special newSpecial}) {
-		Letters letter = day.letter;
-		Special special = day.special;
+	Day buildDay(
+		Day currentDay,
+		{
+			Letters newLetter,
+			Special newSpecial,
+		}
+	) {
+		Letters letter = currentDay.letter;
+		Special special = currentDay.special;
 		if (newLetter != null) {
 			letter = newLetter;
 			if (newSpecial == null) {  // set the special again
@@ -104,9 +106,16 @@ class ScheduleModel with ChangeNotifier {
 						special = newSpecial;
 			}
 		}
-		schedule = reader.student.schedule [letter];
-		day = getDay (letter, special);
-		periods = reader.student.getPeriods(day);
+		return Day (letter: letter, special: special);
+	}
+
+	// Schedule getSchedule(Letters letter) => reader.student.schedule [letter];
+
+	List<Period> getPeriods(Day day) => reader.student.getPeriods(day);
+
+	void update({Letters newLetter, Special newSpecial}) {
+		day = buildDay (day, newLetter: newLetter, newSpecial: newSpecial);
+		periods = getPeriods(day);
 		notifyListeners();
 	}
 }
