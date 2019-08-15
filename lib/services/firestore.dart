@@ -1,8 +1,11 @@
 import "package:cloud_firestore/cloud_firestore.dart";
 import "dart:async" show Future;
 
+import "package:ramaz/services/auth.dart" as Auth;
+
 import "package:ramaz/data/schedule.dart";
 import "package:ramaz/data/student.dart";
+import "package:ramaz/data/note.dart";
 
 const String STUDENTS = "students";
 const String CLASSES = "classes";
@@ -53,3 +56,10 @@ Future<Map<String, dynamic>> getMonth() async => (
 
 Future<List> getNotes(String email) async => 
 	(await notes.document(email).get()).data ["notes"];
+
+Future<void> saveNotes(List<Note> notesList) async => notes
+	.document(await Auth.getEmail())
+	.setData({
+		"notes": notesList.map((Note note) => note.toJson()).toList()
+	});
+
