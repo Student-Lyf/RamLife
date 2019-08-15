@@ -71,7 +71,7 @@ class Reader {
 		notesFile.writeAsStringSync(
 			jsonEncode(result)
 		);
-}
+	}
 
 	void deleteAll() {
 		if (studentFile.existsSync())
