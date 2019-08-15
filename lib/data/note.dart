@@ -3,104 +3,76 @@ import "dart:convert" show JsonUnsupportedObjectError;
 
 import "package:ramaz/data/schedule.dart";
 
-// TODO: move repeat swtich case to its own function. 
-
-enum RepeatableType {period, /*periodAndDay,*/ subject}
+enum RepeatableType {period, subject}
 
 const Map<RepeatableType, String> repeatableTypesToString = {
 	RepeatableType.period: "period",
-	// RepeatableType.periodAndDay: "periodAndDay",
 	RepeatableType.subject: "subject",
 };
 
 const Map<String, RepeatableType> stringToRepeatableTypes = {
 	"period": RepeatableType.period,
-	// "periodAndDay": RepeatableType.periodAndDay,
 	"subject": RepeatableType.subject,
 };
 
 class Note {
 	final String message;
 	final Repeatable repeat;
-	final String type;
 
 	const Note({
 		@required this.message,
-		this.type,
 		this.repeat,
 	});
 
-	factory Note.fromJson(Map<String, dynamic> json) {
-		Repeatable repeatable;
-		if (json ["repeat"] != null) {
-			final Map<String, dynamic> repeat = 
-				Map<String, dynamic>.from(json ["repeat"]);
-			final RepeatableType type = stringToRepeatableTypes [repeat ["type"]];
-			try {
-				switch (type) {
-					case RepeatableType.period: 
-						repeatable = RepeatablePeriod(
-							period: repeat ["period"],
-							letter: stringToLetters [repeat["letter"]],
-						); 
-						break;
-					// case RepeatableType.periodAndDay: 
-					// 	repeatable = RepeatablePeriodAndDay(
-					// 		period: repeat ["period"],
-					// 		letter: stringToLetters [repeat["letter"]],
-					// 	); 
-					// 	break;
-					case RepeatableType.subject: 
-						repeatable = RepeatableSubject(name: repeat ["name"]); 
-						break;
-					default: throw JsonUnsupportedObjectError(
-						json,
-						cause: "Invalid repeat type in note: $json",
-					);
-				}
-			} on AssertionError catch (error) {
-				throw JsonUnsupportedObjectError(
-					json, 
-					cause: (
-						"Invalid repeat value in note: $json\m"
-						"The specific error was: ${error.message}"
-					)
-				);
-			}
-		}
-		return Note (
-			message: json ["message"],
-			repeat: repeatable,
-			type: json ["repeat"] == null ? null : json ["repeat"] ["type"],
-		);
-	}
+	factory Note.fromJson(Map<String, dynamic> json) => Note (
+		message: json ["message"],
+		repeat: json ["repeat"] == null ? null 
+		: Repeatable.fromJson(
+			stringToRepeatableTypes [json ["repeat"] ["type"]],
+			Map<String, dynamic>.from(json ["repeat"]),
+		),
+	);
 
-	static List<Note> fromList(List notes) => 
-		notes.map((dynamic json) => Note.fromJson(Map<String, dynamic>.from(json))).toList();
+	static List<Note> fromList(List notes) => notes.map(
+		(dynamic json) => Note.fromJson(Map<String, dynamic>.from(json))).toList();
 
-	@override String toString() => "$message ($type)";
+	@override String toString() => "$message ($repeat)";
 
 	Map<String, dynamic> toJson() => {
 		"message": message,
 		"repeat": repeat?.toJson(),
-		"type": type,
 	};
 
 	bool get repeats => repeat == null;
 }
 
 abstract class Repeatable {
+	final RepeatableType type = null;
+	const Repeatable();
+
 	bool doesApply({
 		@required Letters letter, 
 		@required Subject subject, 
 		@required String period,
 	});
-	const Repeatable();
 
 	Map<String, dynamic> toJson();
+
+	factory Repeatable.fromJson(RepeatableType type, Map<String, dynamic> json) {
+		switch (type) {
+			case RepeatableType.period: return RepeatablePeriod.fromJson(json);
+			case RepeatableType.subject: return RepeatableSubject.fromJson(json);
+			default: throw JsonUnsupportedObjectError(
+				json,
+				cause: "Invalid repeat type in note: $json",
+			);
+		}
+	}
 }
 
 class RepeatablePeriod extends Repeatable {
+	final RepeatableType type = RepeatableType.period;
+
 	final Letters letter;
 	final String period;
 
@@ -115,7 +87,7 @@ class RepeatablePeriod extends Repeatable {
 	RepeatablePeriod.fromJson(Map<String, dynamic> json) :
 		assert (
 			stringToLetters.containsKey(json ["letters"]), 
-			"Invalid letter"
+			"Invalid letter for note: $json"
 		),
 		letter = stringToLetters [json["letter"]],
 		period = json["period"] as String;
@@ -124,7 +96,7 @@ class RepeatablePeriod extends Repeatable {
 	Map<String, dynamic> toJson() => {
 		"letter": lettersToString [letter],
 		"period": period,
-		"type": "period",
+		"type": repeatableTypesToString [type],
 	};
 
 	@override
@@ -138,31 +110,24 @@ class RepeatablePeriod extends Repeatable {
 		"Repeats every ${lettersToString[letter]}-$period";
 }
 
-// class RepeatablePeriodAndDay extends RepeatablePeriod {
-// 	@override final Letters letter;
-// 	@override final String period;
-
-// 	const RepeatablePeriodAndDay({
-// 		@required this.letter,
-// 		@required this.period,
-// 	}) : super (
-// 		letter: letter,
-// 		period: period
-// 	);
-
-// 	@override Map<String, dynamic> toJson() {
-// 		final Map<String, dynamic> result = super.toJson();
-// 		result ["type"] = "periodAndDay";
-// 		return result;
-// 	}
-// }
-
 class RepeatableSubject extends Repeatable {
+	final RepeatableType type = RepeatableType.subject;
+
 	final String name;
 
 	const RepeatableSubject({
 		@required this.name,
-	}) : assert (name != null, "Name must not be null for note");
+	}) : assert (name != null, "Name must not be null for note repeat");
+
+	@override 
+	factory RepeatableSubject.fromJson(Map<String, dynamic> json) => 
+		RepeatableSubject(name: json ["name"]);
+
+	@override 
+	Map<String, dynamic> toJson() => {
+		"name": name,
+		"type": "subject",
+	};
 
 	@override 
 	bool doesApply({
@@ -170,12 +135,6 @@ class RepeatableSubject extends Repeatable {
 		@required Subject subject, 
 		@required String period,
 	}) => subject.name == this.name;
-
-	@override 
-	Map<String, dynamic> toJson() => {
-		"name": name,
-		"type": "subject",
-	};
 
 	@override String toString() => "Repeats every $name";
 }
