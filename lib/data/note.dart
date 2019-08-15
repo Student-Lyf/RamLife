@@ -21,21 +21,21 @@ const Map<String, RepeatableType> stringToRepeatableTypes = {
 
 class Note {
 	final String message;
-	final Repeatable repeatable;
+	final Repeatable repeat;
 	final String type;
 
 	const Note({
 		@required this.message,
 		this.type,
-		this.repeatable,
+		this.repeat,
 	});
 
 	factory Note.fromJson(Map<String, dynamic> json) {
 		Repeatable repeatable;
 		if (json ["repeat"] != null) {
-			final RepeatableType type = stringToRepeatableTypes [json ["type"]];
 			final Map<String, dynamic> repeat = 
 				Map<String, dynamic>.from(json ["repeat"]);
+			final RepeatableType type = stringToRepeatableTypes [repeat ["type"]];
 			try {
 				switch (type) {
 					case RepeatableType.period: 
@@ -70,8 +70,8 @@ class Note {
 		}
 		return Note (
 			message: json ["message"],
-			repeatable: repeatable,
-			type: json ["type"],
+			repeat: repeatable,
+			type: json ["repeat"] == null ? null : json ["repeat"] ["type"],
 		);
 	}
 
@@ -82,11 +82,11 @@ class Note {
 
 	Map<String, dynamic> toJson() => {
 		"message": message,
-		"repeat": repeatable?.toJson(),
+		"repeat": repeat?.toJson(),
 		"type": type,
 	};
 
-	bool get repeats => repeatable == null;
+	bool get repeats => repeat == null;
 }
 
 abstract class Repeatable {
@@ -124,6 +124,7 @@ class RepeatablePeriod extends Repeatable {
 	Map<String, dynamic> toJson() => {
 		"letter": lettersToString [letter],
 		"period": period,
+		"type": "period",
 	};
 
 	@override
@@ -145,6 +146,12 @@ class RepeatablePeriodAndDay extends RepeatablePeriod {
 		letter: letter,
 		period: period
 	);
+
+	@override Map<String, dynamic> toJson() {
+		final Map<String, dynamic> result = super.toJson();
+		result ["type"] = "periodAndDay";
+		return result;
+	}
 }
 
 class RepeatableSubject extends Repeatable {
@@ -164,5 +171,6 @@ class RepeatableSubject extends Repeatable {
 	@override 
 	Map<String, dynamic> toJson() => {
 		"id": id,
+		"type": "subject",
 	};
 }
