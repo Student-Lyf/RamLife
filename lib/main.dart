@@ -108,7 +108,7 @@ class MainAppState extends State<RamazApp> {
 			primaryColorDark: BLUE_DARK,
 			accentColor: GOLD,
 			accentColorBrightness: Brightness.light,
-			buttonColor: BLUE,
+			buttonColor: GOLD,
 			buttonTheme: ButtonThemeData (
 				buttonColor: GOLD,
 				textTheme: ButtonTextTheme.normal,
@@ -120,7 +120,8 @@ class MainAppState extends State<RamazApp> {
 			primarySwatch: Colors.blue,
 			primaryColorBrightness: Brightness.dark,
 			primaryColorLight: BLUE_LIGHT,
-			primaryColorDark: BLUE,
+			// primaryColor: BLUE,
+			primaryColorDark: BLUE_DARK,
 			accentColor: GOLD_DARK,
 			accentColorBrightness: Brightness.light,
 			iconTheme: IconThemeData (color: GOLD_DARK),
@@ -133,7 +134,8 @@ class MainAppState extends State<RamazApp> {
 			cardTheme: CardTheme (
 				color: Colors.grey[820]
 			),
-			buttonColor: GOLD,
+			toggleableActiveColor: BLUE_LIGHT,
+			buttonColor: BLUE_DARK,
 			buttonTheme: ButtonThemeData (
 				buttonColor: BLUE_DARK, 
 				textTheme: ButtonTextTheme.accent,
