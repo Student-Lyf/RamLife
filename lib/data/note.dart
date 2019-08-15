@@ -5,17 +5,17 @@ import "package:ramaz/data/schedule.dart";
 
 // TODO: move repeat swtich case to its own function. 
 
-enum RepeatableType {period, periodAndDay, subject}
+enum RepeatableType {period, /*periodAndDay,*/ subject}
 
 const Map<RepeatableType, String> repeatableTypesToString = {
 	RepeatableType.period: "period",
-	RepeatableType.periodAndDay: "periodAndDay",
+	// RepeatableType.periodAndDay: "periodAndDay",
 	RepeatableType.subject: "subject",
 };
 
 const Map<String, RepeatableType> stringToRepeatableTypes = {
 	"period": RepeatableType.period,
-	"periodAndDay": RepeatableType.periodAndDay,
+	// "periodAndDay": RepeatableType.periodAndDay,
 	"subject": RepeatableType.subject,
 };
 
@@ -44,14 +44,14 @@ class Note {
 							letter: stringToLetters [repeat["letter"]],
 						); 
 						break;
-					case RepeatableType.periodAndDay: 
-						repeatable = RepeatablePeriodAndDay(
-							period: repeat ["period"],
-							letter: stringToLetters [repeat["letter"]],
-						); 
-						break;
+					// case RepeatableType.periodAndDay: 
+					// 	repeatable = RepeatablePeriodAndDay(
+					// 		period: repeat ["period"],
+					// 		letter: stringToLetters [repeat["letter"]],
+					// 	); 
+					// 	break;
 					case RepeatableType.subject: 
-						repeatable = RepeatableSubject(id: repeat ["id"]); 
+						repeatable = RepeatableSubject(name: repeat ["name"]); 
 						break;
 					default: throw JsonUnsupportedObjectError(
 						json,
@@ -92,7 +92,7 @@ class Note {
 abstract class Repeatable {
 	bool doesApply({
 		@required Letters letter, 
-		@required PeriodData periodData, 
+		@required Subject subject, 
 		@required String period,
 	});
 	const Repeatable();
@@ -130,47 +130,52 @@ class RepeatablePeriod extends Repeatable {
 	@override
 	bool doesApply({
 		@required Letters letter, 
-		@required PeriodData periodData, 
+		@required Subject subject, 
 		@required String period,
 	}) => letter == this.letter && period == this.period;
+
+	@override String toString() => 
+		"Repeats every ${lettersToString[letter]}-$period";
 }
 
-class RepeatablePeriodAndDay extends RepeatablePeriod {
-	@override final Letters letter;
-	@override final String period;
+// class RepeatablePeriodAndDay extends RepeatablePeriod {
+// 	@override final Letters letter;
+// 	@override final String period;
 
-	const RepeatablePeriodAndDay({
-		@required this.letter,
-		@required this.period,
-	}) : super (
-		letter: letter,
-		period: period
-	);
+// 	const RepeatablePeriodAndDay({
+// 		@required this.letter,
+// 		@required this.period,
+// 	}) : super (
+// 		letter: letter,
+// 		period: period
+// 	);
 
-	@override Map<String, dynamic> toJson() {
-		final Map<String, dynamic> result = super.toJson();
-		result ["type"] = "periodAndDay";
-		return result;
-	}
-}
+// 	@override Map<String, dynamic> toJson() {
+// 		final Map<String, dynamic> result = super.toJson();
+// 		result ["type"] = "periodAndDay";
+// 		return result;
+// 	}
+// }
 
 class RepeatableSubject extends Repeatable {
-	final String id;
+	final String name;
 
 	const RepeatableSubject({
-		@required this.id,
-	}) : assert (id != null, "Id must not be null for note");
+		@required this.name,
+	}) : assert (name != null, "Name must not be null for note");
 
 	@override 
 	bool doesApply({
 		@required Letters letter, 
-		@required PeriodData periodData, 
+		@required Subject subject, 
 		@required String period,
-	}) => periodData.id == this.id;
+	}) => subject.name == this.name;
 
 	@override 
 	Map<String, dynamic> toJson() => {
-		"id": id,
+		"name": name,
 		"type": "subject",
 	};
+
+	@override String toString() => "Repeats every $name";
 }
