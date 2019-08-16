@@ -84,8 +84,6 @@ abstract class Repeatable {
 		@required Subject subject, 
 		@required String period,
 	});
-
-
 }
 
 class RepeatablePeriod extends Repeatable {
@@ -152,7 +150,7 @@ class RepeatableSubject extends Repeatable {
 		@required Letters letter, 
 		@required Subject subject, 
 		@required String period,
-	}) => subject.name == this.name;
+	}) => subject?.name == this.name;
 
 	@override String toString() => "Repeats every $name";
 }
