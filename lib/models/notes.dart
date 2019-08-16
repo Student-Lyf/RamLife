@@ -6,8 +6,6 @@ import "package:ramaz/services/reader.dart";
 import "package:ramaz/data/note.dart";
 import "package:ramaz/data/schedule.dart";
 
-import "package:ramaz/models/schedule.dart";
-
 class NotesPageModel with ChangeNotifier {
 	final Reader reader;
 	final List<Note> notes;
@@ -18,7 +16,7 @@ class NotesPageModel with ChangeNotifier {
 
 	void updateNotes() {
 		notifyListeners();
-		Future (
+		Future (  // save UI time
 			() {
 				saveNotes(notes);
 				reader.notes = notes;  // holds notes in memory
@@ -48,33 +46,32 @@ class NotesPageModel with ChangeNotifier {
 
 class NotesBuilderModel with ChangeNotifier {
 	final Reader reader;
-	ScheduleModel schedule;
 	RepeatableType type;
 	Repeatable repeat;
-	Day day = Day (letter: Letters.M);
+	Day day;
 
-	String message;
+	String message = "";
 	bool shouldRepeat = false;
 
-	// For RepeatablePeriod(AndDay)
-	Letters letter;
+	// For RepeatablePeriod
 	String period;
 
 	// For RepeatableSubject
 	String name;
 
 	NotesBuilderModel({@required this.reader, Note note}) {
-		schedule = ScheduleModel(reader: reader);
 		if (note == null) return;
+
 		message = note.message;
 		repeat = note.repeat;	
 		shouldRepeat = repeat != null;
 		if (repeat == null) return;
+
 		type = repeat.type;
 		switch (type) {
 			case RepeatableType.period: 
 				period = (repeat as RepeatablePeriod).period;
-				letter = (repeat as RepeatablePeriod).letter;
+				day = Day (letter: (repeat as RepeatablePeriod).letter);
 				break;
 			case RepeatableType.subject:
 				name = (repeat as RepeatableSubject).name;
@@ -84,53 +81,41 @@ class NotesBuilderModel with ChangeNotifier {
 		}
 	}
 
-	Note build() {
-		if (message == null) throw ArgumentError.notNull("message");
-		Repeatable repeatable;
-		if (shouldRepeat) {
-			switch (type) {
-				case RepeatableType.period:
-					if (letter == null) throw ArgumentError.notNull("letter");
-					else if (period == null) throw ArgumentError.notNull("period");
-					else repeatable = RepeatablePeriod(
-						letter: letter,
-						period: period,
-					);
-					break;
-				// case RepeatableType.periodAndDay:
-				// 	if (letter == null) throw ArgumentError.notNull("letter");
-				// 	else if (period == null) throw ArgumentError.notNull("period");
-				// 	else repeatable = RepeatablePeriodAndDay(
-				// 		letter: letter,
-				// 		period: period,
-				// 	); 
-				// 	break;
-				case RepeatableType.subject: 
-					if (name == null) throw ArgumentError.notNull("name");
-					else repeatable = RepeatableSubject(
-						name: name,
-					);
-					break;
-			}
-		}
-		final Note result = Note (message: message, repeat: repeatable);
-		return result;
-	}
-
-	void onMessageChanged(String newMessage) {
-		message = newMessage;
-		notifyListeners();
-	}
+	Note build() => Note (
+		message: message, 
+		repeat: !shouldRepeat ? null : Repeatable.fromType(
+			type: type,
+			letter: letter,
+			period: period,
+			course: name,
+		),
+	);
 
 	bool get ready => (
 		(message?.isNotEmpty ?? false) &&
 		(!shouldRepeat || type != null) &&
 		(type != RepeatableType.period ||
-			(letter != null && period != null)
+			(day?.letter != null && period != null)
 		) && (
 			type != RepeatableType.subject || name != null			
 		)
 	);
+
+	Iterable<String> get periods => day == null ? null 
+		: reader.student.getPeriods(day).map(
+			(Period period) => period.period,
+		);
+
+	Iterable<String> get courses => reader.subjects.values.map(
+		(Subject subject) => subject.name
+	);
+
+	Letters get letter => day?.letter;
+
+	void onMessageChanged(String newMessage) {
+		message = newMessage;
+		notifyListeners();
+	}
 
 	void toggleRepeat(bool value) {
 		shouldRepeat = value;
@@ -143,23 +128,14 @@ class NotesBuilderModel with ChangeNotifier {
 	}
 
 	void changeLetter(Letters value) {
-		letter = value;
-		day = schedule.buildDay(day, newLetter: letter);
+		day = Day (letter: value);
 		notifyListeners();
 	}
-
-	Iterable<String> get periods => schedule.getPeriods(day).map(
-		(Period period) => period.period,
-	);
 
 	void changePeriod(String value) {
 		period = value;
 		notifyListeners();
 	}
-
-	Iterable<String> get courses => reader.subjects.values.map(
-		(Subject subject) => subject.name
-	);
 
 	void changeCourse(String value) {
 		name = value;
