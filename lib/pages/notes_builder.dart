@@ -33,6 +33,13 @@ class NotesBuilder extends StatefulWidget {
 		}
 	}
 
+	static Future<Note> buildNote(
+		BuildContext context, Reader reader, [Note note]
+	) async => await showDialog<Note>(
+		context: context, 
+		builder: (_) => NotesBuilder(reader: reader, note: note),
+	);
+
 	final Note note;
 	final Reader reader;
 
@@ -48,6 +55,11 @@ class NotesBuilder extends StatefulWidget {
 /// Exists solely to instantiate a TextEditingController
 class NotesBuilderState extends State<NotesBuilder> {
 	final TextEditingController controller = TextEditingController();
+
+	@override initState() {
+		super.initState();
+		controller.text = widget.note?.message;
+	}
 
 	@override
 	Widget build(BuildContext context) => ChangeNotifierListener(
