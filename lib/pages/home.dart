@@ -12,17 +12,19 @@ import "package:ramaz/widgets/class_list.dart";
 import "package:ramaz/widgets/next_class.dart";
 import "package:ramaz/widgets/icons.dart";
 
-class HomePage extends StatelessWidget {//<HomePage> {
+class HomePage extends StatelessWidget {
 	final Reader reader;
 	final Preferences prefs;
-	const HomePage({
+	final Widget drawer;
+
+	HomePage({
 		@required this.reader,
 		@required this.prefs,
-	});
+	}) : drawer = NavigationDrawer(prefs);
 
 	@override 
 	Widget build (BuildContext context) => ChangeNotifierListener<HomeModel>( 
-		model: HomeModel (reader: reader, prefs: prefs),
+		model: () => HomeModel(reader: reader, prefs: prefs),
 		builder: (BuildContext context, HomeModel model, _) => Scaffold (
 			appBar: AppBar (
 				title: Text ("Home"),
@@ -53,7 +55,7 @@ class HomePage extends StatelessWidget {//<HomePage> {
 					)
 				],
 			),
-			drawer: NavigationDrawer(model.prefs),
+			drawer: drawer,
 			endDrawer: !model.school ? null : Drawer (
 				child: ClassList(
 					periods: model.nextPeriod == null 
@@ -81,15 +83,16 @@ class HomePage extends StatelessWidget {//<HomePage> {
 							textAlign: TextAlign.center
 						),
 						SizedBox (height: 20),
-						if (model.school)
-							NextClass(model.period, model.reader.subjects[model.period?.id]),
-						// if school is not over, show the next class
-						if (model.nextPeriod != null)  
-							NextClass (
-								model.nextPeriod, 
-								model.reader.subjects[model.nextPeriod?.id], 
-								next: true
-							),
+						if (model.school) NextClass(
+							model.period, 
+							model.reader.subjects [model.period?.id]
+						),
+						// if school won't be over, show the next class
+						if (model.nextPeriod != null) NextClass (
+							model.nextPeriod, 
+							model.reader.subjects[model.nextPeriod?.id], 
+							next: true
+						),
 					]
 				)
 			)

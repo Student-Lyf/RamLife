@@ -14,38 +14,20 @@ import "package:ramaz/widgets/class_list.dart";
 import "package:ramaz/widgets/date_picker.dart" show pickDate;
 
 class SchedulePage extends StatelessWidget {
-	final ScheduleModel model;
-	final NavigationDrawer drawer;
+	final Reader reader; 
+	final Widget drawer;
 	
 	final bool canExit;
 
 	SchedulePage ({
-		@required Reader reader,
+		@required this.reader,
 		@required Preferences prefs,
 		this.canExit = false
-	}) : 
-		drawer = NavigationDrawer(prefs),
-		model = ScheduleModel (reader: reader);
-
-	void viewDay(ScheduleModel model, BuildContext context) async {
-		final DateTime selected = await pickDate (
-			context: context,
-			initialDate: model.selectedDay
-		);
-		if (selected == null) return;
-		try {model.date = selected;}
-		on ArgumentError {
-			Scaffold.of(context).showSnackBar(
-				SnackBar (
-					content: Text ("There is no school on this day")
-				)
-			);
-		}
-	}
+	}) : drawer = NavigationDrawer(prefs);
 
 	@override
 	Widget build (BuildContext context) => ChangeNotifierListener<ScheduleModel>(
-		model: model,
+		model: () => ScheduleModel (reader: reader),
 		builder: (BuildContext context, ScheduleModel model, Widget _) => Scaffold(
 			appBar: AppBar (
 				title: Text ("Schedule"),
@@ -111,4 +93,20 @@ class SchedulePage extends StatelessWidget {
 			)
 		)
 	);
+
+	void viewDay(ScheduleModel model, BuildContext context) async {
+		final DateTime selected = await pickDate (
+			context: context,
+			initialDate: model.selectedDay
+		);
+		if (selected == null) return;
+		try {model.date = selected;}
+		on ArgumentError {
+			Scaffold.of(context).showSnackBar(
+				SnackBar (
+					content: Text ("There is no school on this day")
+				)
+			);
+		}
+	}
 }
