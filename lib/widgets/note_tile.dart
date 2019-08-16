@@ -18,14 +18,16 @@ class NoteTile extends StatelessWidget {
 	@override 
 	Widget build (BuildContext context) => SizedBox (
 		height: height, 
-		child: ListTile (
-			title: Text (note.message),
-			subtitle: Text (note.repeat?.toString() ?? ""),
-			onTap: onTap,
-			trailing: IconButton (
-				icon: Icon (Icons.remove_circle),
-				onPressed: onDelete,
+		child: Center (
+			child: ListTile (
+				title: Text (note.message),
+				subtitle: Text (note.repeat?.toString() ?? ""),
+				onTap: onTap,
+				trailing: IconButton (
+					icon: Icon (Icons.remove_circle, color: Theme.of(context).iconTheme.color),
+					onPressed: onDelete,
+				),
 			),
-		)
+		),
 	);
 }
