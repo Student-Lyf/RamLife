@@ -2,6 +2,8 @@ import "package:flutter/foundation.dart" show ChangeNotifier, required;
 import "dart:async" show Timer;
 
 import "package:ramaz/data/schedule.dart";
+import "package:ramaz/data/note.dart";
+import "package:ramaz/models/notes.dart";
 import "package:ramaz/services/auth.dart" as Auth;
 import "package:ramaz/services/reader.dart";
 import "package:ramaz/services/preferences.dart";
@@ -11,26 +13,18 @@ class HomeModel with ChangeNotifier {
 
 	final Reader reader;
 	final Preferences prefs;
-	Period period, nextPeriod; 
-	Schedule schedule;
-	Day today;
+	final NoteEditor noteModel;
 
 	Timer timer;
-	List<Period> periods;
-	int periodIndex;
+	List<int> currentNotes, nextNotes;
 	bool googleSupport = true;
 
 	HomeModel ({
 		@required this.reader,	
 		@required this.prefs,	
-	}) {
-		today = reader.today;
-		reader.currentDay = today;
-		schedule = reader.student.schedule [today.letter];
-		periods = reader.student.getPeriods(today);
-		// periodIndex = today.period;
+	}) : noteModel = NoteEditor(reader) {
+		noteModel.addListener(onNotesChanged);
 		updatePeriod();
-		reader.period = nextPeriod;
 		timer = Timer.periodic (minute, updatePeriod);
 		checkGoogleSupport();
 	}
@@ -42,19 +36,32 @@ class HomeModel with ChangeNotifier {
 
 	Subject getSubject(Period period) => reader.subjects[period.id];
 	bool get school => today.school;
+	Period get period => reader.period;
+	Period get nextPeriod => reader.nextPeriod;
+	Day get today => reader.today;
 
 	Future<void> updatePeriod([_]) async {  // pull-to-refresh wants a Future
-		if (!today.school) {
-			period = null;
-			nextPeriod = null;
-			notifyListeners();
-			return;
-		}
-		periodIndex = today.period;
-		period = periodIndex == null ? null : periods [periodIndex];
-		nextPeriod = periodIndex != null && periodIndex < periods.length - 1
-			? periods [periodIndex + 1]
-			: nextPeriod = null;
+		updateNotes();
+		notifyListeners();
+	}
+
+	void updateNotes() {
+		currentNotes = Note.getNotes(
+			notes: noteModel.notes,
+			period: period?.period,
+			letter: today.letter,
+			subject: reader.subjects [period?.id],
+		).toList();
+		nextNotes = Note.getNotes(
+			notes: noteModel.notes,
+			period: nextPeriod?.period,
+			letter: today.letter,
+			subject: reader.subjects [nextPeriod?.id],
+		).toList();
+	}
+
+	void onNotesChanged() {
+		updateNotes();
 		notifyListeners();
 	}
 

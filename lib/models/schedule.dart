@@ -2,6 +2,8 @@ import "package:flutter/foundation.dart" show ChangeNotifier, required;
 
 import "package:ramaz/services/reader.dart";
 
+import "package:ramaz/models/notes.dart";
+
 import "package:ramaz/data/times.dart";
 import "package:ramaz/data/schedule.dart";
 
@@ -15,21 +17,22 @@ class ScheduleModel with ChangeNotifier {
 		winterFridayRoshChodesh
 	];
 
-
 	final Reader reader;
+	final NoteEditor noteModel;
 	Day day;
 	DateTime selectedDay = DateTime.now();
 	Map<DateTime, Day> calendar;
 
 	ScheduleModel ({
 		@required this.reader,
-	}) {
+	}) : noteModel = NoteEditor(reader) {
 		// Order to determine which day to show:
 		// 	Valid day stored in reader? 
 		// 		True: use that
 		// 		False: Is there school today? 
 		// 			True: Use that
 		// 			False: Use default day
+		noteModel.addListener(notifyListeners);
 		final Day readerDay = reader.currentDay;
 		if (readerDay == null || !readerDay.school) 
 			try {date = selectedDay;}  // try to set today
