@@ -2,14 +2,17 @@ import "package:flutter/material.dart";
 import "package:flutter/foundation.dart";
 
 import "package:ramaz/constants.dart" show SCHEDULE, CAN_EXIT;
+
 import "package:ramaz/data/schedule.dart";
 import "package:ramaz/data/note.dart";
+
+import "package:ramaz/widgets/info_card.dart";
 import "package:ramaz/widgets/note_tile.dart";
+import "package:ramaz/pages/notes_builder.dart";
+
 import "package:ramaz/models/notes.dart";
 import "package:ramaz/models/home.dart";
-import "package:ramaz/pages/notes_builder.dart";
-import "package:ramaz/services/reader.dart";
-import "info_card.dart";
+
 
 class NextClass extends StatelessWidget {
 	static final TextStyle white = TextStyle (

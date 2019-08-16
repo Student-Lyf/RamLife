@@ -16,11 +16,5 @@ Future<DateTime> pickDate({
 		initialDate: initialDate,
 		firstDate: beginningOfMonth,
 		lastDate: endOfMonth,
-
-		// For a darker theme -- set intelligently
-		// builder: (BuildContext context, Widget child) => Theme (
-		// 	data: ThemeData.dark(),
-		// 	child: child
-		// )
 	);
 }
