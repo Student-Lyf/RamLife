@@ -6,40 +6,33 @@ import "package:ramaz/services/reader.dart";
 import "package:ramaz/data/note.dart";
 import "package:ramaz/data/schedule.dart";
 
-class NotesPageModel with ChangeNotifier {
+class NoteEditor with ChangeNotifier {
 	final Reader reader;
-	final List<Note> notes;
+	NoteEditor(this.reader);
 
-	NotesPageModel({
-		@required this.reader,
-	}) : notes = reader.notes;
+	List<Note> get notes => reader.notes;
 
 	void updateNotes() {
+		saveNotes(notes);  // upload to firestore
+		reader.notesData = notes;
 		notifyListeners();
-		Future (  // save UI time
-			() {
-				saveNotes(notes);
-				reader.notes = notes;  // holds notes in memory
-				reader.notesData = notes;  // writes to file
-			}
-		);
 	}
 
-	void saveNote(Note note) {
+	void replaceNote (int index, Note note) {
+		if (note == null) return;
+		notes.removeAt(index);
+		notes.insert(index, note);
+		updateNotes();
+	}
+
+	void addNote(Note note) {
 		if (note == null) return;
 		notes.add(note);
 		updateNotes();
 	}
 
-	void replace(int index, Note note) {
-		if (note == null) return;
-		notes.removeAt (index);
-		notes.insert(index, note);
-		updateNotes();
-	}
-
 	void deleteNote(int index) {
-		notes.removeAt (index);
+		notes.removeAt(index);
 		updateNotes();
 	}
 }
