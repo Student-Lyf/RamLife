@@ -109,13 +109,9 @@ class ScheduleModel with ChangeNotifier {
 		return Day (letter: letter, special: special);
 	}
 
-	// Schedule getSchedule(Letters letter) => reader.student.schedule [letter];
-
-	List<Period> getPeriods(Day day) => reader.student.getPeriods(day);
-
 	void update({Letters newLetter, Special newSpecial}) {
 		day = buildDay (day, newLetter: newLetter, newSpecial: newSpecial);
-		periods = getPeriods(day);
+		periods = reader.student.getPeriods(day);
 		notifyListeners();
 	}
 }
