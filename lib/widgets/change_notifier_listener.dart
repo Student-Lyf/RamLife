@@ -25,7 +25,7 @@ class ChangeNotifierState<Model extends ChangeNotifier> extends State<ChangeNoti
     super.initState();
     model = widget.model();
     model.addListener(listener);
-    widget?.setup();
+    if (widget.setup != null) widget.setup();
   }
 
   @override void dispose() {

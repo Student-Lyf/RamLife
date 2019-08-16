@@ -51,7 +51,6 @@ class NotesBuilderState extends State<NotesBuilder> {
 
 	@override
 	Widget build(BuildContext context) => ChangeNotifierListener(
-		setup: () => controller.text = widget.note?.message,
 		child: FlatButton(
 			child: Text (
 				"Cancel", 
