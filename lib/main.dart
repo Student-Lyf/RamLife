@@ -108,6 +108,8 @@ class MainAppState extends State<RamazApp> {
 			primaryColorDark: BLUE_DARK,
 			accentColor: GOLD,
 			accentColorBrightness: Brightness.light,
+			cursorColor: BLUE_LIGHT,
+			textSelectionHandleColor: BLUE_LIGHT,
 			buttonColor: GOLD,
 			buttonTheme: ButtonThemeData (
 				buttonColor: GOLD,
@@ -131,6 +133,8 @@ class MainAppState extends State<RamazApp> {
 				backgroundColor: GOLD_DARK,
 				foregroundColor: BLUE
 			),
+			cursorColor: BLUE_LIGHT,
+			textSelectionHandleColor: BLUE_LIGHT,
 			cardTheme: CardTheme (
 				color: Colors.grey[820]
 			),
