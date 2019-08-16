@@ -20,14 +20,14 @@ class NotesPage extends StatelessWidget {
 	}) : drawer = NavigationDrawer(prefs);
 
 	@override 
-	Widget build(BuildContext context) => ChangeNotifierListener<NotesPageModel>(
-		model: () => NotesPageModel(reader: reader),
-		builder: (BuildContext context, NotesPageModel model, _) => Scaffold(
+	Widget build(BuildContext context) => ChangeNotifierListener<NoteEditor>(
+		model: () => NoteEditor(reader),
+		builder: (BuildContext context, NoteEditor model, _) => Scaffold(
 				drawer: drawer,
 				appBar: AppBar(title: Text ("Notes")),
 				floatingActionButton: FloatingActionButton(
 					child: Icon (Icons.note_add),
-					onPressed: () async => model.saveNote (await showBuilder(context)),
+					onPressed: () async => model.addNote(await showBuilder(context)),
 				),
 				body: model.notes.isEmpty
 					? Center (
@@ -42,7 +42,7 @@ class NotesPage extends StatelessWidget {
 						separatorBuilder: (_, __) => Divider(),
 						itemBuilder: (BuildContext context, int index) => NoteTile(
 							note: model.notes [index],
-							onTap: () async => model.replace(
+							onTap: () async => model.replaceNote(
 								index, 
 								await showBuilder(context, model.notes [index]),
 							),

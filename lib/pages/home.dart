@@ -58,11 +58,12 @@ class HomePage extends StatelessWidget {
 			drawer: drawer,
 			endDrawer: !model.school ? null : Drawer (
 				child: ClassList(
+					noteModel: model.noteModel,
 					day: model.today,
 					periods: model.nextPeriod == null 
-						? model.periods
-						: model.periods.getRange (
-							(model.periodIndex ?? -1) + 1, model.periods.length
+						? model.reader.periods
+						: model.reader.periods.getRange (
+							(model.reader.periodIndex ?? -1) + 1, model.reader.periods.length
 						),
 					reader: model.reader,
 					headerText: model.period == null 
@@ -84,15 +85,11 @@ class HomePage extends StatelessWidget {
 							textAlign: TextAlign.center
 						),
 						SizedBox (height: 20),
-						if (model.school) NextClass(
-							model.period, 
-							model.reader.subjects [model.period?.id]
-						),
+						if (model.school) NextClass(model: model),
 						// if school won't be over, show the next class
 						if (model.nextPeriod != null) NextClass (
-							model.nextPeriod, 
-							model.reader.subjects[model.nextPeriod?.id], 
-							next: true
+							next: true,
+							model: model,
 						),
 					]
 				)
