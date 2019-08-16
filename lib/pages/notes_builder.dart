@@ -4,35 +4,23 @@ import "package:ramaz/data/note.dart";
 import "package:ramaz/data/schedule.dart";
 
 import "package:ramaz/models/notes.dart" show NotesBuilderModel;
-
+import "package:ramaz/services/reader.dart";
 import "package:ramaz/widgets/change_notifier_listener.dart";
 
-import "package:ramaz/services/reader.dart";
-
-class NotesBuilder extends StatefulWidget {
-	final Note note;
-	final Reader reader;
-	NotesBuilder({
-		@required this.reader,
-		this.note
-	});
-
-	@override 
-	NotesBuilderState createState() => NotesBuilderState();
-}
-
-class NotesBuilderState extends State<NotesBuilder> {
-	NotesBuilderModel model;
-	TextEditingController controller;
-
+///Must be stateful to keep [TextEditingController.text] intact
+class NotesBuilder extends StatefulWidget {	
 	static void noop(){}
-	static final Color disabledColor = RaisedButton(onPressed: noop).disabledTextColor;
+	static final Color disabledColor = RaisedButton(onPressed: noop)
+		.disabledTextColor;
+
+	static String trimString (String text, int length) => text.length > length
+		? text.substring(0, length) : text;
 
 	static Color getButtonTextColor(
 		BuildContext context, 
 		Brightness brightness,
 		bool enabled,
-	){
+	) {
 		if (!enabled) return disabledColor;
 		switch (Theme.of(context).buttonTheme.textTheme) {
 			case ButtonTextTheme.normal: return brightness == Brightness.dark
@@ -45,22 +33,30 @@ class NotesBuilderState extends State<NotesBuilder> {
 		}
 	}
 
-	static String trimString (String text, int length) => text.length > length
-		? text.substring(0, length) : text;
+	final Note note;
+	final Reader reader;
 
-	@override void initState() {
-		super.initState();
-		model = NotesBuilderModel(reader: widget.reader, note: widget.note);
-		controller = TextEditingController(text: model.message);
-	}
+	NotesBuilder({
+		@required this.reader,
+		this.note
+	}); 
+
+	@override 
+	NotesBuilderState createState() => NotesBuilderState();
+}
+
+/// Exists solely to instantiate a TextEditingController
+class NotesBuilderState extends State<NotesBuilder> {
+	final TextEditingController controller = TextEditingController();
 
 	@override
 	Widget build(BuildContext context) => ChangeNotifierListener(
+		setup: () => controller.text = widget.note?.message,
 		child: FlatButton(
 			child: Text (
 				"Cancel", 
 				style: TextStyle (
-					color: getButtonTextColor(
+					color: NotesBuilder.getButtonTextColor(
 						context, 
 						Theme.of(context).brightness,
 						true
@@ -69,7 +65,7 @@ class NotesBuilderState extends State<NotesBuilder> {
 			),
 			onPressed: Navigator.of(context).pop,
 		),
-		model: model,
+		model: () => NotesBuilderModel(reader: widget.reader, note: widget.note),
 		builder: (BuildContext context, NotesBuilderModel model, Widget back) =>
 			AlertDialog(
 				title: Text (widget.note == null ? "Create note" : "Edit note"),
@@ -79,7 +75,7 @@ class NotesBuilderState extends State<NotesBuilder> {
 						child: Text (
 							"Save", 
 							style: TextStyle (
-								color: getButtonTextColor(
+								color: NotesBuilder.getButtonTextColor(
 									context, 
 									ThemeData.estimateBrightnessForColor(
 										Theme.of(context).buttonColor
@@ -101,6 +97,7 @@ class NotesBuilderState extends State<NotesBuilder> {
 							TextField (
 								controller: controller,
 								onChanged: model.onMessageChanged,
+								textCapitalization: TextCapitalization.sentences,
 							),
 							SwitchListTile (
 								value: model.shouldRepeat,
@@ -144,12 +141,12 @@ class NotesBuilderState extends State<NotesBuilder> {
 									ListTile (
 										title: Text ("Period"),
 										trailing: DropdownButton<String> (
-											items: model.periods.map(
+											items: model.periods?.map(
 												(String period) => DropdownMenuItem<String>(
 													value: period,
 													child: Text (period),
 												)
-											).toList(),
+											)?.toList() ?? const [],
 											onChanged: model.changePeriod,
 											value: model.period,
 											hint: Text ("Period"),
@@ -162,7 +159,7 @@ class NotesBuilderState extends State<NotesBuilder> {
 											items: model.courses.map(
 												(String course) => DropdownMenuItem<String>(
 													value: course,
-													child: Text ("${trimString(course, 14)}..."),
+													child: Text ("${NotesBuilder.trimString(course, 14)}..."),
 												)
 											).toList(),
 											onChanged: model.changeCourse,
@@ -175,7 +172,7 @@ class NotesBuilderState extends State<NotesBuilder> {
 							],
 						]
 					)
-				) 
+				)
 			)
 	);
 }
