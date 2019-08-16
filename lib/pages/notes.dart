@@ -22,25 +22,33 @@ class NotesPage extends StatelessWidget {
 	@override 
 	Widget build(BuildContext context) => ChangeNotifierListener<NotesPageModel>(
 		model: () => NotesPageModel(reader: reader),
-		builder: (BuildContext context, NotesPageModel model, Widget child) => Scaffold(
-			drawer: drawer,
-			appBar: AppBar(title: Text ("Notes")),
-			floatingActionButton: FloatingActionButton(
-				child: Icon (Icons.note_add),
-				onPressed: () async => model.saveNote (await showBuilder(context)),
-			),
-			body: ListView.separated (
-				itemCount: model.notes.length,
-				separatorBuilder: (_, __) => Divider(),
-				itemBuilder: (BuildContext context, int index) => NoteTile(
-					note: model.notes [index],
-					onTap: () async => model.replace(
-						index, 
-						await showBuilder(context, model.notes [index]),
-					),
-					onDelete: () => model.deleteNote(index),
+		builder: (BuildContext context, NotesPageModel model, _) => Scaffold(
+				drawer: drawer,
+				appBar: AppBar(title: Text ("Notes")),
+				floatingActionButton: FloatingActionButton(
+					child: Icon (Icons.note_add),
+					onPressed: () async => model.saveNote (await showBuilder(context)),
 				),
-			)
+				body: model.notes.isEmpty
+					? Center (
+						child: Text (
+							"You don't have any notes yet",
+							textScaleFactor: 1.5,
+							textAlign: TextAlign.center,
+						),
+					) 
+					: ListView.separated (
+						itemCount: model.notes.length,
+						separatorBuilder: (_, __) => Divider(),
+						itemBuilder: (BuildContext context, int index) => NoteTile(
+							note: model.notes [index],
+							onTap: () async => model.replace(
+								index, 
+								await showBuilder(context, model.notes [index]),
+							),
+							onDelete: () => model.deleteNote(index),
+						),
+					)
 		)
 	);
 
