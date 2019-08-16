@@ -5,25 +5,59 @@ import "reader.dart";
 import "preferences.dart";
 
 import "package:ramaz/data/student.dart";
-import "package:ramaz/data/schedule.dart" show Subject, Day;
+import "package:ramaz/data/schedule.dart";
 import "package:ramaz/data/note.dart" show Note;
 
+DateTime now = DateTime.now();
+
+void onNewPeriod(Reader reader) {
+	final DateTime newDate = DateTime.now();
+	if (newDate.day != now.day) {
+		now = newDate;
+		return setToday(reader);
+	}
+
+	if (!reader.today.school) {
+		reader.period = null; 
+		reader.nextPeriod = null;
+		return;
+	}
+
+	final int index = reader.today.period;
+	reader.periodIndex = index;
+	if (index != null) {
+		reader.period = reader.periods [index];
+		Period nextPeriod;
+		if (index < reader.periods.length - 1) 
+			nextPeriod = reader.periods [index + 1];
+		reader.nextPeriod = nextPeriod;
+
+		reader.hasNote = Note.getNotes(
+			notes: reader.notes,
+			subject: reader.subjects [reader.period?.id],
+			period: reader.nextPeriod?.period,
+			letter: reader.today.letter,
+		).isNotEmpty;
+	} else reader.period = null;
+}
+
 void setToday(Reader reader) {
-	final DateTime now = DateTime.now();
 	final DateTime today = DateTime.utc(
 		now.year, 
 		now.month,
 		now.day
 	);
-	reader.today = reader.calendar [today];
-	if (reader.today?.name != null) Timer.periodic (
-		Duration (minutes: 1),
-		(Timer timer) {
-			final int index = reader.today.period;
-			if (index == null) return;
-			reader.period = reader.student.getPeriods(reader.today) [index];
-		}
-	);
+	Day schoolDay = reader.calendar [today];
+	reader.today = schoolDay;
+	reader.currentDay = schoolDay;
+	if (schoolDay.school) {
+		reader.periods = reader.student.getPeriods(schoolDay);
+		onNewPeriod(reader);
+		Timer.periodic (
+			Duration (minutes: 1),
+			(Timer timer) => onNewPeriod(reader),
+		);
+	}
 }
 
 Future<void> initOnMain(Reader reader, Preferences prefs) async {
