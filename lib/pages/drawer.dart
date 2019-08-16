@@ -10,7 +10,7 @@ import "package:ramaz/constants.dart";  // for route names
 
 class NavigationDrawer extends StatelessWidget {
 	final Preferences prefs;
-	NavigationDrawer(this.prefs, {Key key}) : super(key: key);
+	const NavigationDrawer(this.prefs, {Key key}) : super(key: key);
 
 	@override Widget build (BuildContext context) => Drawer (
 		child: Column (
@@ -45,11 +45,6 @@ class NavigationDrawer extends StatelessWidget {
 				// 	title: Text ("Sports (coming soon)"),
 				// 	leading: Icon (Icons.directions_run),
 				// 	onTap: () => Navigator.of(context).pushReplacementNamed(SPORTS)
-				// ),
-				// ListTile (
-				// 	title: Text ("Admin console (coming soon)"),
-				// 	leading: Icon (Icons.verified_user),
-				// 	onTap: () => Navigator.of(context).pushReplacementNamed(ADMIN_LOGIN)
 				// ),
 				ListTile (
 					title: Text ("Logout"),
