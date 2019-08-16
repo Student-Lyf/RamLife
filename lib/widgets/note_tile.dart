@@ -6,20 +6,26 @@ class NoteTile extends StatelessWidget {
 	final Note note;
 	final VoidCallback onTap, onDelete;
 
+	final double height;
+
 	const NoteTile({
 		@required this.note,
 		@required this.onTap,
-		@required this.onDelete
+		@required this.onDelete,
+		this.height = 65,
 	});
 
 	@override 
-	Widget build (BuildContext context) => ListTile (
-		title: Text (note.message),
-		subtitle: Text (note.repeat?.toString() ?? ""),
-		onTap: onTap,
-		trailing: IconButton (
-			icon: Icon (Icons.remove_circle),
-			onPressed: onDelete,
-		),
+	Widget build (BuildContext context) => SizedBox (
+		height: height, 
+		child: ListTile (
+			title: Text (note.message),
+			subtitle: Text (note.repeat?.toString() ?? ""),
+			onTap: onTap,
+			trailing: IconButton (
+				icon: Icon (Icons.remove_circle),
+				onPressed: onDelete,
+			),
+		)
 	);
 }
