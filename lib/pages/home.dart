@@ -58,6 +58,7 @@ class HomePage extends StatelessWidget {
 			drawer: drawer,
 			endDrawer: !model.school ? null : Drawer (
 				child: ClassList(
+					day: model.today,
 					periods: model.nextPeriod == null 
 						? model.periods
 						: model.periods.getRange (

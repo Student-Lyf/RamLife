@@ -83,9 +83,8 @@ class SchedulePage extends StatelessWidget {
 					Divider(),
 					SizedBox (height: 20),
 					Expanded (
-						child: 
-						ClassList(
-							periods: model.periods, 
+						child: ClassList(
+							day: model.day, 
 							reader: model.reader
 						)
 					),
