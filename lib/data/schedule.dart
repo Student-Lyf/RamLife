@@ -157,12 +157,10 @@ class Period {
 
 class Day {
 	final Letters letter;
-	// final Lunch lunch;
 	Special special;
 
 	Day ({
 		@required this.letter,
-		// @required this.lunch,
 		special
 	}) {
 		if (special == null) {
@@ -286,18 +284,7 @@ class Schedule {
 	@override operator == (other) => throw UnsupportedError(
 		"Cannot equate two Schedules. Compare Schedule.periods instead"
 	);
-		// other is Schedule && ListEquality().equals (other.periods, periods);
-		// other is Schedule && other.periods == periods;
 
-	// Each entry is a map: 
-	// 	- id: int, 
-	// 	- room: String
-	// 
-	// Also, we can't use typedefs as these are not functions :(
-
-	// The data we receive will come with other data (ints, Strings, etc.)
-	// So we have to receive it with dynamic values
-	// Here we can cast it to have a FB Map as the value
 	factory Schedule.fromJson(List json) => Schedule (
 		json.map (
 			(dynamic period) => PeriodData.fromJson (
