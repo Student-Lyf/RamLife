@@ -19,7 +19,6 @@ class ScheduleModel with ChangeNotifier {
 	final Reader reader;
 	Day day;
 	DateTime selectedDay = DateTime.now();
-	List<Period> periods;
 	Map<DateTime, Day> calendar;
 
 	ScheduleModel ({
@@ -111,7 +110,6 @@ class ScheduleModel with ChangeNotifier {
 
 	void update({Letters newLetter, Special newSpecial}) {
 		day = buildDay (day, newLetter: newLetter, newSpecial: newSpecial);
-		periods = reader.student.getPeriods(day);
 		notifyListeners();
 	}
 }
