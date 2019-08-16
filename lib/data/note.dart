@@ -50,14 +50,6 @@ abstract class Repeatable {
 	final RepeatableType type = null;
 	const Repeatable();
 
-	bool doesApply({
-		@required Letters letter, 
-		@required Subject subject, 
-		@required String period,
-	});
-
-	Map<String, dynamic> toJson();
-
 	factory Repeatable.fromJson(RepeatableType type, Map<String, dynamic> json) {
 		switch (type) {
 			case RepeatableType.period: return RepeatablePeriod.fromJson(json);
@@ -68,6 +60,32 @@ abstract class Repeatable {
 			);
 		}
 	}
+
+	factory Repeatable.fromType({
+		@required RepeatableType type,
+		@required Letters letter,
+		@required String period,
+		@required String course,
+	}) {
+		switch (type) {
+			case RepeatableType.period: return RepeatablePeriod(
+				period: period,
+				letter: letter,
+			); case RepeatableType.subject: return RepeatableSubject(
+				name: course
+			); default: throw ArgumentError.notNull("type");
+		}
+	}
+
+	Map<String, dynamic> toJson();
+
+	bool doesApply({
+		@required Letters letter, 
+		@required Subject subject, 
+		@required String period,
+	});
+
+
 }
 
 class RepeatablePeriod extends Repeatable {
