@@ -15,7 +15,27 @@ const Map<String, RepeatableType> stringToRepeatableTypes = {
 	"subject": RepeatableType.subject,
 };
 
+// used for iterating over notes
+Iterable<int> range(int stop) sync* {
+	for (int index = 0; index < stop; index++) {
+		yield index;
+	}
+}
+
 class Note {
+	static Iterable<int> getNotes({
+		@required List<Note> notes,
+		@required Letters letter,
+		@required String period,
+		@required Subject subject,
+	}) => range(notes.length).where(
+		(int index) => notes [index].repeat?.doesApply(
+			letter: letter,
+			period: period,
+			subject: subject
+		) ?? false
+	);
+
 	final String message;
 	final Repeatable repeat;
 
