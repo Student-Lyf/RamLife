@@ -10,39 +10,28 @@ import "package:ramaz/pages/notes_builder.dart";
 
 import "package:ramaz/widgets/note_tile.dart";
 
-class NotesPage extends StatefulWidget {
+class NotesPage extends StatelessWidget {
 	final Reader reader;
-	final Preferences prefs;
+	final Widget drawer;
 
-	const NotesPage({
+	NotesPage({
 		@required this.reader,
-		@required this.prefs,
-	});
-
-	@override 
-	NotesPageState createState() => NotesPageState();
-}
-
-class NotesPageState extends State<NotesPage> {
-	NotesPageModel model;
-
-	@override initState() {
-		super.initState();
-		model = NotesPageModel(reader: widget.reader);
-	}
+		@required Preferences prefs,
+	}) : drawer = NavigationDrawer(prefs);
 
 	@override 
 	Widget build(BuildContext context) => ChangeNotifierListener<NotesPageModel>(
-		model: model,
+		model: () => NotesPageModel(reader: reader),
 		builder: (BuildContext context, NotesPageModel model, Widget child) => Scaffold(
-			drawer: NavigationDrawer(widget.prefs),
+			drawer: drawer,
 			appBar: AppBar(title: Text ("Notes")),
 			floatingActionButton: FloatingActionButton(
 				child: Icon (Icons.note_add),
 				onPressed: () async => model.saveNote (await showBuilder(context)),
 			),
-			body: ListView.builder (
+			body: ListView.separated (
 				itemCount: model.notes.length,
+				separatorBuilder: (_, __) => Divider(),
 				itemBuilder: (BuildContext context, int index) => NoteTile(
 					note: model.notes [index],
 					onTap: () async => model.replace(
@@ -59,6 +48,6 @@ class NotesPageState extends State<NotesPage> {
 		showDialog<Note>(
 			context: context,
 			builder : (BuildContext context) => 
-				NotesBuilder(reader: widget.reader, note: note)
+				NotesBuilder(reader: reader, note: note)
 		);
 }
