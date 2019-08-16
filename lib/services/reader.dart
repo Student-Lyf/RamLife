@@ -92,7 +92,11 @@ class Reader {
 	// This next section is so that we can pass information between screens
 	// remember that all navigation happens through RamazApp.routes
 	Day currentDay;
-	Period period;
+	Period period, nextPeriod;
+	List<Period> periods;
 	Subject get subject => subjects [period?.id];
 	List<Note> notes;
+	
+	bool hasNote;
+	int periodIndex;
 }
