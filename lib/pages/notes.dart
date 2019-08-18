@@ -2,7 +2,7 @@ import "package:flutter/material.dart";
 
 import "package:ramaz/widgets/services.dart";
 
-import "package:ramaz/models/notes.dart";
+import "package:ramaz/services/notes.dart";
 import "package:ramaz/widgets/change_notifier_listener.dart";
 import "package:ramaz/pages/drawer.dart" show NavigationDrawer;
 import "package:ramaz/pages/notes_builder.dart";
@@ -11,9 +11,9 @@ import "package:ramaz/widgets/note_tile.dart";
 
 class NotesPage extends StatelessWidget {
 	@override 
-	Widget build(BuildContext context) => ChangeNotifierListener<NoteEditor>(
-		model: () => NoteEditor(Services.of(context).services),
-		builder: (BuildContext context, NoteEditor model, _) => Scaffold(
+	Widget build(BuildContext context) => ChangeNotifierListener<Notes>(
+		model: () => Services.of(context).notes,
+		builder: (BuildContext context, Notes model, _) => Scaffold(
 			drawer: NavigationDrawer(),
 			appBar: AppBar(title: Text ("Notes")),
 			floatingActionButton: FloatingActionButton(

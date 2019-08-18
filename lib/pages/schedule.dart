@@ -39,7 +39,7 @@ class SchedulePage extends StatelessWidget {
 			bottomNavigationBar: Footer (
 				period: model.reader.period,
 				subject: model.reader.subject,
-				note: model.reader.hasNote ?? false
+				note: model.noteModel.hasNote
 			),
 			floatingActionButton: Builder (
 				builder: (BuildContext context) => FloatingActionButton (
