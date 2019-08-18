@@ -13,7 +13,7 @@ class Notes with ChangeNotifier {
 	Notes(this.reader) : 
 		notes = Note.fromList (reader.notesData);
 
-	bool get hasNote => _hasNote;
+	bool get hasNote => _hasNote ?? false;
 	set hasNote(bool value) {
 		_hasNote = value;
 		notifyListeners();
