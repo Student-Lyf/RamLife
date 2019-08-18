@@ -10,17 +10,12 @@ import "package:ramaz/widgets/services.dart";
 
 // Used to actually login
 import "package:ramaz/services/auth.dart" as Auth;
-// import "package:ramaz/services/reader.dart";
-// import "package:ramaz/services/preferences.dart";
 import "package:ramaz/services/services.dart";
 import "package:ramaz/services/main.dart" show initOnLogin;
 
 /// This widget is only stateful so it doesn't get disposed when 
 /// the theme changes, and then we can keep using the BuildContext
 class Login extends StatefulWidget {
-	// final Reader reader;
-	// final Preferences prefs;
-	// const Login(this.reader, this.prefs);
 	const Login();
 
 	@override LoginState createState() => LoginState();
@@ -32,10 +27,15 @@ class LoginState extends State<Login> {
 
 	@override void initState() {
 		super.initState();
-		services = Services.of(context).services;
-		
 		// Log out first
 		Auth.signOut();
+	}
+
+	@override 
+	void didChangeDependencies() {
+		super.didChangeDependencies();
+		print ("Login dependencies changed. Deleting files...");
+		services = Services.of(context).services;
 		services.reader.deleteAll();
 	}
 
