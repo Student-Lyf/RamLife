@@ -1,6 +1,8 @@
 import "package:flutter/foundation.dart";
 
 import "package:ramaz/data/note.dart";
+import "package:ramaz/data/schedule.dart" show Letters;
+
 import "reader.dart";
 import "firestore.dart" as Firestore;
 
@@ -8,14 +10,24 @@ class Notes with ChangeNotifier {
 	final Reader reader;
 	final List<Note> notes;
 
-	bool _hasNote;
+	List<int> currentNotes;
 
 	Notes(this.reader) : 
 		notes = Note.fromList (reader.notesData);
 
-	bool get hasNote => _hasNote ?? false;
-	set hasNote(bool value) {
-		_hasNote = value;
+	bool get hasNote => currentNotes.isNotEmpty;
+
+	void setNote({
+		@required String subject,
+		@required String period,
+		@required Letters letter,
+	}) {
+		currentNotes = Note.getNotes(
+			notes: notes,
+			subject: subject,
+			letter: letter,
+			period: period,
+		).toList();
 		notifyListeners();
 	}
 
@@ -48,5 +60,4 @@ class Notes with ChangeNotifier {
 		notes.removeAt(index);
 		updateNotes();
 	}
-
 }

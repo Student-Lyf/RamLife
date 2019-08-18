@@ -27,7 +27,7 @@ class Note {
 		@required List<Note> notes,
 		@required Letters letter,
 		@required String period,
-		@required Subject subject,
+		@required String subject,
 	}) => range(notes.length).where(
 		(int index) => notes [index].repeat?.doesApply(
 			letter: letter,
@@ -35,6 +35,9 @@ class Note {
 			subject: subject
 		) ?? false
 	);
+
+	static List<Note> fromList(List notes) => notes.map(
+		(dynamic json) => Note.fromJson(Map<String, dynamic>.from(json))).toList();
 
 	final String message;
 	final Repeatable repeat;
@@ -52,9 +55,6 @@ class Note {
 			Map<String, dynamic>.from(json ["repeat"]),
 		),
 	);
-
-	static List<Note> fromList(List notes) => notes.map(
-		(dynamic json) => Note.fromJson(Map<String, dynamic>.from(json))).toList();
 
 	@override String toString() => "$message ($repeat)";
 
@@ -101,7 +101,7 @@ abstract class Repeatable {
 
 	bool doesApply({
 		@required Letters letter, 
-		@required Subject subject, 
+		@required String subject, 
 		@required String period,
 	});
 }
@@ -138,7 +138,7 @@ class RepeatablePeriod extends Repeatable {
 	@override
 	bool doesApply({
 		@required Letters letter, 
-		@required Subject subject, 
+		@required String subject, 
 		@required String period,
 	}) => letter == this.letter && period == this.period;
 
@@ -168,9 +168,9 @@ class RepeatableSubject extends Repeatable {
 	@override 
 	bool doesApply({
 		@required Letters letter, 
-		@required Subject subject, 
+		@required String subject, 
 		@required String period,
-	}) => subject?.name == this.name;
+	}) => subject == this.name;
 
 	@override String toString() => "Repeats every $name";
 }
