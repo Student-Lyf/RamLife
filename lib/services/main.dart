@@ -96,7 +96,6 @@ Future<void> initOnLogin(ServicesCollection services, String email) async {
 		await Firestore.getClasses(student);
 	final Map<String, Subject> subjects = Subject.getSubjects(subjectData);
 	final Map<DateTime, Day> calendar = Day.getCalendar(month);
-	final List<Note> notes = Note.fromList(notesList);
 
 	final Reader reader = services.reader;
 	// save the data
@@ -106,7 +105,7 @@ Future<void> initOnLogin(ServicesCollection services, String email) async {
 	reader.subjects = subjects;
 	reader.calendarData = month;
 	reader.calendar = calendar;
-	reader.notesData = notes;
+	reader.notesData = notesList;
 	services.prefs.lastCalendarUpdate = DateTime.now();
 	setToday(services);
 }
