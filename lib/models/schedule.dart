@@ -1,11 +1,11 @@
 import "package:flutter/foundation.dart" show ChangeNotifier, required;
 
-import "package:ramaz/services/reader.dart";
+import "package:ramaz/services/schedule.dart";
 import "package:ramaz/services/services.dart";
 import "package:ramaz/services/notes.dart";
 
 import "package:ramaz/data/times.dart";
-import "package:ramaz/data/schedule.dart";
+import "package:ramaz/data/schedule.dart" show Letters, Day;
 
 class ScheduleModel with ChangeNotifier {
 	static const Letters defaultLetter = Letters.M;
@@ -17,8 +17,8 @@ class ScheduleModel with ChangeNotifier {
 		winterFridayRoshChodesh
 	];
 
-	final Reader reader;
-	final Notes noteModel;
+	final Schedule schedule;
+	final Notes notes;
 	Day day;
 	DateTime selectedDay = DateTime.now();
 	Map<DateTime, Day> calendar;
@@ -26,8 +26,8 @@ class ScheduleModel with ChangeNotifier {
 	ScheduleModel ({
 		@required ServicesCollection services,
 	}) : 
-		reader = services.reader,
-		noteModel = Notes(services.reader) 
+		schedule = services.schedule,
+		notes = services.notes 
 	{
 		// Order to determine which day to show:
 		// 	Valid day stored in reader? 
@@ -35,8 +35,8 @@ class ScheduleModel with ChangeNotifier {
 		// 		False: Is there school today? 
 		// 			True: Use that
 		// 			False: Use default day
-		noteModel.addListener(notifyListeners);
-		final Day readerDay = reader.currentDay;
+		notes.addListener(notifyListeners);
+		final Day readerDay = schedule.currentDay;
 		if (readerDay == null || !readerDay.school) 
 			try {date = selectedDay;}  // try to set today
 			on ArgumentError {  // If no school today, go to default
@@ -58,9 +58,9 @@ class ScheduleModel with ChangeNotifier {
 			date.month,
 			date.day
 		);
-		final Day selected = reader.calendar [justDate];
+		final Day selected = schedule.calendar [justDate];
 		if (!selected.school) throw ArgumentError("No School");
-		reader.currentDay = selected;
+		schedule.currentDay = selected;
 		selectedDay = justDate;
 		update (newLetter: selected.letter, newSpecial: selected.special);
 	}

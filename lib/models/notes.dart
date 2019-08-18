@@ -1,13 +1,14 @@
 import "package:flutter/foundation.dart";
 
-import "package:ramaz/services/reader.dart";
+import "package:ramaz/services/schedule.dart" as ScheduleTracker;
 import "package:ramaz/services/services.dart";
 
 import "package:ramaz/data/note.dart";
 import "package:ramaz/data/schedule.dart";
 
 class NotesBuilderModel with ChangeNotifier {
-	final Reader reader;
+	final ScheduleTracker.Schedule schedule;
+
 	RepeatableType type;
 	Repeatable repeat;
 	Day day;
@@ -24,7 +25,7 @@ class NotesBuilderModel with ChangeNotifier {
 	NotesBuilderModel({
 		@required ServicesCollection services, 
 		Note note
-	}) : reader = services.reader {
+	}) : schedule = services.schedule {
 		if (note == null) return;
 
 		message = note.message;
@@ -67,11 +68,11 @@ class NotesBuilderModel with ChangeNotifier {
 	);
 
 	Iterable<String> get periods => day == null ? null 
-		: reader.student.getPeriods(day).map(
+		: schedule.student.getPeriods(day).map(
 			(Period period) => period.period,
 		);
 
-	Iterable<String> get courses => reader.subjects.values.map(
+	Iterable<String> get courses => schedule.subjects.values.map(
 		(Subject subject) => subject.name
 	);
 
