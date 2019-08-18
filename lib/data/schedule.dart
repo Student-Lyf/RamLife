@@ -63,9 +63,14 @@ class Subject {
 }
 
 class PeriodData {
+	static List<PeriodData> getList(List<Map<String, dynamic>> json) => json.map(
+		(Map<String, dynamic> periodJson) => PeriodData.fromJson(
+			periodJson?.cast<String, dynamic>()
+		)
+	).toList();
+
 	final String room;
 	final String id;
-
 
 	const PeriodData ({
 		@required this.room,
@@ -274,22 +279,4 @@ class Lunch {
 		@required this.salad, 
 		this.dessert = "Seasonal Fresh Fruit"
 	});
-}
-
-class Schedule {
-	final List <PeriodData> periods;
-	const Schedule (this.periods);
-
-	@override String toString() => "Schedule ($periods)";
-	@override operator == (other) => throw UnsupportedError(
-		"Cannot equate two Schedules. Compare Schedule.periods instead"
-	);
-
-	factory Schedule.fromJson(List json) => Schedule (
-		json.map (
-			(dynamic period) => PeriodData.fromJson (
-				period?.cast<String, dynamic>()
-			)
-		).toList()
-	);
 }

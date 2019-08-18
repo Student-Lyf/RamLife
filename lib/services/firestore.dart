@@ -28,8 +28,8 @@ Future<Map<String, dynamic>> getClass (String id) async =>
 
 Future<Map<String, Map<String, dynamic>>> getClasses(Student student) async {
 	Set<String> ids = {};
-	for (final Schedule schedule in student.schedule.values) {
-		for (final PeriodData period in schedule.periods) {
+	for (final List<PeriodData> schedule in student.schedule.values) {
+		for (final PeriodData period in schedule) {
 			if (period == null) continue;  // skip free periods
 			ids.add(period.id);
 		}

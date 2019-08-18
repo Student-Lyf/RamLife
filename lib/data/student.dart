@@ -5,7 +5,7 @@ import "schedule.dart";
 import "times.dart";
 
 class Student {
-	final Map <Letters, Schedule> schedule;
+	final Map <Letters, List<PeriodData>> schedule;
 	final String homeroomLocation, homeroom;
 
 	const Student ({
@@ -56,13 +56,13 @@ class Student {
 			homeroomLocation: homeroomLocation,
 			homeroom: homeroom,
 			schedule: {
-				Letters.A: Schedule.fromJson (json ["A"]),
-				Letters.B: Schedule.fromJson (json ["B"]),
-				Letters.C: Schedule.fromJson (json ["C"]),
-				Letters.E: Schedule.fromJson (json ["E"]),
-				Letters.F: Schedule.fromJson (json ["F"]),
-				Letters.M: Schedule.fromJson (json ["M"]),
-				Letters.R: Schedule.fromJson (json ["R"]),
+				Letters.A: PeriodData.getList (json ["A"]),
+				Letters.B: PeriodData.getList (json ["B"]),
+				Letters.C: PeriodData.getList (json ["C"]),
+				Letters.E: PeriodData.getList (json ["E"]),
+				Letters.F: PeriodData.getList (json ["F"]),
+				Letters.M: PeriodData.getList (json ["M"]),
+				Letters.R: PeriodData.getList (json ["R"]),
 			},
 		);
 	}
@@ -70,7 +70,7 @@ class Student {
 	List <Period> getPeriods (Day day) {
 		final List <Period> result = [];
 		if (!day.school) return result;
-		final List <PeriodData> periods = schedule [day.letter].periods;
+		final List <PeriodData> periods = schedule [day.letter];
 		final Special special = day.special;
 		int periodIndex = 0;
 
