@@ -3,6 +3,7 @@ import "package:flutter/material.dart";
 import "package:ramaz/services/reader.dart";
 import "package:ramaz/services/preferences.dart";
 import "package:ramaz/services/services.dart";
+import "package:ramaz/services/notes.dart";
 
 class Services extends InheritedWidget {
 	static Services of(
@@ -12,6 +13,7 @@ class Services extends InheritedWidget {
 	final ServicesCollection services;
 	final Reader reader;
 	final Preferences prefs;
+	final Notes notes;
 
 	Services({
 		this.services,
@@ -19,6 +21,7 @@ class Services extends InheritedWidget {
 	}) :
 		reader = services.reader,
 		prefs = services.prefs,
+		notes = services.notes,
 		super (child: child);
 
 	/// This instance will never be rebuilt with new data
