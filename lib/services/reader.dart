@@ -3,7 +3,6 @@ import "dart:io" show File;
 
 import "package:ramaz/data/schedule.dart";
 import "package:ramaz/data/student.dart";
-import "package:ramaz/data/note.dart";
 
 class Reader {
 	final String dir;
@@ -95,8 +94,6 @@ class Reader {
 	Period period, nextPeriod;
 	List<Period> periods;
 	Subject get subject => subjects [period?.id];
-	List<Note> notes;
 	
-	bool hasNote;
 	int periodIndex;
 }
