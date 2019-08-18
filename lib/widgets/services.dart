@@ -4,6 +4,7 @@ import "package:ramaz/services/reader.dart";
 import "package:ramaz/services/preferences.dart";
 import "package:ramaz/services/services.dart";
 import "package:ramaz/services/notes.dart";
+import "package:ramaz/services/schedule.dart";
 
 class Services extends InheritedWidget {
 	static Services of(
@@ -14,6 +15,7 @@ class Services extends InheritedWidget {
 	final Reader reader;
 	final Preferences prefs;
 	final Notes notes;
+	final ScheduleTracker scheduleTracker;
 
 	Services({
 		this.services,
@@ -22,6 +24,7 @@ class Services extends InheritedWidget {
 		reader = services.reader,
 		prefs = services.prefs,
 		notes = services.notes,
+		scheduleTracker = services.scheduleTracker,
 		super (child: child);
 
 	/// This instance will never be rebuilt with new data
