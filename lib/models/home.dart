@@ -4,8 +4,7 @@ import "dart:async" show Timer;
 import "package:ramaz/data/schedule.dart";
 import "package:ramaz/data/note.dart";
 
-import "package:ramaz/models/notes.dart";
-
+import "package:ramaz/services/notes.dart";
 import "package:ramaz/services/auth.dart" as Auth;
 import "package:ramaz/services/reader.dart";
 import "package:ramaz/services/services.dart";
@@ -15,14 +14,14 @@ class HomeModel with ChangeNotifier {
 
 	final Reader reader;
 	final ServicesCollection services;
-	final NoteEditor noteModel;
+	final Notes noteModel;
 
 	Timer timer;
 	List<int> currentNotes, nextNotes;
 	bool googleSupport = true;
 
 	HomeModel (this.services) : 
-		noteModel = NoteEditor(services),
+		noteModel = Notes(services.reader),
 		reader = services.reader
 	{
 		noteModel.addListener(onNotesChanged);

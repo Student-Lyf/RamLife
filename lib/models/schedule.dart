@@ -2,8 +2,7 @@ import "package:flutter/foundation.dart" show ChangeNotifier, required;
 
 import "package:ramaz/services/reader.dart";
 import "package:ramaz/services/services.dart";
-
-import "package:ramaz/models/notes.dart";
+import "package:ramaz/services/notes.dart";
 
 import "package:ramaz/data/times.dart";
 import "package:ramaz/data/schedule.dart";
@@ -19,7 +18,7 @@ class ScheduleModel with ChangeNotifier {
 	];
 
 	final Reader reader;
-	final NoteEditor noteModel;
+	final Notes noteModel;
 	Day day;
 	DateTime selectedDay = DateTime.now();
 	Map<DateTime, Day> calendar;
@@ -28,7 +27,7 @@ class ScheduleModel with ChangeNotifier {
 		@required ServicesCollection services,
 	}) : 
 		reader = services.reader,
-		noteModel = NoteEditor(services) 
+		noteModel = Notes(services.reader) 
 	{
 		// Order to determine which day to show:
 		// 	Valid day stored in reader? 
