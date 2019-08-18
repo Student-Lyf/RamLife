@@ -17,7 +17,7 @@ class Notes with ChangeNotifier {
 
 	bool get hasNote => currentNotes.isNotEmpty;
 
-	void setNote({
+	void setNotes({
 		@required String subject,
 		@required String period,
 		@required Letters letter,

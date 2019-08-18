@@ -10,7 +10,7 @@ class ServicesCollection {
 	final Preferences prefs;
 
 	Notes notes;
-	ScheduleTracker scheduleTracker;
+	Schedule schedule;
 
 	ServicesCollection({
 		@required this.reader,
@@ -24,9 +24,9 @@ class ServicesCollection {
 	/// Use this function to initialize anything that requires a file.
 	void init() {
 		notes = Notes (reader);
-		scheduleTracker = ScheduleTracker(
+		schedule = Schedule(
 			reader, 
-			setNotes: notes.setNote,
+			notes: notes,
 		);
 		verify();
 	}
@@ -34,7 +34,7 @@ class ServicesCollection {
 	/// Since [init] cannot be enforced, this function does null checks.
 	/// Put any variables that aren't final in here
 	void verify() {
-		final List properties = [notes, scheduleTracker];
+		final List properties = [notes, schedule];
 
 		for (final property in properties) assert (
 			property != null,

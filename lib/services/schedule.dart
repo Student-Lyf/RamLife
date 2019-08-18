@@ -2,23 +2,18 @@ import "package:flutter/foundation.dart";
 import "dart:async" show Timer;
 
 import "package:ramaz/services/reader.dart";
+import "package:ramaz/services/notes.dart";
 
 import "package:ramaz/data/student.dart";
 import "package:ramaz/data/schedule.dart";
 
-typedef NoteSetter = void Function({
-	@required String subject, 
-	@required String period, 
-	@required Letters letter
-});
-
-class ScheduleTracker with ChangeNotifier {
+class Schedule with ChangeNotifier {
 	static DateTime now = DateTime.now();
 
 	final Student student;
 	final Map<String, Subject> subjects;
 	final Map<DateTime, Day> calendar;
-	final NoteSetter setNotes;
+	final Notes notes;
 
 	Timer timer;
 	Day today, currentDay;
@@ -27,14 +22,15 @@ class ScheduleTracker with ChangeNotifier {
 
 	int periodIndex;
 
-	ScheduleTracker(
+	Schedule(
 		Reader reader,
-		{@required this.setNotes}
+		{@required this.notes}
 	) : 
 		subjects = Subject.getSubjects(reader.subjectData),
 		student = Student.fromJson(reader.studentData),
 		calendar = Day.getCalendar(reader.calendarData) 
 	{
+		notes.addListener(updateNotes);
 		setToday();
 	}
 
@@ -91,12 +87,12 @@ class ScheduleTracker with ChangeNotifier {
 		if (periodIndex < periods.length - 1) 
 			nextPeriod = periods [periodIndex + 1];
 
-		setNotes(
-			period: period?.period,
-			subject: subjects [period?.id]?.name,
-			letter: today.letter,
-		);
-		
 		notifyListeners();
 	}
+
+	void updateNotes() => notes.setNotes(
+		period: period?.period,
+		subject: subjects [period?.id]?.name,
+		letter: today.letter,
+	);
 }
