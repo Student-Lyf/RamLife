@@ -46,7 +46,6 @@ class ClassPanel extends StatelessWidget {
 										index, 
 										await NotesBuilder.buildNote(
 											context, 
-											editor.reader,
 											editor.notes [index],
 										),
 									),

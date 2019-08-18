@@ -4,7 +4,7 @@ import "package:ramaz/data/note.dart";
 import "package:ramaz/data/schedule.dart";
 
 import "package:ramaz/models/notes.dart" show NotesBuilderModel;
-import "package:ramaz/services/reader.dart";
+import "package:ramaz/widgets/services.dart";
 import "package:ramaz/widgets/change_notifier_listener.dart";
 
 ///Must be stateful to keep [TextEditingController.text] intact
@@ -34,17 +34,15 @@ class NotesBuilder extends StatefulWidget {
 	}
 
 	static Future<Note> buildNote(
-		BuildContext context, Reader reader, [Note note]
+		BuildContext context, [Note note]
 	) async => await showDialog<Note>(
 		context: context, 
-		builder: (_) => NotesBuilder(reader: reader, note: note),
+		builder: (_) => NotesBuilder(note: note),
 	);
 
 	final Note note;
-	final Reader reader;
 
 	NotesBuilder({
-		@required this.reader,
 		this.note
 	}); 
 
@@ -76,7 +74,10 @@ class NotesBuilderState extends State<NotesBuilder> {
 			),
 			onPressed: Navigator.of(context).pop,
 		),
-		model: () => NotesBuilderModel(reader: widget.reader, note: widget.note),
+		model: () => NotesBuilderModel(
+			services: Services.of(context).services, 
+			note: widget.note
+		),
 		builder: (BuildContext context, NotesBuilderModel model, Widget back) =>
 			AlertDialog(
 				title: Text (widget.note == null ? "Create note" : "Edit note"),

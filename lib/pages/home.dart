@@ -1,7 +1,6 @@
 import "package:flutter/material.dart";
 
-import "package:ramaz/services/reader.dart";
-import "package:ramaz/services/preferences.dart";
+import "package:ramaz/widgets/services.dart";
 
 import "package:ramaz/models/home.dart";
 
@@ -13,18 +12,9 @@ import "package:ramaz/widgets/next_class.dart";
 import "package:ramaz/widgets/icons.dart";
 
 class HomePage extends StatelessWidget {
-	final Reader reader;
-	final Preferences prefs;
-	final Widget drawer;
-
-	HomePage({
-		@required this.reader,
-		@required this.prefs,
-	}) : drawer = NavigationDrawer(prefs);
-
 	@override 
-	Widget build (BuildContext context) => ChangeNotifierListener<HomeModel>( 
-		model: () => HomeModel(reader: reader, prefs: prefs),
+	Widget build (BuildContext context) => ChangeNotifierListener<HomeModel>(
+		model: () => HomeModel(Services.of(context).services),
 		builder: (BuildContext context, HomeModel model, _) => Scaffold (
 			appBar: AppBar (
 				title: Text ("Home"),
@@ -55,7 +45,7 @@ class HomePage extends StatelessWidget {
 					)
 				],
 			),
-			drawer: drawer,
+			drawer: NavigationDrawer(),
 			endDrawer: !model.school ? null : Drawer (
 				child: ClassList(
 					noteModel: model.noteModel,

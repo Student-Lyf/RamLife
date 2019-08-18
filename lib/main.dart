@@ -4,13 +4,15 @@ import "package:shared_preferences/shared_preferences.dart";
 
 // Backend
 import "services/auth.dart" as Auth;
-import "services/main.dart" show initOnMain;
+import "services/main.dart";
 import "services/preferences.dart";
 import "services/reader.dart";
-import "services/fcm.dart" show registerNotifications;
+import "services/fcm.dart" as FCM;
+import "services/services.dart";
 
 // UI
 import "widgets/theme_changer.dart" show ThemeChanger;
+import "widgets/services.dart";
 import "pages/splash.dart" show SplashScreen;
 import "pages/home.dart" show HomePage;
 import "pages/schedule.dart" show SchedulePage;
@@ -40,7 +42,7 @@ void main() async {
 	);
 
 	// Initialize basic backend
-
+	// 
 	// First, get the raw materials. 
 	// 	This is done here since they are `Future`s, and this is
 	// 	the only place those `Future`s can be reliably `await`ed. 
@@ -48,25 +50,24 @@ void main() async {
 	final String dir = (await getApplicationDocumentsDirectory()).path;
 
 	// Now, actually initialize the backend services.
-	final Preferences preferences = Preferences(prefs);
-	final Reader reader = Reader(dir);
+	final ServicesCollection services = ServicesCollection(
+		reader: Reader(dir),
+		prefs: Preferences(prefs),
+	);
 	
 	// Determine the appropriate brightness. 
-	final bool savedBrightness = preferences.brightness;
+	final bool savedBrightness = services.prefs.brightness;
 	if (savedBrightness != null) brightness = savedBrightness
 		? Brightness.light
 		: Brightness.dark;
 
 	// To download, and login or go to main
-	final bool ready = reader.ready && await Auth.ready();
-	if (ready) await initOnMain(reader, preferences);
+	final bool ready = services.reader.ready && await Auth.ready();
+	if (ready) await initOnMain(services);
 	
 	// Register for FCM notifications. 
 	Future(
-		() => registerNotifications(
-			reader: reader, 
-			prefs: preferences,
-		)
+		() => FCM.registerNotifications(services)
 	);
 
 	// Now we are ready to run the app
@@ -74,22 +75,19 @@ void main() async {
 		RamazApp (
 			ready: ready,
 			brightness: brightness,
-			reader: reader, 
-			prefs: preferences
+			services: services,
 		)
 	);
 }
 
 class RamazApp extends StatefulWidget {
 	final Brightness brightness;
-	final Reader reader;
-	final Preferences prefs;
+	final ServicesCollection services;
 	final bool ready;
 	RamazApp ({
 		@required this.brightness,
-		@required this.reader,
-		@required this.prefs,
 		@required this.ready,
+		@required this.services,
 	});
 
 	@override MainAppState createState() => MainAppState();
@@ -97,90 +95,77 @@ class RamazApp extends StatefulWidget {
 
 class MainAppState extends State<RamazApp> {
 	@override 
-	Widget build (BuildContext context) => ThemeChanger (
-		defaultBrightness: widget.brightness,
-		light: ThemeData (
-			brightness: Brightness.light,
-			primarySwatch: Colors.blue,
-			primaryColor: BLUE,
-			primaryColorBrightness: Brightness.dark,
-			primaryColorLight: BLUE_LIGHT,
-			primaryColorDark: BLUE_DARK,
-			accentColor: GOLD,
-			accentColorBrightness: Brightness.light,
-			cursorColor: BLUE_LIGHT,
-			textSelectionHandleColor: BLUE_LIGHT,
-			buttonColor: GOLD,
-			buttonTheme: ButtonThemeData (
+	Widget build (BuildContext context) => Services (
+		services: widget.services,
+		child: ThemeChanger (
+			defaultBrightness: widget.brightness,
+			light: ThemeData (
+				brightness: Brightness.light,
+				primarySwatch: Colors.blue,
+				primaryColor: BLUE,
+				primaryColorBrightness: Brightness.dark,
+				primaryColorLight: BLUE_LIGHT,
+				primaryColorDark: BLUE_DARK,
+				accentColor: GOLD,
+				accentColorBrightness: Brightness.light,
+				cursorColor: BLUE_LIGHT,
+				textSelectionHandleColor: BLUE_LIGHT,
 				buttonColor: GOLD,
-				textTheme: ButtonTextTheme.normal,
-			),
-		),
-		dark: ThemeData(
-			brightness: Brightness.dark,
-			scaffoldBackgroundColor: Colors.grey[850],
-			primarySwatch: Colors.blue,
-			primaryColorBrightness: Brightness.dark,
-			primaryColorLight: BLUE_LIGHT,
-			// primaryColor: BLUE,
-			primaryColorDark: BLUE_DARK,
-			accentColor: GOLD_DARK,
-			accentColorBrightness: Brightness.light,
-			iconTheme: IconThemeData (color: GOLD_DARK),
-			primaryIconTheme: IconThemeData (color: GOLD_DARK),
-			accentIconTheme: IconThemeData (color: GOLD_DARK),
-			floatingActionButtonTheme: FloatingActionButtonThemeData(
-				backgroundColor: GOLD_DARK,
-				foregroundColor: BLUE
-			),
-			cursorColor: BLUE_LIGHT,
-			textSelectionHandleColor: BLUE_LIGHT,
-			cardTheme: CardTheme (
-				color: Colors.grey[820]
-			),
-			toggleableActiveColor: BLUE_LIGHT,
-			buttonColor: BLUE_DARK,
-			buttonTheme: ButtonThemeData (
-				buttonColor: BLUE_DARK, 
-				textTheme: ButtonTextTheme.accent,
-			),
-		),
-		builder: (BuildContext context, ThemeData theme) => MaterialApp (
-			home: widget.ready
-				? HomePage (
-					reader: widget.reader, 
-					prefs: widget.prefs
-				)
-				: Login (widget.reader, widget.prefs),
-			title: "Student Life",
-			color: BLUE,
-			theme: theme,
-			routes: {
-				LOGIN: (_) => Login(widget.reader, widget.prefs),
-				HOME_PAGE: (_) => HomePage (
-					reader: widget.reader, 
-					prefs: widget.prefs
+				buttonTheme: ButtonThemeData (
+					buttonColor: GOLD,
+					textTheme: ButtonTextTheme.normal,
 				),
-				SCHEDULE: (_) => SchedulePage (
-					reader: widget.reader,
-					prefs: widget.prefs,
+			),
+			dark: ThemeData(
+				brightness: Brightness.dark,
+				scaffoldBackgroundColor: Colors.grey[850],
+				primarySwatch: Colors.blue,
+				primaryColorBrightness: Brightness.dark,
+				primaryColorLight: BLUE_LIGHT,
+				// primaryColor: BLUE,
+				primaryColorDark: BLUE_DARK,
+				accentColor: GOLD_DARK,
+				accentColorBrightness: Brightness.light,
+				iconTheme: IconThemeData (color: GOLD_DARK),
+				primaryIconTheme: IconThemeData (color: GOLD_DARK),
+				accentIconTheme: IconThemeData (color: GOLD_DARK),
+				floatingActionButtonTheme: FloatingActionButtonThemeData(
+					backgroundColor: GOLD_DARK,
+					foregroundColor: BLUE
 				),
-				SCHEDULE + CAN_EXIT: (_) => SchedulePage (
-					reader: widget.reader,
-					prefs: widget.prefs,
-					canExit: true,
+				cursorColor: BLUE_LIGHT,
+				textSelectionHandleColor: BLUE_LIGHT,
+				cardTheme: CardTheme (
+					color: Colors.grey[820]
 				),
-				NOTES: (_) => NotesPage (
-					reader: widget.reader,
-					prefs: widget.prefs
+				toggleableActiveColor: BLUE_LIGHT,
+				buttonColor: BLUE_DARK,
+				buttonTheme: ButtonThemeData (
+					buttonColor: BLUE_DARK, 
+					textTheme: ButtonTextTheme.accent,
 				),
-				// NEWS: placeholder (widget.prefs, "News"),
-				// LOST_AND_FOUND: placeholder (widget.prefs, "Lost and found"),
-				// SPORTS: placeholder (widget.prefs, "Sports"),
-				// SPORTS: (_) => SportsPage (games),
-				// ADMIN_LOGIN: placeholder (widget.prefs, "Admin Login"),
-				FEEDBACK: (_) => FeedbackPage(),
-			}
+			),
+			builder: (BuildContext context, ThemeData theme) => MaterialApp (
+				home: widget.ready
+					? HomePage()
+					: Login(),
+				title: "Student Life",
+				color: BLUE,
+				theme: theme,
+				routes: {
+					LOGIN: (_) => Login(),
+					HOME_PAGE: (_) => HomePage(),
+					SCHEDULE: (_) => SchedulePage(),
+					SCHEDULE + CAN_EXIT: (_) => SchedulePage (canExit: true),
+					NOTES: (_) => NotesPage(),
+					// NEWS: placeholder (widget.prefs, "News"),
+					// LOST_AND_FOUND: placeholder (widget.prefs, "Lost and found"),
+					// SPORTS: placeholder (widget.prefs, "Sports"),
+					// SPORTS: (_) => SportsPage (games),
+					// ADMIN_LOGIN: placeholder (widget.prefs, "Admin Login"),
+					FEEDBACK: (_) => FeedbackPage(),
+				}
+			)
 		)
 	);
 }

@@ -1,16 +1,13 @@
 import "package:flutter/material.dart";
 
-import "package:ramaz/widgets/icons.dart";
-// import "package:ramaz/widgets/theme_changer.dart";
 import "package:ramaz/widgets/brightness_changer.dart" show BrightnessChanger;
-
-import "package:ramaz/services/preferences.dart";
+import "package:ramaz/widgets/icons.dart";
+import "package:ramaz/widgets/services.dart";
 
 import "package:ramaz/constants.dart";  // for route names
 
 class NavigationDrawer extends StatelessWidget {
-	final Preferences prefs;
-	const NavigationDrawer(this.prefs, {Key key}) : super(key: key);
+	const NavigationDrawer({Key key}) : super(key: key);
 
 	@override Widget build (BuildContext context) => Drawer (
 		child: Column (
@@ -60,7 +57,7 @@ class NavigationDrawer extends StatelessWidget {
 						nav.pushNamed(FEEDBACK);
 					}
 				),
-				BrightnessChanger.dropdown(prefs: prefs),
+				BrightnessChanger.dropdown(prefs: Services.of(context).prefs),
 				AboutListTile (
 					icon: Icon (Icons.info),
 					child: Text ("About"),

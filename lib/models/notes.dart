@@ -2,13 +2,15 @@ import "package:flutter/foundation.dart";
 
 import "package:ramaz/services/firestore.dart" show saveNotes;
 import "package:ramaz/services/reader.dart";
+import "package:ramaz/services/services.dart";
 
 import "package:ramaz/data/note.dart";
 import "package:ramaz/data/schedule.dart";
 
 class NoteEditor with ChangeNotifier {
 	final Reader reader;
-	NoteEditor(this.reader);
+	NoteEditor(ServicesCollection services)
+		: reader = services.reader;
 
 	List<Note> get notes => reader.notes;
 
@@ -52,7 +54,10 @@ class NotesBuilderModel with ChangeNotifier {
 	// For RepeatableSubject
 	String name;
 
-	NotesBuilderModel({@required this.reader, Note note}) {
+	NotesBuilderModel({
+		@required ServicesCollection services, 
+		Note note
+	}) : reader = services.reader {
 		if (note == null) return;
 
 		message = note.message;

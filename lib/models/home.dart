@@ -3,26 +3,28 @@ import "dart:async" show Timer;
 
 import "package:ramaz/data/schedule.dart";
 import "package:ramaz/data/note.dart";
+
 import "package:ramaz/models/notes.dart";
+
 import "package:ramaz/services/auth.dart" as Auth;
 import "package:ramaz/services/reader.dart";
-import "package:ramaz/services/preferences.dart";
+import "package:ramaz/services/services.dart";
 
 class HomeModel with ChangeNotifier {
 	static const Duration minute = Duration (minutes: 1);
 
 	final Reader reader;
-	final Preferences prefs;
+	final ServicesCollection services;
 	final NoteEditor noteModel;
 
 	Timer timer;
 	List<int> currentNotes, nextNotes;
 	bool googleSupport = true;
 
-	HomeModel ({
-		@required this.reader,	
-		@required this.prefs,	
-	}) : noteModel = NoteEditor(reader) {
+	HomeModel (this.services) : 
+		noteModel = NoteEditor(services),
+		reader = services.reader
+	{
 		noteModel.addListener(onNotesChanged);
 		updatePeriod();
 		timer = Timer.periodic (minute, updatePeriod);
@@ -35,10 +37,10 @@ class HomeModel with ChangeNotifier {
 	}
 
 	Subject getSubject(Period period) => reader.subjects[period.id];
+	Day get today => reader.today;
 	bool get school => today.school;
 	Period get period => reader.period;
 	Period get nextPeriod => reader.nextPeriod;
-	Day get today => reader.today;
 
 	Future<void> updatePeriod([_]) async {  // pull-to-refresh wants a Future
 		updateNotes();

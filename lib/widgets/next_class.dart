@@ -4,7 +4,6 @@ import "package:flutter/foundation.dart";
 import "package:ramaz/constants.dart" show SCHEDULE, CAN_EXIT;
 
 import "package:ramaz/data/schedule.dart";
-import "package:ramaz/data/note.dart";
 
 import "package:ramaz/widgets/info_card.dart";
 import "package:ramaz/widgets/note_tile.dart";
@@ -34,7 +33,7 @@ class NextClass extends StatelessWidget {
 		subject = model.reader.subjects [
 			(next ? model.nextPeriod : model.period)?.id
 		],
-		notesModel = NoteEditor(model.reader),
+		notesModel = NoteEditor(model.services),
 		notes = next ? model.nextNotes : model.currentNotes;
 
 	@override Widget build (BuildContext context) {
@@ -67,13 +66,8 @@ class NextClass extends StatelessWidget {
 										onTap: () async {
 											await notesModel.replaceNote(
 												index,
-												await showDialog<Note> (
-													context: context,
-													builder: (_) => NotesBuilder(
-														reader: notesModel.reader,
-														note: notesModel.notes [index],
-													),
-												)
+												await NotesBuilder.buildNote(
+													context, notesModel.notes [index]),
 											);
 											setState(() {});
 										},

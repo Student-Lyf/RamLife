@@ -1,11 +1,9 @@
-import "package:flutter/foundation.dart" show required;
 import 'package:firebase_messaging/firebase_messaging.dart';
 import "dart:convert" show JsonUnsupportedObjectError;
 
-import "package:ramaz/services/main.dart" show initOnLogin;
-import "package:ramaz/services/reader.dart" show Reader;
-import "package:ramaz/services/preferences.dart" show Preferences;
 import "package:ramaz/services/auth.dart" as Auth;
+import "package:ramaz/services/main.dart" show initOnLogin;
+import "package:ramaz/services/services.dart";
 
 // So basically, here's the gist with these things
 // When the app is in the foreground, it's onMessage
@@ -26,12 +24,12 @@ Future<String> getToken() async => firebase.getToken();
 
 /// Completely refresh the user's schedule 
 /// Basically simulate the login sequence
-void refresh(Reader reader, Preferences prefs) async {
+void refresh(ServicesCollection services) async {
 	final String email = await Auth.getEmail();
 	if (email == null) throw StateError(
 		"Cannot refresh schedule because the user is not logged in."
 	);
-	initOnLogin(reader, prefs, email);
+	initOnLogin(services, email);
 }
 
 /// This one's kinda a tricky function
@@ -48,14 +46,13 @@ void refresh(Reader reader, Preferences prefs) async {
 /// 
 /// The command functions are declared globally instead of the manner
 /// described above in order to make extension much simpler. 
-Future<void> registerNotifications({
-	@required Reader reader,
-	@required Preferences prefs,	
-}) async {
+Future<void> registerNotifications(ServicesCollection services) async {
+	// First, get permission on iOS:
+	firebase.requestNotificationPermissions();
 
 	// O(1) lookup table for the commands. 
 	final Map<String, Command> commands = {
-		"refresh": () => refresh(reader, prefs)
+		"refresh": () => refresh(services)
 	};
 
 	/// This function handles validation of the notification and looks 

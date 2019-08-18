@@ -3,6 +3,7 @@ import "dart:async";
 import "firestore.dart" as Firestore;
 import "reader.dart";
 import "preferences.dart";
+import "services.dart";
 
 import "package:ramaz/data/student.dart";
 import "package:ramaz/data/schedule.dart";
@@ -60,7 +61,9 @@ void setToday(Reader reader) {
 	}
 }
 
-Future<void> initOnMain(Reader reader, Preferences prefs) async {
+Future<void> initOnMain(ServicesCollection services) async {
+	final Reader reader = services.reader;
+	final Preferences prefs = services.prefs;
 	reader.student = Student.fromJson(reader.studentData);
 	reader.subjects = Subject.getSubjects(reader.subjectData);
 	reader.notes = Note.fromList(reader.notesData);
@@ -75,7 +78,7 @@ Future<void> initOnMain(Reader reader, Preferences prefs) async {
 	setToday(reader);
 }
 
-Future<void> initOnLogin(Reader reader, Preferences prefs, String email) async {
+Future<void> initOnLogin(ServicesCollection services, String email) async {
 	// retrieve raw data
 	final Map<String, dynamic> studentData = await Firestore.getStudent(email);
 	final Map<String, dynamic> month = await Firestore.getMonth();
@@ -89,6 +92,7 @@ Future<void> initOnLogin(Reader reader, Preferences prefs, String email) async {
 	final Map<DateTime, Day> calendar = Day.getCalendar(month);
 	final List<Note> notes = Note.fromList(notesList);
 
+	final Reader reader = services.reader;
 	// save the data
 	reader.studentData = studentData;
 	reader.student = student;
@@ -98,6 +102,6 @@ Future<void> initOnLogin(Reader reader, Preferences prefs, String email) async {
 	reader.calendar = calendar;
 	reader.notes = notes;
 	reader.notesData = notes;
-	prefs.lastCalendarUpdate = DateTime.now();
+	services.prefs.lastCalendarUpdate = DateTime.now();
 	setToday(reader);
 }
