@@ -19,9 +19,15 @@ class Notes with ChangeNotifier {
 		notifyListeners();
 	}
 
+	void saveNotesToReader() {
+		reader.notesData = notes.map(
+			(Note note) => note.toJson()
+		).toList();
+	}
+
 	void updateNotes() {
 		Firestore.saveNotes(notes);  // upload to firestore
-		reader.notesData = notes;
+		saveNotesToReader();
 		notifyListeners();
 	}
 

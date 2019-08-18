@@ -58,8 +58,10 @@ class Reader {
 	Map<DateTime, Day> calendar;
 	Day today;
 
-	List<Map<String, dynamic>> get notesData => jsonDecode(
-		notesFile.readAsStringSync()
+	List<Map<String, dynamic>> get notesData => List<Map<String, dynamic>>.from(
+		jsonDecode(
+			notesFile.readAsStringSync()
+		)
 	);
 
 	set notesData(List<Map<String, dynamic>> data) => notesFile.writeAsStringSync(
