@@ -2,16 +2,18 @@ import "package:flutter/material.dart";
 
 import "package:ramaz/data/schedule.dart" show Period, Subject, Day;
 import "package:ramaz/data/note.dart";
+
+import "package:ramaz/services/notes.dart";
 import "package:ramaz/services/reader.dart";
+
 import "package:ramaz/widgets/note_tile.dart";
 import "package:ramaz/pages/notes_builder.dart";
-import "package:ramaz/models/notes.dart";
 
 class ClassPanel extends StatelessWidget {
 	final String title, id;
 	final List<Widget> children;
 	final List<int> notes;
-	final NoteEditor editor;
+	final Notes editor;
 
 	const ClassPanel ({
 		@required this.title,
@@ -66,7 +68,7 @@ class ClassList extends StatefulWidget {
 	final Iterable<Period> periods;
 	final String headerText;
 	final Reader reader;
-	final NoteEditor noteModel;
+	final Notes noteModel;
 
 	ClassList ({
 		@required this.day, 

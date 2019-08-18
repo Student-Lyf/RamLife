@@ -5,11 +5,12 @@ import "package:ramaz/constants.dart" show SCHEDULE, CAN_EXIT;
 
 import "package:ramaz/data/schedule.dart";
 
+import "package:ramaz/services/notes.dart";
+
+import "package:ramaz/pages/notes_builder.dart";
 import "package:ramaz/widgets/info_card.dart";
 import "package:ramaz/widgets/note_tile.dart";
-import "package:ramaz/pages/notes_builder.dart";
 
-import "package:ramaz/models/notes.dart";
 import "package:ramaz/models/home.dart";
 
 
@@ -20,7 +21,7 @@ class NextClass extends StatelessWidget {
 
 	final Period period;
 	final Subject subject;
-	final NoteEditor notesModel;
+	final Notes notesModel;
 	final HomeModel model;
 	final List<int> notes;
 	final bool next;
@@ -33,7 +34,7 @@ class NextClass extends StatelessWidget {
 		subject = model.reader.subjects [
 			(next ? model.nextPeriod : model.period)?.id
 		],
-		notesModel = NoteEditor(model.services),
+		notesModel = Notes(model.services.reader),
 		notes = next ? model.nextNotes : model.currentNotes;
 
 	@override Widget build (BuildContext context) {
