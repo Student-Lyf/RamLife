@@ -74,7 +74,7 @@ void main({bool restart = false}) async {
 			main(restart: true);
 		} else rethrow;
 	}
-	
+
 	// Determine the appropriate brightness. 
 	final bool savedBrightness = services.prefs.brightness;
 	if (savedBrightness != null) brightness = savedBrightness
