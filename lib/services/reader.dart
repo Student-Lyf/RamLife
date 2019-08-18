@@ -1,9 +1,6 @@
 import "dart:convert" show jsonDecode, jsonEncode;
 import "dart:io" show File;
 
-import "package:ramaz/data/schedule.dart";
-import "package:ramaz/data/student.dart";
-
 class Reader {
 	final String dir;
 	final File studentFile, subjectFile, calendarFile, notesFile;
@@ -22,8 +19,6 @@ class Reader {
 	Map<String, dynamic> get studentData => jsonDecode (
 		studentFile.readAsStringSync()
 	);
-
-	Student student;
 
 	set subjectData (Map<String, Map<String, dynamic>> subjects) => subjectFile.writeAsStringSync (
 		jsonEncode (
@@ -45,8 +40,6 @@ class Reader {
 		)
 	);
 
-	Map<String, Subject> subjects;
-
 	set calendarData (Map<String, dynamic> data) => calendarFile.writeAsStringSync(
 		jsonEncode(data)
 	);
@@ -54,9 +47,6 @@ class Reader {
 	Map<String, dynamic> get calendarData => jsonDecode(
 		calendarFile.readAsStringSync()
 	);
-
-	Map<DateTime, Day> calendar;
-	Day today;
 
 	List<Map<String, dynamic>> get notesData => List<Map<String, dynamic>>.from(
 		jsonDecode(
@@ -83,13 +73,4 @@ class Reader {
 		studentFile.existsSync() && subjectFile.existsSync() 
 		&& notesFile.existsSync() && calendarFile.existsSync()
 	);
-
-	// This next section is so that we can pass information between screens
-	// remember that all navigation happens through RamazApp.routes
-	Day currentDay;
-	Period period, nextPeriod;
-	List<Period> periods;
-	Subject get subject => subjects [period?.id];
-	
-	int periodIndex;
 }
