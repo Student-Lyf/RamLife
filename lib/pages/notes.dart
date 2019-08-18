@@ -13,6 +13,7 @@ class NotesPage extends StatelessWidget {
 	@override 
 	Widget build(BuildContext context) => ChangeNotifierListener<Notes>(
 		model: () => Services.of(context).notes,
+		dispose: false,
 		builder: (BuildContext context, Notes model, _) => Scaffold(
 			drawer: NavigationDrawer(),
 			appBar: AppBar(title: Text ("Notes")),

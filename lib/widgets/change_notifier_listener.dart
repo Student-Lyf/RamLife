@@ -7,11 +7,15 @@ class ChangeNotifierListener<Model extends ChangeNotifier> extends StatefulWidge
   final Widget Function(BuildContext, Model, Widget) builder;
   final Widget child;
   final VoidCallback setup;
+
+  final bool dispose;
+
   const ChangeNotifierListener ({
     @required this.model,
     @required this.builder,
     this.child,
     this.setup,
+    this.dispose = true,
   });
 
   @override 
@@ -30,7 +34,7 @@ class ChangeNotifierState<Model extends ChangeNotifier> extends State<ChangeNoti
 
   @override void dispose() {
     model.removeListener(listener);
-    model.dispose();
+    if (widget.dispose) model.dispose();
     super.dispose();
   }
 
