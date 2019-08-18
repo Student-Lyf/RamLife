@@ -30,7 +30,7 @@ const Color BLUE_DARK = Color (0xFF00245F);
 const Color GOLD_DARK = Color (0XFFC19A00);
 const Color GOLD_LIGHT = Color (0XFFFFFD56);
 
-void main() async {
+void main({bool restart = false}) async {
 	// This shows a splash screen but secretly 
 	// determines the desired `platformBrightness`
 	Brightness brightness;
@@ -49,11 +49,31 @@ void main() async {
 	final SharedPreferences prefs = await SharedPreferences.getInstance();
 	final String dir = (await getApplicationDocumentsDirectory()).path;
 
-	// Now, actually initialize the backend services.
-	final ServicesCollection services = ServicesCollection(
-		reader: Reader(dir),
-		prefs: Preferences(prefs),
-	);
+	ServicesCollection services;
+	Reader reader;
+	bool ready;
+	try {
+		// Now, actually initialize the backend services.
+
+		// Reader is kept out of ServicesCollection so it can be used to reset
+		reader = Reader(dir);
+		services = ServicesCollection(
+			reader: reader,
+			prefs: Preferences(prefs),
+		);
+		
+		// To download, and login or go to main
+		ready = services.reader.ready && await Auth.ready();
+		if (ready) await initOnMain(services);
+	} catch (error) {
+		print ("Error on main.");
+		if (!restart) {
+			print ("Trying again...");
+			await Auth.signOut();
+			reader.deleteAll();
+			main(restart: true);
+		} else rethrow;
+	}
 	
 	// Determine the appropriate brightness. 
 	final bool savedBrightness = services.prefs.brightness;
@@ -61,10 +81,6 @@ void main() async {
 		? Brightness.light
 		: Brightness.dark;
 
-	// To download, and login or go to main
-	final bool ready = services.reader.ready && await Auth.ready();
-	if (ready) await initOnMain(services);
-	
 	// Register for FCM notifications. 
 	Future(
 		() => FCM.registerNotifications(services)
