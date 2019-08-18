@@ -8,10 +8,14 @@ class ServicesCollection {
 	final Reader reader;
 	final Preferences prefs;
 
-	final Notes notes;
+	Notes notes;
 
 	ServicesCollection({
 		@required this.reader,
 		@required this.prefs,
-	}) : notes = Notes (reader);
+	});
+
+	void init() {
+		notes = Notes (reader);
+	}
 }

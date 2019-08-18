@@ -69,6 +69,7 @@ void setToday(ServicesCollection services) {
 }
 
 Future<void> initOnMain(ServicesCollection services) async {
+	services.init();
 	final Reader reader = services.reader;
 	final Preferences prefs = services.prefs;
 	reader.student = Student.fromJson(reader.studentData);
@@ -105,7 +106,11 @@ Future<void> initOnLogin(ServicesCollection services, String email) async {
 	reader.subjects = subjects;
 	reader.calendarData = month;
 	reader.calendar = calendar;
-	reader.notesData = notesList;
+	reader.notesData = List<Map<String, dynamic>>.from(
+		notesList.map(
+			(dynamic json) => Map<String, dynamic>.from(json)
+		).toList()
+	);
 	services.prefs.lastCalendarUpdate = DateTime.now();
 	setToday(services);
 }
