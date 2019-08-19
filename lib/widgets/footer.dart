@@ -17,7 +17,11 @@ class Footer extends StatelessWidget {
 					onClosing: () {},
 					builder: (BuildContext context) => GestureDetector(
 						onTap: !schedule.notes.hasNote ? null : 
-							() => Navigator.of(context).pushReplacementNamed("home"),
+							() {
+								final NavigatorState nav = Navigator.of(context);
+								if (nav.canPop()) nav.pop();
+								nav.pushReplacementNamed("home");
+							},
 						child: SizedBox (
 							height: 70,
 							child: Align (
