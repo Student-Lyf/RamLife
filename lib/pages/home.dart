@@ -36,7 +36,7 @@ class HomePage extends StatelessWidget {
 							),
 						),
 					),
-					if (model.school) Builder (
+					if (model.schedule.hasSchool) Builder (
 						builder: (BuildContext context) => FlatButton(
 							child: Text ("Swipe left for schedule"),
 							textColor: Colors.white,
@@ -46,41 +46,39 @@ class HomePage extends StatelessWidget {
 				],
 			),
 			drawer: NavigationDrawer(),
-			endDrawer: !model.school ? null : Drawer (
+			endDrawer: !model.schedule.hasSchool ? null : Drawer (
 				child: ClassList(
-					noteModel: model.noteModel,
-					day: model.today,
-					periods: model.nextPeriod == null 
-						? model.reader.periods
-						: model.reader.periods.getRange (
-							(model.reader.periodIndex ?? -1) + 1, model.reader.periods.length
+					day: model.schedule.today,
+					periods: model.schedule.nextPeriod == null 
+						? model.schedule.periods
+						: model.schedule.periods.getRange (
+							(model.schedule.periodIndex ?? -1) + 1, 
+							model.schedule.periods.length
 						),
-					reader: model.reader,
-					headerText: model.period == null 
+					headerText: model.schedule.period == null 
 						? "Today's Schedule" 
 						: "Upcoming Classes"
 				)
 			),
 			body: RefreshIndicator (  // so you can refresh the period
-				onRefresh: model.updatePeriod,
+				onRefresh: () async => model.schedule.onNewPeriod(),
 				child: ListView (
 					children: [
 						RamazLogos.ram_rectangle,
 						Divider(),
 						Text (
-							model.school
-								? "Today is a${model.today.n} ${model.today.name}"
+							model.schedule.hasSchool
+								? "Today is a${model.schedule.today.n} "
+									"${model.schedule.today.name}"
 								: "There is no school today",
 							textScaleFactor: 2,
 							textAlign: TextAlign.center
 						),
 						SizedBox (height: 20),
-						if (model.school) NextClass(model: model),
+						if (model.schedule.hasSchool) NextClass(),
 						// if school won't be over, show the next class
-						if (model.nextPeriod != null) NextClass (
-							next: true,
-							model: model,
-						),
+						if (model.schedule.nextPeriod != null) 
+							NextClass (next: true),
 					]
 				)
 			)

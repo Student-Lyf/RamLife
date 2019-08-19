@@ -33,14 +33,8 @@ class NotesPage extends StatelessWidget {
 				: ListView.separated (
 					itemCount: model.notes.length,
 					separatorBuilder: (_, __) => Divider(),
-					itemBuilder: (BuildContext context, int index) => NoteTile(
-						note: model.notes [index],
-						onTap: () async => model.replaceNote(
-							index, 
-							await NotesBuilder.buildNote(context, model.notes [index]),
-						),
-						onDelete: () => model.deleteNote(index),
-					),
+					itemBuilder: (BuildContext context, int index) => 
+						NoteTile(index: index),
 				)
 		)
 	);

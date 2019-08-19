@@ -24,7 +24,8 @@ class SchedulePage extends StatelessWidget {
 	@override
 	Widget build (BuildContext context) => ChangeNotifierListener<ScheduleModel>(
 		model: () => ScheduleModel(services: Services.of(context).services),
-		builder: (BuildContext context, ScheduleModel model, Widget _) => Scaffold(
+		child: Footer(), 
+		builder: (BuildContext context, ScheduleModel model, Widget footer) => Scaffold(
 			appBar: AppBar (
 				title: Text ("Schedule"),
 				actions: canExit ? null : [
@@ -36,11 +37,7 @@ class SchedulePage extends StatelessWidget {
 					)
 				]
 			),
-			bottomNavigationBar: Footer (
-				period: model.reader.period,
-				subject: model.reader.subject,
-				note: model.noteModel.hasNote
-			),
+			bottomNavigationBar: footer,
 			floatingActionButton: Builder (
 				builder: (BuildContext context) => FloatingActionButton (
 					child: Icon (Icons.calendar_today),
@@ -79,13 +76,7 @@ class SchedulePage extends StatelessWidget {
 					SizedBox (height: 20),
 					Divider(),
 					SizedBox (height: 20),
-					Expanded (
-						child: ClassList(
-							noteModel: model.noteModel,
-							day: model.day, 
-							reader: model.reader
-						)
-					),
+					Expanded (child: ClassList(day: model.day)),
 				]
 			)
 		)
