@@ -88,7 +88,7 @@ class ClassList extends StatelessWidget {
 								);
 
 							if (period.id != null) 
-								info.add(period.id?.toString());
+								info.add("ID: " + period.id);
 
 							return ClassPanel (
 								children: info,
