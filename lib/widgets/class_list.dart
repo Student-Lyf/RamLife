@@ -92,10 +92,9 @@ class ClassList extends StatelessWidget {
 
 							return ClassPanel (
 								children: info,
-								title: (
-									"${period.period}"
-									"${int.tryParse (period.period) == null ? "" : ": "}"
-									"${period.getName(subject)}"
+								title: (int.tryParse(period.period) == null 
+									? period.getName(subject)
+									: "${period.period}: ${period.getName(subject)}"
 								),
 								notes: services.notes.getNotes(
 									period: period.period,
