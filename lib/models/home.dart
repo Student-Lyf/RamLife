@@ -26,6 +26,7 @@ class HomeModel with ChangeNotifier {
 	@override 
 	void dispose() {
 		notes.removeListener(notifyListeners);
+		schedule.removeListener(notifyListeners);
 		super.dispose();
 	}
 
