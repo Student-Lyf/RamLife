@@ -8,6 +8,7 @@ import "package:ramaz/pages/drawer.dart" show NavigationDrawer;
 import "package:ramaz/pages/notes_builder.dart";
 
 import "package:ramaz/widgets/note_tile.dart";
+import "package:ramaz/widgets/footer.dart";
 
 class NotesPage extends StatelessWidget {
 	@override 
@@ -15,8 +16,17 @@ class NotesPage extends StatelessWidget {
 		model: () => Services.of(context).notes,
 		dispose: false,
 		builder: (BuildContext context, Notes model, _) => Scaffold(
+			bottomNavigationBar: Footer(),
 			drawer: NavigationDrawer(),
-			appBar: AppBar(title: Text ("Notes")),
+			appBar: AppBar(
+				title: Text ("Notes"),
+				actions: [
+					IconButton(
+						icon: Icon (Icons.home),
+						onPressed: () => Navigator.of(context).pushReplacementNamed("home")
+					)
+				]
+			),
 			floatingActionButton: FloatingActionButton(
 				child: Icon (Icons.note_add),
 				onPressed: () async => 
