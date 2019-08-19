@@ -22,14 +22,14 @@ class SchedulePage extends StatelessWidget {
 		builder: (BuildContext context, ScheduleModel model, Widget footer) => Scaffold(
 			appBar: AppBar (
 				title: Text ("Schedule"),
-				actions: Navigator.of(context).canPop() ? null : [
-					IconButton (
-						icon: Icon (Icons.home),
-						onPressed: () => Navigator
-							.of(context)
-							.pushReplacementNamed("home")
-					)
-				]
+				actions: [
+					if (ModalRoute.of(context).isFirst)
+						IconButton (
+							icon: Icon (Icons.home),
+							onPressed: () => Navigator.of(context)
+								.pushReplacementNamed("home")
+						)
+				],
 			),
 			bottomNavigationBar: footer,
 			floatingActionButton: Builder (
@@ -38,7 +38,8 @@ class SchedulePage extends StatelessWidget {
 					onPressed: () => viewDay (model, context)
 				)
 			),
-			drawer: Navigator.of(context).canPop() ? null : NavigationDrawer(),
+			// drawer: Navigator.of(context).canPop() ? null : NavigationDrawer(),
+			drawer: ModalRoute.of(context).isFirst ? NavigationDrawer() : null,
 			body: Column (
 				children: [
 					ListTile (
