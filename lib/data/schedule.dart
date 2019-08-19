@@ -39,7 +39,7 @@ class Subject {
 		final String name = json ["name"], teacher = json ["teacher"];
 		if (name == null || teacher == null) 
 			throw JsonUnsupportedObjectError (json.toString());
-			// throw Error();
+			
 		return Subject (
 			name: name,
 			teacher: teacher,
