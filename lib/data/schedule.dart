@@ -63,8 +63,8 @@ class Subject {
 }
 
 class PeriodData {
-	static List<PeriodData> getList(List<Map<String, dynamic>> json) => json.map(
-		(Map<String, dynamic> periodJson) => PeriodData.fromJson(
+	static List<PeriodData> getList(List json) => json.map(
+		(periodJson) => PeriodData.fromJson(
 			periodJson?.cast<String, dynamic>()
 		)
 	).toList();
