@@ -46,6 +46,12 @@ class ScheduleModel with ChangeNotifier {
 		update();
 	}
 
+	@override
+	void dispose() {
+		notes.removeListener(notifyListeners);
+		super.dispose();
+	}
+
 	static Day getDay (Letters letter, Special special) => Day (
 		letter: letter,
 		special: special

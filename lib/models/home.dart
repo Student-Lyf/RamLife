@@ -23,6 +23,12 @@ class HomeModel with ChangeNotifier {
 		checkGoogleSupport();
 	}
 
+	@override 
+	void dispose() {
+		notes.removeListener(notifyListeners);
+		super.dispose();
+	}
+
 	void checkGoogleSupport() async {
 		googleSupport = await Auth.supportsGoogle();
 		notifyListeners();
