@@ -41,6 +41,7 @@ class Schedule with ChangeNotifier {
 	}
 
 	Subject get subject => subjects [period?.id];
+	bool get hasSchool => today.school;
 
 	void setToday() {
 		// Get rid of the time
@@ -78,21 +79,30 @@ class Schedule with ChangeNotifier {
 		periodIndex = today.period;
 		if (periodIndex == null) { // School ended
 			period = nextPeriod = null;
+			updateNotes();  // at least clear notes
 			notifyListeners();
 			return;
 		}
 
 		// Only here if there is school right now
 		period = periods [periodIndex];
-		if (periodIndex < periods.length - 1) 
+		if (periodIndex < periods.length - 1)
 			nextPeriod = periods [periodIndex + 1];
+		updateNotes();
 
 		notifyListeners();
 	}
 
-	void updateNotes() => notes.setNotes(
-		period: period?.period,
-		subject: subjects [period?.id]?.name,
-		letter: today.letter,
-	);
+	void updateNotes() {
+		notes.currentNotes = notes.getNotes(
+			period: period?.period,
+			subject: subjects [period?.id]?.name,
+			letter: today.letter,
+		);
+		notes.nextNotes = notes.getNotes(
+			period: nextPeriod?.period,
+			subject: subjects [nextPeriod?.id]?.name,
+			letter: today.letter,
+		);
+	}
 }

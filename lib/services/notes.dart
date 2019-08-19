@@ -10,26 +10,23 @@ class Notes with ChangeNotifier {
 	final Reader reader;
 	final List<Note> notes;
 
-	List<int> currentNotes;
+	List<int> currentNotes, nextNotes;
 
 	Notes(this.reader) : 
 		notes = Note.fromList (reader.notesData);
 
 	bool get hasNote => currentNotes.isNotEmpty;
 
-	void setNotes({
+	List<int> getNotes({
 		@required String subject,
 		@required String period,
 		@required Letters letter,
-	}) {
-		currentNotes = Note.getNotes(
-			notes: notes,
-			subject: subject,
-			letter: letter,
-			period: period,
-		).toList();
-		notifyListeners();
-	}
+	}) => Note.getNotes(
+		notes: notes,
+		subject: subject,
+		letter: letter,
+		period: period,
+	).toList();
 
 	void saveNotesToReader() {
 		reader.notesData = notes.map(
@@ -37,9 +34,27 @@ class Notes with ChangeNotifier {
 		).toList();
 	}
 
-	void updateNotes() {
+	void verifyNotes(int changedIndex) {
+		if (currentNotes != null) {
+			for (final int index in currentNotes) {
+				if (index == changedIndex) {
+					currentNotes.removeAt(index);
+				}
+			}
+		}
+		if (nextNotes != null) {
+			for (final int index in nextNotes) {
+				if (index == changedIndex) {
+					nextNotes.removeAt(index);
+				}
+			}
+		}
+	}
+
+	void updateNotes([int changedIndex]) {
 		Firestore.saveNotes(notes);  // upload to firestore
 		saveNotesToReader();
+		verifyNotes(changedIndex);
 		notifyListeners();
 	}
 
