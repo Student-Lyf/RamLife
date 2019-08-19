@@ -1,85 +1,65 @@
 import "package:flutter/material.dart";
-import "package:flutter/foundation.dart";
 
 import "package:ramaz/constants.dart" show SCHEDULE, CAN_EXIT;
 
+import "package:ramaz/services/schedule.dart";
+
 import "package:ramaz/data/schedule.dart";
 
-import "package:ramaz/services/notes.dart";
-
-import "package:ramaz/pages/notes_builder.dart";
 import "package:ramaz/widgets/info_card.dart";
 import "package:ramaz/widgets/note_tile.dart";
-
-import "package:ramaz/models/home.dart";
-
+import "package:ramaz/widgets/services.dart";
+import "package:ramaz/widgets/change_notifier_listener.dart";
 
 class NextClass extends StatelessWidget {
-	static final TextStyle white = TextStyle (
+	static const TextStyle white = TextStyle (
 		color: Colors.white
 	);
+	static const double notePadding = 10;
 
-	final Period period;
-	final Subject subject;
-	final Notes notesModel;
-	final HomeModel model;
-	final List<int> notes;
 	final bool next;
 
-	NextClass({
-		@required this.model,
-		this.next = false,
-	}) :
-		period = next ? model.nextPeriod : model.period,
-		subject = model.reader.subjects [
-			(next ? model.nextPeriod : model.period)?.id
-		],
-		notesModel = Notes(model.services.reader),
-		notes = next ? model.nextNotes : model.currentNotes;
+	NextClass({this.next = false});
 
-	@override Widget build (BuildContext context) {
-		final Widget child = InfoCard (
-			icon: next ? Icons.restore : Icons.school,
-			title: period == null
-				? "School is over"
-				: "${next ? 'Next' : 'Current'} period: ${subject?.name ?? period.period}",
-			children: period?.getInfo(subject),
-			page: SCHEDULE + CAN_EXIT
-		);
+	@override 
+	Widget build (BuildContext context) => ChangeNotifierListener(
+		model: () => Services.of(context).schedule,
+		dispose: false,
+		builder: (BuildContext context, Schedule schedule, Widget child) {
+			final Period period = next ? schedule.nextPeriod : schedule.period;
+			final Subject subject = schedule.subjects [period?.id];
+			final List<int> notes = next 
+				? schedule.notes.nextNotes 
+				: schedule.notes.currentNotes;
 
-		return notes.isEmpty ? child : Column (
-			children: <Widget>[
-				child, 
-				...(
-					notes.map(
+			return Column(
+				children: [
+					InfoCard (
+						icon: next ? Icons.restore : Icons.school,
+						children: period?.getInfo(subject),
+						page: SCHEDULE + CAN_EXIT,
+						title: period == null
+							? "School is over"
+							: "${next ? 'Next' : 'Current'} period: " 
+								+ (subject?.name ?? period.period),
+					),
+
+					...notes.map(
 						(int index) => Padding (
-							padding: EdgeInsets.symmetric(horizontal: 10), 
+							padding: EdgeInsets.symmetric(horizontal: notePadding),
 							child: Container (
-								foregroundDecoration: ShapeDecoration (
+								foregroundDecoration: ShapeDecoration(
 									shape: RoundedRectangleBorder(
 										side: BorderSide(color: Theme.of(context).primaryColor),
-										borderRadius: BorderRadius.circular (20),
-									),
-								),
-								child: StatefulBuilder(
-									builder: (_, StateSetter setState) => NoteTile(
-										note: notesModel.notes [index], 
-										onTap: () async {
-											await notesModel.replaceNote(
-												index,
-												await NotesBuilder.buildNote(
-													context, notesModel.notes [index]),
-											);
-											setState(() {});
-										},
-										onDelete: () => model.noteModel.deleteNote(index),
+										borderRadius:  BorderRadius.circular (20),
 									)
-								)
+								),
+								child: NoteTile(index: index),
 							)
 						)
 					)
-				)
-			]
-		);
-	}
+				]
+			);
+		}
+	);
 }

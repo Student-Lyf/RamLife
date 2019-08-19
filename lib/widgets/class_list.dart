@@ -1,26 +1,22 @@
 import "package:flutter/material.dart";
 
 import "package:ramaz/data/schedule.dart" show Period, Subject, Day;
-import "package:ramaz/data/note.dart";
 
 import "package:ramaz/services/notes.dart";
-import "package:ramaz/services/reader.dart";
 
+import "package:ramaz/widgets/services.dart";
 import "package:ramaz/widgets/note_tile.dart";
-import "package:ramaz/pages/notes_builder.dart";
+import "package:ramaz/widgets/change_notifier_listener.dart";
 
 class ClassPanel extends StatelessWidget {
-	final String title, id;
-	final List<Widget> children;
+	final String title;
+	final List<String> children;
 	final List<int> notes;
-	final Notes editor;
 
 	const ClassPanel ({
 		@required this.title,
 		@required this.children,
-		@required this.id,
-		@required this.editor,
-		this.notes,
+		@required this.notes,
 	});
 
 	@override Widget build (BuildContext context) => ExpansionTile (
@@ -32,30 +28,20 @@ class ClassPanel extends StatelessWidget {
 					alignment: Alignment.centerLeft,					
 					child: Column (
 						crossAxisAlignment: CrossAxisAlignment.start,
-						children: <Widget>[
-							...children, 
-							if (id != null) Text ("ID: $id")
-						].map<Widget> (
-							(Widget child) => Padding (
-								padding: const EdgeInsets.symmetric(vertical: 5),
-								child: child
-							) 
-						).toList() + (
-							notes.map(
+						children: [
+							...children.map(
+								(String text) => Padding (
+									padding: const EdgeInsets.symmetric(vertical: 5),
+									child: Text (text)
+								)
+							),
+							...notes.map(
 								(int index) => NoteTile (
-									note: editor.notes [index],
-									onTap: () async => editor.replaceNote(
-										index, 
-										await NotesBuilder.buildNote(
-											context, 
-											editor.notes [index],
-										),
-									),
-									onDelete: () => editor.deleteNote(index),
+									index: index,
 									height: 60,
 								)
-							).toList()
-						)
+							),
+						]
 					)
 				)
 			)
@@ -63,87 +49,64 @@ class ClassPanel extends StatelessWidget {
 	);
 }
 
-class ClassList extends StatefulWidget {
+class ClassList extends StatelessWidget {
 	final Day day;
 	final Iterable<Period> periods;
-	final String headerText;
-	final Reader reader;
-	final Notes noteModel;
 
-	ClassList ({
+	final String headerText;
+
+	const ClassList ({
 		@required this.day, 
-		@required this.reader,
-		@required this.noteModel,
 		this.headerText,
 		this.periods,
 	});
 
-	@override 
-	ClassListState createState() => ClassListState();
-}
+	@override Widget build(BuildContext context) => ChangeNotifierListener<Notes>(
+		model: () => Services.of(context).notes,
+		dispose: false,
+		child: DrawerHeader (
+			child: Center (
+				child: Text (
+					headerText ?? "",
+					textScaleFactor: 2,
+					textAlign: TextAlign.center,
+				)
+			)
+		),
+		builder: (BuildContext context, Notes notes, Widget header) {
+			final Services services = Services.of(context);
+			return ListView (
+				shrinkWrap: true,
+				children: [
+					if (headerText != null) header,
+					...(periods ?? services.schedule.student.getPeriods(day)).map(
+						(Period period) {
+							final Subject subject = services.schedule.subjects[period.id];
+							final List<String> info = period.getInfo(subject)
+								..removeWhere(  // period.name already has the period number
+									(String description) => description.startsWith("Period:")
+								);
 
-class ClassListState extends State<ClassList> {
-	Iterable<Period> periods;
+							if (period.id != null) 
+								info.add(period.id?.toString());
 
-	void listener() => setState (() {});
-
-	@override 
-	void initState() {
-		super.initState();
-		periods = widget.periods ?? widget.reader.student.getPeriods(widget.day);
-		widget.noteModel.addListener(listener);
-	}
-
-	@override 
-	void dispose() {
-		widget.noteModel.removeListener(listener);
-		super.dispose();
-	}
-
-	@override 
-	Widget build (BuildContext context) => ListView (
-		shrinkWrap: true,
-		children: [
-			if (widget.headerText != null) 
-				DrawerHeader (
-					child: Center (
-						child: Text (
-							widget.headerText,
-							textScaleFactor: 2,
-							textAlign: TextAlign.center,
-						)
+							return ClassPanel (
+								children: info,
+								title: (
+									"${period.period}"
+									"${int.tryParse (period.period) == null ? "" : ": "}"
+									"${period.getName(subject)}"
+								),
+								notes: services.notes.getNotes(
+									period: period.period,
+									letter: day.letter,
+									subject: subject?.name,
+								),
+							);
+						}
 					)
-				),
-			...periods.map (
-				(Period period) {
-					final Subject subject = widget.reader.subjects[period.id];
-					final List<String> info = period.getInfo(subject);
-					// ListTile has the period number, so get rid of it
-					info.removeWhere(
-						(String description) => description.startsWith("Period:")
-					);
-
-					final List<int> notes = Note.getNotes(
-						period: period.period,
-						letter: widget.day.letter,
-						subject: subject,
-						notes: widget.noteModel.notes,
-					).toList();
-					return ClassPanel (
-						notes: notes,
-						title: (
-							"${period.period}"
-							"${int.tryParse (period.period) == null ? "" : ": "}"
-							"${period.getName(subject)}"
-						),
-						id: period.id,
-						children: info.map (
-							(String description) => Text (description)
-						).toList(),
-						editor: widget.noteModel,
-					);
-				}
-			).toList()
-		]
+				]
+			);
+		}
 	);
 }
