@@ -117,25 +117,20 @@ class Period {
 		@required this.id,
 	});
 
-	factory Period (
+	Period (
 		PeriodData data,
 		{@required Range time, @required String period}
-	) => Period._ (
-		time: time, 
-		room: data.room,
-		period: period,
-		id: data.id
-	);
+	) : 
+		time = time,
+		room = data.room,
+		period = period,
+		id = data.id;
 
-	factory Period.mincha (Range time) => Period (
-		PeriodData (
-			room: null,
-			id: null,
-		),
-		period: "Mincha",
-		time: time
-	);
-
+	const Period.mincha (Range time) :
+		room = null,
+		id = null,
+		time = time,
+		period = "Mincha";
 
 	@override String toString() => "Period $period";
 	@override operator == (other) => (
@@ -146,11 +141,9 @@ class Period {
 		other.id == id
 	);
 
-	String getName(Subject subject) => 
-		int.tryParse (period) != null && id == null
-			? "Free period"
-			: subject?.name ?? "";
-
+	String getName(Subject subject) => int.tryParse(period) != null && id == null
+		? "Free period"
+		: subject?.name ?? period;
 
 	List <String> getInfo (Subject subject) => [
 		"Time: $time",
