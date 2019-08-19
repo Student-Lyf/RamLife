@@ -172,7 +172,6 @@ class MainAppState extends State<RamazApp> {
 					LOGIN: (_) => Login(),
 					HOME_PAGE: (_) => HomePage(),
 					SCHEDULE: (_) => SchedulePage(),
-					SCHEDULE + CAN_EXIT: (_) => SchedulePage (canExit: true),
 					NOTES: (_) => NotesPage(),
 					// NEWS: placeholder (widget.prefs, "News"),
 					// LOST_AND_FOUND: placeholder (widget.prefs, "Lost and found"),

@@ -1,7 +1,5 @@
 import "package:flutter/material.dart";
 
-// import "package:ramaz/services/preferences.dart";
-// import "package:ramaz/services/reader.dart";
 import "package:ramaz/widgets/services.dart";
 
 import "package:ramaz/models/schedule.dart";
@@ -15,11 +13,7 @@ import "package:ramaz/widgets/class_list.dart";
 import "package:ramaz/widgets/date_picker.dart" show pickDate;
 
 class SchedulePage extends StatelessWidget {
-	final bool canExit;
-
-	SchedulePage ({
-		this.canExit = false
-	});
+	const SchedulePage();
 
 	@override
 	Widget build (BuildContext context) => ChangeNotifierListener<ScheduleModel>(
@@ -28,7 +22,7 @@ class SchedulePage extends StatelessWidget {
 		builder: (BuildContext context, ScheduleModel model, Widget footer) => Scaffold(
 			appBar: AppBar (
 				title: Text ("Schedule"),
-				actions: canExit ? null : [
+				actions: Navigator.of(context).canPop() ? null : [
 					IconButton (
 						icon: Icon (Icons.home),
 						onPressed: () => Navigator
@@ -44,7 +38,7 @@ class SchedulePage extends StatelessWidget {
 					onPressed: () => viewDay (model, context)
 				)
 			),
-			drawer: canExit ? null : NavigationDrawer(),
+			drawer: Navigator.of(context).canPop() ? null : NavigationDrawer(),
 			body: Column (
 				children: [
 					ListTile (

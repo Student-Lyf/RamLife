@@ -1,6 +1,6 @@
 import "package:flutter/material.dart";
 
-import "package:ramaz/constants.dart" show SCHEDULE, CAN_EXIT;
+import "package:ramaz/constants.dart" show SCHEDULE;
 
 import "package:ramaz/services/schedule.dart";
 
@@ -37,7 +37,7 @@ class NextClass extends StatelessWidget {
 					InfoCard (
 						icon: next ? Icons.restore : Icons.school,
 						children: period?.getInfo(subject),
-						page: SCHEDULE + CAN_EXIT,
+						page: SCHEDULE,
 						title: period == null
 							? "School is over"
 							: "${next ? 'Next' : 'Current'} period: " 
