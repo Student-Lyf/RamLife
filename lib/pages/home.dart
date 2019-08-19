@@ -12,6 +12,8 @@ import "package:ramaz/widgets/next_class.dart";
 import "package:ramaz/widgets/icons.dart";
 
 class HomePage extends StatelessWidget {
+	const HomePage();
+
 	@override 
 	Widget build (BuildContext context) => ChangeNotifierListener<HomeModel>(
 		model: () => HomeModel(Services.of(context).services),
