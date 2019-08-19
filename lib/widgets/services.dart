@@ -14,8 +14,6 @@ class Services extends InheritedWidget {
 	final ServicesCollection services;
 	final Reader reader;
 	final Preferences prefs;
-	final Notes notes;
-	final Schedule schedule;
 
 	Services({
 		this.services,
@@ -23,9 +21,10 @@ class Services extends InheritedWidget {
 	}) :
 		reader = services.reader,
 		prefs = services.prefs,
-		notes = services.notes,
-		schedule = services.schedule,
 		super (child: child);
+
+	Notes get notes => services.notes;
+	Schedule get schedule => services.schedule;
 
 	/// This instance will never be rebuilt with new data
 	@override
