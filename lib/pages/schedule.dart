@@ -38,7 +38,6 @@ class SchedulePage extends StatelessWidget {
 					onPressed: () => viewDay (model, context)
 				)
 			),
-			// drawer: Navigator.of(context).canPop() ? null : NavigationDrawer(),
 			drawer: ModalRoute.of(context).isFirst ? NavigationDrawer() : null,
 			body: Column (
 				children: [
