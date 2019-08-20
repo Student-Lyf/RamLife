@@ -31,6 +31,7 @@ class NotesBuilderModel with ChangeNotifier {
 		message = note.message;
 		time = note.time;	
 
+		shouldRepeat = time.repeats;
 		type = time.type;
 		switch (type) {
 			case NoteTimeType.period: 
