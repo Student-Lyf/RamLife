@@ -6,5 +6,9 @@
         <item name="android:windowBackground">
         	@mipmap/splash_screen
 	      </item>
+	      <item name="android:defaultFocusHighlightEnabled">
+	      	false
+	      </item>
     </style>
+
 </resources>
