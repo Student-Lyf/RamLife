@@ -32,7 +32,7 @@ class NoteTile extends StatelessWidget {
 					final Note note = notes.notes [index];
 					return ListTile(
 						title: Text (note.message),
-						subtitle: Text (note.repeat?.toString() ?? ""),
+						subtitle: Text (note.time.toString() ?? ""),
 						onTap: () async => notes.replaceNote(
 							index, 
 							await NotesBuilder.buildNote(context, note),

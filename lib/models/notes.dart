@@ -1,22 +1,22 @@
 import "package:flutter/foundation.dart";
 
-import "package:ramaz/services/schedule.dart" as ScheduleTracker;
+import "package:ramaz/services/schedule.dart";
 import "package:ramaz/services/services.dart";
 
 import "package:ramaz/data/note.dart";
 import "package:ramaz/data/schedule.dart";
 
 class NotesBuilderModel with ChangeNotifier {
-	final ScheduleTracker.Schedule schedule;
+	final Schedule schedule;
 
-	RepeatableType type;
-	Repeatable repeat;
-	Day day;
+	NoteTimeType type;
+	NoteTime time;
 
 	String message = "";
 	bool shouldRepeat = false;
 
 	// For RepeatablePeriod
+	Day day;
 	String period;
 
 	// For RepeatableSubject
@@ -29,41 +29,39 @@ class NotesBuilderModel with ChangeNotifier {
 		if (note == null) return;
 
 		message = note.message;
-		repeat = note.repeat;	
-		shouldRepeat = repeat != null;
-		if (repeat == null) return;
+		time = note.time;	
 
-		type = repeat.type;
+		type = time.type;
 		switch (type) {
-			case RepeatableType.period: 
-				period = (repeat as RepeatablePeriod).period;
-				day = Day (letter: (repeat as RepeatablePeriod).letter);
+			case NoteTimeType.period: 
+				period = (time as PeriodNoteTime).period;
+				day = Day (letter: (time as PeriodNoteTime).letter);
 				break;
-			case RepeatableType.subject:
-				name = (repeat as RepeatableSubject).name;
+			case NoteTimeType.subject:
+				name = (time as SubjectNoteTime).name;
 				break;
 			default: 
-				throw ArgumentError.notNull("Note.repeat.type");
+				throw ArgumentError.notNull("Note.time.type");
 		}
 	}
 
 	Note build() => Note (
 		message: message, 
-		repeat: !shouldRepeat ? null : Repeatable.fromType(
+		time: NoteTime.fromType(
 			type: type,
 			letter: letter,
 			period: period,
-			course: name,
+			name: name,
+			repeats: shouldRepeat,
 		),
 	);
 
 	bool get ready => (
-		(message?.isNotEmpty ?? false) &&
-		(!shouldRepeat || type != null) &&
-		(type != RepeatableType.period ||
+		(message?.isNotEmpty ?? false) && type != null && 
+		(type != NoteTimeType.period ||
 			(day?.letter != null && period != null)
 		) && (
-			type != RepeatableType.subject || name != null			
+			type != NoteTimeType.subject || name != null			
 		)
 	);
 
@@ -88,13 +86,14 @@ class NotesBuilderModel with ChangeNotifier {
 		notifyListeners();
 	}
 
-	void toggleRepeatType(RepeatableType value) {
+	void toggleRepeatType(NoteTimeType value) {
 		type = value;
 		notifyListeners();
 	}
 
 	void changeLetter(Letters value) {
 		day = Day (letter: value);
+		period = null;
 		notifyListeners();
 	}
 
