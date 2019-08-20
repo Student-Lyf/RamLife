@@ -20,7 +20,14 @@ class ClassPanel extends StatelessWidget {
 	});
 
 	@override Widget build (BuildContext context) => ExpansionTile (
-		title: Text (title),
+		title: Row (
+			mainAxisAlignment: MainAxisAlignment.spaceBetween,
+			children: [
+				Text (title),
+				if (notes.isNotEmpty)
+					Icon (Icons.note)
+			]
+		),
 		children: [
 			Padding (
 				padding: EdgeInsets.only(left: 30),
