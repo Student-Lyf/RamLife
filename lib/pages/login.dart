@@ -160,7 +160,10 @@ class LoginState extends State<Login> {
 		onSuccess: () async {
 			loadingNotifier.value = true;
 			final String email = await Auth.getEmail();
-			if (email == null) return;
+			if (email == null) {
+				loadingNotifier.value = false;
+				return;
+			}
 			await downloadData(email.toLowerCase(), scaffoldContext);
 		},
 		scaffoldContext: scaffoldContext,
