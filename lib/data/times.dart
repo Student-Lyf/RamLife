@@ -126,7 +126,10 @@ class Special {
 		} else if (month == WINTER_FRIDAY_MONTH_END) {
 			if (day < WINTER_FRIDAY_DAY_END) return winterFriday;
 			else return friday;
-		} else throw "Cannot get friday schedule for summer month ($month)";
+		} else {
+			print ("Tasked to find winter friday for the summer, assuming regular");
+			return friday;
+		}
 	}
 
 	@override String toString() => name;
