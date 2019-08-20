@@ -76,7 +76,9 @@ class Schedule with ChangeNotifier {
 		}
 
 		// So we have school today...
-		periodIndex = today.period;
+		final int newIndex = today.period;
+		if (newIndex != periodIndex) cleanNotes();
+		periodIndex = newIndex;
 		if (periodIndex == null) { // School ended
 			period = nextPeriod = null;
 			updateNotes();  // at least clear notes
@@ -93,16 +95,27 @@ class Schedule with ChangeNotifier {
 		notifyListeners();
 	}
 
-	void updateNotes() {
-		notes.currentNotes = notes.getNotes(
+	void cleanNotes() {
+		// We cannot change the length of a list
+		// while iterating over it
+		final List<int> toRemove = [];
+		for (final int index in notes.currentNotes) {
+			if (!notes.notes [index].time.repeats) 
+				toRemove.add (index);
+		}
+		for (final int index in toRemove) 
+			notes.deleteNote(index);
+	}
+
+	void updateNotes() => notes
+		..currentNotes = notes.getNotes(
 			period: period?.period,
 			subject: subjects [period?.id]?.name,
 			letter: today.letter,
-		);
-		notes.nextNotes = notes.getNotes(
+		)
+		..nextNotes = notes.getNotes(
 			period: nextPeriod?.period,
 			subject: subjects [nextPeriod?.id]?.name,
 			letter: today.letter,
 		);
-	}
 }
