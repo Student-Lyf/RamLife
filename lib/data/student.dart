@@ -1,13 +1,39 @@
+/// {@category Data}
+library student;
+
 import "package:flutter/foundation.dart";
 import "dart:convert" show JsonUnsupportedObjectError;
 
 import "schedule.dart";
 import "times.dart";
 
+/// A representation of a student. 
+/// 
+/// This object holds their schedule, and is a convenience class for getting 
+/// their schedule, as well as some other noteable data, such as when and where
+/// to meet for homeroom. 
+/// 
+/// This class uses data from the `students` collection in the database.
+@immutable
 class Student {
+	/// This student's schedule.
+	/// 
+	/// Each key is a different day, and the value is a list of periods. 
+	/// See [Letters] and [PeriodData] for more information.
 	final Map <Letters, List<PeriodData>> schedule;
-	final String homeroomLocation, homeroom;
 
+	/// The rooom for this students homeroom. 
+	/// 
+	/// This is not stored with other [PeriodData]s in the database, 
+	/// so it is more convenient to extract it and keep here. 
+	final String homeroomLocation;
+
+	/// The id of this student's advisory group. 
+	/// 
+	/// This can be used to get the student's advisor. 
+	final String homeroom;
+
+	/// `const` constructor for a student.
 	const Student ({
 		@required this.schedule,
 		@required this.homeroomLocation,
@@ -21,6 +47,9 @@ class Student {
 		other.homeroomLocation == homeroomLocation
 	);
 
+	/// Returns a [Student] from a JSON object.
+	/// 
+	/// Needs to be a factory so there can be proper error checking.
 	factory Student.fromJson (Map<String, dynamic> json) {
 		// Fun Fact: ALl this is error checking. 
 		// Your welcome. 
@@ -67,6 +96,10 @@ class Student {
 		);
 	}
 
+	/// Returns the schedule for this student on a given day. 
+	/// 
+	/// Iterates over the entry for [Day.letter] in [schedule], and converts the
+	/// [PeriodData]s to [Period] objects using the [Range]s in [Day.special]. 
 	List <Period> getPeriods (Day day) {
 		final List <Period> result = [];
 		if (!day.school) return result;
@@ -110,7 +143,8 @@ class Student {
 		return result;
 	}
 
+	/// Returns a [PeriodData] for this student's homeroom period on a given day.
 	PeriodData getHomeroom(Day day) => day.letter == Letters.B 
 		? PeriodData (room: homeroomLocation, id: homeroom) 
-		: PeriodData.free();
+		: PeriodData.free;
 }

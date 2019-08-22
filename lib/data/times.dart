@@ -1,16 +1,40 @@
-// winter fridays
-import "package:flutter/foundation.dart" show required;
+/// A collection of dataclasses to sufficiently represent time for a student. 
+/// {@category Data}
+library time;
+
+import "package:flutter/foundation.dart";
 import "package:ramaz/mock/times.dart";  // for winter friday times
 
+/// The hour and minute representation of a time. 
+/// 
+/// This is used instead of [Flutter's TimeOfDay](https://api.flutter.dev/flutter/material/TimeOfDay-class.html)
+/// to provide the `>` and `<` operators. 
+@immutable
 class Time {
+	/// Defines the order of the hours in terms of the school day. 
+	/// 
+	/// Numbers on this clock ignore AM and PM by finding their index in this
+	/// list instead. Numbers not in this list are considered to be invalid, 
+	/// since they are not real school hours. 
 	static const List <int> clock = [
 		8, 9, 10, 11, 12, 1, 2, 3, 4, 5
 	];
 
-	final int hour, minutes;
+	/// The hour in 12-hour format. 
+	final int hour;
 
+	/// The minutes. 
+	final int minutes;
+
+	/// A const constructor.
 	const Time (this.hour, this.minutes);
 
+	/// Simplifies a [DateTime] object to a [Time].
+	/// 
+	/// If the hour is outside of the values listed in [clock], it is set to 5.
+	/// This is to demonstrate that it is after school. 
+	/// 
+	/// When after-school events are introduced, this should be fixed. 
 	factory Time.fromDateTime (DateTime date) {
 		int hour = date.hour;
 		if (hour >= 17 || hour < 8) hour = 5;  // garbage value
@@ -18,42 +42,63 @@ class Time {
 		return Time (hour, date.minute);
 	}
 
-	int get hashCode => [hour, minutes].hashCode;
-
+	@override
 	operator == (dynamic other) => (
 		other.runtimeType == Time && 
 		other.hour == this.hour && 
 		other.minutes == this.minutes
 	);
 
+	/// Returns whether this [Time] is before another [Time].
 	operator < (Time other) => (
 		clock.indexOf (hour) < clock.indexOf (other.hour) || 
 		(this.hour == other.hour && this.minutes < other.minutes)
 	);
+
+	/// Returns whether this [Time] is at or before another [Time].
 	operator <= (Time other) => this < other || this == other;
 
+	/// Returns whether this [Time] is after another [Time].
 	operator > (Time other) => (
 		clock.indexOf (hour) > clock.indexOf (other.hour) ||
 		(this.hour == other.hour && this.minutes > other.minutes)
 	);
+
+	/// Returns whether this [Time] is at or after another [Time].
 	operator >= (Time other) => this > other || this == other;
 
-	@override String toString() => "$hour:${minutes.toString().padLeft(2, '0')}";
+	@override 
+	String toString() => "$hour:${minutes.toString().padLeft(2, '0')}";
 }
 
+/// A range of times.
+@immutable
 class Range {
-	final Time start, end;
+	/// When this range starts.
+	final Time start;
+
+	/// When this range ends.
+	final Time end;
+
+	/// Provides a const constructor.
 	const Range (this.start, this.end);
 
-	factory Range.nums (int start1, int end1, int start2, int end2) => Range (
-		Time (start1, end1), 
-		Time (start2, end2),
-	);
+	/// Convenience method for manually creating a range by hand.
+	Range.nums (
+		int startHour, 
+		int startMinute, 
+		int endHour, 
+		int endMinute
+	) : 
+		start = Time (startHour, startMinute), 
+		end = Time (endHour, endMinute);
 
+	/// Returns whether [other] is in this range. 
 	bool contains (Time other) => start <= other && other <= end;
 
 	@override String toString() => "$start-$end";
 
+	/// Returns whether this range is before another range.
 	operator < (Time other) => (
 		this.end.hour < other.hour ||
 		(
@@ -62,6 +107,7 @@ class Range {
 		)
 	);
 
+	/// Returns whether this range is after another range.
 	operator > (Time other) => (
 		this.start.hour > other.hour ||
 		(
@@ -71,32 +117,54 @@ class Range {
 	);
 }
 
-class SchoolEvent {
-	// A class to represent the time for a school event
-	final Range time;
-	final int year, month, day;
-	const SchoolEvent ({
-		@required this.year,
-		@required this.month,
-		@required this.day,
-		@required this.time
-	});
+// /// 
+// @immutable
+// class SchoolEvent {
+// 	// A class to represent the time for a school event
+// 	final Range time;
+// 	final int year, month, day;
+// 	const SchoolEvent ({
+// 		@required this.year,
+// 		@required this.month,
+// 		@required this.day,
+// 		@required this.time
+// 	});
 
-	operator < (DateTime other) => DateTime.utc(  // event is in the past
-		year, month, day, time.end.hour, time.end.minutes
-	).isBefore(other);
+// 	operator < (DateTime other) => DateTime.utc(  // event is in the past
+// 		year, month, day, time.end.hour, time.end.minutes
+// 	).isBefore(other);
 
-	operator > (DateTime other) => DateTime.utc(  // event is upcoming
-		year, month, day, time.start.hour, time.start.minutes
-	).isAfter(other);
-}
+// 	operator > (DateTime other) => DateTime.utc(  // event is upcoming
+// 		year, month, day, time.start.hour, time.start.minutes
+// 	).isAfter(other);
+// }
 
+/// A description of the time allotment for a day. 
+/// 
+/// Some days require different time periods, or even periods that 
+/// are skipped altogether, as well as homeroom and mincha movements.
+/// This class helps facilitate that. 
+@immutable
 class Special {
+	/// The name of this special. 
 	final String name;
+	
+	/// The time allotments for the periods. 
 	final List <Range> periods;
-	final List<int> skip;
-	final int mincha, homeroom;
 
+	/// The indices of periods to skip. 
+	/// 
+	/// For example, on fast days, all lunch periods are skipped.
+	/// So here, skip would be `[6, 7, 8]`, to skip 6th, 7th and 8th periods.
+	final List<int> skip;
+
+	/// The index in [periods] that represents mincha.
+	final int mincha;
+	
+	/// The index in [periods] that represents homeroom.
+	final int homeroom;
+
+	/// A const constructor.
 	const Special (
 		this.name, 
 		this.periods, 
@@ -107,6 +175,9 @@ class Special {
 		}
 	);
 
+	/// Determines whether to use a Winter Friday or regular Friday schedule. 
+	/// 
+	/// Winter Fridays mean shorter periods, with an ultimately shorter dismissal.
 	static Special getWinterFriday() {
 		final DateTime today = DateTime.now();
 		final int month = today.month, day = today.day;
@@ -139,6 +210,7 @@ class Special {
 	);
 }
 
+/// The [Special] for Rosh Chodesh
 const Special roshChodesh = Special (
 	"Rosh Chodesh", 
 	[
@@ -160,6 +232,7 @@ const Special roshChodesh = Special (
 	mincha: 10,
 );
 
+/// The [Special] for fast days. 
 const Special fastDay = Special (
 	"Tzom",
 	[
@@ -177,6 +250,7 @@ const Special fastDay = Special (
 	skip: const [6, 7, 8]
 );
 
+/// The [Special] for Fridays. 
 const Special friday = Special (
 	"Friday",
 	[
@@ -192,6 +266,7 @@ const Special friday = Special (
 	homeroom: 4
 );
 
+/// The [Special] for when Rosh Chodesh falls on a Friday. 
 const Special fridayRoshChodesh = Special (
 	"Friday Rosh Chodesh",
 	[
@@ -207,6 +282,7 @@ const Special fridayRoshChodesh = Special (
 	homeroom: 4
 );
 
+/// The [Special] for a winter Friday. See [Special.getWinterFriday].
 const Special winterFriday = Special (
 	"Winter Friday",
 	[
@@ -222,6 +298,7 @@ const Special winterFriday = Special (
 	homeroom: 4
 );
 
+/// The [Special] for when a Rosh Chodesh falls on a winter Friday.
 const Special winterFridayRoshChodesh = Special (
 	"Winter Friday Rosh Chodesh",
 	[
@@ -237,6 +314,7 @@ const Special winterFridayRoshChodesh = Special (
 	homeroom: 4
 );
 
+/// The [Special] for when there is an assembly during Homeroom.
 const Special amAssembly = Special (
 	"AM Assembly",
 	[
@@ -255,9 +333,11 @@ const Special amAssembly = Special (
 		Range(Time (4, 05), Time (4, 45))
 	],
 	homeroom: 3,
+
 	mincha: 10
 );
 
+/// The [Special] for when there is an assembly during Mincha.
 const Special pmAssembly = Special (
 	"PM Assembly",
 	[
@@ -277,6 +357,7 @@ const Special pmAssembly = Special (
 	mincha: 9
 );
 
+/// The [Special] for Mondays and Thursdays.
 const Special regular = Special (
 	"M or R day",
 	[
@@ -298,6 +379,7 @@ const Special regular = Special (
 	mincha: 10
 );
 
+/// The [Special] for Tuesday and Wednesday (letters A, B, and C)
 const Special rotate = Special (
 	"A, B, or C day",
 	[
@@ -319,6 +401,7 @@ const Special rotate = Special (
 	mincha: 10
 );
 
+/// The [Special] for an early dismissal.
 const Special early = Special (
 	"Early Dismissal",
 	[
@@ -340,6 +423,9 @@ const Special early = Special (
 	mincha: 10
 );
 
+/// A collection of all the [Special]s
+/// 
+/// Used in the UI
 const List<Special> specials = [
 	regular,
 	roshChodesh,
