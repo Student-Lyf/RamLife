@@ -160,18 +160,14 @@ class Note {
 	final String message;
 	final NoteTime time;
 
-	bool shown;
-
 	Note({
 		@required this.message,
 		this.time,
-		this.shown = false,
 	});
 
 	factory Note.fromJson(Map<String, dynamic> json) => Note (
 		message: json ["message"],
 		time: NoteTime.fromJson(json ["time"]),
-		shown: json ["shown"],
 	);
 
 	@override String toString() => "$message ($time)";
@@ -179,6 +175,5 @@ class Note {
 	Map<String, dynamic> toJson() => {
 		"message": message,
 		"time": time.toJson(),
-		"shown": shown,
 	};
 }

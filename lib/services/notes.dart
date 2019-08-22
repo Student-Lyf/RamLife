@@ -10,17 +10,17 @@ class Notes with ChangeNotifier {
 	final Reader reader;
 	final List<Note> notes;
 
-	List<int> currentNotes, nextNotes;
+	List<int> currentNotes, nextNotes, readNotes;
 
 	Notes(this.reader) : 
+		readNotes = reader.readNotes,
 		notes = Note.fromList (reader.notesData);
 
 	bool get hasNote => currentNotes.isNotEmpty;
 	set shown (int index) {
-		final Note note = notes [index];
-		if (note.shown) return;
-		notes [index].shown = true;
-		updateNotes();
+		if (readNotes.contains(index)) return;
+		readNotes.add(index);
+		updateRead();
 	}
 
 	List<int> getNotes({
@@ -58,6 +58,13 @@ class Notes with ChangeNotifier {
 			}
 		}
 		if (toRemove != null) nextNotes.removeAt(toRemove);
+		if (readNotes != null) {
+			for (final int index in readNotes) {
+				if (index == changedIndex) 
+					toRemove = index;
+			}
+		}
+		if (toRemove != null) readNotes.removeAt(toRemove);
 	}
 
 	void updateNotes([int changedIndex]) {
@@ -67,11 +74,16 @@ class Notes with ChangeNotifier {
 		notifyListeners();
 	}
 
+	void updateRead() {
+		reader.readNotes = readNotes;
+		notifyListeners();
+	}
+
 	void replaceNote(int index, Note note) {
 		if (note == null) return;
 		notes.removeAt(index);
 		notes.insert(index, note);
-		updateNotes();
+		updateNotes(index);
 	}
 
 	void addNote(Note note) {
@@ -82,14 +94,18 @@ class Notes with ChangeNotifier {
 
 	void deleteNote(int index) {
 		notes.removeAt(index);
-		updateNotes();
+		updateNotes(index);
 	}
 
 	void cleanNotes() {
 		final List<Note> toRemove = [];
 		for (final Note note in notes) {
 			final int index = notes.indexOf(note);
-			if (note.shown && !note.time.repeats && !currentNotes.contains(index))
+			if (
+				readNotes.contains(index) && 
+				!note.time.repeats && 
+				!currentNotes.contains(index)
+			) 
 				toRemove.add (note);
 		}
 		for (final Note note in toRemove) {
