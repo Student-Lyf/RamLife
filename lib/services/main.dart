@@ -22,11 +22,7 @@ Future<void> initOnLogin(ServicesCollection services, String email) async {
 		..studentData = studentData
 		..subjectData = await Firestore.getClasses(student)
 		..calendarData =  await Firestore.getMonth()
-		..notesData = List<Map<String, dynamic>>.from(
-			(await Firestore.getNotes(email)).map(
-				(dynamic json) => Map<String, dynamic>.from(json)
-			).toList()
-		);
+		..notesData = await Firestore.getNotes(email);
 
 	services.prefs.lastCalendarUpdate = DateTime.now();
 

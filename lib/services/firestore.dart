@@ -54,12 +54,13 @@ Future<Map<String, dynamic>> getMonth() async => (
 	await calendar.document(DateTime.now().month.toString()).get()
 ).data;
 
-Future<List> getNotes(String email) async => 
-	(await notes.document(email).get()).data ["notes"];
+Future<Map<String, dynamic>> getNotes(String email) async => 
+	(await notes.document(email).get()).data;
 
-Future<void> saveNotes(List<Note> notesList) async => notes
+Future<void> saveNotes(List<Note> notesList, List<int> readNotes) async => notes
 	.document(await Auth.getEmail())
 	.setData({
-		"notes": notesList.map((Note note) => note.toJson()).toList()
+		"notes": notesList.map((Note note) => note.toJson()).toList(),
+		"read": readNotes
 	});
 

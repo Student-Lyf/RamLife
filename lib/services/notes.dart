@@ -8,19 +8,21 @@ import "firestore.dart" as Firestore;
 
 class Notes with ChangeNotifier {
 	final Reader reader;
-	final List<Note> notes;
 
+	List<Note> notes;
 	List<int> currentNotes, nextNotes, readNotes;
 
-	Notes(this.reader) : 
-		readNotes = reader.readNotes,
-		notes = Note.fromList (reader.notesData);
+	Notes(this.reader) {
+		final Map<String, dynamic> data = reader.notesData;
+		readNotes = List<int>.from(data ["read"]);
+		notes = data ["notes"].map<Note>((json) => Note.fromJson(json)).toList();
+	}
 
 	bool get hasNote => currentNotes.isNotEmpty;
 	set shown (int index) {
 		if (readNotes.contains(index)) return;
 		readNotes.add(index);
-		updateRead();
+		updateNotes();
 	}
 
 	List<int> getNotes({
@@ -35,9 +37,13 @@ class Notes with ChangeNotifier {
 	).toList();
 
 	void saveNotesToReader() {
-		reader.notesData = notes.map(
-			(Note note) => note.toJson()
-		).toList();
+		reader.notesData = {
+			"notes": notes.map(
+					(Note note) => note.toJson()
+				).toList(),
+			"read": readNotes,
+		};
+		Firestore.saveNotes(notes, readNotes);
 	}
 
 	void verifyNotes(int changedIndex) {
@@ -68,14 +74,9 @@ class Notes with ChangeNotifier {
 	}
 
 	void updateNotes([int changedIndex]) {
-		Firestore.saveNotes(notes);  // upload to firestore
+		Firestore.saveNotes(notes, readNotes);  // upload to firestore
 		saveNotesToReader();
 		verifyNotes(changedIndex);
-		notifyListeners();
-	}
-
-	void updateRead() {
-		reader.readNotes = readNotes;
 		notifyListeners();
 	}
 

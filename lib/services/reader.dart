@@ -3,15 +3,14 @@ import "dart:io" show File;
 
 class Reader {
 	final String dir;
-	final File studentFile, subjectFile, calendarFile, notesFile, notesReadFile;
+	final File studentFile, subjectFile, calendarFile, notesFile;
 	Reader(this.dir) :
 		// The files end with 2 because there seems to 
 		// be some sort of ghost data in the original
 		studentFile = File ("$dir/student2.json"),
 		subjectFile = File ("$dir/subjects2.json"),
 		calendarFile = File ("$dir/calendar.json"),
-		notesFile = File ("$dir/notes.json"),
-		notesReadFile = File ("$dir/notesShown.json");
+		notesFile = File ("$dir/notes.json");
 
 	set studentData(Map<String, dynamic> data) => studentFile.writeAsStringSync(
 		jsonEncode(data)
@@ -49,21 +48,13 @@ class Reader {
 		calendarFile.readAsStringSync()
 	);
 
-	List<Map<String, dynamic>> get notesData => List<Map<String, dynamic>>.from(
+	Map<String, dynamic> get notesData => Map<String, dynamic>.from(
 		jsonDecode(
 			notesFile.readAsStringSync()
 		)
 	);
 
-	set notesData(List<Map<String, dynamic>> data) => notesFile.writeAsStringSync(
-		jsonEncode(data)
-	);
-
-	List<int> get readNotes => List<int>.from(
-		jsonDecode(notesReadFile.readAsStringSync())
-	);
-
-	set readNotes(List<int> data) => notesFile.writeAsStringSync(
+	set notesData(Map<String, dynamic> data) => notesFile.writeAsStringSync(
 		jsonEncode(data)
 	);
 
@@ -76,13 +67,10 @@ class Reader {
 			calendarFile.deleteSync();
 		if (notesFile.existsSync())
 			notesFile.deleteSync();
-		if (notesReadFile.existsSync())
-			notesReadFile.deleteSync();
 	}
 
 	bool get ready => (
 		studentFile.existsSync() && subjectFile.existsSync() 
 		&& notesFile.existsSync() && calendarFile.existsSync() 
-		&& notesReadFile.existsSync()
 	);
 }
