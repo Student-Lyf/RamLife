@@ -2,6 +2,3 @@ dartdoc:
   categories:
     "First":
       name: "Data"
-  include: 
-    - "note_dataclasses"
-    - "schedule_dataclasses"
