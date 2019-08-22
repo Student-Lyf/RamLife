@@ -6,7 +6,7 @@
 /// {@category Data}
 library schedule_dataclasses;
 
-import "package:flutter/foundation.dart" show required;
+import "package:flutter/foundation.dart";
 import "dart:convert" show JsonUnsupportedObjectError;
 
 import "times.dart";
@@ -77,6 +77,7 @@ const Map<String, Letters> stringToLetters = {
 /// subjects are represented externally by an ID, which is used to look up
 /// a canonicalized [Subject] instance. This saves space and simplifies
 /// compatibility with existing school databases. 
+@immutable
 class Subject {
 	/// Returns a map of [Subject]s from a list of JSON objects.
 	/// 
@@ -130,6 +131,7 @@ class Subject {
 /// 
 /// This is needed since the time can change on any day.
 /// See [Special] for when the times can change.
+@immutable
 class PeriodData {
 
 	/// Returns a list of [PeriodData] from a JSON object.
@@ -202,6 +204,7 @@ class PeriodData {
 /// 
 /// Period objects unpack the [PeriodData] passed to them,
 /// so that they alone contain all the information to represent a period.
+@immutable
 class Period {
 
 	/// The time this period takes place. 
@@ -302,6 +305,7 @@ class Period {
 /// Each day has a [letter] and [special] property.
 /// The [letter] property decides which schedule to show,
 /// while the [special] property decides what time slots to give the periods. 
+@immutable
 class Day {
 
 	/// The default [Special] for a given [Letters].
