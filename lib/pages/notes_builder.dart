@@ -3,7 +3,8 @@ import "package:flutter/material.dart";
 import "package:ramaz/data/note.dart";
 import "package:ramaz/data/schedule.dart";
 
-import "package:ramaz/models/notes.dart" show NotesBuilderModel;
+import "package:ramaz/models/notes_builder.dart";
+
 import "package:ramaz/widgets/services.dart";
 import "package:ramaz/widgets/change_notifier_listener.dart";
 

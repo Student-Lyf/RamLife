@@ -2,8 +2,9 @@ import "package:flutter/foundation.dart" show required;
 
 import "reader.dart";
 import "preferences.dart";
-import "notes.dart";
-import "schedule.dart";
+
+import "package:ramaz/models/notes.dart";
+import "package:ramaz/models/schedule.dart";
 
 class ServicesCollection {
 	final Reader reader;

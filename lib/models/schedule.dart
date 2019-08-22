@@ -1,127 +1,122 @@
-import "package:flutter/foundation.dart" show ChangeNotifier, required;
+import "package:flutter/foundation.dart";
+import "dart:async" show Timer;
 
-import "package:ramaz/services/schedule.dart";
-import "package:ramaz/services/services.dart";
-import "package:ramaz/services/notes.dart";
+import "package:ramaz/services/reader.dart";
 
-import "package:ramaz/data/times.dart";
-import "package:ramaz/data/schedule.dart" show Letters, Day;
+import "package:ramaz/models/notes.dart";
 
-class ScheduleModel with ChangeNotifier {
-	static const Letters defaultLetter = Letters.M;
-	static final Special defaultSpecial = regular;
-	static const List<Special> fridays = [
-		friday, 
-		winterFriday, 
-		fridayRoshChodesh, 
-		winterFridayRoshChodesh
-	];
+import "package:ramaz/data/student.dart";
+import "package:ramaz/data/schedule.dart";
 
-	final Schedule schedule;
+class Schedule with ChangeNotifier {
+	static DateTime now = DateTime.now();
+
+	final Student student;
+	final Map<String, Subject> subjects;
+	final Map<DateTime, Day> calendar;
 	final Notes notes;
-	Day day;
-	DateTime selectedDay = DateTime.now();
-	Map<DateTime, Day> calendar;
 
-	ScheduleModel ({
-		@required ServicesCollection services,
-	}) : 
-		schedule = services.schedule,
-		notes = services.notes 
+	Timer timer;
+	Day today, currentDay;
+	Period period, nextPeriod;
+	List<Period> periods;
+
+	int periodIndex;
+
+	Schedule(
+		Reader reader,
+		{@required this.notes}
+	) : 
+		subjects = Subject.getSubjects(reader.subjectData),
+		student = Student.fromJson(reader.studentData),
+		calendar = Day.getCalendar(reader.calendarData) 
 	{
-		// Order to determine which day to show:
-		// 	Valid day stored in reader? 
-		// 		True: use that
-		// 		False: Is there school today? 
-		// 			True: Use that
-		// 			False: Use default day
-		notes.addListener(notifyListeners);
-		final Day readerDay = schedule.currentDay;
-		if (readerDay == null || !readerDay.school) 
-			try {date = selectedDay;}  // try to set today
-			on ArgumentError {  // If no school today, go to default
-				day = getDay (defaultLetter, defaultSpecial);
-			}
-		else day = readerDay;
-		update();
+		notes.addListener(updateNotes);
+		setToday();
 	}
 
-	@override
+	@override 
 	void dispose() {
-		notes.removeListener(notifyListeners);
+		timer.cancel();
 		super.dispose();
 	}
 
-	static Day getDay (Letters letter, Special special) => Day (
-		letter: letter,
-		special: special
-	);
+	Subject get subject => subjects [period?.id];
+	bool get hasSchool => today.school;
 
-	set date (DateTime date) {
-		// Get rid of time
-		final DateTime justDate = DateTime.utc (
-			date.year, 
-			date.month,
-			date.day
-		);
-		final Day selected = schedule.calendar [justDate];
-		if (!selected.school) throw ArgumentError("No School");
-		schedule.currentDay = selected;
-		selectedDay = justDate;
-		update (newLetter: selected.letter, newSpecial: selected.special);
+	void setToday() {
+		// Get rid of the time
+		final DateTime currentDate = DateTime.utc(
+			now.year, 
+			now.month,
+			now.day
+		); 
+		
+		today = currentDay = calendar [currentDate];
+		if (today.school) {
+			periods = student.getPeriods(today);
+			onNewPeriod();
+			timer?.cancel();
+			timer = Timer.periodic(
+				const Duration (minutes: 1),
+				(Timer timer) => onNewPeriod()
+			);
+		}
 	}
 
-	Day buildDay(
-		Day currentDay,
-		{
-			Letters newLetter,
-			Special newSpecial,
-		}
-	) {
-		Letters letter = currentDay.letter;
-		Special special = currentDay.special;
-		if (newLetter != null) {
-			letter = newLetter;
-			if (newSpecial == null) {  // set the special again
-				switch (letter) {
-					case Letters.A: 
-					case Letters.B:
-					case Letters.C: 
-						special = rotate;
-						break;
-					case Letters.M:
-					case Letters.R: 
-						special = regular;
-						break;
-					case Letters.E:
-					case Letters.F:
-						special = Special.getWinterFriday();
-				}
-			}
-		} 
-		if (newSpecial != null) {
-			switch (letter) {
-				// Cannot set a Friday schedule to a non-Friday
-				case Letters.A:
-				case Letters.B:
-				case Letters.C:
-				case Letters.M:
-				case Letters.R:
-					if (!fridays.contains (newSpecial)) 
-						special = newSpecial;
-					break;
-				// Cannot set a non-Friday schedule to a Friday
-				case Letters.E:
-				case Letters.F:
-					if (fridays.contains (newSpecial))
-						special = newSpecial;
-			}
-		}
-		return Day (letter: letter, special: special);
-	}
+	void onNewPeriod() {
+		final DateTime newDate = DateTime.now();
+		if (newDate.day != now.day) {
+			// Day changed. Probably midnight
+			now = newDate;
+			return setToday();
+		} else if (!today.school) {
+			period = nextPeriod = periods = null;
 
-	void update({Letters newLetter, Special newSpecial}) {
-		day = buildDay (day, newLetter: newLetter, newSpecial: newSpecial);
+			updateNotes();
+			notifyListeners();
+			return;
+		}
+
+		// So we have school today...
+		final int newIndex = today.period;
+		if (newIndex != null && newIndex == periodIndex) 
+			// Maybe the day changed
+			return notifyListeners();
+		periodIndex = newIndex;
+		if (periodIndex == null) { // School ended
+			period = nextPeriod = null;
+			
+			updateNotes();
+			notifyListeners();
+			return;
+		}
+
+		// Only here if there is school right now
+		period = periods [periodIndex];
+		if (periodIndex < periods.length - 1)
+			nextPeriod = periods [periodIndex + 1];
+
+		updateNotes();
 		notifyListeners();
+	}
+
+	void updateNotes() {
+		notes
+			..currentNotes = notes.getNotes(
+				period: period?.period,
+				subject: subjects [period?.id]?.name,
+				letter: today.letter,
+			)
+			..nextNotes = notes.getNotes(
+				period: nextPeriod?.period,
+				subject: subjects [nextPeriod?.id]?.name,
+				letter: today.letter,
+			);
+
+		for (final int index in notes.currentNotes ?? [])
+			notes.shown = index;
+
+		notes.cleanNotes();
 	}
 }

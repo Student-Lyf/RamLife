@@ -3,8 +3,9 @@ import "package:flutter/material.dart";
 import "package:ramaz/services/reader.dart";
 import "package:ramaz/services/preferences.dart";
 import "package:ramaz/services/services.dart";
-import "package:ramaz/services/notes.dart";
-import "package:ramaz/services/schedule.dart";
+
+import "package:ramaz/models/notes.dart";
+import "package:ramaz/models/schedule.dart";
 
 class Services extends InheritedWidget {
 	static Services of(

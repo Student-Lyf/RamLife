@@ -1,12 +1,13 @@
 import "package:flutter/material.dart";
 
-import "package:ramaz/widgets/services.dart";
-
-import "package:ramaz/models/schedule.dart";
 import "package:ramaz/data/times.dart";
 import "package:ramaz/data/schedule.dart" show Letters;
 
+import "package:ramaz/models/schedule_page.dart";
+
 import "package:ramaz/pages/drawer.dart";
+
+import "package:ramaz/widgets/services.dart";
 import "package:ramaz/widgets/change_notifier_listener.dart";
 import "package:ramaz/widgets/footer.dart";
 import "package:ramaz/widgets/class_list.dart";

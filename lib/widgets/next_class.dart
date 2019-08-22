@@ -2,7 +2,7 @@ import "package:flutter/material.dart";
 
 import "package:ramaz/constants.dart" show SCHEDULE;
 
-import "package:ramaz/services/schedule.dart";
+import "package:ramaz/models/schedule.dart";
 
 import "package:ramaz/data/schedule.dart";
 
