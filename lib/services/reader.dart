@@ -48,13 +48,13 @@ class Reader {
 		calendarFile.readAsStringSync()
 	);
 
-	List<Map<String, dynamic>> get notesData => List<Map<String, dynamic>>.from(
+	Map<String, dynamic> get notesData => Map<String, dynamic>.from(
 		jsonDecode(
 			notesFile.readAsStringSync()
 		)
 	);
 
-	set notesData(List<Map<String, dynamic>> data) => notesFile.writeAsStringSync(
+	set notesData(Map<String, dynamic> data) => notesFile.writeAsStringSync(
 		jsonEncode(data)
 	);
 
@@ -71,6 +71,6 @@ class Reader {
 
 	bool get ready => (
 		studentFile.existsSync() && subjectFile.existsSync() 
-		&& notesFile.existsSync() && calendarFile.existsSync()
+		&& notesFile.existsSync() && calendarFile.existsSync() 
 	);
 }

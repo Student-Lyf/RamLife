@@ -71,15 +71,22 @@ class Schedule with ChangeNotifier {
 			return setToday();
 		} else if (!today.school) {
 			period = nextPeriod = periods = null;
+
+			updateNotes();
 			notifyListeners();
 			return;
 		}
 
 		// So we have school today...
-		periodIndex = today.period;
+		final int newIndex = today.period;
+		if (newIndex != null && newIndex == periodIndex) 
+			// Maybe the day changed
+			return notifyListeners();
+		periodIndex = newIndex;
 		if (periodIndex == null) { // School ended
 			period = nextPeriod = null;
-			updateNotes();  // at least clear notes
+			
+			updateNotes();
 			notifyListeners();
 			return;
 		}
@@ -88,21 +95,27 @@ class Schedule with ChangeNotifier {
 		period = periods [periodIndex];
 		if (periodIndex < periods.length - 1)
 			nextPeriod = periods [periodIndex + 1];
-		updateNotes();
 
+		updateNotes();
 		notifyListeners();
 	}
 
 	void updateNotes() {
-		notes.currentNotes = notes.getNotes(
-			period: period?.period,
-			subject: subjects [period?.id]?.name,
-			letter: today.letter,
-		);
-		notes.nextNotes = notes.getNotes(
-			period: nextPeriod?.period,
-			subject: subjects [nextPeriod?.id]?.name,
-			letter: today.letter,
-		);
+		notes
+			..currentNotes = notes.getNotes(
+				period: period?.period,
+				subject: subjects [period?.id]?.name,
+				letter: today.letter,
+			)
+			..nextNotes = notes.getNotes(
+				period: nextPeriod?.period,
+				subject: subjects [nextPeriod?.id]?.name,
+				letter: today.letter,
+			);
+
+		for (final int index in notes.currentNotes ?? [])
+			notes.shown = index;
+
+		notes.cleanNotes();
 	}
 }
