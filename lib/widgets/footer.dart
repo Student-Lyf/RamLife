@@ -1,8 +1,9 @@
 import "package:flutter/material.dart";
 
+import "package:ramaz/models/schedule.dart";
+
 import "package:ramaz/widgets/services.dart";
 import "package:ramaz/widgets/change_notifier_listener.dart";
-import "package:ramaz/services/schedule.dart";
 
 class Footer extends StatelessWidget {
 	static const double textScale = 1.25;

@@ -1,110 +1,117 @@
 import "package:flutter/foundation.dart";
 
-import "package:ramaz/services/schedule.dart";
-import "package:ramaz/services/services.dart";
-
 import "package:ramaz/data/note.dart";
-import "package:ramaz/data/schedule.dart";
+import "package:ramaz/data/schedule.dart" show Letters;
 
-class NotesBuilderModel with ChangeNotifier {
-	final Schedule schedule;
+import "package:ramaz/services/reader.dart";
+import "package:ramaz/services/firestore.dart" as Firestore;
 
-	NoteTimeType type;
-	NoteTime time;
+class Notes with ChangeNotifier {
+	final Reader reader;
 
-	String message = "";
-	bool shouldRepeat = false;
+	List<Note> notes;
+	List<int> currentNotes, nextNotes, readNotes;
 
-	// For RepeatablePeriod
-	Day day;
-	String period;
+	Notes(this.reader) {
+		final Map<String, dynamic> data = reader.notesData;
+		readNotes = List<int>.from(data ["read"]);
+		notes = data ["notes"].map<Note>((json) => Note.fromJson(json)).toList();
+	}
 
-	// For RepeatableSubject
-	String name;
+	bool get hasNote => currentNotes.isNotEmpty;
+	set shown (int index) {
+		if (readNotes.contains(index)) return;
+		readNotes.add(index);
+		updateNotes();
+	}
 
-	NotesBuilderModel({
-		@required ServicesCollection services, 
-		Note note
-	}) : schedule = services.schedule {
-		if (note == null) return;
+	List<int> getNotes({
+		@required String subject,
+		@required String period,
+		@required Letters letter,
+	}) => Note.getNotes(
+		notes: notes,
+		subject: subject,
+		letter: letter,
+		period: period,
+	).toList();
 
-		message = note.message;
-		time = note.time;	
+	void saveNotesToReader() {
+		reader.notesData = {
+			"notes": notes.map(
+					(Note note) => note.toJson()
+				).toList(),
+			"read": readNotes,
+		};
+		Firestore.saveNotes(notes, readNotes);
+	}
 
-		shouldRepeat = time.repeats;
-		type = time.type;
-		switch (type) {
-			case NoteTimeType.period: 
-				period = (time as PeriodNoteTime).period;
-				day = Day (letter: (time as PeriodNoteTime).letter);
-				break;
-			case NoteTimeType.subject:
-				name = (time as SubjectNoteTime).name;
-				break;
-			default: 
-				throw ArgumentError.notNull("Note.time.type");
+	void verifyNotes(int changedIndex) {
+		int toRemove;
+		if (currentNotes != null) {
+			for (final int index in currentNotes) {
+				if (index == changedIndex) {
+					toRemove = index;
+				}
+			}
 		}
+		if (toRemove != null) currentNotes.removeAt(toRemove);
+		if (nextNotes != null) {
+			for (final int index in nextNotes) {
+				if (index == changedIndex) {
+					toRemove = index;
+				}
+			}
+		}
+		if (toRemove != null) nextNotes.removeAt(toRemove);
+		if (readNotes != null) {
+			for (final int index in readNotes) {
+				if (index == changedIndex) 
+					toRemove = index;
+			}
+		}
+		if (toRemove != null) readNotes.removeAt(toRemove);
 	}
 
-	Note build() => Note (
-		message: message, 
-		time: NoteTime.fromType(
-			type: type,
-			letter: letter,
-			period: period,
-			name: name,
-			repeats: shouldRepeat,
-		),
-	);
-
-	bool get ready => (
-		(message?.isNotEmpty ?? false) && type != null && 
-		(type != NoteTimeType.period ||
-			(day?.letter != null && period != null)
-		) && (
-			type != NoteTimeType.subject || name != null			
-		)
-	);
-
-	Iterable<String> get periods => day == null ? null 
-		: schedule.student.getPeriods(day).map(
-			(Period period) => period.period,
-		);
-
-	Iterable<String> get courses => schedule.subjects.values.map(
-		(Subject subject) => subject.name
-	);
-
-	Letters get letter => day?.letter;
-
-	void onMessageChanged(String newMessage) {
-		message = newMessage;
+	void updateNotes([int changedIndex]) {
+		verifyNotes(changedIndex);
+		Firestore.saveNotes(notes, readNotes);  // upload to firestore
+		saveNotesToReader();
 		notifyListeners();
 	}
 
-	void toggleRepeat(bool value) {
-		shouldRepeat = value;
-		notifyListeners();
+	void replaceNote(int index, Note note) {
+		if (note == null) return;
+		notes.removeAt(index);
+		notes.insert(index, note);
+		updateNotes(index);
 	}
 
-	void toggleRepeatType(NoteTimeType value) {
-		type = value;
-		notifyListeners();
+	void addNote(Note note) {
+		if (note == null) return;
+		notes.add(note);
+		updateNotes();
 	}
 
-	void changeLetter(Letters value) {
-		day = Day (letter: value);
-		period = null;
-		notifyListeners();
+	void deleteNote(int index) {
+		notes.removeAt(index);
+		updateNotes(index);
 	}
 
-	void changePeriod(String value) {
-		period = value;
-		notifyListeners();
-	}
-
-	void changeCourse(String value) {
-		name = value;
-		notifyListeners();
+	void cleanNotes() {
+		final List<Note> toRemove = [];
+		for (final Note note in notes) {
+			final int index = notes.indexOf(note);
+			if (
+				readNotes.contains(index) && 
+				!note.time.repeats && 
+				!currentNotes.contains(index)
+			) 
+				toRemove.add (note);
+		}
+		for (final Note note in toRemove) {
+			print ("Note expired: $note");
+			deleteNote(notes.indexOf(note));
+		}
 	}
 }

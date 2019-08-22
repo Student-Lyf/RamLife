@@ -2,7 +2,7 @@ import "package:flutter/material.dart";
 
 import "package:ramaz/data/schedule.dart" show Period, Subject, Day;
 
-import "package:ramaz/services/notes.dart";
+import "package:ramaz/models/notes.dart";
 
 import "package:ramaz/widgets/services.dart";
 import "package:ramaz/widgets/note_tile.dart";
