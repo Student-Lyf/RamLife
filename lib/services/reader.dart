@@ -52,11 +52,11 @@ class Reader {
 	Map<String, dynamic> get notesData => Map<String, dynamic>.from(
 		jsonDecode(
 			notesFile.readAsStringSync()
-		)
+		) ?? {}
 	);
 
 	set notesData(Map<String, dynamic> data) => notesFile.writeAsStringSync(
-		jsonEncode(data)
+		jsonEncode(data ?? {})
 	);
 
 	void deleteAll() {

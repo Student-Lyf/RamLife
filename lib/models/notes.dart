@@ -14,8 +14,13 @@ class Notes with ChangeNotifier {
 
 	Notes(this.reader) {
 		final Map<String, dynamic> data = reader.notesData;
-		readNotes = List<int>.from(data ["read"]);
-		notes = data ["notes"].map<Note>((json) => Note.fromJson(json)).toList();
+		readNotes = List<int>.from(data ["read"] ?? []);
+		notes = data ["notes"]
+			?.map<Note>(
+				(json) => Note.fromJson(json)
+			)
+			?.toList() 
+			?? [];
 	}
 
 	bool get hasNote => currentNotes.isNotEmpty;
@@ -41,9 +46,9 @@ class Notes with ChangeNotifier {
 			"notes": notes.map(
 					(Note note) => note.toJson()
 				).toList(),
-			"read": readNotes,
+			"read": readNotes ?? [],
 		};
-		Firestore.saveNotes(notes, readNotes);
+		Firestore.saveNotes(notes ?? [], readNotes ?? []);
 	}
 
 	void verifyNotes(int changedIndex) {
