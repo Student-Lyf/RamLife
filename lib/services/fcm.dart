@@ -29,7 +29,9 @@ void refresh(ServicesCollection services) async {
 	if (email == null) throw StateError(
 		"Cannot refresh schedule because the user is not logged in."
 	);
-	initOnLogin(services, email);
+	await initOnLogin(services, email, false);
+	services.notes.setup();
+	services.schedule.setup(services.reader);
 }
 
 /// This one's kinda a tricky function
@@ -52,7 +54,7 @@ Future<void> registerNotifications(ServicesCollection services) async {
 
 	// O(1) lookup table for the commands. 
 	final Map<String, Command> commands = {
-		"refresh": () => refresh(services)
+		"refresh": () async => await refresh(services)
 	};
 
 	/// This function handles validation of the notification and looks 
@@ -82,7 +84,7 @@ Future<void> registerNotifications(ServicesCollection services) async {
 				commands.keys.toList().join(", "),
 		); else {
 			print ("Executing command: $command");
-			function();
+			await function();
 			print ("Command successfully executed.");
 		}
 	}

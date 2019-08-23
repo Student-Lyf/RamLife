@@ -12,7 +12,11 @@ Future<void> initOnMain(ServicesCollection services) async {
 	services.init();
 }
 
-Future<void> initOnLogin(ServicesCollection services, String email) async {
+Future<void> initOnLogin(
+	ServicesCollection services, 
+	String email, 
+	[bool first = true]
+) async {
 	// Save and initialize the student to get the subjects
 	final Map<String, dynamic> studentData = await Firestore.getStudent(email);
 	final Student student = Student.fromJson(studentData);		
@@ -26,5 +30,5 @@ Future<void> initOnLogin(ServicesCollection services, String email) async {
 
 	services.prefs.lastCalendarUpdate = DateTime.now();
 
-	services.init();
+	if (first) services.init();
 }

@@ -12,7 +12,9 @@ class Notes with ChangeNotifier {
 	List<Note> notes;
 	List<int> currentNotes, nextNotes, readNotes;
 
-	Notes(this.reader) {
+	Notes(this.reader) {setup();}
+
+	void setup() {
 		final Map<String, dynamic> data = reader.notesData;
 		readNotes = List<int>.from(data ["read"] ?? []);
 		notes = data ["notes"]
@@ -21,6 +23,7 @@ class Notes with ChangeNotifier {
 			)
 			?.toList() 
 			?? [];
+		notifyListeners();
 	}
 
 	bool get hasNote => currentNotes.isNotEmpty;

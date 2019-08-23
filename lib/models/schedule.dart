@@ -11,10 +11,11 @@ import "package:ramaz/data/schedule.dart";
 class Schedule with ChangeNotifier {
 	static DateTime now = DateTime.now();
 
-	final Student student;
-	final Map<String, Subject> subjects;
-	final Map<DateTime, Day> calendar;
 	final Notes notes;
+
+	Student student;
+	Map<String, Subject> subjects;
+	Map<DateTime, Day> calendar;
 
 	Timer timer;
 	Day today, currentDay;
@@ -26,13 +27,17 @@ class Schedule with ChangeNotifier {
 	Schedule(
 		Reader reader,
 		{@required this.notes}
-	) : 
-		subjects = Subject.getSubjects(reader.subjectData),
-		student = Student.fromJson(reader.studentData),
-		calendar = Day.getCalendar(reader.calendarData) 
-	{
+	) {
+		setup(reader);
 		notes.addListener(updateNotes);
+	}
+
+	void setup(Reader reader) {
+		subjects = Subject.getSubjects(reader.subjectData);
+		student = Student.fromJson(reader.studentData);
+		calendar = Day.getCalendar(reader.calendarData);
 		setToday();
+		notifyListeners();
 	}
 
 	@override 
