@@ -31,6 +31,7 @@ Future<Map<String, Map<String, dynamic>>> getClasses(Student student) async {
 	for (final List<PeriodData> schedule in student.schedule.values) {
 		for (final PeriodData period in schedule) {
 			if (period == null) continue;  // skip free periods
+			else if (period.id == null) continue;
 			ids.add(period.id);
 		}
 	}
