@@ -69,6 +69,7 @@ const Map<String, Letters> stringToLetters = {
 	"R": Letters.R,
 	"E": Letters.E,
 	"F": Letters.F,
+	null: null,
 };
 
 /// A subject, or class, that a student can take.
