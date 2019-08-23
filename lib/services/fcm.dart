@@ -83,6 +83,7 @@ Future<void> registerNotifications(ServicesCollection services) async {
 		); else {
 			print ("Executing command: $command");
 			function();
+			print ("Command successfully executed.");
 		}
 	}
 

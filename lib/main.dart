@@ -83,7 +83,10 @@ void main({bool restart = false}) async {
 
 	// Register for FCM notifications. 
 	Future(
-		() => FCM.registerNotifications(services)
+		() async {
+			await FCM.registerNotifications(services);
+			print ("Device notification id: ${await FCM.getToken()}");
+		}
 	);
 
 	// Now we are ready to run the app
