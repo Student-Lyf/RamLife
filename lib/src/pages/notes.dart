@@ -6,7 +6,7 @@ import "package:ramaz/widgets.dart";
 
 class NotesPage extends StatelessWidget {
 	@override 
-	Widget build(BuildContext context) => ChangeNotifierListener<Notes>(
+	Widget build(BuildContext context) => ModelListener<Notes>(
 		model: () => Services.of(context).notes,
 		child: Center (
 			child: Text (
@@ -15,7 +15,6 @@ class NotesPage extends StatelessWidget {
 				textAlign: TextAlign.center,
 			),
 		),
-		dispose: false,
 		builder: (BuildContext context, Notes model, Widget none) => Scaffold(
 			bottomNavigationBar: Footer(),
 			drawer: NavigationDrawer(),

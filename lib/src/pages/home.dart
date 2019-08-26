@@ -8,7 +8,7 @@ class HomePage extends StatelessWidget {
 	const HomePage();
 
 	@override 
-	Widget build (BuildContext context) => ChangeNotifierListener<HomeModel>(
+	Widget build (BuildContext context) => ModelListener<HomeModel>(
 		model: () => HomeModel(Services.of(context).services),
 		builder: (BuildContext context, HomeModel model, _) => Scaffold (
 			appBar: AppBar (

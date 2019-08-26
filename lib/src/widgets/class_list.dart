@@ -64,9 +64,8 @@ class ClassList extends StatelessWidget {
 		this.periods,
 	});
 
-	@override Widget build(BuildContext context) => ChangeNotifierListener<Notes>(
+	@override Widget build(BuildContext context) => ModelListener<Notes>(
 		model: () => Services.of(context).notes,
-		dispose: false,
 		child: DrawerHeader (
 			child: Center (
 				child: Text (

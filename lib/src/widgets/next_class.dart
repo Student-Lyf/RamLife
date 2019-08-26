@@ -3,7 +3,7 @@ import "package:flutter/material.dart";
 import "info_card.dart";
 import "note_tile.dart";
 import "services.dart";
-import "change_notifier_listener.dart";
+import "model_listener.dart";
 
 import "package:ramaz/constants.dart";
 import "package:ramaz/data.dart";
@@ -24,9 +24,8 @@ class NextClass extends StatelessWidget {
 	});
 
 	@override 
-	Widget build (BuildContext context) => ChangeNotifierListener<Notes>(
+	Widget build (BuildContext context) => ModelListener<Notes>(
 		model: () => Services.of(context).notes,
-		dispose: false,
 		builder: (BuildContext context, Notes notes, Widget child) => Column(
 			children: [
 				InfoCard (

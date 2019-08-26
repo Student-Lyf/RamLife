@@ -9,7 +9,7 @@ class SchedulePage extends StatelessWidget {
 	const SchedulePage();
 
 	@override
-	Widget build (BuildContext context) => ChangeNotifierListener<ScheduleModel>(
+	Widget build (BuildContext context) => ModelListener<ScheduleModel>(
 		model: () => ScheduleModel(services: Services.of(context).services),
 		child: Footer(), 
 		builder: (BuildContext context, ScheduleModel model, Widget footer) => Scaffold(
