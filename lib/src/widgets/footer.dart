@@ -1,14 +1,12 @@
 import "package:flutter/material.dart";
 
-import "package:ramaz/models/schedule.dart";
-
-import "package:ramaz/widgets/services.dart";
-import "package:ramaz/widgets/change_notifier_listener.dart";
+import "package:ramaz/models.dart";
+import "package:ramaz/widgets.dart";
 
 class Footer extends StatelessWidget {
 	static const double textScale = 1.25;
 
-	@override Widget build (BuildContext context) => ChangeNotifierListener(
+	@override Widget build (BuildContext context) => ChangeNotifierListener<Schedule>(
 			model: () => Services.of(context).schedule,
 			dispose: false,
 			child: Container(height: 0, width: 0),

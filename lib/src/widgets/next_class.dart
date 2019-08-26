@@ -1,15 +1,13 @@
 import "package:flutter/material.dart";
 
+import "info_card.dart";
+import "note_tile.dart";
+import "services.dart";
+import "change_notifier_listener.dart";
+
 import "package:ramaz/constants.dart" show SCHEDULE;
-
-import "package:ramaz/models/schedule.dart";
-
-import "package:ramaz/data/schedule.dart";
-
-import "package:ramaz/widgets/info_card.dart";
-import "package:ramaz/widgets/note_tile.dart";
-import "package:ramaz/widgets/services.dart";
-import "package:ramaz/widgets/change_notifier_listener.dart";
+import "package:ramaz/data.dart";
+import "package:ramaz/models.dart";
 
 class NextClass extends StatelessWidget {
 	static const TextStyle white = TextStyle (
@@ -22,7 +20,7 @@ class NextClass extends StatelessWidget {
 	NextClass({this.next = false});
 
 	@override 
-	Widget build (BuildContext context) => ChangeNotifierListener(
+	Widget build (BuildContext context) => ChangeNotifierListener<Schedule>(
 		model: () => Services.of(context).schedule,
 		dispose: false,
 		builder: (BuildContext context, Schedule schedule, Widget child) {

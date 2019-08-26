@@ -1,7 +1,8 @@
 import "package:flutter/material.dart";
 
-import "package:ramaz/services/preferences.dart";
-import "package:ramaz/widgets/theme_changer.dart" show ThemeChanger;
+import "theme_changer.dart" show ThemeChanger;
+
+import "package:ramaz/services.dart";
 
 enum BrightnessChangerForm {button, dropdown}
 

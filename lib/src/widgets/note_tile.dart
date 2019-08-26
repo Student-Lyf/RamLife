@@ -1,12 +1,11 @@
 import "package:flutter/material.dart";
 
-import "package:ramaz/data/note.dart";
+import "services.dart";
+import "change_notifier_listener.dart";
+import "notes_builder.dart";
 
-import "package:ramaz/models/notes.dart";
-
-import "package:ramaz/widgets/services.dart";
-import "package:ramaz/widgets/change_notifier_listener.dart";
-import "package:ramaz/pages/notes_builder.dart";
+import "package:ramaz/data.dart";
+import "package:ramaz/models.dart";
 
 class NoteTile extends StatelessWidget {
 	final int index;
@@ -21,7 +20,7 @@ class NoteTile extends StatelessWidget {
 	Widget build (BuildContext context) => SizedBox (
 		height: height, 
 		child: Center (
-			child: ChangeNotifierListener(
+			child: ChangeNotifierListener<Notes>(
 				model: () => Services.of(context).notes,
 				dispose: false,
 				child: Icon (

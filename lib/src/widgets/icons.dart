@@ -1,7 +1,7 @@
 import "package:flutter/material.dart";
 
-import "package:ramaz/widgets/images/loading_image.dart";
-import "package:ramaz/widgets/images/link_icon.dart";
+import "images/loading_image.dart";
+import "images/link_icon.dart";
 
 import "package:ramaz/constants.dart";
 

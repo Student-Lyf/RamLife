@@ -1,12 +1,8 @@
 import "package:flutter/material.dart";
 
-import "package:ramaz/data/schedule.dart" show Period, Subject, Day;
-
-import "package:ramaz/models/notes.dart";
-
-import "package:ramaz/widgets/services.dart";
-import "package:ramaz/widgets/note_tile.dart";
-import "package:ramaz/widgets/change_notifier_listener.dart";
+import "package:ramaz/data.dart";
+import "package:ramaz/models.dart";
+import "package:ramaz/widgets.dart";
 
 class ClassPanel extends StatelessWidget {
 	final String title;
