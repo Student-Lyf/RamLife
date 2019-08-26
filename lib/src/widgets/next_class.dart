@@ -26,6 +26,7 @@ class NextClass extends StatelessWidget {
 	@override 
 	Widget build (BuildContext context) => ModelListener<Notes>(
 		model: () => Services.of(context).notes,
+		dispose: false,
 		builder: (BuildContext context, Notes notes, Widget child) => Column(
 			children: [
 				InfoCard (

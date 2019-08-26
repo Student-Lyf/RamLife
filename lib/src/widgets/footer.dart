@@ -9,6 +9,7 @@ class Footer extends StatelessWidget {
 
 	@override Widget build (BuildContext context) => ModelListener<Schedule>(
 			model: () => Services.of(context).schedule,
+			dispose: false,
 			child: Container(height: 0, width: 0),
 			builder: (BuildContext context, Schedule schedule, Widget blank) =>
 				schedule.period == null ? blank : BottomSheet (

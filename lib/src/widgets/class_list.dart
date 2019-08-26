@@ -66,6 +66,7 @@ class ClassList extends StatelessWidget {
 
 	@override Widget build(BuildContext context) => ModelListener<Notes>(
 		model: () => Services.of(context).notes,
+		dispose: false,
 		child: DrawerHeader (
 			child: Center (
 				child: Text (

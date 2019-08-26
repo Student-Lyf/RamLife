@@ -57,7 +57,7 @@ class NotesBuilderState extends State<NotesBuilder> {
 	}
 
 	@override
-	Widget build(BuildContext context) => ModelListener(
+	Widget build(BuildContext context) => ModelListener<NotesBuilderModel>(
 		child: FlatButton(
 			child: Text (
 				"Cancel", 

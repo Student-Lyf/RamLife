@@ -8,6 +8,7 @@ class NotesPage extends StatelessWidget {
 	@override 
 	Widget build(BuildContext context) => ModelListener<Notes>(
 		model: () => Services.of(context).notes,
+		dispose: false,
 		child: Center (
 			child: Text (
 				"You don't have any notes yet",
