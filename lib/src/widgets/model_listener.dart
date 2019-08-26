@@ -1,8 +1,8 @@
 import "package:flutter/material.dart";
 
-typedef ModelBuilder<T extends Listenable> = Widget Function(BuildContext, T, Widget);
+typedef ModelBuilder<T extends ChangeNotifier> = Widget Function(BuildContext, T, Widget);
 
-class ModelListener<Model extends Listenable> extends StatefulWidget {
+class ModelListener<Model extends ChangeNotifier> extends StatefulWidget {
   final Model Function() model;
   final Widget Function(BuildContext, Model, Widget) builder;
   final Widget child;
@@ -16,10 +16,10 @@ class ModelListener<Model extends Listenable> extends StatefulWidget {
   });
 
   @override 
-  ChangeNotifierState createState() => ChangeNotifierState<Model>();
+  ModelListenerState createState() => ModelListenerState<Model>();
 }
 
-class ChangeNotifierState<Model extends Listenable> 
+class ModelListenerState<Model extends ChangeNotifier> 
   extends State<ModelListener<Model>> 
 {
   Model model;
