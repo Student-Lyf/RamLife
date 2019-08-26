@@ -9,12 +9,10 @@ class HomeModel with ChangeNotifier {
 	static const Duration minute = Duration (minutes: 1);
 
 	final Schedule schedule;
-	final ServicesCollection services;
-	// final Notes notes;
 
 	bool googleSupport = true;
 
-	HomeModel (this.services) :
+	HomeModel (ServicesCollection services) :
 		schedule = services.schedule
 	{
 		schedule.addListener(notifyListeners);
