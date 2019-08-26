@@ -1,12 +1,10 @@
 import "package:flutter/foundation.dart" show ChangeNotifier, required;
 
-import "package:ramaz/data/times.dart";
-import "package:ramaz/data/schedule.dart" show Letters, Day;
+import "schedule.dart";
+import "notes.dart";
 
-import "package:ramaz/models/schedule.dart";
-import "package:ramaz/models/notes.dart";
-
-import "package:ramaz/services/services.dart";
+import "package:ramaz/data.dart";
+import "package:ramaz/services.dart";
 
 class ScheduleModel with ChangeNotifier {
 	static const Letters defaultLetter = Letters.M;

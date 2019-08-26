@@ -1,12 +1,10 @@
 import "package:flutter/foundation.dart";
 import "dart:async" show Timer;
 
-import "package:ramaz/services/reader.dart";
+import "notes.dart";
 
-import "package:ramaz/models/notes.dart";
-
-import "package:ramaz/data/student.dart";
-import "package:ramaz/data/schedule.dart";
+import "package:ramaz/services.dart";
+import "package:ramaz/data.dart";
 
 class Schedule with ChangeNotifier {
 	static DateTime now = DateTime.now();

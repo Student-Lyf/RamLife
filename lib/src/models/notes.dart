@@ -1,10 +1,7 @@
 import "package:flutter/foundation.dart";
 
-import "package:ramaz/data/note.dart";
-import "package:ramaz/data/schedule.dart" show Letters;
-
-import "package:ramaz/services/reader.dart";
-import "package:ramaz/services/firestore.dart" as Firestore;
+import "package:ramaz/data.dart";
+import "package:ramaz/services.dart";
 
 class Notes with ChangeNotifier {
 	final Reader reader;

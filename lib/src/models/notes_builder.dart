@@ -1,11 +1,8 @@
 import "package:flutter/foundation.dart";
 
-import "package:ramaz/services/services.dart";
-
-import "package:ramaz/models/schedule.dart";
-
-import "package:ramaz/data/note.dart";
-import "package:ramaz/data/schedule.dart";
+import "package:ramaz/data.dart";
+import "package:ramaz/models.dart";
+import "package:ramaz/services.dart";
 
 class NotesBuilderModel with ChangeNotifier {
 	final Schedule schedule;
