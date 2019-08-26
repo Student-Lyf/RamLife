@@ -35,13 +35,13 @@ class ScheduleModel with ChangeNotifier {
 		// 			True: Use that
 		// 			False: Use default day
 		notes.addListener(notifyListeners);
-		final Day readerDay = schedule.currentDay;
-		if (readerDay == null || !readerDay.school) 
+		final Day currentDay = schedule.currentDay;
+		if (currentDay == null || !currentDay.school) 
 			try {date = selectedDay;}  // try to set today
 			on ArgumentError {  // If no school today, go to default
 				day = getDay (defaultLetter, defaultSpecial);
 			}
-		else day = readerDay;
+		else day = currentDay;
 		update();
 	}
 
@@ -79,25 +79,7 @@ class ScheduleModel with ChangeNotifier {
 	) {
 		Letters letter = currentDay.letter;
 		Special special = currentDay.special;
-		if (newLetter != null) {
-			letter = newLetter;
-			if (newSpecial == null) {  // set the special again
-				switch (letter) {
-					case Letters.A: 
-					case Letters.B:
-					case Letters.C: 
-						special = rotate;
-						break;
-					case Letters.M:
-					case Letters.R: 
-						special = regular;
-						break;
-					case Letters.E:
-					case Letters.F:
-						special = Special.getWinterFriday();
-				}
-			}
-		} 
+		if (newLetter != null) letter = newLetter;
 		if (newSpecial != null) {
 			switch (letter) {
 				// Cannot set a Friday schedule to a non-Friday

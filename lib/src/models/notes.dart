@@ -15,11 +15,7 @@ class Notes with ChangeNotifier {
 		final Map<String, dynamic> data = reader.notesData;
 		readNotes = List<int>.from(data ["read"] ?? []);
 		notes = data ["notes"]
-			?.map<Note>(
-				(json) => Note.fromJson(json)
-			)
-			?.toList() 
-			?? [];
+			?.map<Note>((json) => Note.fromJson(json))?.toList() ?? [];
 		notifyListeners();
 	}
 
@@ -27,6 +23,7 @@ class Notes with ChangeNotifier {
 	set shown (int index) {
 		if (readNotes.contains(index)) return;
 		readNotes.add(index);
+		cleanNotes();
 		updateNotes();
 	}
 

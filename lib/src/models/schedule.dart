@@ -77,7 +77,6 @@ class Schedule with ChangeNotifier {
 			period = nextPeriod = periods = null;
 
 			updateNotes();
-			notifyListeners();
 			return;
 		}
 
@@ -91,7 +90,6 @@ class Schedule with ChangeNotifier {
 			period = nextPeriod = null;
 			
 			updateNotes();
-			notifyListeners();
 			return;
 		}
 
@@ -101,7 +99,6 @@ class Schedule with ChangeNotifier {
 			nextPeriod = periods [periodIndex + 1];
 
 		updateNotes();
-		notifyListeners();
 	}
 
 	void updateNotes() {
@@ -120,6 +117,6 @@ class Schedule with ChangeNotifier {
 		for (final int index in notes.currentNotes ?? [])
 			notes.shown = index;
 
-		notes.cleanNotes();
+		notifyListeners();
 	}
 }
