@@ -2,8 +2,6 @@
 /// 
 /// Classes here are used to abstract the weird schedule details 
 /// to make the code a whole lot simpler. 
-/// 
-/// {@category Data}
 library schedule_dataclasses;
 
 import "package:flutter/foundation.dart";

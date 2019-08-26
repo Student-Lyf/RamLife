@@ -1,4 +1,5 @@
 dartdoc: 
-  categories:
-    "First":
-      name: "Data"
+  linkToSource: 
+    root: lib
+    uriTemplate: https://github.com/Levi-Lesches/Ramaz-Student-Life/blob/master/lib/%f%#L%l%
+  favicon: "images/logos/ramaz/icon_small.png"

@@ -3,8 +3,6 @@
 /// Each note a [Note.time] property, which is a [NoteTime], describing when 
 /// said note should be displayed. Since notes could be shown on a specific
 /// class or period, the classes [PeriodNoteTime] and [SubjectNoteTime] were made. 
-///
-/// {@category Data}
 library note_dataclasses;
 
 import "package:flutter/foundation.dart";

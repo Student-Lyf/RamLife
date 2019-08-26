@@ -1,6 +1,5 @@
 /// A collection of dataclasses to sufficiently represent time for a student. 
-/// {@category Data}
-library time;
+library time_dataclasses;
 
 import "package:flutter/foundation.dart";
 import "package:ramaz/mock.dart";  // for winter friday times
