@@ -1,14 +1,8 @@
 import "package:flutter/material.dart";
 
-import "package:ramaz/models/notes.dart";
-
-import "package:ramaz/pages/drawer.dart";
-import "package:ramaz/pages/notes_builder.dart";
-
-import "package:ramaz/widgets/change_notifier_listener.dart";
-import "package:ramaz/widgets/footer.dart";
-import "package:ramaz/widgets/note_tile.dart";
-import "package:ramaz/widgets/services.dart";
+import "package:ramaz/models.dart";
+import "package:ramaz/pages.dart";
+import "package:ramaz/widgets.dart";
 
 class NotesPage extends StatelessWidget {
 	@override 

@@ -1,15 +1,8 @@
 import "package:flutter/material.dart";
 
-import "package:ramaz/widgets/services.dart";
-
-import "package:ramaz/models/home.dart";
-
-// UI
-import "package:ramaz/pages/drawer.dart";
-import "package:ramaz/widgets/change_notifier_listener.dart";
-import "package:ramaz/widgets/class_list.dart";
-import "package:ramaz/widgets/next_class.dart";
-import "package:ramaz/widgets/icons.dart";
+import "package:ramaz/models.dart";
+import "package:ramaz/pages.dart";
+import "package:ramaz/widgets.dart";
 
 class HomePage extends StatelessWidget {
 	const HomePage();

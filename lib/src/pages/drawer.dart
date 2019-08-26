@@ -1,8 +1,6 @@
 import "package:flutter/material.dart";
 
-import "package:ramaz/widgets/brightness_changer.dart" show BrightnessChanger;
-import "package:ramaz/widgets/icons.dart";
-import "package:ramaz/widgets/services.dart";
+import "package:ramaz/widgets.dart";
 
 import "package:ramaz/constants.dart";  // for route names
 

@@ -3,15 +3,9 @@ import "package:flutter/services.dart" show PlatformException;
 
 import "package:url_launcher/url_launcher.dart";
 
-import "package:ramaz/widgets/icons.dart";
-import "package:ramaz/widgets/theme_changer.dart";
-import "package:ramaz/widgets/brightness_changer.dart" show BrightnessChanger;
-import "package:ramaz/widgets/services.dart";
-
-// Used to actually login
-import "package:ramaz/services/auth.dart" as Auth;
-import "package:ramaz/services/services.dart";
-import "package:ramaz/services/main.dart" show initOnLogin;
+import "package:ramaz/widgets.dart";
+import "package:ramaz/services_collection.dart";
+import "package:ramaz/services.dart";
 
 /// This widget is only stateful so it doesn't get disposed when 
 /// the theme changes, and then we can keep using the BuildContext
@@ -138,9 +132,7 @@ class LoginState extends State<Login> {
 	}
 
 	void downloadData(String username, BuildContext scaffoldContext) async => safely(
-		function: () async => 
-			// await initOnLogin(widget.reader, widget.prefs, username),
-			await initOnLogin(services, username),
+		function: () async => await services.initOnLogin(username),
 		onSuccess: () => Navigator.of(context).pushReplacementNamed("home"),
 		scaffoldContext: scaffoldContext,
 	);

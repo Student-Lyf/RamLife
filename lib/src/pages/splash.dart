@@ -1,5 +1,6 @@
 import "package:flutter/material.dart"; 
-import "package:ramaz/widgets/icons.dart" show RamazLogos;
+
+import "package:ramaz/widgets.dart";
 
 class SplashScreen extends StatelessWidget {
 	final void Function (Brightness) setBrightness;

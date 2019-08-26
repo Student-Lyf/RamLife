@@ -1,7 +1,6 @@
 import "package:flutter/material.dart";
 
-import "package:ramaz/services/firestore.dart" show sendFeedback;
-import "package:ramaz/services/auth.dart" as Auth;
+import "package:ramaz/services.dart";
 
 class FeedbackPage extends StatefulWidget {
 	@override 
@@ -40,7 +39,7 @@ class FeedbackState extends State<FeedbackPage> {
 	);
 
 	void submit(BuildContext context) async {
-		sendFeedback (
+		Firestore.sendFeedback (
 			controller.text,
 			(await Auth.currentUser()).displayName
 		);
