@@ -1,4 +1,4 @@
-library services;
+library ramaz_services;
 
 export "src/services/auth.dart";
 export "src/services/fcm.dart";
