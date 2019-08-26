@@ -2,15 +2,12 @@ import "package:flutter/material.dart";
 import "package:path_provider/path_provider.dart";
 import "package:shared_preferences/shared_preferences.dart";
 
-// Backend
-import "package:ramaz/services.dart";
 
-// UI
-import "package:ramaz/widgets.dart";
+import "package:ramaz/constants.dart";  // for route keys
 import "package:ramaz/pages.dart";
- 
-import "constants.dart";  // for route keys
-//import "mock/sports.dart" show games;
+import "package:ramaz/services.dart";
+import "package:ramaz/services_collection.dart";
+import "package:ramaz/widgets.dart";
 
 const Color BLUE = Color(0xFF004B8D);  // (255, 0, 75, 140);
 const Color GOLD = Color(0xFFF9CA15);
@@ -18,6 +15,18 @@ const Color BLUE_LIGHT = Color(0XFF4A76BE);
 const Color BLUE_DARK = Color (0xFF00245F);
 const Color GOLD_DARK = Color (0XFFC19A00);
 const Color GOLD_LIGHT = Color (0XFFFFFD56);
+
+/// Completely refresh the user's schedule 
+/// Basically simulate the login sequence
+Future<void> refresh(ServicesCollection services) async {
+	final String email = await Auth.getEmail();
+	if (email == null) throw StateError(
+		"Cannot refresh schedule because the user is not logged in."
+	);
+	await services.initOnLogin(email, false);
+	services.notes.setup();
+	services.schedule.setup(services.reader);
+}
 
 void main({bool restart = false}) async {
 	// This shows a splash screen but secretly 
@@ -53,7 +62,7 @@ void main({bool restart = false}) async {
 		
 		// To download, and login or go to main
 		ready = services.reader.ready && await Auth.ready();
-		if (ready) await initOnMain(services);
+		if (ready) await services.initOnMain();
 	} catch (error) {
 		print ("Error on main.");
 		if (!restart) {
@@ -73,7 +82,11 @@ void main({bool restart = false}) async {
 	// Register for FCM notifications. 
 	Future(
 		() async {
-			await FCM.registerNotifications(services);
+			await FCM.registerNotifications(
+				{
+					"refresh": () async => await refresh(services)
+				}
+			);
 			print ("Device notification id: ${await FCM.getToken()}");
 		}
 	);

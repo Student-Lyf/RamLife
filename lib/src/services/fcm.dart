@@ -1,10 +1,6 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import "dart:convert" show JsonUnsupportedObjectError;
 
-import "auth.dart";
-import "main.dart" show initOnLogin;
-import "services.dart";
-
 // So basically, here's the gist with these things
 // When the app is in the foreground, it's onMessage
 // If not, then: 
@@ -23,18 +19,6 @@ class FCM {
 	/// Convenience function to get the device's FCM token
 	static Future<String> getToken() async => _firebase.getToken();
 
-	/// Completely refresh the user's schedule 
-	/// Basically simulate the login sequence
-	static Future<void> refresh(ServicesCollection services) async {
-		final String email = await Auth.getEmail();
-		if (email == null) throw StateError(
-			"Cannot refresh schedule because the user is not logged in."
-		);
-		await initOnLogin(services, email, false);
-		services.notes.setup();
-		services.schedule.setup(services.reader);
-	}
-
 	/// This one's kinda a tricky function
 	/// 
 	/// It needs to: 
@@ -50,14 +34,9 @@ class FCM {
 	/// 
 	/// The command functions are declared globally instead of the manner
 	/// described above in order to make extension much simpler. 
-	static Future<void> registerNotifications(ServicesCollection services) async {
+	static Future<void> registerNotifications(Map<String, Command> commands) async {
 		// First, get permission on iOS:
 		_firebase.requestNotificationPermissions();
-
-		// O(1) lookup table for the commands. 
-		final Map<String, Command> commands = {
-			"refresh": () async => await refresh(services)
-		};
 
 		/// This function handles validation of the notification and looks 
 		/// up the correct callback function based on the command in the 
