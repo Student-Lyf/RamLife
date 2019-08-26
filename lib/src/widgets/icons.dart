@@ -47,27 +47,27 @@ class Logos {
 
 	static const Widget drive = LinkIcon (
 		path: "images/logos/drive.png",
-		url: GOOGLE_DRIVE
+		url: Urls.GOOGLE_DRIVE
 	);
 
 	static const Widget outlook = LinkIcon (
 		path: "images/logos/outlook.jpg",
-		url: EMAIL
+		url: Urls.EMAIL
 	);
 
 	static const Widget schoology = LinkIcon (
 		path: "images/logos/schoology.png",
-		url: SCHOOLOGY
+		url: Urls.SCHOOLOGY
 	);
 
 	static const Widget ramazIcon = LinkIcon (
 		path: "images/logos/ramaz/teal.jpg",
-		url: RAMAZ
+		url: Urls.RAMAZ
 	);
 
 	static const senior_systems = LinkIcon (
 		path: "images/logos/senior_systems.png",
-		url: SENIOR_SYSTEMS
+		url: Urls.SENIOR_SYSTEMS
 	);
 }
 

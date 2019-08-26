@@ -174,16 +174,16 @@ class MainAppState extends State<RamazApp> {
 				color: BLUE,
 				theme: theme,
 				routes: {
-					LOGIN: (_) => Login(),
-					HOME_PAGE: (_) => HomePage(),
-					SCHEDULE: (_) => SchedulePage(),
-					NOTES: (_) => NotesPage(),
-					// NEWS: placeholder (widget.prefs, "News"),
-					// LOST_AND_FOUND: placeholder (widget.prefs, "Lost and found"),
-					// SPORTS: placeholder (widget.prefs, "Sports"),
-					// SPORTS: (_) => SportsPage (games),
-					// ADMIN_LOGIN: placeholder (widget.prefs, "Admin Login"),
-					FEEDBACK: (_) => FeedbackPage(),
+					Routes.LOGIN: (_) => Login(),
+					Routes.HOME_PAGE: (_) => HomePage(),
+					Routes.SCHEDULE: (_) => SchedulePage(),
+					Routes.NOTES: (_) => NotesPage(),
+					// Routes.NEWS: placeholder ("News"),
+					// Routes.LOST_AND_FOUND: placeholder ("Lost and found"),
+					// Routes.SPORTS: placeholder ("Sports"),
+					// Routes.SPORTS: (_) => SportsPage (games),
+					// Routes.ADMIN_LOGIN: placeholder ("Admin Login"),
+					Routes.FEEDBACK: (_) => FeedbackPage(),
 				}
 			)
 		)
@@ -192,12 +192,11 @@ class MainAppState extends State<RamazApp> {
 	
 // Placeholder
 // class PlaceholderPage extends StatelessWidget {
-// 	final Preferences prefs;
 // 	final String title;
-// 	PlaceholderPage (this.prefs, this.title);
+// 	PlaceholderPage (this.title);
 
 // 	@override Widget build (BuildContext context) => Scaffold (
-// 		drawer: NavigationDrawer(prefs),
+// 		drawer: NavigationDrawer(),
 // 		appBar: AppBar (
 // 			title: Text (title),
 // 			actions: [
@@ -211,5 +210,5 @@ class MainAppState extends State<RamazApp> {
 // 	);
 // }
 
-// Widget Function(BuildContext) placeholder(Preferences prefs, String text) => 
-// 	(BuildContext context) => PlaceholderPage (prefs, text);
+// Widget Function(BuildContext) placeholder(String text) => 
+// 	(BuildContext context) => PlaceholderPage (text);
