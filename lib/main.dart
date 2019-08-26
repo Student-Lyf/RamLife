@@ -3,22 +3,11 @@ import "package:path_provider/path_provider.dart";
 import "package:shared_preferences/shared_preferences.dart";
 
 // Backend
-import "services/auth.dart" as Auth;
-import "services/main.dart";
-import "services/preferences.dart";
-import "services/reader.dart";
-import "services/fcm.dart" as FCM;
-import "services/services.dart";
+import "package:ramaz/services.dart";
 
 // UI
-import "widgets/theme_changer.dart" show ThemeChanger;
-import "widgets/services.dart";
-import "pages/splash.dart" show SplashScreen;
-import "pages/home.dart" show HomePage;
-import "pages/schedule.dart" show SchedulePage;
-import "pages/login.dart" show Login;
-import "pages/feedback.dart" show FeedbackPage;
-import "pages/notes.dart" show NotesPage;
+import "package:ramaz/widgets.dart";
+import "package:ramaz/pages.dart";
  
 import "constants.dart";  // for route keys
 //import "mock/sports.dart" show games;
