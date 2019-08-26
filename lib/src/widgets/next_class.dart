@@ -5,59 +5,54 @@ import "note_tile.dart";
 import "services.dart";
 import "change_notifier_listener.dart";
 
-import "package:ramaz/constants.dart" show SCHEDULE;
+import "package:ramaz/constants.dart";
 import "package:ramaz/data.dart";
 import "package:ramaz/models.dart";
 
 class NextClass extends StatelessWidget {
-	static const TextStyle white = TextStyle (
-		color: Colors.white
-	);
+	static const TextStyle white = TextStyle (color: Colors.white);
 	static const double notePadding = 10;
 
 	final bool next;
+	final Period period;
+	final Subject subject;
 
-	NextClass({this.next = false});
+	const NextClass({
+		@required this.period,
+		@required this.subject,
+		this.next = false
+	});
 
 	@override 
-	Widget build (BuildContext context) => ChangeNotifierListener<Schedule>(
-		model: () => Services.of(context).schedule,
+	Widget build (BuildContext context) => ChangeNotifierListener<Notes>(
+		model: () => Services.of(context).notes,
 		dispose: false,
-		builder: (BuildContext context, Schedule schedule, Widget child) {
-			final Period period = next ? schedule.nextPeriod : schedule.period;
-			final Subject subject = schedule.subjects [period?.id];
-			final List<int> notes = next 
-				? schedule.notes.nextNotes 
-				: schedule.notes.currentNotes;
+		builder: (BuildContext context, Notes notes, Widget child) => Column(
+			children: [
+				InfoCard (
+					icon: next ? Icons.restore : Icons.school,
+					children: period?.getInfo(subject),
+					page: Routes.SCHEDULE,
+					title: period == null
+						? "School is over"
+						: "${next ? 'Next' : 'Current'} period: " 
+							+ (subject?.name ?? period.period),
+				),
 
-			return Column(
-				children: [
-					InfoCard (
-						icon: next ? Icons.restore : Icons.school,
-						children: period?.getInfo(subject),
-						page: SCHEDULE,
-						title: period == null
-							? "School is over"
-							: "${next ? 'Next' : 'Current'} period: " 
-								+ (subject?.name ?? period.period),
-					),
-
-					...notes.map(
-						(int index) => Padding (
-							padding: EdgeInsets.symmetric(horizontal: notePadding),
-							child: Container (
-								foregroundDecoration: ShapeDecoration(
-									shape: RoundedRectangleBorder(
-										side: BorderSide(color: Theme.of(context).primaryColor),
-										borderRadius:  BorderRadius.circular (20),
-									)
-								),
-								child: NoteTile(index: index),
-							)
+				for (final int index in next ? notes.nextNotes : notes.currentNotes) 
+					Padding (
+						padding: EdgeInsets.symmetric(horizontal: notePadding),
+						child: Container (
+							foregroundDecoration: ShapeDecoration(
+								shape: RoundedRectangleBorder(
+									side: BorderSide(color: Theme.of(context).primaryColor),
+									borderRadius:  BorderRadius.circular (20),
+								)
+							),
+							child: NoteTile(index: index),
 						)
 					)
-				]
-			);
-		}
+			]
+		)
 	);
 }

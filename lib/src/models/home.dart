@@ -1,6 +1,5 @@
 import "package:flutter/foundation.dart" show ChangeNotifier, required;
 
-import "notes.dart";
 import "schedule.dart";
 
 import "package:ramaz/services.dart";
@@ -11,22 +10,19 @@ class HomeModel with ChangeNotifier {
 
 	final Schedule schedule;
 	final ServicesCollection services;
-	final Notes notes;
+	// final Notes notes;
 
 	bool googleSupport = true;
 
 	HomeModel (this.services) :
-		schedule = services.schedule,
-		notes = services.notes
+		schedule = services.schedule
 	{
-		notes.addListener(notifyListeners);
 		schedule.addListener(notifyListeners);
 		checkGoogleSupport();
 	}
 
 	@override 
 	void dispose() {
-		notes.removeListener(notifyListeners);
 		schedule.removeListener(notifyListeners);
 		super.dispose();
 	}

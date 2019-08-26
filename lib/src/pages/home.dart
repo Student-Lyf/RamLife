@@ -70,10 +70,16 @@ class HomePage extends StatelessWidget {
 							textAlign: TextAlign.center
 						),
 						SizedBox (height: 20),
-						if (model.schedule.hasSchool) NextClass(),
+						if (model.schedule.hasSchool) NextClass(
+							period: model.schedule.period,
+							subject: model.schedule.subjects [model.schedule.period?.id]
+						),
 						// if school won't be over, show the next class
-						if (model.schedule.nextPeriod != null) 
-							NextClass (next: true),
+						if (model.schedule.nextPeriod != null) NextClass (
+							next: true,
+							period: model.schedule.nextPeriod,
+							subject: model.schedule.subjects [model.schedule.nextPeriod?.id]
+						),
 					]
 				)
 			)
