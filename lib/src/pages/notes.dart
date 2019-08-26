@@ -8,8 +8,15 @@ class NotesPage extends StatelessWidget {
 	@override 
 	Widget build(BuildContext context) => ChangeNotifierListener<Notes>(
 		model: () => Services.of(context).notes,
+		child: Center (
+			child: Text (
+				"You don't have any notes yet",
+				textScaleFactor: 1.5,
+				textAlign: TextAlign.center,
+			),
+		),
 		dispose: false,
-		builder: (BuildContext context, Notes model, _) => Scaffold(
+		builder: (BuildContext context, Notes model, Widget none) => Scaffold(
 			bottomNavigationBar: Footer(),
 			drawer: NavigationDrawer(),
 			appBar: AppBar(
@@ -27,13 +34,7 @@ class NotesPage extends StatelessWidget {
 					model.addNote(await NotesBuilder.buildNote(context)),
 			),
 			body: model.notes.isEmpty
-				? Center (
-					child: Text (
-						"You don't have any notes yet",
-						textScaleFactor: 1.5,
-						textAlign: TextAlign.center,
-					),
-				) 
+				? none 
 				: ListView.separated (
 					itemCount: model.notes.length,
 					separatorBuilder: (_, __) => Divider(),
