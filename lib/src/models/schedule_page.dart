@@ -4,7 +4,7 @@ import "schedule.dart";
 import "notes.dart";
 
 import "package:ramaz/data.dart";
-import "package:ramaz/services.dart";
+import "package:ramaz/services_collection.dart";
 
 class ScheduleModel with ChangeNotifier {
 	static const Letters defaultLetter = Letters.M;

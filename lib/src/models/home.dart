@@ -1,9 +1,10 @@
 import "package:flutter/foundation.dart" show ChangeNotifier, required;
 
-import "package:ramaz/services.dart";
-
 import "notes.dart";
 import "schedule.dart";
+
+import "package:ramaz/services.dart";
+import "package:ramaz/services_collection.dart";
 
 class HomeModel with ChangeNotifier {
 	static const Duration minute = Duration (minutes: 1);
