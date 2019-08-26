@@ -175,7 +175,7 @@ class MainAppState extends State<RamazApp> {
 				theme: theme,
 				routes: {
 					Routes.LOGIN: (_) => Login(),
-					Routes.HOME_PAGE: (_) => HomePage(),
+					Routes.HOME: (_) => HomePage(),
 					Routes.SCHEDULE: (_) => SchedulePage(),
 					Routes.NOTES: (_) => NotesPage(),
 					// Routes.NEWS: placeholder ("News"),
