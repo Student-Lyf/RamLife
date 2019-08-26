@@ -5,6 +5,9 @@ import "package:ramaz/widgets.dart";
 import "package:ramaz/constants.dart";  // for route names
 
 class NavigationDrawer extends StatelessWidget {
+	static pushRoute(BuildContext context, String name) => 
+		() => Navigator.of(context).pushReplacementNamed(name);
+
 	const NavigationDrawer({Key key}) : super(key: key);
 
 	@override Widget build (BuildContext context) => Drawer (
@@ -14,17 +17,17 @@ class NavigationDrawer extends StatelessWidget {
 				ListTile (
 					title: Text ("Home"),
 					leading: Icon (Icons.home),
-					onTap: () => Navigator.of(context).pushReplacementNamed(HOME_PAGE)
+					onTap: pushRoute(context, Routes.HOME),
 				),
 				ListTile (
 					title: Text ("Schedule"),
 					leading: Icon (Icons.schedule),
-					onTap: () => Navigator.of(context).pushReplacementNamed(SCHEDULE)
+					onTap: pushRoute(context, Routes.SCHEDULE),
 				),
 				ListTile (
 					title: Text ("Notes"),
 					leading: Icon (Icons.note),
-					onTap: () => Navigator.of(context).pushReplacementNamed(NOTES)
+					onTap: pushRoute(context, Routes.NOTES),
 				),
 				// ListTile (
 				// 	title: Text ("Newspapers (coming soon)"),
@@ -44,16 +47,14 @@ class NavigationDrawer extends StatelessWidget {
 				ListTile (
 					title: Text ("Logout"),
 					leading: Icon (Icons.lock),
-					onTap: () => Navigator.of(context).pushReplacementNamed(LOGIN)
+					onTap: pushRoute(context, Routes.LOGIN)
 				),
 				ListTile (
 					title: Text ("Send Feedback"),
 					leading: Icon (Icons.feedback),
-					onTap: () {
-						final NavigatorState nav = Navigator.of(context);
-						nav.pop();
-						nav.pushNamed(FEEDBACK);
-					}
+					onTap: () => Navigator.of(context)
+						..pop()
+						..pushNamed(Routes.FEEDBACK)
 				),
 				BrightnessChanger.dropdown(prefs: Services.of(context).prefs),
 				AboutListTile (

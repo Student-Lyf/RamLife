@@ -1,7 +1,7 @@
 library constants;
 
 class Routes {
-	static const String HOME_PAGE = "home";
+	static const String HOME = "home";
 	static const String SCHEDULE = "schedule";
 	static const String NOTES = "notes";
 	static const String NEWS = "news";
