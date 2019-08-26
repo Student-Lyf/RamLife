@@ -10,7 +10,7 @@ library note_dataclasses;
 import "package:flutter/foundation.dart";
 import "dart:convert" show JsonUnsupportedObjectError;
 
-import "package:ramaz/data/schedule.dart";
+import "schedule.dart";
 
 /// An enum to decide when the note should appear. 
 /// 

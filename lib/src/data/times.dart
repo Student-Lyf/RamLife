@@ -3,7 +3,7 @@
 library time;
 
 import "package:flutter/foundation.dart";
-import "package:ramaz/mock/times.dart";  // for winter friday times
+import "package:ramaz/mock.dart";  // for winter friday times
 
 /// The hour and minute representation of a time. 
 /// 
