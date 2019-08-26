@@ -34,18 +34,16 @@ class ClassPanel extends StatelessWidget {
 					child: Column (
 						crossAxisAlignment: CrossAxisAlignment.start,
 						children: [
-							...children.map(
-								(String text) => Padding (
+							for (final String label in children) 
+								Padding (
 									padding: const EdgeInsets.symmetric(vertical: 5),
-									child: Text (text)
-								)
-							),
-							...notes.map(
-								(int index) => NoteTile (
+									child: Text (label)
+								),
+							for (final int index in notes)
+								NoteTile (
 									index: index,
 									height: 60,
 								)
-							),
 						]
 					)
 				)

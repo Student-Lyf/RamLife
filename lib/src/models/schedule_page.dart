@@ -1,7 +1,6 @@
 import "package:flutter/foundation.dart" show ChangeNotifier, required;
 
 import "schedule.dart";
-import "notes.dart";
 
 import "package:ramaz/data.dart";
 import "package:ramaz/services_collection.dart";
@@ -17,7 +16,6 @@ class ScheduleModel with ChangeNotifier {
 	];
 
 	final Schedule schedule;
-	final Notes notes;
 	Day day;
 	DateTime selectedDay = DateTime.now();
 	Map<DateTime, Day> calendar;
@@ -25,8 +23,7 @@ class ScheduleModel with ChangeNotifier {
 	ScheduleModel ({
 		@required ServicesCollection services,
 	}) : 
-		schedule = services.schedule,
-		notes = services.notes 
+		schedule = services.schedule
 	{
 		// Order to determine which day to show:
 		// 	Valid day stored in reader? 
@@ -34,7 +31,6 @@ class ScheduleModel with ChangeNotifier {
 		// 		False: Is there school today? 
 		// 			True: Use that
 		// 			False: Use default day
-		notes.addListener(notifyListeners);
 		final Day currentDay = schedule.currentDay;
 		if (currentDay == null || !currentDay.school) 
 			try {date = selectedDay;}  // try to set today
@@ -47,7 +43,6 @@ class ScheduleModel with ChangeNotifier {
 
 	@override
 	void dispose() {
-		notes.removeListener(notifyListeners);
 		super.dispose();
 	}
 
