@@ -126,8 +126,8 @@ class SchoolEvent {
 	});
 
 	SchoolEvent.fromJson(Map<String, dynamic> json) :
-		start = json ["start"].toDate(),
-		end = json ["end"].toDate();
+		start = DateTime.fromMicrosecondsSinceEpoch(json ["start"]),
+		end = DateTime.fromMicrosecondsSinceEpoch(json ["end"]);
 
 	operator < (DateTime other) => end.isBefore(other);
 	operator > (DateTime other) => end.isAfter(other);
