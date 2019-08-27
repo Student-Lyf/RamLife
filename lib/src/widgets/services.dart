@@ -23,6 +23,7 @@ class Services extends InheritedWidget {
 
 	Notes get notes => services.notes;
 	Schedule get schedule => services.schedule;
+	Sports get sports => services.sports;
 
 	/// This instance will never be rebuilt with new data
 	@override

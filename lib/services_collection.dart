@@ -12,6 +12,7 @@ class ServicesCollection {
 
 	Notes notes;
 	Schedule schedule;
+	Sports sports;
 
 	ServicesCollection({
 		@required this.reader,
@@ -29,13 +30,14 @@ class ServicesCollection {
 			reader, 
 			notes: notes,
 		);
+		sports = Sports(reader);
 		verify();
 	}
 
 	/// Since [init] cannot be enforced, this function does null checks.
 	/// Put any variables that aren't final in here
 	void verify() {
-		final List properties = [notes, schedule];
+		final List properties = [notes, schedule, sports];
 
 		for (final property in properties) assert (
 			property != null,
@@ -66,5 +68,10 @@ class ServicesCollection {
 
 		if (first) init();
 	}
-}
 
+	void reset() {
+		notes.setup();
+		schedule.setup(reader);
+		sports.setup(reader);
+	}
+}

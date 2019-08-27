@@ -24,8 +24,7 @@ Future<void> refresh(ServicesCollection services) async {
 		"Cannot refresh schedule because the user is not logged in."
 	);
 	await services.initOnLogin(email, false);
-	services.notes.setup();
-	services.schedule.setup(services.reader);
+	services.reset();
 }
 
 void main({bool restart = false}) async {

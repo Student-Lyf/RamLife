@@ -7,13 +7,11 @@ import "package:ramaz/services.dart";
 class Sports with ChangeNotifier {
 	static const Duration updateInterval = Duration (hours: 1);
 
-	final Reader reader;
-
 	List<SportsGame> games, recents, upcoming;
 	Timer timer;
 
-	Sports(this.reader) {
-		setup();
+	Sports(Reader reader) {
+		setup(reader);
 		timer = Timer.periodic(updateInterval, updateGames);
 	}
 
@@ -23,7 +21,7 @@ class Sports with ChangeNotifier {
 		super.dispose();
 	}
 
-	void setup() {
+	void setup(Reader reader) {
 		games = SportsGame.fromList(reader.games);
 		updateGames();
 	}
