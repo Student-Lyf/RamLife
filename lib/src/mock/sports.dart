@@ -1,26 +1,22 @@
-// import "package:ramaz/data.dart";
+import "package:ramaz/data.dart";
 
-// final List<SportsGame> games = [
-// 	SportsGame (  // future
-// 		sport: Sports.basketball,
-// 		opponent: "SAR",
-// 		home: false,
-// 		time: SchoolEvent (
-// 			year: 2020,
-// 			month: 5,
-// 			day: 5,
-// 			time: Range.nums(5, 00, 7, 00)
-// 		)
-// 	),
-// 	SportsGame (
-// 		sport: Sports.tennis,
-// 		opponent: "Frisch",
-// 		home: true,
-// 		time: SchoolEvent (
-// 			year: 2019, 
-// 			month: 5,
-// 			day: 5,
-// 			time: Range.nums(12, 00, 3, 30)  // it's a Sunday :)
-// 		)
-// 	)
-// ];
+final List<SportsGame> games = [
+	SportsGame (  // future
+		sport: Sports.basketball,
+		opponent: "SAR",
+		home: false,
+		time: SchoolEvent (
+			start: DateTime(2020, 5, 5, 5, 0),
+			end: DateTime(2020, 5, 5, 7, 0),
+		)
+	),
+	SportsGame (
+		sport: Sports.tennis,
+		opponent: "Frisch",
+		home: true,
+		time: SchoolEvent (
+			start: DateTime(2019, 8, 26, 12, 0),
+			end: DateTime(2019, 8, 26, 3, 30),
+		)
+	)
+];

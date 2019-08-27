@@ -125,8 +125,8 @@ class SchoolEvent {
 		@required this.end,
 	});
 
-	operator < (SchoolEvent other) => end.isBefore(other.start);
-	operator > (SchoolEvent other) => end.isAfter(other.end);
+	operator < (DateTime other) => end.isBefore(other);
+	operator > (DateTime other) => end.isAfter(other);
 }
 
 /// A description of the time allotment for a day. 

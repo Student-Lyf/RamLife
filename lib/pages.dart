@@ -7,3 +7,4 @@ export "src/pages/login.dart";
 export "src/pages/notes.dart";
 export "src/pages/schedule.dart";
 export "src/pages/splash.dart";
+export "src/pages/sports.dart";

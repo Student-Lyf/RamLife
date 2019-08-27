@@ -39,11 +39,11 @@ class NavigationDrawer extends StatelessWidget {
 				// 	leading: Icon (Icons.help),
 				// 	onTap: () => Navigator.of(context).pushReplacementNamed(LOST_AND_FOUND)
 				// ),
-				// ListTile (
-				// 	title: Text ("Sports (coming soon)"),
-				// 	leading: Icon (Icons.directions_run),
-				// 	onTap: () => Navigator.of(context).pushReplacementNamed(SPORTS)
-				// ),
+				ListTile (
+					title: Text ("Sports (coming soon)"),
+					leading: Icon (Icons.directions_run),
+					onTap: pushRoute(context, Routes.SPORTS),
+				),
 				ListTile (
 					title: Text ("Logout"),
 					leading: Icon (Icons.lock),

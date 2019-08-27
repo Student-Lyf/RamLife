@@ -180,8 +180,7 @@ class MainAppState extends State<RamazApp> {
 					Routes.NOTES: (_) => NotesPage(),
 					// Routes.NEWS: placeholder ("News"),
 					// Routes.LOST_AND_FOUND: placeholder ("Lost and found"),
-					// Routes.SPORTS: placeholder ("Sports"),
-					// Routes.SPORTS: (_) => SportsPage (games),
+					Routes.SPORTS: (_) => SportsPage(),
 					// Routes.ADMIN_LOGIN: placeholder ("Admin Login"),
 					Routes.FEEDBACK: (_) => FeedbackPage(),
 				}
