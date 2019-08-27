@@ -117,27 +117,17 @@ class Range {
 	);
 }
 
-// /// 
-// @immutable
-// class SchoolEvent {
-// 	// A class to represent the time for a school event
-// 	final Range time;
-// 	final int year, month, day;
-// 	const SchoolEvent ({
-// 		@required this.year,
-// 		@required this.month,
-// 		@required this.day,
-// 		@required this.time
-// 	});
+@immutable
+class SchoolEvent {
+	final DateTime start, end;
+	const SchoolEvent ({
+		@required this.start,
+		@required this.end,
+	});
 
-// 	operator < (DateTime other) => DateTime.utc(  // event is in the past
-// 		year, month, day, time.end.hour, time.end.minutes
-// 	).isBefore(other);
-
-// 	operator > (DateTime other) => DateTime.utc(  // event is upcoming
-// 		year, month, day, time.start.hour, time.start.minutes
-// 	).isAfter(other);
-// }
+	operator < (SchoolEvent other) => end.isBefore(other.start);
+	operator > (SchoolEvent other) => end.isAfter(other.end);
+}
 
 /// A description of the time allotment for a day. 
 /// 
