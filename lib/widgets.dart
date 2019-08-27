@@ -11,4 +11,5 @@ export "src/widgets/next_class.dart";
 export "src/widgets/note_tile.dart";
 export "src/widgets/notes_builder.dart";
 export "src/widgets/services.dart";
+export "src/widgets/sports_tile.dart";
 export "src/widgets/theme_changer.dart";
