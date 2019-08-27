@@ -67,5 +67,9 @@ class Firestore {
 		});
 
 	static Future<List<Map<String, dynamic>>> getSports() async => 
-		(await sports.document("sports").get()).data ["games"];
+		List<Map<String, dynamic>>.from (
+			(await sports.document("sports").get()).data ["games"].map (
+				(json) => Map<String, dynamic>.from(json)
+			).toList()
+		);
 }

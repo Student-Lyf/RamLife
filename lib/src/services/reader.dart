@@ -1,3 +1,4 @@
+import "package:cloud_firestore/cloud_firestore.dart" show Timestamp;
 import "dart:convert" show jsonDecode, jsonEncode;
 import "dart:io" show File;
 
@@ -65,7 +66,15 @@ class Reader {
 	);
 
 	set sportsData(List<Map<String, dynamic>> data) => 
-		sportsFile.writeAsStringSync(jsonEncode(data ?? []));
+		sportsFile.writeAsStringSync(
+			jsonEncode(
+				data ?? [],
+				// cloud_firestore uses Timestamps instead of DateTimes. 
+				// See https://github.com/FirebaseExtended/flutterfire/issues/46
+				// By yours truly. 
+				toEncodable: (obj) => (obj as Timestamp).microsecondsSinceEpoch,
+			)
+		);
 
 	void deleteAll() {
 		if (studentFile.existsSync())
