@@ -22,7 +22,7 @@ class Sports with ChangeNotifier {
 	}
 
 	void setup(Reader reader) {
-		games = SportsGame.fromList(reader.games);
+		games = SportsGame.fromList(reader.sportsData);
 		updateGames();
 	}
 

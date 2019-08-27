@@ -6,12 +6,12 @@ import "auth.dart";
 import "package:ramaz/data.dart";
 
 class Firestore {
-
 	static const String STUDENTS = "students";
 	static const String CLASSES = "classes";
 	static const String CALENDAR = "calendar";
 	static const String FEEDBACK = "feedback";
 	static const String NOTES = "notes";
+	static const String SPORTS = "sports";
 
 	static final FB.Firestore firestore = FB.Firestore.instance;
 	static final FB.CollectionReference students = firestore.collection(STUDENTS);
@@ -19,6 +19,7 @@ class Firestore {
 	static final FB.CollectionReference feedback = firestore.collection (FEEDBACK);
 	static final FB.CollectionReference calendar = firestore.collection(CALENDAR);
 	static final FB.CollectionReference notes = firestore.collection (NOTES);
+	static final FB.CollectionReference sports = firestore.collection(SPORTS);
 
 	static Future<Map<String, dynamic>> getStudent (String username) async => 
 		(await students.document(username).get()).data;
@@ -64,4 +65,7 @@ class Firestore {
 			"notes": notesList.map((Note note) => note.toJson()).toList(),
 			"read": readNotes
 		});
+
+	static Future<List<Map<String, dynamic>>> getSports() async => 
+		(await sports.document("sports").get()).data ["games"];
 }

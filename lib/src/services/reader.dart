@@ -3,13 +3,14 @@ import "dart:io" show File;
 
 class Reader {
 	final String dir;
-	final File studentFile, subjectFile, calendarFile, notesFile;
+	final File studentFile, subjectFile, calendarFile, notesFile, sportsFile;
 	Reader(this.dir) :
 		// The files end with 2 because there seems to 
 		// be some sort of ghost data in the original
 		studentFile = File ("$dir/student2.json"),
 		subjectFile = File ("$dir/subjects2.json"),
 		calendarFile = File ("$dir/calendar.json"),
+		sportsFile = File ("$dir/sports.json"),
 		notesFile = File ("$dir/notes.json");
 
 	set studentData(Map<String, dynamic> data) => studentFile.writeAsStringSync(
@@ -59,6 +60,13 @@ class Reader {
 		jsonEncode(data ?? {})
 	);
 
+	List<Map<String, dynamic>> get sportsData => List<Map<String, dynamic>>.from(
+		jsonDecode(sportsFile.readAsStringSync()) ?? {}
+	);
+
+	set sportsData(List<Map<String, dynamic>> data) => 
+		sportsFile.writeAsStringSync(jsonEncode(data ?? []));
+
 	void deleteAll() {
 		if (studentFile.existsSync())
 			studentFile.deleteSync();
@@ -68,10 +76,13 @@ class Reader {
 			calendarFile.deleteSync();
 		if (notesFile.existsSync())
 			notesFile.deleteSync();
+		if (sportsFile.existsSync())
+			sportsFile.deleteSync();
 	}
 
 	bool get ready => (
 		studentFile.existsSync() && subjectFile.existsSync() 
-		&& notesFile.existsSync() && calendarFile.existsSync() 
+		&& notesFile.existsSync() && calendarFile.existsSync()
+		&& sportsFile.existsSync()
 	);
 }
