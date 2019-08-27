@@ -34,5 +34,6 @@ class Sports with ChangeNotifier {
 			if (game.time < now) recents.add(game);
 			else upcoming.add(game);
 		}
+		notifyListeners();
 	}
 }

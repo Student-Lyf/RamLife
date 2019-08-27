@@ -42,6 +42,7 @@ class HomeModel with ChangeNotifier {
 				game.time.start.day == now.day
 			)
 		).toList();
+		notifyListeners();
 	}
 
 	void checkGoogleSupport() async {

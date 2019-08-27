@@ -3,7 +3,7 @@ init()
 
 from firebase_admin import messaging 
 
-token = "cEdcFTaKsiQ:APA91bECBKXtnEDIXFcwucd8n7VtutQNNXf2dm135oubWlk6ddC847P2R1ojXNI3Hq89waqds1xRPzOUHQA4Chys79LDjWPp70Aqve2FxjhFldapOSHoNwVwwEU8QeyuortPkiu9k9m1"
+token = "dS5eOsrIeoc:APA91bGXNEpMqESxMD8mGVOmXg74N065fWMSI23In2bQfU0GK7qIjQRrs7ZgCvENIXPICwsX4vMlUZnbikzRX5qX3b4zqHuhjk7bywz-lHBvCkcjaAaoQ3qQ1JmEx-zxRawLe5mOKfJh"
 
 message = messaging.Message(
 	data = {
