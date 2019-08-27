@@ -20,9 +20,9 @@ class SportsGame {
 	}) : 
 		timestamp = 
 			"${time.start.hour}:"
-			"${time.start.minute}-"
+			"${time.start.minute.toString().padRight(2, "0")}-"
 			"${time.end.hour}:"
-			"${time.end.minute}",
+			"${time.end.minute.toString().padRight(2, "0")}",
 		info = home
 			? "$opponent @ Ramaz"
 			: "Ramaz @ $opponent";

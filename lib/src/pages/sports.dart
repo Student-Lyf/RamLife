@@ -1,6 +1,8 @@
 import "package:flutter/material.dart";
 
+import "package:ramaz/constants.dart";
 import "package:ramaz/data.dart";
+import "package:ramaz/pages.dart";
 import "package:ramaz/widgets.dart";
 
 import "package:ramaz/mock.dart";
@@ -29,34 +31,31 @@ class SportsPage extends StatelessWidget {
 
 	@override Widget build(BuildContext context) => DefaultTabController (
 		length: 2,
+		initialIndex: 1,
 		child: Scaffold (
 			appBar: AppBar (
 				title: Text ("Sports"),
-				bottom: TabBar (tabs: tabs)
+				bottom: TabBar (tabs: tabs),
+				actions: [
+					IconButton(
+						icon: Icon (Icons.home),
+						onPressed: () => Navigator.of(context).pushReplacementNamed(Routes.HOME)
+					)
+				]
 			),
-			// body: TabBarView (
-			// 	children: tabs.map (
-			// 		(Tab tab) => ListView (
-			// 			children: [recent, upcoming].map(
-			// 				(List<SportsGame> gamesList) => ListView (
-			// 					children: gamesList.map (
-			// 						(SportsGame game) => SportsTile (game)
-			// 					).toList()
-			// 				)
-			// 			).toList()
-			// 		)
-			// 	).toList()
-			// )
+			drawer: NavigationDrawer(),
 			body: TabBarView (
 				children: [
-					ListView (children: recent.map((SportsGame game) => SportsTile(game)).toList()),
-					ListView (children: upcoming.map((SportsGame game) => SportsTile(game)).toList()),
+					for (final List<SportsGame> gameList in [recent, upcoming])
+						ListView (
+							padding: EdgeInsets.only(top: 10),
+							children: [
+								for (final SportsGame game in gameList)
+									SportsTile(game)
+							]
+						)
 				]
-			)
+			),
 		)
 	);
-
-	// @override Widget build(BuildContext context) => Scaffold (ListView (
-	// 	children: recent.map((SportsGame game) => SportsTile(game)).toList()
-	// );
 }
