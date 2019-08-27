@@ -23,8 +23,16 @@ class SportsTile extends StatelessWidget {
 	@override Widget build (BuildContext context) => Card (
 		child: ListTile (
 			title: Text (game.info),
-			subtitle: Text (game.timestamp),
-			leading: icon
+			leading: icon,
+			subtitle: Text (
+				"${TimeOfDay(
+					hour: game.time.start.hour, 
+					minute: game.time.start.minute
+				).format(context)} -- ${TimeOfDay(
+					hour: game.time.end.hour,
+					minute: game.time.end.minute,
+				).format(context)}",
+			),
 		)
 	);
 }

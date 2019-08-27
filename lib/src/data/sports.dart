@@ -29,7 +29,7 @@ class SportsGame {
 	final bool home;
 	final String opponent;
 
-	SportsGame({
+	const SportsGame({
 		@required this.sport,
 		@required this.home,
 		@required this.opponent,
@@ -45,13 +45,6 @@ class SportsGame {
 		home = json ["home"],
 		opponent = json ["opponent"],
 		time = SchoolEvent.fromJson (json ["time"]);
-
-
-	String get timestamp => 
-		"${time.start.hour}:"
-		"${time.start.minute.toString().padRight(2, "0")}-"
-		"${time.end.hour}:"
-		"${time.end.minute.toString().padRight(2, "0")}";
 
 	String get info => home ? "$opponent @ Ramaz" : "Ramaz @ $opponent";
 }
