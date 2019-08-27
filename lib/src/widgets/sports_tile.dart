@@ -10,12 +10,12 @@ class SportsTile extends StatelessWidget {
 
 	Widget get icon {
 		switch (game.sport) {
-			case Sports.baseball: return SportsIcons.baseball;
-			case Sports.basketball: return SportsIcons.basketball;
-			case Sports.soccer: return SportsIcons.soccer;
-			case Sports.hockey: return SportsIcons.hockey;
-			case Sports.tennis: return SportsIcons.tennis;
-			case Sports.volleyball: return SportsIcons.volleyball;
+			case Sport.baseball: return SportsIcons.baseball;
+			case Sport.basketball: return SportsIcons.basketball;
+			case Sport.soccer: return SportsIcons.soccer;
+			case Sport.hockey: return SportsIcons.hockey;
+			case Sport.tennis: return SportsIcons.tennis;
+			case Sport.volleyball: return SportsIcons.volleyball;
 		}
 		return null;
 	}

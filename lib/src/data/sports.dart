@@ -5,10 +5,10 @@ import "package:flutter/foundation.dart";
 
 import "package:ramaz/data.dart";
 
-enum Sports {baseball, basketball, hockey, tennis, volleyball, soccer}
+enum Sport {baseball, basketball, hockey, tennis, volleyball, soccer}
 
 class SportsGame {
-	final Sports sport;
+	final Sport sport;
 	final bool home;
 	final String opponent, timestamp, info;
 	final SchoolEvent time;
