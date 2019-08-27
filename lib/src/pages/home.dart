@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 
+import "package:ramaz/data.dart";
 import "package:ramaz/models.dart";
 import "package:ramaz/pages.dart";
 import "package:ramaz/widgets.dart";
@@ -82,6 +83,19 @@ class HomePage extends StatelessWidget {
 							period: model.schedule.nextPeriod,
 							subject: model.schedule.subjects [model.schedule.nextPeriod?.id]
 						),
+						if (model.games.isNotEmpty) Padding (
+							padding: EdgeInsets.symmetric(vertical: 10),
+							child: Align (
+								alignment: Alignment.center,
+								child: Text (
+									"Sports games",
+									textScaleFactor: 1.5,
+									style: TextStyle(fontWeight: FontWeight.w300),
+								)
+							)
+						),
+						for (final SportsGame game in model.games)
+							SportsTile (game),
 					]
 				)
 			)
