@@ -159,9 +159,9 @@ class MainAppState extends State<RamazApp> {
 					color: Colors.grey[820]
 				),
 				toggleableActiveColor: BLUE_LIGHT,
-				buttonColor: BLUE_DARK,
+				buttonColor: BLUE_LIGHT,
 				buttonTheme: ButtonThemeData (
-					buttonColor: BLUE_DARK, 
+					buttonColor: BLUE_LIGHT, 
 					textTheme: ButtonTextTheme.accent,
 				),
 			),
