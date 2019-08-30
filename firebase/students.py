@@ -155,13 +155,13 @@ def main(students, upload, auth, create):
 		print ("Authenticating students...")
 		print ("Indexing students...")
 		students = {
-			student.username.lower(): student
+			student.username: student
 			for student in students
 		}
 		records = []
 		if create: 
 			for student in students.values(): 
-				try: user = FirebaseAuth.create_user(student)
+				try: FirebaseAuth.create_user(student)
 				except FirebaseAuth.Firebase.AuthError: pass 
 		for user in FirebaseAuth.get_users(): 
 			student = students [user.email]
@@ -170,8 +170,6 @@ def main(students, upload, auth, create):
 			records.append (record)
 		print ("Adding Google as a provider...")
 		FirebaseAuth.add_provider(records) 
-		print ("Saving credentials to the database...")
-		add_credentials(students.values())
 	if upload or auth: 
 		print (f"Successfully configured {len (students)} students.")
 

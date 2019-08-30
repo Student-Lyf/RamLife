@@ -5,7 +5,7 @@ def create_user (student): return Firebase.create_user (
 	email = student.username + "@ramaz.org",
 	# This will be overridden by adding Google as a provider
 	password = "ThisShouldNotBeUsed",
-	display_name = student.first + student.last,
+	display_name = f"{student.first} {student.last}",
 	email_verified = False,
 	phone_number = None,
 	photo_url = None,
