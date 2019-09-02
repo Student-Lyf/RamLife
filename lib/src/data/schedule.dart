@@ -369,13 +369,21 @@ class Day {
 	factory Day.fromJson(Map<dynamic, dynamic> json) {
 		if (!json.containsKey("letter")) throw JsonUnsupportedObjectError(json);
 		final String jsonLetter = json ["letter"];
+		final String jsonSpecial = json ["special"];
 		if (!stringToLetters.containsKey (jsonLetter)) throw ArgumentError.value(
 			jsonLetter,  // invalid value
 			"letter",  // arg name
 			"$jsonLetter is not a valid letter",  // message
-		);
+		); 
+		if (jsonSpecial != null && !stringToSpecial.containsKey (jsonSpecial))
+			throw ArgumentError.value (
+				jsonSpecial, // invalid value
+				"special", // arg name
+				"$jsonSpecial is not a valid special", // message
+			);
 		final Letters letter = stringToLetters [jsonLetter];
-		return Day (letter: letter);
+		final Special special = stringToSpecial [jsonSpecial];
+		return Day (letter: letter, special: special);
 	}
 
 	@override 
@@ -396,7 +404,7 @@ class Day {
 	/// If [special] was left as the default, will only return the [letter].
 	String get name => letter == null
 		? null
-		: "${lettersToString [letter]} day ${
+		: "${lettersToString [letter]} day${
 			special == regular || special == rotate ? '' : ' ' + special.name
 		}";
 

@@ -2,8 +2,7 @@ import "../unit.dart";
 
 import "dart:convert" show JsonUnsupportedObjectError;
 
-import "package:ramaz/data/student.dart";
-import "package:ramaz/data/schedule.dart";
+import "package:ramaz/data.dart";
 
 const Map<String, dynamic> invalidJson = {
 	"this": "is",
@@ -29,15 +28,16 @@ class StudentTester {
 	static final List periodListJson = List.filled (11, periodJson);
 	static final PeriodData period = PeriodData.fromJson (periodJson);
 	static final List<PeriodData> periods = List.filled (11, period);
+	static const PeriodData empty = PeriodData.free;
 
-	static final Map<Letters, Schedule> schedule = {
-		Letters.A: Schedule (periods),
-		Letters.B: Schedule (periods),
-		Letters.C: Schedule (periods),
-		Letters.M: Schedule (periods),
-		Letters.R: Schedule (periods),
-		Letters.E: Schedule (periods),
-		Letters.F: Schedule (periods),
+	static final Map<Letters, List<PeriodData>> schedule = {
+		Letters.A: periods,
+		Letters.B: periods,
+		Letters.C: periods,
+		Letters.M: periods,
+		Letters.R: periods,
+		Letters.E: periods,
+		Letters.F: periods,
 	};
 
 	static const String homeroomLocation = "U507";
@@ -67,9 +67,9 @@ class StudentTester {
 	static Map<Letters, List<PeriodData>>convert(Student student)=> 
 		Map.fromEntries(
 			student.schedule.entries.map<MapEntry<Letters, List<PeriodData>>>(
-				(MapEntry<Letters, Schedule> entry) => MapEntry (
+				(MapEntry<Letters, List<PeriodData>> entry) => MapEntry (
 					entry.key,
-					entry.value.periods
+					entry.value
 				)
 			)
 		);
@@ -113,7 +113,7 @@ class StudentTester {
 		}
 		compare<List<Period>> (
 			student.getPeriods(noSchool),
-			null
+			[]
 		);
 	}
 
@@ -127,7 +127,7 @@ class StudentTester {
 		);
 		compare<PeriodData> (
 			student.getHomeroom(noSchool),
-			null
+			empty
 		);
 	}
 }

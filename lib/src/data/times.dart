@@ -438,3 +438,13 @@ const List<Special> specials = [
 	rotate,
 	early,
 ];
+
+final Map<String, Special> stringToSpecial = Map.fromIterable(
+	specials,
+	key: (special) => special.name,
+);
+
+final Map<Special, String> specialToString = Map.fromIterable(
+	specials,
+	value: (special) => special.name,
+);

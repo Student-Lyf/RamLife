@@ -8,6 +8,8 @@
 
 // import "../widget.dart" as Test;
 
+void main() {}
+
 // void main() => Test.test_suite (
 // 	{"NextClass title": NextClassTester.infoTest}
 // );

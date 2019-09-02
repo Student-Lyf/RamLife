@@ -34,18 +34,16 @@ class ClassPanel extends StatelessWidget {
 					child: Column (
 						crossAxisAlignment: CrossAxisAlignment.start,
 						children: [
-							...children.map(
-								(String text) => Padding (
+							for (final String label in children) 
+								Padding (
 									padding: const EdgeInsets.symmetric(vertical: 5),
-									child: Text (text)
-								)
-							),
-							...notes.map(
-								(int index) => NoteTile (
+									child: Text (label)
+								),
+							for (final int index in notes)
+								NoteTile (
 									index: index,
 									height: 60,
 								)
-							),
 						]
 					)
 				)
@@ -66,7 +64,7 @@ class ClassList extends StatelessWidget {
 		this.periods,
 	});
 
-	@override Widget build(BuildContext context) => ChangeNotifierListener<Notes>(
+	@override Widget build(BuildContext context) => ModelListener<Notes>(
 		model: () => Services.of(context).notes,
 		dispose: false,
 		child: DrawerHeader (

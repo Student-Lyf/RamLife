@@ -1,7 +1,7 @@
 library widgets;
 
 export "src/widgets/brightness_changer.dart";
-export "src/widgets/change_notifier_listener.dart";
+export "src/widgets/model_listener.dart";
 export "src/widgets/class_list.dart";
 export "src/widgets/date_picker.dart";
 export "src/widgets/footer.dart";

@@ -2,8 +2,7 @@ import "dart:convert" show JsonUnsupportedObjectError;
 
 import "../unit.dart";
 
-import "package:ramaz/data/schedule.dart";
-import "package:ramaz/data/times.dart";
+import "package:ramaz/data.dart";
 
 const Map<String, dynamic> invalidJson = {
 	"This": "is",
@@ -33,10 +32,6 @@ void main() => test_suite (
 			"Factory test": DayTester.factoryTest,
 			"Calendar test": DayTester.calendarTest,
 		},
-		"Schedule": {
-			"Equality test": ScheduleTester.equalityTest,
-			"Factory test": ScheduleTester.factoryTest,
-		}
 	}
 );
 
@@ -73,7 +68,6 @@ class SubjectTester {
 			testSubject
 		);
 
-		compare<Subject> (Subject.fromJson (null), null);
 		willThrow<JsonUnsupportedObjectError> (
 			() => Subject.fromJson (invalidJson),
 		);
@@ -117,7 +111,7 @@ class PeriodDataTester {
 			),
 			period
 		);
-		compare<PeriodData> (PeriodData.fromJson (null), null);
+		compare<PeriodData> (PeriodData.fromJson (null), PeriodData.free);
 		willThrow<JsonUnsupportedObjectError> (
 			() => PeriodData.fromJson (invalidJson),
 		);
@@ -151,7 +145,7 @@ class PeriodTester {
 	);
 
 	static final Period free = Period (
-		PeriodData.free(),
+		PeriodData.free,
 		time: range, 
 		period: periodNum,
 	);
@@ -318,33 +312,4 @@ class DayTester {
 			},
 		);
 	}
-}
-
-class ScheduleTester {
-	static final List<PeriodData> periods = [
-		PeriodDataTester.period,
-		PeriodTester.periodData,
-	];
-	static final Schedule schedule = Schedule (periods);
-	static const List json = [
-		{
-			PeriodDataTester.idKey: PeriodDataTester.id,
-			PeriodDataTester.roomKey: PeriodDataTester.room,
-		},
-		{
-			PeriodDataTester.idKey: PeriodTester.id,
-			PeriodDataTester.roomKey: PeriodTester.room,
-		}
-	];
-
-	static void equalityTest() {
-		willThrow<UnsupportedError> (() => schedule == Schedule (periods));
-		compareList<PeriodData> (Schedule (periods).periods, periods);
-	}
-
-	// Schedule is basically a list. So let's do something more complicated. 
-	static void factoryTest() => compareList<PeriodData> (
-		Schedule.fromJson (json).periods,
-		periods,
-	);
 }

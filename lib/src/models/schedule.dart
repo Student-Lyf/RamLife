@@ -27,7 +27,7 @@ class Schedule with ChangeNotifier {
 		{@required this.notes}
 	) {
 		setup(reader);
-		notes.addListener(updateNotes);
+		notes.addListener(notesListener);
 	}
 
 	void setup(Reader reader) {
@@ -40,9 +40,12 @@ class Schedule with ChangeNotifier {
 
 	@override 
 	void dispose() {
+		notes.removeListener(notesListener);
 		timer.cancel();
 		super.dispose();
 	}
+
+	void notesListener() => updateNotes(true);
 
 	Subject get subject => subjects [period?.id];
 	bool get hasSchool => today.school;
@@ -58,7 +61,7 @@ class Schedule with ChangeNotifier {
 		today = currentDay = calendar [currentDate];
 		if (today.school) {
 			periods = student.getPeriods(today);
-			onNewPeriod();
+			onNewPeriod(true);
 			timer?.cancel();
 			timer = Timer.periodic(
 				const Duration (minutes: 1),
@@ -67,7 +70,7 @@ class Schedule with ChangeNotifier {
 		}
 	}
 
-	void onNewPeriod() {
+	void onNewPeriod([bool first = false]) {
 		final DateTime newDate = DateTime.now();
 		if (newDate.day != now.day) {
 			// Day changed. Probably midnight
@@ -76,8 +79,7 @@ class Schedule with ChangeNotifier {
 		} else if (!today.school) {
 			period = nextPeriod = periods = null;
 
-			updateNotes();
-			notifyListeners();
+			updateNotes(first);
 			return;
 		}
 
@@ -90,8 +92,7 @@ class Schedule with ChangeNotifier {
 		if (periodIndex == null) { // School ended
 			period = nextPeriod = null;
 			
-			updateNotes();
-			notifyListeners();
+			updateNotes(first);
 			return;
 		}
 
@@ -100,11 +101,10 @@ class Schedule with ChangeNotifier {
 		if (periodIndex < periods.length - 1)
 			nextPeriod = periods [periodIndex + 1];
 
-		updateNotes();
-		notifyListeners();
+		updateNotes(first);
 	}
 
-	void updateNotes() {
+	void updateNotes([bool scheduleNotifications = false]) {
 		notes
 			..currentNotes = notes.getNotes(
 				period: period?.period,
@@ -120,6 +120,43 @@ class Schedule with ChangeNotifier {
 		for (final int index in notes.currentNotes ?? [])
 			notes.shown = index;
 
-		notes.cleanNotes();
+		if (scheduleNotifications) {
+			Future(scheduleNotes);
+		}
+		notifyListeners();
+	}
+
+	void scheduleNotes() async {
+		await Notifications.cancelAll();
+		final DateTime now = DateTime.now();
+		for (int index = periodIndex; index < periods.length; index++) {
+			final Period period = periods [index];
+			for (final int noteIndex in notes.getNotes(
+				period: period?.period,
+				subject: subjects [period?.id]?.name,
+				letter: today.letter,
+			)) {
+				final date = DateTime(
+					now.year, 
+					now.month, 
+					now.day,
+					period.time.start.hour,
+					period.time.start.minutes,
+				);
+				print ("Scheduling note: ${notes.notes [noteIndex].message} for $date");
+				await Notifications.scheduleNotification(
+				date: DateTime(
+					now.year, 
+					now.month, 
+					now.day,
+					period.time.start.hour,
+					period.time.start.minutes,
+				),
+				notification: Notification.note(
+					title: "New note",
+					message: notes.notes [noteIndex].message,
+				)
+			);}
+		}
 	}
 }

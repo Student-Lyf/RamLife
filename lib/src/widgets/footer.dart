@@ -1,12 +1,13 @@
 import "package:flutter/material.dart";
 
+import "package:ramaz/constants.dart";
 import "package:ramaz/models.dart";
 import "package:ramaz/widgets.dart";
 
 class Footer extends StatelessWidget {
 	static const double textScale = 1.25;
 
-	@override Widget build (BuildContext context) => ChangeNotifierListener<Schedule>(
+	@override Widget build (BuildContext context) => ModelListener<Schedule>(
 			model: () => Services.of(context).schedule,
 			dispose: false,
 			child: Container(height: 0, width: 0),
@@ -19,7 +20,7 @@ class Footer extends StatelessWidget {
 							() {
 								final NavigatorState nav = Navigator.of(context);
 								if (nav.canPop()) nav.pop();
-								nav.pushReplacementNamed("home");
+								nav.pushReplacementNamed(Routes.HOME);
 							},
 						child: SizedBox (
 							height: 70,

@@ -9,13 +9,6 @@ import "package:ramaz/services.dart";
 import "package:ramaz/services_collection.dart";
 import "package:ramaz/widgets.dart";
 
-const Color BLUE = Color(0xFF004B8D);  // (255, 0, 75, 140);
-const Color GOLD = Color(0xFFF9CA15);
-const Color BLUE_LIGHT = Color(0XFF4A76BE);
-const Color BLUE_DARK = Color (0xFF00245F);
-const Color GOLD_DARK = Color (0XFFC19A00);
-const Color GOLD_LIGHT = Color (0XFFFFFD56);
-
 /// Completely refresh the user's schedule 
 /// Basically simulate the login sequence
 Future<void> refresh(ServicesCollection services) async {
@@ -123,17 +116,17 @@ class MainAppState extends State<RamazApp> {
 			light: ThemeData (
 				brightness: Brightness.light,
 				primarySwatch: Colors.blue,
-				primaryColor: BLUE,
+				primaryColor: RamazColors.BLUE,
 				primaryColorBrightness: Brightness.dark,
-				primaryColorLight: BLUE_LIGHT,
-				primaryColorDark: BLUE_DARK,
-				accentColor: GOLD,
+				primaryColorLight: RamazColors.BLUE_LIGHT,
+				primaryColorDark: RamazColors.BLUE_DARK,
+				accentColor: RamazColors.GOLD,
 				accentColorBrightness: Brightness.light,
-				cursorColor: BLUE_LIGHT,
-				textSelectionHandleColor: BLUE_LIGHT,
-				buttonColor: GOLD,
+				cursorColor: RamazColors.BLUE_LIGHT,
+				textSelectionHandleColor: RamazColors.BLUE_LIGHT,
+				buttonColor: RamazColors.GOLD,
 				buttonTheme: ButtonThemeData (
-					buttonColor: GOLD,
+					buttonColor: RamazColors.GOLD,
 					textTheme: ButtonTextTheme.normal,
 				),
 			),
@@ -142,27 +135,27 @@ class MainAppState extends State<RamazApp> {
 				scaffoldBackgroundColor: Colors.grey[850],
 				primarySwatch: Colors.blue,
 				primaryColorBrightness: Brightness.dark,
-				primaryColorLight: BLUE_LIGHT,
-				// primaryColor: BLUE,
-				primaryColorDark: BLUE_DARK,
-				accentColor: GOLD_DARK,
+				primaryColorLight: RamazColors.BLUE_LIGHT,
+				// primaryColor: RamazColors.BLUE,
+				primaryColorDark: RamazColors.BLUE_DARK,
+				accentColor: RamazColors.GOLD_DARK,
 				accentColorBrightness: Brightness.light,
-				iconTheme: IconThemeData (color: GOLD_DARK),
-				primaryIconTheme: IconThemeData (color: GOLD_DARK),
-				accentIconTheme: IconThemeData (color: GOLD_DARK),
+				iconTheme: IconThemeData (color: RamazColors.GOLD_DARK),
+				primaryIconTheme: IconThemeData (color: RamazColors.GOLD_DARK),
+				accentIconTheme: IconThemeData (color: RamazColors.GOLD_DARK),
 				floatingActionButtonTheme: FloatingActionButtonThemeData(
-					backgroundColor: GOLD_DARK,
-					foregroundColor: BLUE
+					backgroundColor: RamazColors.GOLD_DARK,
+					foregroundColor: RamazColors.BLUE
 				),
-				cursorColor: BLUE_LIGHT,
-				textSelectionHandleColor: BLUE_LIGHT,
+				cursorColor: RamazColors.BLUE_LIGHT,
+				textSelectionHandleColor: RamazColors.BLUE_LIGHT,
 				cardTheme: CardTheme (
 					color: Colors.grey[820]
 				),
-				toggleableActiveColor: BLUE_LIGHT,
-				buttonColor: BLUE_DARK,
+				toggleableActiveColor: RamazColors.BLUE_LIGHT,
+				buttonColor: RamazColors.BLUE_DARK,
 				buttonTheme: ButtonThemeData (
-					buttonColor: BLUE_DARK, 
+					buttonColor: RamazColors.BLUE_DARK, 
 					textTheme: ButtonTextTheme.accent,
 				),
 			),
@@ -171,11 +164,11 @@ class MainAppState extends State<RamazApp> {
 					? HomePage()
 					: Login(),
 				title: "Student Life",
-				color: BLUE,
+				color: RamazColors.BLUE,
 				theme: theme,
 				routes: {
 					Routes.LOGIN: (_) => Login(),
-					Routes.HOME_PAGE: (_) => HomePage(),
+					Routes.HOME: (_) => HomePage(),
 					Routes.SCHEDULE: (_) => SchedulePage(),
 					Routes.NOTES: (_) => NotesPage(),
 					// Routes.NEWS: placeholder ("News"),

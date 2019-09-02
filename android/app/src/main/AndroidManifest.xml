@@ -1,6 +1,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.ramaz.student_life">
 
+    <!-- For re-scheduling notifications -->
+    <uses-permission 
+        android:name="android.permission.RECEIVE_BOOT_COMPLETED"
+    />
+
     <!-- io.flutter.app.FlutterApplication is an android.app.Application that
          calls FlutterMain.startInitialization(this); in its onCreate method.
          In most cases you can leave this as-is, but you if you want to provide
@@ -11,6 +16,23 @@
         android:label="Student Life"
         android:roundIcon="@mipmap/bright_yellow_round"
         android:icon="@mipmap/bright_yellow">
+
+        <!-- For showing notifications: -->
+        <receiver 
+            android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationBootReceiver">
+
+            <intent-filter>
+                <action 
+                    android:name="android.intent.action.BOOT_COMPLETED"
+                ></action>
+            </intent-filter>
+        </receiver>
+
+        <receiver 
+            android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationReceiver"
+        />
+        <!-- End of notifications -->
+
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"
