@@ -48,6 +48,7 @@ class Schedule with ChangeNotifier {
 	bool get hasSchool => today.school;
 
 	void setToday() {
+		Notifications.cancelAll();
 		// Get rid of the time
 		final DateTime currentDate = DateTime.utc(
 			now.year, 
@@ -58,7 +59,7 @@ class Schedule with ChangeNotifier {
 		today = currentDay = calendar [currentDate];
 		if (today.school) {
 			periods = student.getPeriods(today);
-			onNewPeriod();
+			onNewPeriod(true);
 			timer?.cancel();
 			timer = Timer.periodic(
 				const Duration (minutes: 1),
@@ -67,8 +68,7 @@ class Schedule with ChangeNotifier {
 		}
 	}
 
-	void onNewPeriod() {
-		Notifications.cancelAll();
+	void onNewPeriod([bool first = false]) {
 		final DateTime newDate = DateTime.now();
 		if (newDate.day != now.day) {
 			// Day changed. Probably midnight
@@ -77,7 +77,7 @@ class Schedule with ChangeNotifier {
 		} else if (!today.school) {
 			period = nextPeriod = periods = null;
 
-			updateNotes();
+			updateNotes(first);
 			return;
 		}
 
@@ -102,7 +102,7 @@ class Schedule with ChangeNotifier {
 		updateNotes();
 	}
 
-	void updateNotes() {
+	void updateNotes([bool scheduleNotifications = false]) {
 		notes
 			..currentNotes = notes.getNotes(
 				period: period?.period,
@@ -118,7 +118,8 @@ class Schedule with ChangeNotifier {
 		for (final int index in notes.currentNotes ?? [])
 			notes.shown = index;
 
-		Future(scheduleNotes);
+		if (scheduleNotifications) 
+			Future(scheduleNotes);
 		notifyListeners();
 	}
 
