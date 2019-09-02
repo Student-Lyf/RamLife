@@ -86,6 +86,11 @@ class AndroidNotification {
 
 @immutable
 class IOSNotification {
+	static const IOSNotification note = IOSNotification(
+		showBadge: true,
+		playSound: true
+	);
+
 	final bool showBadge, playSound;
 
 	const IOSNotification({
@@ -112,8 +117,17 @@ class Notification {
 		@required AndroidNotification android,
 		@required IOSNotification ios,
 	}) : details = NotificationDetails(
-		android.details, ios.details,
-	);
+			android.details, ios.details,
+		);
+
+	Notification.note({
+		@required this.title,
+		@required this.message,
+		bool root = false
+	}) : 
+		details = NotificationDetails(
+			AndroidNotification.note(root).details, IOSNotification.note.details,	
+		);
 }
 
 class Notifications {
@@ -145,4 +159,6 @@ class Notifications {
 		notification.details,
 		androidAllowWhileIdle: true,
 	);
+
+	static void cancelAll() => plugin.cancelAll();
 }
