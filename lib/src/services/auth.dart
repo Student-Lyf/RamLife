@@ -20,17 +20,11 @@ class Auth {
 		await google.signOut();
 	}
 
-	static Future<bool> supportsGoogle() async => (await currentUser())
-		.providerData.any (
-			(UserInfo provider) => provider.providerId == "google.com"
-		);
-
 	static bool isValidGoogleAccount(GoogleSignInAccount account) => account
 		.email.endsWith("@ramaz.org");
 
 	static Future<GoogleSignInAccount> signInWithGoogle(
 		void Function() ifInvalid,
-		{bool link = false}
 	) async {
 		final GoogleSignInAccount account = await google.signIn();
 		if (account == null) return null;
@@ -44,16 +38,7 @@ class Auth {
 			accessToken: _auth.accessToken,
 			idToken: _auth.idToken
 		);
-		if (link) await _firebase.linkWithCredential(credential);
-		else await _firebase.signInWithCredential(credential);
+		await _firebase.signInWithCredential(credential);
 		return account;
-	}
-
-	static Future<void> addGoogleSupport({
-		void Function() callback, Future<void> Function() onSuccess
-	}) async {
-		final account = await signInWithGoogle(callback);
-		if (account == null) return;
-		await onSuccess();
 	}
 }
