@@ -68,6 +68,7 @@ class Schedule with ChangeNotifier {
 	}
 
 	void onNewPeriod() {
+		Notifications.cancelAll();
 		final DateTime newDate = DateTime.now();
 		if (newDate.day != now.day) {
 			// Day changed. Probably midnight
@@ -117,6 +118,31 @@ class Schedule with ChangeNotifier {
 		for (final int index in notes.currentNotes ?? [])
 			notes.shown = index;
 
+		Future(scheduleNotes);
 		notifyListeners();
+	}
+
+	void scheduleNotes() {
+		final DateTime now = DateTime.now();
+		for (int index = periodIndex; index < periods.length; index++) {
+			final Period period = periods [index];
+			for (final int noteIndex in notes.getNotes(
+				period: period?.period,
+				subject: subjects [period?.id]?.name,
+				letter: today.letter,
+			)) Notifications.scheduleNotification(
+				date: DateTime(
+					now.year, 
+					now.month, 
+					now.day,
+					period.time.start.hour,
+					period.time.start.minutes,
+				),
+				notification: Notification.note(
+					title: "New note",
+					message: notes.notes [noteIndex].message,
+				)
+			);
+		}
 	}
 }
