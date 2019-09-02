@@ -27,7 +27,7 @@ class Schedule with ChangeNotifier {
 		{@required this.notes}
 	) {
 		setup(reader);
-		notes.addListener(updateNotes);
+		notes.addListener(notesListener);
 	}
 
 	void setup(Reader reader) {
@@ -40,15 +40,17 @@ class Schedule with ChangeNotifier {
 
 	@override 
 	void dispose() {
+		notes.removeListener(notesListener);
 		timer.cancel();
 		super.dispose();
 	}
+
+	void notesListener() => updateNotes(true);
 
 	Subject get subject => subjects [period?.id];
 	bool get hasSchool => today.school;
 
 	void setToday() {
-		Notifications.cancelAll();
 		// Get rid of the time
 		final DateTime currentDate = DateTime.utc(
 			now.year, 
@@ -90,7 +92,7 @@ class Schedule with ChangeNotifier {
 		if (periodIndex == null) { // School ended
 			period = nextPeriod = null;
 			
-			updateNotes();
+			updateNotes(first);
 			return;
 		}
 
@@ -99,7 +101,7 @@ class Schedule with ChangeNotifier {
 		if (periodIndex < periods.length - 1)
 			nextPeriod = periods [periodIndex + 1];
 
-		updateNotes();
+		updateNotes(first);
 	}
 
 	void updateNotes([bool scheduleNotifications = false]) {
@@ -118,12 +120,14 @@ class Schedule with ChangeNotifier {
 		for (final int index in notes.currentNotes ?? [])
 			notes.shown = index;
 
-		if (scheduleNotifications) 
+		if (scheduleNotifications) {
 			Future(scheduleNotes);
+		}
 		notifyListeners();
 	}
 
-	void scheduleNotes() {
+	void scheduleNotes() async {
+		await Notifications.cancelAll();
 		final DateTime now = DateTime.now();
 		for (int index = periodIndex; index < periods.length; index++) {
 			final Period period = periods [index];
@@ -131,7 +135,16 @@ class Schedule with ChangeNotifier {
 				period: period?.period,
 				subject: subjects [period?.id]?.name,
 				letter: today.letter,
-			)) Notifications.scheduleNotification(
+			)) {
+				final date = DateTime(
+					now.year, 
+					now.month, 
+					now.day,
+					period.time.start.hour,
+					period.time.start.minutes,
+				);
+				print ("Scheduling note: ${notes.notes [noteIndex].message} for $date");
+				await Notifications.scheduleNotification(
 				date: DateTime(
 					now.year, 
 					now.month, 
@@ -143,7 +156,7 @@ class Schedule with ChangeNotifier {
 					title: "New note",
 					message: notes.notes [noteIndex].message,
 				)
-			);
+			);}
 		}
 	}
 }

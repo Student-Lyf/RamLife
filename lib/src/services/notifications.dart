@@ -81,6 +81,8 @@ class AndroidNotification {
 		channelShowBadge: showChannelBadge,
 		enableLights: showLight,
 		ledColor: color,
+		ledOnMs: 1000,
+		ledOffMs: 5000,
 	);
 }
 
@@ -135,7 +137,7 @@ class Notifications {
 		..initialize(
 			InitializationSettings(
 				AndroidInitializationSettings(
-					"@mipmap/ic_launcher"  // default icon of app
+					"@mipmap/bright_yellow"  // default icon of app
 				),
 				IOSInitializationSettings(),  // defaults are good
 			)
