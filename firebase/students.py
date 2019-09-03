@@ -30,7 +30,7 @@ class Student:
 	This class models a student. Contains: 
 		- first: first name
 		- last: last name
-		- email: email address (w/o @ramaz.org)
+		- email: email address (w/ @ramaz.org)
 		- id: student id
 	""" 
 	@init
