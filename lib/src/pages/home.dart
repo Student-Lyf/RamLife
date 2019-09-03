@@ -15,23 +15,6 @@ class HomePage extends StatelessWidget {
 			appBar: AppBar (
 				title: Text ("Home"),
 				actions: [
-					if (!model.googleSupport) Builder (
-						builder: (BuildContext context) => IconButton (
-							icon: Logos.google,
-							onPressed: () => model.addGoogleSupport(
-								onFailure: () => Scaffold.of(context).showSnackBar(
-									SnackBar (
-										content: Text ("You need to sign in with your Ramaz email")
-									)
-								),
-								onSuccess: () => Scaffold.of(context).showSnackBar(
-									SnackBar (
-										content: Text ("Google account linked"),
-									),
-								),
-							),
-						),
-					),
 					if (model.schedule.hasSchool) Builder (
 						builder: (BuildContext context) => FlatButton(
 							child: Text ("Swipe left for schedule"),
@@ -83,7 +66,7 @@ class HomePage extends StatelessWidget {
 							period: model.schedule.nextPeriod,
 							subject: model.schedule.subjects [model.schedule.nextPeriod?.id]
 						),
-						if (model.games.isNotEmpty) Padding (
+						if (model.sports.todayGames.isNotEmpty) Padding (
 							padding: EdgeInsets.symmetric(vertical: 10),
 							child: Align (
 								alignment: Alignment.center,
@@ -94,7 +77,7 @@ class HomePage extends StatelessWidget {
 								)
 							)
 						),
-						for (final SportsGame game in model.games)
+						for (final SportsGame game in model.sports.todayGames)
 							SportsTile (game),
 					]
 				)
