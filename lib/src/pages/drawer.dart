@@ -44,6 +44,7 @@ class NavigationDrawer extends StatelessWidget {
 				// 	leading: Icon (Icons.directions_run),
 				// 	onTap: () => Navigator.of(context).pushReplacementNamed(SPORTS)
 				// ),
+				Spacer(),
 				ListTile (
 					title: Text ("Logout"),
 					leading: Icon (Icons.lock),
@@ -75,15 +76,12 @@ class NavigationDrawer extends StatelessWidget {
 						),
 					]
 				),
-				// SizedBox (height: 10),
-				Spacer(),
 				Align (
 					alignment: Alignment.bottomCenter,
 					child: Column (
 						children: [
 							Divider(),
 							SingleChildScrollView (
-								// physics: NeverScrollableScrollPhysics(),
 								scrollDirection: Axis.horizontal,
 								child: Row (
 									children: [
