@@ -1,12 +1,10 @@
 # TODO: integrate Student classes seamlessly
 # TODO: Log properly
 
-from main import init
-data_dir = init().parent / "data"
+from main import init as initFirebase, get_path
+data_dir = get_path().parent / "data"
 from utils import CSVReader, DefaultDict
-import auth as FirebaseAuth
 from data.student import Student as StudentRecord, Period as PeriodRecord
-from database.students import upload_students, add_credentials
 
 from my_stuff.misc import init
 
@@ -45,7 +43,7 @@ class Period:
 		- room: where the class meets
 	"""
 	@init
-	def __init__(self, day, period, room): pass
+	def __init__(self, day, period, room, id = None): pass
 	def __repr__(self): return f"{self.day}{self.period} ({self.room})"
 
 def get_email(first: str, last: str) -> str: 
@@ -67,7 +65,7 @@ def get_students() -> {"student_id": Student}:
 		result [student_id] = student
 	return result
 
-def get_periods() -> (dict): 
+def get_periods(bundle = False) -> (dict, dict): 
 	result = DefaultDict(lambda key: [])
 	homerooms: {"class id": "room"} = {}
 	for entry in CSVReader (data_dir / "section_schedule.csv"): 
@@ -78,9 +76,14 @@ def get_periods() -> (dict):
 		try: int (period)  # "Mincha" will fail
 		except: 
 			if period == "HOMEROOM": 
-				homerooms [class_id] = room
-			continue
-		period = Period (day = day, period = period, room = room)
+				if bundle: 
+					period = Period(day = day, period = period, room = room, id = class_id)
+				else: 
+					homerooms [class_id] = room
+					continue
+			else: continue
+		else: period = Period (day = day, period = period, room = room, id = class_id)
+		assert type(period) is Period, f"Expected Period, got {period}"
 		result [class_id].append (period)
 	return dict (result), homerooms
 
@@ -174,6 +177,9 @@ def main(students, upload, auth, create):
 		print (f"Successfully configured {len (students)} students.")
 
 if __name__ == '__main__':
+	initFirebase()
+	import auth as FirebaseAuth
+	from database.students import upload_students
 	print ("Gathering data...")
 	from argparse import ArgumentParser
 	parser = ArgumentParser()
