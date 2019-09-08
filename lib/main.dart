@@ -21,6 +21,12 @@ Future<void> refresh(ServicesCollection services) async {
 	services.schedule.setup(services.reader);
 }
 
+Future<void> updateCalendar(ServicesCollection services) async {
+	final Map<String, dynamic> calendar = await Firestore.getMonth();
+	services.reader.calendarData = calendar;
+	services.schedule.setup(services.reader);
+}
+
 void main({bool restart = false}) async {
 	// This shows a splash screen but secretly 
 	// determines the desired `platformBrightness`
@@ -77,9 +83,11 @@ void main({bool restart = false}) async {
 		() async {
 			await FCM.registerNotifications(
 				{
-					"refresh": () async => await refresh(services)
+					"refresh": () async => await refresh(services),
+					"updateCalendar": () async => await updateCalendar(services),
 				}
 			);
+			await FCM.subscribeToCalendar();
 			print ("Device notification id: ${await FCM.getToken()}");
 		}
 	);
