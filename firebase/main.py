@@ -11,4 +11,5 @@ path = str (cd / "admin.json")
 def init(): 
 	print ("Initializing...")
 	initialize_app (credentials.Certificate(path))
-	return cd
+
+def get_path(): return cd

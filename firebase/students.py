@@ -1,12 +1,14 @@
 # TODO: integrate Student classes seamlessly
 # TODO: Log properly
 
-from main import init
-data_dir = init().parent / "data"
-from utils import CSVReader, DefaultDict
+from main import init as initFirebase, get_path
+initFirebase()
 import auth as FirebaseAuth
+from database.students import upload_students
+
+data_dir = get_path().parent / "data"
+from utils import CSVReader, DefaultDict
 from data.student import Student as StudentRecord, Period as PeriodRecord
-from database.students import upload_students, add_credentials
 
 from my_stuff.misc import init
 
@@ -30,7 +32,7 @@ class Student:
 	This class models a student. Contains: 
 		- first: first name
 		- last: last name
-		- email: email address (w/o @ramaz.org)
+		- email: email address (w/ @ramaz.org)
 		- id: student id
 	""" 
 	@init
@@ -45,19 +47,16 @@ class Period:
 		- room: where the class meets
 	"""
 	@init
-	def __init__(self, day, period, room): pass
+	def __init__(self, day, period, room, id = None): pass
 	def __repr__(self): return f"{self.day}{self.period} ({self.room})"
-
-def get_email(first: str, last: str) -> str: 
-	return last + first [0] + "@ramaz.org"
 
 def get_students() -> {"student_id": Student}:
 	result = {}
 	for entry in CSVReader (data_dir / "students.csv"): 
-		first = entry ["First Name"]
-		last = entry ["Last Name"]
-		email = get_email (first, last)
+		first = entry ["StuFirstName"]
+		last = entry ["StuLastName"]
 		student_id = entry ["ID"]
+		email = entry ["StuEmail"]
 		student = Student (
 			first = first, 
 			last = last,
@@ -67,7 +66,7 @@ def get_students() -> {"student_id": Student}:
 		result [student_id] = student
 	return result
 
-def get_periods() -> (dict): 
+def get_periods(bundle = False) -> (dict, dict): 
 	result = DefaultDict(lambda key: [])
 	homerooms: {"class id": "room"} = {}
 	for entry in CSVReader (data_dir / "section_schedule.csv"): 
@@ -78,9 +77,14 @@ def get_periods() -> (dict):
 		try: int (period)  # "Mincha" will fail
 		except: 
 			if period == "HOMEROOM": 
-				homerooms [class_id] = room
-			continue
-		period = Period (day = day, period = period, room = room)
+				if bundle: 
+					period = Period(day = day, period = period, room = room, id = class_id)
+				else: 
+					homerooms [class_id] = room
+					continue
+			else: continue
+		else: period = Period (day = day, period = period, room = room, id = class_id)
+		assert type(period) is Period, f"Expected Period, got {period}"
 		result [class_id].append (period)
 	return dict (result), homerooms
 
@@ -154,17 +158,13 @@ def main(students, upload, auth, create):
 	if auth: 
 		print ("Authenticating students...")
 		print ("Indexing students...")
-		students = {
-			student.username: student
-			for student in students
-		}
 		records = []
 		if create: 
-			for student in students.values(): 
+			for student in students: 
 				try: FirebaseAuth.create_user(student)
 				except FirebaseAuth.Firebase.AuthError: pass 
-		for user in FirebaseAuth.get_users(): 
-			student = students [user.email]
+		for student in students:
+			user = FirebaseAuth.get_user(student.username)
 			student.uid = user.uid
 			record = FirebaseAuth.get_record(user)
 			records.append (record)
