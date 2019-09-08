@@ -129,6 +129,8 @@ class Schedule with ChangeNotifier {
 	void scheduleNotes() async {
 		await Notifications.cancelAll();
 		final DateTime now = DateTime.now();
+		if (!today.school || periodIndex == null || periods == null)
+			return;
 		for (int index = periodIndex; index < periods.length; index++) {
 			final Period period = periods [index];
 			for (final int noteIndex in notes.getNotes(
