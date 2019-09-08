@@ -2,7 +2,7 @@ from firebase_admin import auth as Firebase
 from data.student import Student
 
 def create_user (student): return Firebase.create_user (
-	email = student.username + "@ramaz.org",
+	email = student.username,
 	# This will be overridden by adding Google as a provider
 	password = "ThisShouldNotBeUsed",
 	display_name = f"{student.first} {student.last}",
@@ -28,3 +28,5 @@ def get_record(record): return Firebase.ImportUserRecord (
 def add_provider(users): Firebase.import_users (users)
 
 def get_users(): return Firebase.list_users().iterate_all()
+
+def get_user(email): return Firebase.get_user_by_email(email)

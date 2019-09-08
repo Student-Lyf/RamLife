@@ -40,10 +40,12 @@ class NavigationDrawer extends StatelessWidget {
 				// 	onTap: () => Navigator.of(context).pushReplacementNamed(LOST_AND_FOUND)
 				// ),
 				ListTile (
-					title: Text ("Sports (coming soon)"),
+					title: Text ("Sports"),
 					leading: Icon (Icons.directions_run),
 					onTap: pushRoute(context, Routes.SPORTS),
 				),
+				BrightnessChanger.dropdown(prefs: Services.of(context).prefs),
+				Spacer(),
 				ListTile (
 					title: Text ("Logout"),
 					leading: Icon (Icons.lock),
@@ -56,7 +58,6 @@ class NavigationDrawer extends StatelessWidget {
 						..pop()
 						..pushNamed(Routes.FEEDBACK)
 				),
-				BrightnessChanger.dropdown(prefs: Services.of(context).prefs),
 				AboutListTile (
 					icon: Icon (Icons.info),
 					child: Text ("About"),
@@ -75,15 +76,12 @@ class NavigationDrawer extends StatelessWidget {
 						),
 					]
 				),
-				// SizedBox (height: 10),
-				Spacer(),
 				Align (
 					alignment: Alignment.bottomCenter,
 					child: Column (
 						children: [
 							Divider(),
 							SingleChildScrollView (
-								// physics: NeverScrollableScrollPhysics(),
 								scrollDirection: Axis.horizontal,
 								child: Row (
 									children: [

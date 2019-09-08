@@ -53,12 +53,21 @@ class Student:
 		assert type (self.F) is list
 		assert type (self.R) is list
 		assert type (self.M) is list
-		first = self.A [0]
-		assert type (first) is dict
-		assert "id" in first
-		assert "room" in first
-		assert type (first ["id"]) is str
-		assert type (first ["room"]) is str
+		first = None
+		for day in (self.A, self.B, self.C, self.E, self.F, self.M, self.R): 
+			for period in day: 
+				if period is not None: 
+					first = period
+					break
+
+		if first is None: 
+			print (f"WARNING: Couldn't find a single class for {self.username}")
+		else: 
+			assert type (first) is dict
+			assert "id" in first
+			assert "room" in first
+			assert type (first ["id"]) is str
+			assert type (first ["room"]) is str
 
 	def output(self): return {
 		"A": self.A,
