@@ -2,6 +2,10 @@
 # TODO: Log properly
 
 from main import init as initFirebase, get_path
+initFirebase()
+import auth as FirebaseAuth
+from database.students import upload_students
+
 data_dir = get_path().parent / "data"
 from utils import CSVReader, DefaultDict
 from data.student import Student as StudentRecord, Period as PeriodRecord
@@ -157,17 +161,13 @@ def main(students, upload, auth, create):
 	if auth: 
 		print ("Authenticating students...")
 		print ("Indexing students...")
-		students = {
-			student.username: student
-			for student in students
-		}
 		records = []
 		if create: 
-			for student in students.values(): 
+			for student in students: 
 				try: FirebaseAuth.create_user(student)
 				except FirebaseAuth.Firebase.AuthError: pass 
-		for user in FirebaseAuth.get_users(): 
-			student = students [user.email]
+		for student in students:
+			user = FirebaseAuth.get_user(student.username)
 			student.uid = user.uid
 			record = FirebaseAuth.get_record(user)
 			records.append (record)
@@ -177,9 +177,6 @@ def main(students, upload, auth, create):
 		print (f"Successfully configured {len (students)} students.")
 
 if __name__ == '__main__':
-	initFirebase()
-	import auth as FirebaseAuth
-	from database.students import upload_students
 	print ("Gathering data...")
 	from argparse import ArgumentParser
 	parser = ArgumentParser()

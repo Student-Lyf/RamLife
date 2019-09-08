@@ -1,8 +1,7 @@
-from main import init
-from classes import get_teachers
-from students import get_periods, Period
+from students import get_periods, Period, main
+from classes import get_teachers as get_faculty_classes
 from data.student import Student as TeacherRecord, Period as PeriodRecord
-from utils import DefaultDict
+from utils import DefaultDict, CSVReader
 
 MISSING_ROOMS = set()
 DAYS = {
@@ -15,26 +14,43 @@ DAYS = {
 	"F": 7, 
 }
 
+MISSING_EMAIL = set()
+
 class Teacher:
-	def __init__(self, code: str): 
+	def __init__(self, code: str, first, last, email: str): 
 		self.code = code
+		self.first = first
+		self.last = last
+		self.email = email
 		self.homeroom = None
 	def __str__(self): return self.code
 	def __repr__(self): return str(self)
 	def __hash__(self): return hash(self.code)
 
-def simplify_teachers(teachers) -> {Teacher: ["section_id"]}:
+def get_teachers(path): return {
+	entry ["ID"]: Teacher (
+		code = entry ["Email"],
+		first = entry ["FirstName"],
+		last = entry ["LastName"],
+		email = entry ["Email"].lower()
+	)
+	for entry in CSVReader(path / "faculty.csv")
+}
+
+def simplify_teachers(teachers, classes) -> {Teacher: ["section_id"]}:
 	result = {}
-	teacher_codes = {}
-	for section_id, teacher_code in teachers.items(): 
-		if teacher_code in teacher_codes: 
-			teacher = teacher_codes[teacher_code]
+	for section_id, teacher_code in classes.items(): 
+		if teacher_code not in teachers: 
+			MISSING_EMAIL.add(teacher_code)
+			continue
+
+		teacher = teachers [teacher_code]
+		if teacher in result: 
 			list_of_periods = result [teacher]
 		else: 
-			teacher = Teacher(code = teacher_code)
-			teacher_codes[teacher_code] = teacher
 			list_of_periods = []
 			result [teacher] = list_of_periods
+
 		list_of_periods.append(section_id)
 	return result
 
@@ -83,9 +99,9 @@ def get_teacher_records(schedules: {Teacher: [Period]}) -> [TeacherRecord]:
 
 		result.append(
 			TeacherRecord(
-				username = teacher.code,
-				first = teacher.code,
-				last = teacher.code,
+				username = teacher.email,
+				first = teacher.first,
+				last = teacher.last,
 				homeroom = teacher.homeroom,
 				homeroom_location = None,
 				**{
@@ -106,9 +122,34 @@ def get_teacher_records(schedules: {Teacher: [Period]}) -> [TeacherRecord]:
 	return result
 
 if __name__ == '__main__':
-	init()
-	teachers: {"section_id": "teacher"} = get_teachers(codes = True)
-	teachers = simplify_teachers(teachers)
+	from argparse import ArgumentParser
+	parser = ArgumentParser()
+	parser.add_argument(
+		"--upload", 
+		action = "store_true", 
+		help = "Whether or not to upload everyone's schedules"
+	)
+	parser.add_argument(
+		"--auth", 
+		action = "store_true",
+		help = (
+			"Whether or not to authenticate everyone "
+			"(eg, save credentials to the database)"
+		)
+	)
+	parser.add_argument(
+		"--create", 
+		action = "store_true",
+		help = "Whether or not to recreate student FirebaseAuth accounts. This takes time"
+	)
+	args = parser.parse_args()
+
+	from main import init, get_path
+	# init()
+	data_dir = get_path().parent / "data"
+	teachers = get_teachers(data_dir)
+	classes: {"section_id": "teacher"} = get_faculty_classes(codes = True)
+	teachers = simplify_teachers(teachers, classes)
 	# periods is a dict: {section_id: [Period]}
 	# homeroom_locations is also a dict: {section_id: room}
 	periods, homerooms = get_periods()
@@ -116,5 +157,18 @@ if __name__ == '__main__':
 	if MISSING_ROOMS: 
 		print ("Missing some room locations: ")
 		print (MISSING_ROOMS)
+		print()
+	if MISSING_EMAIL: 
+		print ("Couldn't resolve some faculty IDs:")
+		print (MISSING_EMAIL)
+		print()
 	teacher_records = get_teacher_records(teachers_schedule)
-	print (teacher_records [0])
+	print()
+	main(
+		teacher_records, 
+		upload = args.upload, 
+		auth = args.auth, 
+		create = args.create
+	)
+
+
