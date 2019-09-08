@@ -23,6 +23,7 @@ class Teacher:
 		self.last = last
 		self.email = email
 		self.homeroom = None
+		self.homeroom_location = None
 	def __str__(self): return self.code
 	def __repr__(self): return str(self)
 	def __hash__(self): return hash(self.code)
@@ -69,7 +70,8 @@ def get_teacher_schedule(
 					teacher_entry.append(period)
 			except KeyError: 
 				if section_id in homerooms: 
-					teacher.homeroom = homerooms[section_id]
+					teacher.homeroom = section_id
+					teacher.homeroom_location = homerooms[section_id]
 					continue
 
 				course_id = section_id
@@ -103,7 +105,7 @@ def get_teacher_records(schedules: {Teacher: [Period]}) -> [TeacherRecord]:
 				first = teacher.first,
 				last = teacher.last,
 				homeroom = teacher.homeroom,
-				homeroom_location = None,
+				homeroom_location = teacher.homeroom_location,
 				**{
 					day: [
 						(None if period is None else 
