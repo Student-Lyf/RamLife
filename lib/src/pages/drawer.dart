@@ -29,6 +29,7 @@ class NavigationDrawer extends StatelessWidget {
 					leading: Icon (Icons.note),
 					onTap: pushRoute(context, Routes.NOTES),
 				),
+				BrightnessChanger.dropdown(prefs: Services.of(context).prefs),
 				// ListTile (
 				// 	title: Text ("Newspapers (coming soon)"),
 				// 	leading: Icon (Icons.new_releases),
@@ -44,7 +45,7 @@ class NavigationDrawer extends StatelessWidget {
 				// 	leading: Icon (Icons.directions_run),
 				// 	onTap: () => Navigator.of(context).pushReplacementNamed(SPORTS)
 				// ),
-				Spacer(),
+				// Divider(),
 				ListTile (
 					title: Text ("Logout"),
 					leading: Icon (Icons.lock),
@@ -57,7 +58,6 @@ class NavigationDrawer extends StatelessWidget {
 						..pop()
 						..pushNamed(Routes.FEEDBACK)
 				),
-				BrightnessChanger.dropdown(prefs: Services.of(context).prefs),
 				AboutListTile (
 					icon: Icon (Icons.info),
 					child: Text ("About"),
@@ -66,8 +66,8 @@ class NavigationDrawer extends StatelessWidget {
 					applicationIcon: Logos.ramazIcon,
 					aboutBoxChildren: [
 						Text (
-							"Created by the Ramaz Coding Club (Levi Lesches, Sophia Kremer, "
-							"and Sam Low) with the support of the Ramaz administration. "
+							"Created by the Ramaz Coding Club (Levi Lesches and Sophia "
+							"Kremer) with the support of the Ramaz administration. "
 						),
 						SizedBox (height: 20),
 						Text (
@@ -76,6 +76,7 @@ class NavigationDrawer extends StatelessWidget {
 						),
 					]
 				),
+				Spacer(),
 				Align (
 					alignment: Alignment.bottomCenter,
 					child: Column (
