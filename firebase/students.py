@@ -50,16 +50,13 @@ class Period:
 	def __init__(self, day, period, room, id = None): pass
 	def __repr__(self): return f"{self.day}{self.period} ({self.room})"
 
-def get_email(first: str, last: str) -> str: 
-	return last + first [0] + "@ramaz.org"
-
 def get_students() -> {"student_id": Student}:
 	result = {}
 	for entry in CSVReader (data_dir / "students.csv"): 
-		first = entry ["First Name"]
-		last = entry ["Last Name"]
-		email = get_email (first, last)
+		first = entry ["StuFirstName"]
+		last = entry ["StuLastName"]
 		student_id = entry ["ID"]
+		email = entry ["StuEmail"]
 		student = Student (
 			first = first, 
 			last = last,
