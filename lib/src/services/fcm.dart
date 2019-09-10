@@ -14,10 +14,13 @@ import "dart:convert" show JsonUnsupportedObjectError;
 typedef Command = void Function();
 
 class FCM {
-	static final FirebaseMessaging _firebase = FirebaseMessaging();
+	static const String calendarTopic = "calendar";
+	static const String publicationTopic = "publication";
+
+	static final FirebaseMessaging firebase = FirebaseMessaging();
 
 	/// Convenience function to get the device's FCM token
-	static Future<String> getToken() async => _firebase.getToken();
+	static Future<String> getToken() async => firebase.getToken();
 
 	/// This one's kinda a tricky function
 	/// 
@@ -36,7 +39,7 @@ class FCM {
 	/// described above in order to make extension much simpler. 
 	static Future<void> registerNotifications(Map<String, Command> commands) async {
 		// First, get permission on iOS:
-		_firebase.requestNotificationPermissions();
+		firebase.requestNotificationPermissions();
 
 		/// This function handles validation of the notification and looks 
 		/// up the correct callback function based on the command in the 
@@ -71,12 +74,18 @@ class FCM {
 		}
 
 		// Register the callback
-		_firebase.configure(
+		firebase.configure(
 			onMessage: callback,
 			onResume: callback,
 			onLaunch: callback,
 		);
 	}
 
-	static Future<void> subscribeToCalendar() async => _firebase.subscribeToTopic("calendar");
+	static Future<void> subscribeToCalendar(bool value) async => value 
+		? firebase.subscribeToTopic(calendarTopic)
+		: firebase.unsubscribeFromTopic(calendarTopic);
+
+	static Future<void> subscribeToPublication(String publication, bool value) => value
+		? firebase.subscribeToTopic("$publicationTopic-$publication")
+		: firebase.unsubscribeFromTopic("$publicationTopic-$publication");
 }
