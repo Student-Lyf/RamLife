@@ -439,12 +439,8 @@ const List<Special> specials = [
 	early,
 ];
 
+/// Maps the default special names to their [Special] objects
 final Map<String, Special> stringToSpecial = Map.fromIterable(
 	specials,
 	key: (special) => special.name,
-);
-
-final Map<Special, String> specialToString = Map.fromIterable(
-	specials,
-	value: (special) => special.name,
 );

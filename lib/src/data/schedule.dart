@@ -361,7 +361,7 @@ class Day {
 
 	/// Returns a Day from a JSON object.
 	/// 
-	/// Does not iniitialize [special] for now.
+	/// `json ["letter"]` must be one of the specials in [stringToSpecial].
 	/// `json ["letter"]` must not be null.
 	/// 
 	/// This factory is not a constructor so it can dynamically check 
