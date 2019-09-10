@@ -98,8 +98,7 @@ class ScheduleModel with ChangeNotifier {
 			}
 			result = Day (letter: letter, special: special);
 		}
-		print (result.special);
-		return result;
+		return result ?? Day(letter: Letters.M);
 	}
 
 	void update({Letters newLetter, Special newSpecial}) {
