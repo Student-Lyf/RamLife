@@ -9,6 +9,7 @@ DateTime now = DateTime.now();
 class ServicesCollection {
 	final Reader reader;
 	final Preferences prefs;
+	final CloudStorage storage;
 
 	Notes notes;
 	Schedule schedule;
@@ -16,6 +17,7 @@ class ServicesCollection {
 	ServicesCollection({
 		@required this.reader,
 		@required this.prefs,
+		@required this.storage,
 	});
 
 	/// This function is a safety!
