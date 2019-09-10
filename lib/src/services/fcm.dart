@@ -77,4 +77,6 @@ class FCM {
 			onLaunch: callback,
 		);
 	}
+
+	static Future<void> subscribeToCalendar() async => _firebase.subscribeToTopic("calendar");
 }

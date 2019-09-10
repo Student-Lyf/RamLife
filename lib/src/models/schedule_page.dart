@@ -72,9 +72,13 @@ class ScheduleModel with ChangeNotifier {
 			Special newSpecial,
 		}
 	) {
+		Day result;
 		Letters letter = currentDay.letter;
 		Special special = currentDay.special;
-		if (newLetter != null) letter = newLetter;
+		if (newLetter != null) {
+			letter = newLetter;
+			result = Day(letter: letter, special: null);
+		} 
 		if (newSpecial != null) {
 			switch (letter) {
 				// Cannot set a Friday schedule to a non-Friday
@@ -92,8 +96,10 @@ class ScheduleModel with ChangeNotifier {
 					if (fridays.contains (newSpecial))
 						special = newSpecial;
 			}
+			result = Day (letter: letter, special: special);
 		}
-		return Day (letter: letter, special: special);
+		print (result.special);
+		return result;
 	}
 
 	void update({Letters newLetter, Special newSpecial}) {
