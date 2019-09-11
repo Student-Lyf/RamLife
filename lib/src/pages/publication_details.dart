@@ -21,7 +21,8 @@ class PublicationDetailsPage extends StatelessWidget {
 		model: () => model,
 		dispose: false,
 		child: Hero(
-			child: Image.file(File(publication.metadata.imagePath)),
+			// child: Image.file(File(publication.metadata.imagePath)),
+			child: Image.asset(publication.metadata.imagePath),
 			tag: "publication-${publication.name}",
 		),
 		builder: (BuildContext context, PublicationsModel model, Widget image) => Scaffold(
@@ -36,17 +37,19 @@ class PublicationDetailsPage extends StatelessWidget {
 					SizedBox(height: 20),
 					Text (publication.metadata.description, textScaleFactor: 1.25),
 					SizedBox (height: 20),
-					ExpansionPanelList(
+					ExpansionPanelList.radio(
 						children: [
 							for (final PublicationIssues issues in model.getIssues(publication)) 
-								ExpansionPanel(
+								ExpansionPanelRadio(
+									canTapOnHeader: true,
+									value: issues.toString(),
 									headerBuilder: (_, __) => Text (issues.toString()),
 									body: Column (
 										children: [
 											for (final String issue in issues.issues)
 												ListTile(
 													title: Text (PublicationIssues.getDate(issue)),
-													leading: Icon (Icons.keyboard_arrow_right),
+													trailing: Icon (Icons.keyboard_arrow_right),
 													onTap: () => PdfViewer.loadFile(
 														issue,
 														config: ThemeChanger.of(context).brightness == Brightness.light

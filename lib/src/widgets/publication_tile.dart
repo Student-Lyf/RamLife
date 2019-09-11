@@ -21,13 +21,17 @@ class PublicationTile extends StatelessWidget {
 			child: Column (
 				children: [
 					ListTile(title: Text (publication.name)),
-					Container(
-						child: Center (
-							child: SizedBox(
-								height: size,
-								width: size,
-								child: Image.file(
-									File(publication.metadata.imagePath)
+					Hero(
+						tag: "publication-${publication.name}",
+						child: Container(
+							child: Center (
+								child: SizedBox(
+									height: size,
+									width: size,
+									// child: Image.file(
+									// 	File(publication.metadata.imagePath)
+									// )
+									child: Image.asset(publication.metadata.imagePath)
 								)
 							)
 						)
