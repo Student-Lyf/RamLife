@@ -29,12 +29,12 @@ class NavigationDrawer extends StatelessWidget {
 					leading: Icon (Icons.note),
 					onTap: pushRoute(context, Routes.NOTES),
 				),
+				ListTile (
+					title: Text ("Newspapers (coming soon)"),
+					leading: Icon (Icons.new_releases),
+					onTap: pushRoute(context, Routes.PUBLICATIONS),
+				),
 				BrightnessChanger.dropdown(prefs: Services.of(context).prefs),
-				// ListTile (
-				// 	title: Text ("Newspapers (coming soon)"),
-				// 	leading: Icon (Icons.new_releases),
-				// 	onTap: () => Navigator.of(context).pushReplacementNamed(NEWS),
-				// ),
 				// ListTile (
 				// 	title: Text ("Lost and Found (coming soon)"),
 				// 	leading: Icon (Icons.help),

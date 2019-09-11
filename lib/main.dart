@@ -51,11 +51,11 @@ void main({bool restart = false}) async {
 	bool ready;
 	try {
 		// Now, actually initialize the backend services.
-
 		// Reader is kept out of ServicesCollection so it can be used to reset
 		reader = Reader(dir);
 		services = ServicesCollection(
 			reader: reader,
+			storage: CloudStorage(dir),
 			prefs: Preferences(prefs),
 		);
 		
@@ -185,6 +185,7 @@ class MainAppState extends State<RamazApp> {
 					// Routes.SPORTS: (_) => SportsPage (games),
 					// Routes.ADMIN_LOGIN: placeholder ("Admin Login"),
 					Routes.FEEDBACK: (_) => FeedbackPage(),
+					Routes.PUBLICATIONS: (_) => PublicationsPage(),
 				}
 			)
 		)

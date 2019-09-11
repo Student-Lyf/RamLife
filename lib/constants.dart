@@ -16,12 +16,12 @@ class Routes {
 	static const String HOME = "home";
 	static const String SCHEDULE = "schedule";
 	static const String NOTES = "notes";
-	static const String NEWS = "news";
 	static const String LOST_AND_FOUND = "lost-and-found";
 	static const String SPORTS = "sports";
 	static const String ADMIN_LOGIN = "admin-login";
 	static const String LOGIN = "login";
 	static const String FEEDBACK = "feedback";
+	static const String PUBLICATIONS = "publications";
 }
 
 class Urls {
