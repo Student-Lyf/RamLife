@@ -1,15 +1,25 @@
 import "package:shared_preferences/shared_preferences.dart";
 
+/// An abstraction wrapper around the SharedPreferences plugin.
+/// 
+/// The SharedPreferences plugin allows for quick and small key-value based
+/// storage, which can be very useful. 
 class Preferences {
-	final SharedPreferences prefs;
-	Preferences(this.prefs);
+	final SharedPreferences _prefs;
 
-	// Keys
-	static const CALENDAR_UPDATE_KEY = "lastCalendarUpdate";
-	static const FIRST_TIME = "firstTime";
-	static const LIGHT_MODE = "lightMode";
+	/// Const constructor for this class.
+	const Preferences(this._prefs);
 
-	// Helper function
+	/// The key for when the calendar was last updated. 
+	static const String calendarUpdateKey = "lastCalendarUpdate";
+
+	/// The key for if this is the first time or not.
+	static const String firstTimeKey = "firstTime";
+
+	/// The key for the user brightness preference.
+	static const String lightMode = "lightMode";
+
+	/// Returns whether a [DateTime] is today.
 	static bool isToday(DateTime other) {
 		final DateTime now = DateTime.now();
 		return (
@@ -19,24 +29,31 @@ class Preferences {
 		);
 	}
 
+	/// Determines whether this is the first time opening the app.
 	bool get firstTime {
-		final bool result = prefs.getBool(FIRST_TIME) ?? true;
-		prefs.setBool(FIRST_TIME, false);
+		final bool result = _prefs.getBool(firstTimeKey) ?? true;
+		_prefs.setBool(firstTimeKey, false);
 		return result;
 	}
 
-	// calendar updates
+	/// Whether the calendar should be opened. 
+	/// 
+	/// Is true if the app was opened for the first time or 
+	/// the calendar was not last updated today.
 	bool get shouldUpdateCalendar => firstTime || !isToday (lastCalendarUpdate);
+
+	/// The last time the calendar was updated.
 	DateTime get lastCalendarUpdate => DateTime.parse(
-		prefs.getString(CALENDAR_UPDATE_KEY)
+		_prefs.getString(calendarUpdateKey)
 			?? DateTime.utc (1970, 1, 1).toString() 
 	);
 
-	set lastCalendarUpdate (DateTime date) => prefs.setString(
-		CALENDAR_UPDATE_KEY, date.toString()
+	set lastCalendarUpdate (DateTime date) => _prefs.setString(
+		calendarUpdateKey, date.toString()
 	);
 
-	// Preferred brightness
-	bool get brightness => prefs.getBool(LIGHT_MODE);
-	set brightness (bool value) => prefs.setBool(LIGHT_MODE, value); 
+	/// The user's brightness preference. 
+	bool get brightness => _prefs.getBool(lightMode);
+
+	set brightness (bool value) => _prefs.setBool(lightMode, value); 
 }
