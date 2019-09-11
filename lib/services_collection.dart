@@ -62,7 +62,8 @@ class ServicesCollection {
 			..studentData = studentData
 			..subjectData = await Firestore.getClasses(student)
 			..calendarData =  await Firestore.getMonth()
-			..notesData = await Firestore.getNotes(email);
+			..notesData = await Firestore.getNotes(email)
+			..publicationsFile.writeAsString("[]");
 
 		prefs.lastCalendarUpdate = DateTime.now();
 
