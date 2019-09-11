@@ -81,9 +81,8 @@ class FCM {
 		);
 	}
 
-	static Future<void> subscribeToCalendar(bool value) async => value 
-		? firebase.subscribeToTopic(calendarTopic)
-		: firebase.unsubscribeFromTopic(calendarTopic);
+	static Future<void> subscribeToCalendar() => 
+		firebase.subscribeToTopic(calendarTopic);
 
 	static Future<void> subscribeToPublication(String publication, bool value) => value
 		? firebase.subscribeToTopic("$publicationTopic-$publication")
