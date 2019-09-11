@@ -143,6 +143,7 @@ class PublicationsModel with ChangeNotifier {
 			final List<List<String>> issuesForYear = entry.value;
 			for (int index = 0; index < 12; index++) {
 				final List<String> issuesForMonth = issuesForYear [index];
+				if (issuesForMonth.isEmpty) continue;
 				issuesForMonth.sort();
 				result.add(
 					PublicationIssues(
