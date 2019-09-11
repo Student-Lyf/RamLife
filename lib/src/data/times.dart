@@ -1,6 +1,5 @@
 /// A collection of dataclasses to sufficiently represent time for a student. 
-/// {@category Data}
-library time;
+library time_dataclasses;
 
 import "package:flutter/foundation.dart";
 import "package:ramaz/mock.dart";  // for winter friday times
@@ -440,12 +439,8 @@ const List<Special> specials = [
 	early,
 ];
 
+/// Maps the default special names to their [Special] objects
 final Map<String, Special> stringToSpecial = Map.fromIterable(
 	specials,
 	key: (special) => special.name,
-);
-
-final Map<Special, String> specialToString = Map.fromIterable(
-	specials,
-	value: (special) => special.name,
 );

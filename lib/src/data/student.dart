@@ -1,5 +1,4 @@
-/// {@category Data}
-library student;
+library student_dataclasses;
 
 import "package:flutter/foundation.dart";
 import "dart:convert" show JsonUnsupportedObjectError;

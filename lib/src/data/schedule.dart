@@ -2,8 +2,6 @@
 /// 
 /// Classes here are used to abstract the weird schedule details 
 /// to make the code a whole lot simpler. 
-/// 
-/// {@category Data}
 library schedule_dataclasses;
 
 import "package:flutter/foundation.dart";
@@ -363,7 +361,7 @@ class Day {
 
 	/// Returns a Day from a JSON object.
 	/// 
-	/// Does not iniitialize [special] for now.
+	/// `json ["letter"]` must be one of the specials in [stringToSpecial].
 	/// `json ["letter"]` must not be null.
 	/// 
 	/// This factory is not a constructor so it can dynamically check 
