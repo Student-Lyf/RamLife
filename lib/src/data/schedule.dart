@@ -364,25 +364,24 @@ class Day {
 	/// `json ["letter"]` must be one of the specials in [stringToSpecial].
 	/// `json ["letter"]` must not be null.
 	/// 
+	/// `json ["special"] may be: 
+	/// 
+	/// 	1. One of the specials from [specials].
+	/// 	2. JSON of a special. See [Special.fromJson].
+	/// 
 	/// This factory is not a constructor so it can dynamically check 
 	/// for a valid [letter] while keeping the field final.
 	factory Day.fromJson(Map<dynamic, dynamic> json) {
 		if (!json.containsKey("letter")) throw JsonUnsupportedObjectError(json);
 		final String jsonLetter = json ["letter"];
-		final String jsonSpecial = json ["special"];
+		final jsonSpecial = json ["special"];
 		if (!stringToLetters.containsKey (jsonLetter)) throw ArgumentError.value(
 			jsonLetter,  // invalid value
 			"letter",  // arg name
 			"$jsonLetter is not a valid letter",  // message
 		); 
-		if (jsonSpecial != null && !stringToSpecial.containsKey (jsonSpecial))
-			throw ArgumentError.value (
-				jsonSpecial, // invalid value
-				"special", // arg name
-				"$jsonSpecial is not a valid special", // message
-			);
 		final Letters letter = stringToLetters [jsonLetter];
-		final Special special = stringToSpecial [jsonSpecial];
+		final Special special = Special.fromJson(jsonSpecial);
 		return Day (letter: letter, special: special);
 	}
 

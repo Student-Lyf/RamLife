@@ -140,15 +140,7 @@ class PeriodNoteTime extends NoteTime {
 
 	/// Creates a new [NoteTime] from JSON.
 	/// 
-	/// `json ["letter"]` should be one of: 
-	/// 
-	/// * M
-	/// * R
-	/// * A
-	/// * B
-	/// * C
-	/// * E
-	/// * F
+	/// `json ["letter"]` should be one of the [Letters].
 	/// 
 	/// `json ["period"]` should be a valid period for that letter,
 	/// regardless of any schedule changes (like an "early dismissal").
