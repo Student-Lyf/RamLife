@@ -33,10 +33,7 @@ class ScheduleModel with ChangeNotifier {
 		// 			False: Use default day
 		final Day currentDay = schedule.currentDay;
 		if (currentDay == null || !currentDay.school) 
-			try {date = selectedDay;}  // try to set today
-			on ArgumentError {  // If no school today, go to default
-				day = getDay (defaultLetter, defaultSpecial);
-			}
+			day = getDay (defaultLetter, defaultSpecial);
 		else day = currentDay;
 		update();
 	}
@@ -72,7 +69,7 @@ class ScheduleModel with ChangeNotifier {
 			Special newSpecial,
 		}
 	) {
-		Day result;
+		Day result = currentDay;
 		Letters letter = currentDay.letter;
 		Special special = currentDay.special;
 		if (newLetter != null) {
@@ -98,7 +95,6 @@ class ScheduleModel with ChangeNotifier {
 			}
 			result = Day (letter: letter, special: special);
 		}
-		print (result.special);
 		return result;
 	}
 
