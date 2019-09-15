@@ -9,7 +9,7 @@ class FeedbackPage extends StatelessWidget {
 		appBar: AppBar (title: Text ("Send Feedback")),
 		body: Padding (
 			padding: EdgeInsets.symmetric (horizontal: 50),
-			child: ModelListener(
+			child: ModelListener<FeedbackModel>(
 				model: () => FeedbackModel(),
 				builder: (BuildContext context, FeedbackModel model, _) => Column (
 					mainAxisAlignment: MainAxisAlignment.center,
@@ -31,7 +31,12 @@ class FeedbackPage extends StatelessWidget {
 						RaisedButton.icon(
 							label: Text ("Submit"),
 							icon: Icon (Icons.send),
-							onPressed: !model.ready ? null : model.send
+							onPressed: !model.ready 
+								? null 
+								: () {
+									model.send();
+									Navigator.of(context).pop();
+								}
 						)
 					]
 				)
