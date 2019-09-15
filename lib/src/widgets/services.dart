@@ -12,6 +12,7 @@ class Services extends InheritedWidget {
 	final ServicesCollection services;
 	final Reader reader;
 	final Preferences prefs;
+	final CloudStorage storage;
 
 	Services({
 		this.services,
@@ -19,6 +20,7 @@ class Services extends InheritedWidget {
 	}) :
 		reader = services.reader,
 		prefs = services.prefs,
+		storage = services.storage,
 		super (child: child);
 
 	Notes get notes => services.notes;
