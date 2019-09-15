@@ -230,24 +230,27 @@ class Note {
 	/// 
 	/// All possible parameters are required. 
 	/// This function delegates logic to [NoteTime.doesApply]
-	static Iterable<int> getNotes({
+	static List<int> getNotes({
 		@required List<Note> notes,
 		@required Letters letter,
 		@required String period,
 		@required String subject,
-	}) => range(notes.length).where(
-		(int index) => notes [index].time.doesApply(
-			letter: letter,
-			period: period,
-			subject: subject
-		)
-	);
+	}) => [
+		for (int index = 0; index < notes.length; index++)
+			if (notes [index].time.doesApply(
+				letter: letter,
+				period: period,
+				subject: subject				
+			)) index
+	];
 
 	/// Returns a list of notes from a list of JSON objects. 
 	/// 
 	/// Calls [Note.fromJson] for every JSON object in the list.
-	static List<Note> fromList(List notes) => notes.map(
-		(dynamic json) => Note.fromJson(Map<String, dynamic>.from(json))).toList();
+	static List<Note> fromList(List notes) => [
+		for (final dynamic json in notes)
+			Note.fromJson(Map<String, dynamic>.from(json))
+	];
 
 	/// The message this note should show. 
 	final String message;
