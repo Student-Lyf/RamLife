@@ -30,7 +30,7 @@ class NavigationDrawer extends StatelessWidget {
 					onTap: pushRoute(context, Routes.NOTES),
 				),
 				ListTile (
-					title: Text ("Newspapers (coming soon)"),
+					title: Text ("Newspapers"),
 					leading: Icon (Icons.new_releases),
 					onTap: pushRoute(context, Routes.PUBLICATIONS),
 				),
