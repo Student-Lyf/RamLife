@@ -139,11 +139,10 @@ class PeriodData {
 	/// They represent a free period in the schedule.
 	/// 
 	/// See [PeriodData.fromJson] for more details.
-	static List<PeriodData> getList(List json) => json.map(
-		(periodJson) => PeriodData.fromJson(
-			periodJson?.cast<String, dynamic>()
-		)
-	).toList();
+	static List<PeriodData> getList(List json) => [
+		for (final dynamic periodJson in json)
+			PeriodData.fromJson(Map<String, dynamic>.from(periodJson))
+	];
 
 	/// The room the student needs to be in for this period.
 	final String room;

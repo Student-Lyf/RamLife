@@ -81,9 +81,10 @@ class Notes with ChangeNotifier {
 	/// This method sets [Reader.notesData] and calls [Firestore.saveNotes].
 	void saveNotes() {
 		_reader.notesData = {
-			"notes": notes.map(
-					(Note note) => note.toJson()
-				).toList(),
+			"notes": [
+				for (final Note note in notes)
+					note.toJson()
+			],
 			"read": readNotes ?? [],
 		};
 		Firestore.saveNotes(notes ?? [], readNotes ?? []);

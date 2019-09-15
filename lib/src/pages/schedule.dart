@@ -39,12 +39,13 @@ class SchedulePage extends StatelessWidget {
 						trailing: DropdownButton<Letters> (
 							value: model.day.letter, 
 							onChanged: (Letters letter) => model.update(newLetter: letter),
-							items: Letters.values.map<DropdownMenuItem<Letters>> (
-								(Letters letter) => DropdownMenuItem<Letters> (
-									child: Text (letter.toString().split(".").last),
-									value: letter
-								)
-							).toList()
+							items: [
+								for (final Letters letter in Letters.values)
+									DropdownMenuItem(
+										child: Text(lettersToString [letter]),
+										value: letter,
+									)
+							]
 						)
 					),
 					ListTile (
@@ -52,12 +53,13 @@ class SchedulePage extends StatelessWidget {
 						trailing: DropdownButton<Special> (
 							value: model.day.special,
 							onChanged: (Special special) => model.update(newSpecial: special),
-							items: specials.map<DropdownMenuItem<Special>> (
-								(Special special) => DropdownMenuItem<Special> (
-									child: Text (special.name),
-									value: special
-								)
-							).toList()
+							items: [
+								for (final Special special in specials)
+									DropdownMenuItem(
+										child: Text (special.name),
+										value: special,
+									)
+							]
 						)
 					),
 					SizedBox (height: 20),

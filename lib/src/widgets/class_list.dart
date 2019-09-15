@@ -82,33 +82,36 @@ class ClassList extends StatelessWidget {
 				shrinkWrap: true,
 				children: [
 					if (headerText != null) header,
-					...(periods ?? services.schedule.student.getPeriods(day)).map(
-						(Period period) {
-							final Subject subject = services.schedule.subjects[period.id];
-							final List<String> info = period.getInfo(subject)
-								..removeWhere(  // period.name already has the period number
-									(String description) => description.startsWith("Period:")
-								);
-
-							if (period.id != null) 
-								info.add("ID: " + period.id);
-
-							return ClassPanel (
-								children: info,
-								title: (int.tryParse(period.period) == null 
-									? period.getName(subject)
-									: "${period.period}: ${period.getName(subject)}"
-								),
-								notes: services.notes.getNotes(
-									period: period.period,
-									letter: day.letter,
-									subject: subject?.name,
-								),
-							);
-						}
-					)
+					...[
+						for (
+							final Period period in 
+							periods ?? services.schedule.student.getPeriods(day)
+						) getPanel(services, period)
+					]
 				]
 			);
 		}
 	);
+
+	Widget getPanel(Services services, Period period) {
+		final Subject subject = services.schedule.subjects[period.id];
+		return ClassPanel (
+			children: [
+				for (final String description in period.getInfo(subject))
+					if (!description.startsWith("Period:"))
+						description,
+				if (period.id != null) 
+					"ID: ${period.id}",
+			],
+			title: (int.tryParse(period.period) == null 
+				? period.getName(subject)
+				: "${period.period}: ${period.getName(subject)}"
+			),
+			notes: services.notes.getNotes(
+				period: period.period,
+				letter: day.letter,
+				subject: subject?.name,
+			),
+		);
+	}
 }

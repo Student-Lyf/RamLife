@@ -98,7 +98,10 @@ class Firestore {
 	static Future<void> saveNotes(List<Note> notesList, List<int> readNotes) async => _notes
 		.document(await Auth.getEmail())
 		.setData({
-			"notes": notesList.map((Note note) => note.toJson()).toList(),
+			"notes": [
+				for (final Note note in notesList)
+					note.toJson()
+			],
 			"read": readNotes
 		});
 }

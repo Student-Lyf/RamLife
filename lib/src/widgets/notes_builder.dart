@@ -134,12 +134,13 @@ class NotesBuilderState extends State<NotesBuilder> {
 								ListTile (
 									title: Text ("Letter day"),
 									trailing: DropdownButton<Letters>(
-										items: Letters.values.map(
-											(Letters letter) => DropdownMenuItem<Letters>(
-												value: letter,
-												child: Text (lettersToString [letter])
-											)
-										).toList(),
+										items: [
+											for (final Letters letter in Letters.values)
+												DropdownMenuItem(
+													value: letter,
+													child: Text (lettersToString [letter]),
+												),
+										],
 										onChanged: model.changeLetter,
 										value: model.letter,
 										hint: Text ("Letter"),
@@ -148,34 +149,35 @@ class NotesBuilderState extends State<NotesBuilder> {
 								ListTile (
 									title: Text ("Period"),
 									trailing: DropdownButton<String> (
-										items: model.periods?.map(
-											(String period) => DropdownMenuItem<String>(
-												value: period,
-												child: Text (period),
-											)
-										)?.toList() ?? const [],
+										items: [
+											for (final String period in model.periods ?? [])
+												DropdownMenuItem(
+													child: Text (period),
+													value: period,
+												)
+										],
 										onChanged: model.changePeriod,
 										value: model.period,
 										hint: Text ("Period"),
 									)
 								)
-							] else if (model.type == NoteTimeType.subject) ...[
+							] else if (model.type == NoteTimeType.subject)
 								ListTile (
 									title: Text ("Class"),
 									trailing: DropdownButton<String>(
-										items: model.courses.map(
-											(String course) => DropdownMenuItem<String>(
-												value: course,
-												child: Text ("${NotesBuilder.trimString(course, 14)}..."),
-											)
-										).toList(),
+										items: [
+											for (final String course in model.courses)
+												DropdownMenuItem(
+													value: course,
+													child: Text("${NotesBuilder.trimString(course, 14)}..."),
+												)
+										],
 										onChanged: model.changeCourse,
 										value: model.course,
 										isDense: true,
 										hint: Text ("Class"),
 									)
-								)
-							],
+								),
 							SwitchListTile (
 								value: model.shouldRepeat,
 								onChanged: model.toggleRepeat,
