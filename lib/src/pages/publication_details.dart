@@ -8,6 +8,10 @@ import "package:ramaz/models.dart";
 import "package:ramaz/widgets.dart";
 
 class PublicationDetailsPage extends StatelessWidget {
+	static const List<String> months = [
+		"Jan", "Feb", "Mar", "Apr", "May", "Jun", 
+		"Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+	];
 	final PublicationsModel model;
 	final Publication publication;
 
@@ -21,48 +25,70 @@ class PublicationDetailsPage extends StatelessWidget {
 		model: () => model,
 		dispose: false,
 		child: Hero(
-			// child: Image.file(File(publication.metadata.imagePath)),
-			child: Image.asset(publication.metadata.imagePath),
 			tag: "publication-${publication.name}",
+			child: Image.file(
+				File(model.storage.getImagePath(publication.name))
+			),
 		),
 		builder: (BuildContext context, PublicationsModel model, Widget image) => Scaffold(
 			appBar: AppBar(title: Text (publication.name)),
-			floatingActionButton: FloatingActionButton(
-				child: Icon (Icons.file_download),
-				onPressed: () => model.getMoreIssues(publication),
-			),
-			body: ListView(
-				children: [
-					image,
-					SizedBox(height: 20),
-					Text (publication.metadata.description, textScaleFactor: 1.25),
-					SizedBox (height: 20),
-					ExpansionPanelList.radio(
-						children: [
-							for (final PublicationIssues issues in model.getIssues(publication)) 
-								ExpansionPanelRadio(
-									canTapOnHeader: true,
-									value: issues.toString(),
-									headerBuilder: (_, __) => Text (issues.toString()),
-									body: Column (
-										children: [
-											for (final String issue in issues.issues)
-												ListTile(
-													title: Text (PublicationIssues.getDate(issue)),
-													trailing: Icon (Icons.keyboard_arrow_right),
-													onTap: () => PdfViewer.loadFile(
-														issue,
-														config: ThemeChanger.of(context).brightness == Brightness.light
-															? null
-															: PdfViewerConfig(nightMode: true),
-													)
-												)
-										]
-									)
-								)
-						]
-					)
-				]
+			body: RefreshIndicator(
+				onRefresh: () async => model.updatePublication(publication.name),
+				child: ListView(
+					shrinkWrap: true,
+					padding: EdgeInsets.symmetric(horizontal: 20),
+					children: [
+						SizedBox(height: 20),
+						image,
+						SizedBox(height: 20),
+						Text (publication.metadata.description, textScaleFactor: 1.25),
+						SizedBox(height: 20),
+						ExpansionPanelList.radio(
+							children: [
+								for (
+									MapEntry<int, Map<int, List<String>>> yearEntry
+									 in publication.metadata.issuesByMonth.entries
+								 ) ...[
+						        for (MapEntry<int, List<String>> monthEntry in yearEntry.value.entries)
+							        ExpansionPanelRadio(
+			  								canTapOnHeader: true,
+			  								value: "${monthEntry.key}_${yearEntry.key}",
+			  								headerBuilder: (_, __) => ListTile(
+			  									title: Text ("${months [monthEntry.key]} ${yearEntry.key}")
+		  									),
+			  								body: Column (
+			  									children: [
+			  										for (final String issue in monthEntry.value)
+			  											ListTile(
+			  												title: Text (
+			  													"\t\t${months [monthEntry.key]} " + 
+			  													issue.substring(
+			  														issue.lastIndexOf("_") + 1,  // the date
+			  														issue.length - 4,  // but not ".pdf"
+		  														)
+		  													),
+			  												trailing: model.downloading == issue
+			  													? SizedBox(
+			  														width: 25, 
+			  														height: 25,
+			  														child: CircularProgressIndicator()
+		  														)
+				  												: Icon (Icons.keyboard_arrow_right),
+			  												onTap: () async => PdfViewer.loadFile(
+			  													await model.getIssue(publication, issue),
+			  													config: ThemeChanger.of(context).brightness == Brightness.light
+			  														? null
+			  														: PdfViewerConfig(nightMode: true),
+			  												)
+			  											)
+			  									]
+			  								)
+	  								)
+									]
+							]
+						)
+					]
+				)
 			)
 		)
 	);
