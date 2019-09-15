@@ -1,6 +1,8 @@
 import "package:flutter/material.dart";
 import "dart:io" show File;
 
+import "services.dart";
+
 import "package:ramaz/data.dart";
 
 class PublicationTile extends StatelessWidget {
@@ -21,17 +23,19 @@ class PublicationTile extends StatelessWidget {
 			child: Column (
 				children: [
 					ListTile(title: Text (publication.name)),
-					Hero(
-						tag: "publication-${publication.name}",
-						child: Container(
+					SizedBox(
+						height: size,
+						width: size,
+						child: Hero(
+							tag: "publication-${publication.name}",
 							child: Center (
-								child: SizedBox(
-									height: size,
-									width: size,
-									// child: Image.file(
-									// 	File(publication.metadata.imagePath)
-									// )
-									child: Image.asset(publication.metadata.imagePath)
+								child: Image.file(
+									File(
+										Services
+											.of(context)
+											.storage
+											.getImagePath(publication.name)
+									)
 								)
 							)
 						)
