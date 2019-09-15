@@ -209,8 +209,7 @@ class Special {
 	/// 		- a "skip" field, which should be a list of integers. See [skip].
 	/// 
 	factory Special.fromJson(dynamic value) {
-		if (value == null)
-			throw ArgumentError.notNull ("Special.fromJson: value");
+		if (value == null) return null;
 		else if (!(value is Map || value is String))
 			throw ArgumentError.value (
 				value, // invalid value
@@ -232,7 +231,7 @@ class Special {
 			Range.getList(json ["periods"]),
 			homeroom: json ["homeroom"],
 			mincha: json ["mincha"],
-			skip: json ["skip"],
+			skip: List<int>.from(json ["skip"]),
 		);
 	}
 

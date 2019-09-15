@@ -306,7 +306,6 @@ class Period {
 /// while the [special] property decides what time slots to give the periods. 
 @immutable
 class Day {
-
 	/// The default [Special] for a given [Letters].
 	static final Map<Letters, Special> specials = {
 		Letters.A: rotate,
@@ -368,6 +367,7 @@ class Day {
 	/// 
 	/// 	1. One of the specials from [specials].
 	/// 	2. JSON of a special. See [Special.fromJson].
+	/// 	3. null, in which case [specials] will be used.
 	/// 
 	/// This factory is not a constructor so it can dynamically check 
 	/// for a valid [letter] while keeping the field final.
