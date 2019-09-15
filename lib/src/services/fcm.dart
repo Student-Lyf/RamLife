@@ -84,6 +84,11 @@ class FCM {
 	/// data. Notifications are still handled by [registerNotifications].
 	static Future<void> subscribeToCalendar() async => _firebase.subscribeToTopic("calendar");
 
+	/// Subscribe to a publication.
+	/// 
+	/// Calling this function will result in being notified when the authors 
+	/// publish a new issue or edit a past issue. This way, all users will stay
+	/// updated at the author's whim, while still only following some publications.
 	static Future<void> subscribeToPublication(String publication, bool value) => value
 		? _firebase.subscribeToTopic("publication-$publication")
 		: _firebase.unsubscribeFromTopic("publication-$publication");
