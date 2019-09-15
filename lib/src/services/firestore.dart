@@ -69,13 +69,8 @@ class Firestore {
 	/// 
 	/// The feedback collection is write-only, and can only be accessed by admins.
 	static Future<void> sendFeedback(
-		String message, 
-		String name,
-	) => _feedback.document().setData({
-		"message": message,
-		"name": name,
-		"timestamp": DateTime.now()
-	});
+		Map<String, dynamic> json
+	) => _feedback.document().setData(json);
 
 	/// Downloads the calendar for the current month. 
 	static Future<Map<String, dynamic>> getMonth() async => (

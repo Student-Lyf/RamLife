@@ -16,6 +16,12 @@ class Auth {
 	/// methods that provide higher level functionality, such as [ready].
 	static Future<FirebaseUser> currentUser() async => await _firebase.currentUser();
 
+	/// The user's email.
+	static Future<String> get email async => (await currentUser()).email;
+
+	/// The user's full name.
+	static Future<String> get name async => (await currentUser()).displayName;
+
 	/// Returns the email of the currently logged in user.
 	static Future<String> getEmail() async {
 		final FirebaseUser user = await currentUser();
