@@ -32,7 +32,11 @@ class ScheduleModel with ChangeNotifier {
 		// 			True: Use that
 		// 			False: Use default day
 		final Day currentDay = schedule.currentDay;
-		if (currentDay == null || !currentDay.school) 
+		if (
+			currentDay == null || 
+			!currentDay.school ||
+			!stringToSpecial.containsKey(currentDay.special.name)
+		) 
 			day = getDay (defaultLetter, defaultSpecial);
 		else day = currentDay;
 		update();
