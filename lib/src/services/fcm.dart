@@ -2,7 +2,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import "dart:convert" show JsonUnsupportedObjectError;
 
 /// Callback that expects no arguments and returns no data. 
-typedef VoidCallback = void Function();
+typedef VoidCallback = Future<void> Function();
 
 /// An abstraction around Firebase Cloud Messaging. 
 /// 
@@ -56,7 +56,8 @@ class FCM {
 				partialResult: data.toString(),
 			);
 
-			final VoidCallback function = commands [command];
+			// final VoidCallback function = commands [command];
+			final function = commands [command];
 			if (function == null) throw ArgumentError.value(
 				command,
 				"Command",
