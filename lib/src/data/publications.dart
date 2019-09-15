@@ -1,64 +1,140 @@
 import "package:flutter/foundation.dart" show immutable, required;
 
+/// A publication club (such as Rampage)
 @immutable
 class Publication {
-	static List<Publication> getList(List data) {
-		final List<Publication> result = [];
+	/// Returns a list of [Publication]s from a list of JSON objects.
+	/// 
+	/// See [Publication.fromJson] for details.
+	static List<Publication> getList(List<Map<String, dynamic>> data) => [
 		for (dynamic json in data) 
-			result.add(Publication.fromJson(Map<String, dynamic>.from(json)));
-		return result;
-	}
+			Publication.fromJson(json)
+	];
 
+	/// THe metadata for this publication.
 	final PublicationMetadata metadata;
-	final List<String> issues;	
+
+	/// The name of this publication.
 	final String name;
 
+	/// A list of all the issues downloaded for this publication.
+	/// 
+	/// This includes recent and outdated issues. It can be safely assumed 
+	/// that any path listed in here is present in the filesystem.
+	final Set<String> downloadedIssues;	
+
+	/// A const constructor for this class.
 	const Publication({
 		@required this.name,
-		@required this.issues,
+		@required this.downloadedIssues,
 		@required this.metadata,
 	});
 
+	/// Returns a new [Publication] from a JSON object.
+	/// 
+	/// The JSON must have: 
+	/// 
+	/// 	- a `name` field that is a string. See [name].
+	/// 	- an `issues` field that is a list of strings. See [downloadedIssues].
+	/// 	- a `metadata` field that is JSON. See [PublicationMetadata.fromJson].
+	/// 
 	Publication.fromJson(Map<String, dynamic> json) :
 		name = json ["name"],
-		issues  = List<String>.from(json ["issues"]),
-		metadata = PublicationMetadata.fromJson(Map<String, dynamic>.from(json ["metadata"]));
+		downloadedIssues  = Set<String>.from(json ["issues"]),
+		metadata = PublicationMetadata.fromJson(
+			Map<String, dynamic>.from(json ["metadata"])
+		);
 
+	/// Returns a JSON representation of this publication.
 	Map<String, dynamic> toJson() => {
 		"name": name,
-		"issues": issues,
+		"issues": List.from(downloadedIssues),
 		"metadata": metadata.toJson(),
 	};
 }
 
+/// Metadata about a publication.
+/// 
+/// Metadata includes things like:
+/// 
+/// 	- a label image,
+/// 	- a list of recent issues,
+/// 	- a list of all issues, and
+/// 	- a description of the publication.
+/// 
 @immutable 
 class PublicationMetadata {
-	final List<String> recents, allIssues;
-	final String description, imagePath;
+	/// Returns a collection of issues sorted by month.
+	/// 
+	/// See [PublicationMetadata.issuesByMonth] for usage.
+	static Map<int, Map<int, List<String>>> getIssuesByMonth(List<String> issues) {
+		issues.sort();
+		final Map<int, Map<int, List<String>>> result = {};
+		for (final String issue in issues) {
+			final List<String> date_parts = issue.substring(
+				issue.lastIndexOf("/") + 1, issue.length - 4
+			).split("_");
+			final int year = int.parse(date_parts [0]);
+			final int month = int.parse(date_parts [1]);
+			if (!result.containsKey(year))
+				result [year] = {};
+			List<String> issuesForMonth = result [year] [month];
+			if (issuesForMonth == null) {
+				issuesForMonth = [];
+				result [year] [month] = issuesForMonth;
+			} 
+			issuesForMonth.add(issue);
+		}
+		return result;
+	}
 
-	const PublicationMetadata({
-		@required this.recents,
-		@required this.allIssues,
+	/// All issues available for this publication.
+	/// 
+ 	/// These paths can be downloaded from Firebase Cloud Storage.
+	final List<String> issues;
+
+	/// All issues for this publication sorted by year and month.
+	/// 
+	/// The keys are years and the values are maps where the keys 
+	/// are months and the values are issues for that month.
+	/// 
+	/// For example: `issuesByMonth [2019] [0]` will return all issues 
+	/// for January 2019.
+	final Map<int, Map<int, List<String>>> issuesByMonth;
+	
+	/// A description of this publication.
+	final String description;
+
+	/// A constructor for this class.
+	/// 
+	/// [issuesByMonth] will be automatically initialized. See [getIssuesByMonth].
+	PublicationMetadata({
+		@required this.issues,
 		@required this.description,
-		@required this.imagePath,
-	});
+	}) : issuesByMonth = getIssuesByMonth(issues);
 
+	/// Returns a new metadata instance from a JSON object.
+	/// 
+	/// The JSON must have: 
+	/// 	- a `description` field that is a string. See [description].
+	/// 	- an `issues` field that is a list of strings. See [issues].
+	/// 
+	/// [issuesByMonth] will be automatically initialized. See [getIssuesByMonth].
 	PublicationMetadata.fromJson(Map<String, dynamic> json) :
-		recents = List<String>.from(json ["recents"]),
-		allIssues = List<String>.from(json ["allIssues"]),
+		issues = List<String>.from(json ["allIssues"].split(", ")),
 		description = json ["description"] as String,
-		imagePath = json ["imagePath"] as String;
+		issuesByMonth = getIssuesByMonth(
+			List<String>.from(json ["allIssues"].split(", "))
+		);
 
+	@override
+	operator == (dynamic other) => other is PublicationMetadata &&
+		issues == other.issues &&
+		description == other.description;
+
+	/// Returns a JSON representation of this instance.
 	Map<String, dynamic> toJson() => {
 		"description": description,
-		"imagePath": imagePath,
-		"recents": recents,
-		"allIssues": allIssues,
+		"allIssues": issues.join (", "),
 	};
-
-	operator == (dynamic other) => other is PublicationMetadata &&
-		recents == other.recents &&
-		allIssues == other.allIssues &&
-		description == other.description &&
-		imagePath == other.imagePath;
 }
