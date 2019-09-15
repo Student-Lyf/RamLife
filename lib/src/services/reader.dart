@@ -27,6 +27,7 @@ class Reader {
 	/// The file containing the user's notes. 
 	final File notesFile;
 
+	/// The file containing the user's downloaded publications.
 	final File publicationsFile;
 
 	/// Initializes the files based on the path ([dir]) provided to it. 
@@ -93,11 +94,15 @@ class Reader {
 		jsonEncode(data ?? {})
 	);
 
-	List get publications => jsonDecode(
-		publicationsFile.readAsStringSync()
-	);
+	/// A JSON representation of the user's downloaded publications.
+	List<Map<String, dynamic>> get publications => [
+		for (final dynamic json in jsonDecode(
+			publicationsFile.readAsStringSync()
+		))
+			Map<String, dynamic>.from(json)
+	];
 
-	set publications (List data) => publicationsFile.writeAsStringSync(
+	set publications (List<Map<String, dynamic>> data) => publicationsFile.writeAsStringSync(
 		jsonEncode(data)
 	);
 
