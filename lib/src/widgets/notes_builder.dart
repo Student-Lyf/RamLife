@@ -4,7 +4,7 @@ import "package:ramaz/data.dart";
 import "package:ramaz/models.dart";
 import "package:ramaz/widgets.dart";
 
-///Must be stateful to keep [TextEditingController.text] intact
+// Must be stateful to keep [TextEditingController.text] intact
 class NotesBuilder extends StatefulWidget {	
 	static void noop(){}
 	static final Color disabledColor = RaisedButton(onPressed: noop)
@@ -47,7 +47,7 @@ class NotesBuilder extends StatefulWidget {
 	NotesBuilderState createState() => NotesBuilderState();
 }
 
-/// Exists solely to instantiate a TextEditingController
+// Exists solely to instantiate a TextEditingController
 class NotesBuilderState extends State<NotesBuilder> {
 	final TextEditingController controller = TextEditingController();
 
@@ -170,7 +170,7 @@ class NotesBuilderState extends State<NotesBuilder> {
 											)
 										).toList(),
 										onChanged: model.changeCourse,
-										value: model.name,
+										value: model.course,
 										isDense: true,
 										hint: Text ("Class"),
 									)
