@@ -9,17 +9,6 @@ import "package:ramaz/models.dart";
 import "package:ramaz/widgets.dart";
 
 class PublicationsPage extends StatelessWidget {
-	static const Publication pub = Publication(
-		name: "RamPage",
-		issues: ["path/blah/blah/2019_05_22.pdf", "path/blah/blah/2019_05_21.pdf", "path/blah/blah/2018_02_27.pdf"],
-		metadata: PublicationMetadata(
-			imagePath: "images/logos/ramaz/ram_square_words.png",
-			allIssues: ["path/blah/blah/2019_05_22.pdf", "path/blah/blah/2019_05_21.pdf", "path/blah/blah/2018_02_27.pdf"],
-			recents: ["path/blah/blah/2019_05_22.pdf", "path/blah/blah/2019_05_21.pdf", "path/blah/blah/2018_02_27.pdf"],
-			description: "The Rampage newspaper is very prestigous blah blah blah blah blah blah blah blah blah blah blah blah blah blah",
-		)
-	);
-
 	@override
 	Widget build(BuildContext context) => Scaffold(
 		drawer: NavigationDrawer(),
@@ -35,26 +24,28 @@ class PublicationsPage extends StatelessWidget {
 		),
 		body: ModelListener(
 			model: () => PublicationsModel(Services.of(context).services),
-			builder: (BuildContext context, PublicationsModel model, _) => ListView(
-				children: [
-					PublicationTile(
-						onTap: () => Navigator.of(context).push(
-							MaterialPageRoute(
-								builder: (_) => PublicationDetailsPage(
-									publication: pub,
-									model: model,
+			builder: (BuildContext context, PublicationsModel model, _) => model.publications.isEmpty 
+				?	Center(child: CircularProgressIndicator())
+				: RefreshIndicator(
+					onRefresh: model.updatePublications,
+					child: ListView(
+						itemExtent: 250,
+						children: [
+							for (final Publication publication in model.publications)
+								PublicationTile(
+									publication: publication,
+									onTap: () => Navigator.of(context).push(
+										MaterialPageRoute(
+											builder: (_) => PublicationDetailsPage(
+												publication: publication,
+												model: model,
+											),
+										),
+									),
 								),
-							),
-						),
-						publication: pub,
-					),
-					for (final Publication publication in model.publications) 
-						PublicationTile(
-							publication: publication,
-							onTap: null,
-						),
-				]
-			)
+						]
+					)
+				)
 		)
 	);
 }
