@@ -12,7 +12,7 @@ import "package:ramaz/widgets.dart";
 /// Completely refresh the user's schedule 
 /// Basically simulate the login sequence
 Future<void> refresh(ServicesCollection services) async {
-	final String email = await Auth.getEmail();
+	final String email = await Auth.email;
 	if (email == null) throw StateError(
 		"Cannot refresh schedule because the user is not logged in."
 	);
@@ -22,7 +22,7 @@ Future<void> refresh(ServicesCollection services) async {
 }
 
 Future<void> updateCalendar(ServicesCollection services) async {
-	final Map<String, dynamic> calendar = await Firestore.getMonth();
+	final Map<String, dynamic> calendar = await Firestore.month;
 	services.reader.calendarData = calendar;
 	services.schedule.setup(services.reader);
 }
@@ -60,7 +60,7 @@ void main({bool restart = false}) async {
 		);
 		
 		// To download, and login or go to main
-		ready = services.reader.ready && await Auth.ready();
+		ready = services.reader.ready && await Auth.ready;
 		if (ready) await services.initOnMain();
 	} catch (error) {
 		print ("Error on main.");
@@ -88,7 +88,7 @@ void main({bool restart = false}) async {
 				}
 			);
 			await FCM.subscribeToCalendar();
-			print ("Device notification id: ${await FCM.getToken()}");
+			print ("Device notification id: ${await FCM.token}");
 		}
 	);
 

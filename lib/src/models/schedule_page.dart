@@ -112,9 +112,4 @@ class ScheduleModel with ChangeNotifier {
 			notifyListeners();
 		}
 	}
-
-	void update({Letters newLetter, Special newSpecial}) {
-		day = buildDay (day, newLetter: newLetter, newSpecial: newSpecial);
-		notifyListeners();
-	}
 }

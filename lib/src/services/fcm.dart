@@ -86,7 +86,6 @@ class FCM {
 	/// data. Notifications are still handled by [registerNotifications].
 	static Future<void> subscribeToCalendar() async => 
 		_firebase.subscribeToTopic("calendar");
-	static Future<void> subscribeToCalendar() async => _firebase.subscribeToTopic("calendar");
 
 	/// Subscribe to a publication.
 	/// 

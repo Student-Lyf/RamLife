@@ -47,22 +47,22 @@ class ServicesCollection {
 
 	Future<void> initOnMain() async {
 		if (prefs.shouldUpdateCalendar)
-			reader.calendarData = await Firestore.getMonth();
+			reader.calendarData = await Firestore.month;
 
 		init();
 	}
 
 	Future<void> initOnLogin(String email, [bool first = true]) async {
 		// Save and initialize the student to get the subjects
-		final Map<String, dynamic> studentData = await Firestore.getStudent(email);
+		final Map<String, dynamic> studentData = await Firestore.student;
 		final Student student = Student.fromJson(studentData);		
 
 		// save the data
 		reader
 			..studentData = studentData
 			..subjectData = await Firestore.getClasses(student)
-			..calendarData =  await Firestore.getMonth()
-			..notesData = await Firestore.getNotes(email)
+			..calendarData =  await Firestore.month
+			..notesData = await Firestore.notes
 			..publicationsFile.writeAsString("[]");
 
 		prefs.lastCalendarUpdate = DateTime.now();
