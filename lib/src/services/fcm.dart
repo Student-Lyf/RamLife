@@ -2,18 +2,18 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import "dart:convert" show JsonUnsupportedObjectError;
 
 /// Callback that expects no arguments and returns no data. 
-typedef VoidCallback = void Function();
+typedef VoidCallback = Future<void> Function();
 
 /// An abstraction around Firebase Cloud Messaging. 
 /// 
 /// The app can receive a notification from Firebase at any time.
 /// What it does with the notification depends on when it was received:
 /// 
-/// 	- If the app is in the foreground, `onMessage` is called. 
-/// 	- If the app is in the background: 
-/// 		- If it's a notification, `onResume` is called when the app starts.
-/// 		- Otherwise, `onMessage` is called.
-/// 	- If the app is terminated, `onLaunch` will be called when the app is opened.
+/// - If the app is in the foreground, `onMessage` is called. 
+/// - If the app is in the background: 
+/// 	- If it's a notification, `onResume` is called when the app starts.
+/// 	- Otherwise, `onMessage` is called.
+/// - If the app is terminated, `onLaunch` will be called when the app is opened.
 /// 
 /// In any case, noticication configuration is handled by [registerNotifications], 
 /// which assigns the same callback to all cases. The callbacks can be registered 
@@ -24,13 +24,14 @@ class FCM {
 	static final FirebaseMessaging _firebase = FirebaseMessaging();
 
 	/// Returns the device's FCM token
-	static Future<String> getToken() async => _firebase.getToken();
+	static Future<String> get token => _firebase.getToken();
 
 	/// Registers a group of callbacks with Firebase Cloud Messaging. 
 	/// 
 	/// The callbacks should be a map of command keys and functions. 
 	/// The value of the `command` field of the data message will be passed
-	/// as the key to the [commands]. This function should be called from main. 
+	/// as the key to the [commands]. This function should be called from a scope
+	/// with access to data models and services. 
 	static Future<void> registerNotifications(Map<String, VoidCallback> commands) async {
 		// First, get permission on iOS:
 		_firebase.requestNotificationPermissions();
@@ -56,7 +57,8 @@ class FCM {
 				partialResult: data.toString(),
 			);
 
-			final VoidCallback function = commands [command];
+			// final VoidCallback function = commands [command];
+			final function = commands [command];
 			if (function == null) throw ArgumentError.value(
 				command,
 				"Command",
@@ -82,6 +84,8 @@ class FCM {
 	/// Calling this function will result in being notified when the calendar changes. 
 	/// This allows the device to only update the calendar and not all of the student 
 	/// data. Notifications are still handled by [registerNotifications].
+	static Future<void> subscribeToCalendar() async => 
+		_firebase.subscribeToTopic("calendar");
 	static Future<void> subscribeToCalendar() async => _firebase.subscribeToTopic("calendar");
 
 	/// Subscribe to a publication.

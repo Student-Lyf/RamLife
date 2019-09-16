@@ -33,10 +33,10 @@ class Firestore {
 	static final FB.CollectionReference _notes = _firestore.collection (NOTES);
 
 	/// Downloads the student's document in the student collection.
-	static Future<Map<String, dynamic>> getStudent (String username) async => 
-		(await _students.document(username).get()).data;
+	static Future<Map<String, dynamic>> get student async => 
+		(await _students.document(await Auth.email).get()).data;
 
-	/// Downloads the class document in the classes collection.
+	/// Downloads the relevant document in the `classes` collection.
 	static Future<Map<String, dynamic>> getClass (String id) async => 
 		(await _classes.document(id).get()).data;
 
@@ -69,16 +69,11 @@ class Firestore {
 	/// 
 	/// The feedback collection is write-only, and can only be accessed by admins.
 	static Future<void> sendFeedback(
-		String message, 
-		String name,
-	) => _feedback.document().setData({
-		"message": message,
-		"name": name,
-		"timestamp": DateTime.now()
-	});
+		Map<String, dynamic> json
+	) => _feedback.document().setData(json);
 
 	/// Downloads the calendar for the current month. 
-	static Future<Map<String, dynamic>> getMonth() async => (
+	static Future<Map<String, dynamic>> get month async => (
 		await _calendar.document(DateTime.now().month.toString()).get()
 	).data;
 
@@ -88,8 +83,8 @@ class Firestore {
 	/// the student profile data. This choice was made since notes are 
 	/// updated frequently and this saves the system from processing the
 	/// student's schedule every time this happens. 
-	static Future<Map<String, dynamic>> getNotes(String email) async => 
-		(await _notes.document(email).get()).data;
+	static Future<Map<String, dynamic>> get notes async => 
+		(await _notes.document(await Auth.email).get()).data;
 
 	/// Uploads the user's notes to the database. 
 	/// 
@@ -101,9 +96,12 @@ class Firestore {
 	/// This should also probably not persist the read notes in the database 
 	/// (ie, keep them local).
 	static Future<void> saveNotes(List<Note> notesList, List<int> readNotes) async => _notes
-		.document(await Auth.getEmail())
+		.document(await Auth.email)
 		.setData({
-			"notes": notesList.map((Note note) => note.toJson()).toList(),
+			"notes": [
+				for (final Note note in notesList)
+					note.toJson()
+			],
 			"read": readNotes
 		});
 }

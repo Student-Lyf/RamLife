@@ -41,6 +41,13 @@ class Time {
 		return Time (hour, date.minute);
 	}
 
+	/// Returns a new [Time] object from JSON data.
+	/// 
+	/// The json must have `hour` and `minutes` fields that map to integers.
+	Time.fromJson(Map<String, dynamic> json) :
+		hour = json ["hour"],
+		minutes = json ["minutes"];
+
 	@override
 	operator == (dynamic other) => (
 		other.runtimeType == Time && 
@@ -73,6 +80,14 @@ class Time {
 /// A range of times.
 @immutable
 class Range {
+	/// Returns a list of [Range]s from a list of JSON objects
+	/// 
+	/// See [Range.fromJson] for more details.
+	static List<Range> getList(List json) => [
+		for (final dynamic jsonElement in json) 
+			Range.fromJson(Map<String, dynamic>.from(jsonElement))
+	];
+
 	/// When this range starts.
 	final Time start;
 
@@ -91,6 +106,14 @@ class Range {
 	) : 
 		start = Time (startHour, startMinute), 
 		end = Time (endHour, endMinute);
+
+	/// Returns a new [Range] from JSON data
+	/// 
+	/// The json must have `start` and `end` fields that map to [Time] JSON objects.
+	/// See [Time.fromJson] for more details.
+	Range.fromJson(Map<String, dynamic> json) :
+		start = Time.fromJson(Map<String, dynamic>.from(json ["start"])),
+		end = Time.fromJson(Map<String, dynamic>.from(json ["end"]));
 
 	/// Returns whether [other] is in this range. 
 	bool contains (Time other) => start <= other && other <= end;
@@ -173,6 +196,44 @@ class Special {
 			this.skip
 		}
 	);
+
+	/// Returns a new [Special] from a JSON value. 
+	/// 
+	/// The value must either be: 
+	/// 
+	/// - a string, in which case it should be in the [specials] list, or
+	/// - a map, in which case it will be interpreted as JSON. The JSON must have: 
+	/// 	- a "name" field, which should be a string. See [name].
+	/// 	- a "periods" field, which should be a list of [Range] JSON objects. See [Range.getList] for details.
+	/// 	- a "homeroom" field, which should be an integer. See [homeroom].
+	/// 	- a "skip" field, which should be a list of integers. See [skip].
+	/// 
+	factory Special.fromJson(dynamic value) {
+		if (value == null) return null;
+		else if (!(value is Map || value is String))
+			throw ArgumentError.value (
+				value, // invalid value
+				"Special.fromJson: value", // arg name
+				"$value is not a valid special", // message
+			);
+		else if (value is String && !stringToSpecial.containsKey(value))
+			throw ArgumentError.value(
+				value, 
+				"Special.fromJson: value",
+				"'$value' needs to be one of " + 
+					stringToSpecial.keys.join(", ")
+			);
+		if (value is String) return stringToSpecial [value];
+
+		final Map<String, dynamic> json = Map<String, dynamic>.from(value);
+		return Special (
+			json ["name"],
+			Range.getList(json ["periods"]),
+			homeroom: json ["homeroom"],
+			mincha: json ["mincha"],
+			skip: List<int>.from(json ["skip"]),
+		);
+	}
 
 	/// Determines whether to use a Winter Friday or regular Friday schedule. 
 	/// 
@@ -297,7 +358,7 @@ const Special winterFriday = Special (
 	homeroom: 4
 );
 
-/// The [Special] for when a Rosh Chodesh falls on a winter Friday.
+/// The [Special] for when a Rosh Chodesh falls on a Winter Friday.
 const Special winterFridayRoshChodesh = Special (
 	"Winter Friday Rosh Chodesh",
 	[

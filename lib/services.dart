@@ -2,16 +2,16 @@
 /// 
 /// The services library serves two purposes: 
 /// 
-/// 	1. To abstract device functions. 
+/// 1. To abstract device functions. 
 /// 
-/// 		For example, device notifications can be abstracted away from the 
-/// 		business logic to provide for a platform-agnostic implementation. 
+/// 	For example, device notifications can be abstracted away from the 
+/// 	business logic to provide for a platform-agnostic implementation. 
 /// 
-/// 	2. To abstract data sources: 
+/// 2. To abstract data sources: 
 /// 	
-/// 		For example, retrieving data from a database or file can be abstracted
-/// 		to keep the app focused on the content of the data rather than how to 
-/// 		properly access it. 
+/// 	For example, retrieving data from a database or file can be abstracted
+/// 	to keep the app focused on the content of the data rather than how to 
+/// 	properly access it. 
 /// 
 library ramaz_services;
 

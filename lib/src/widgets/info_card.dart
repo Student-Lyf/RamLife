@@ -21,14 +21,16 @@ class InfoCard extends StatelessWidget {
 				alignment: const Alignment (-0.75, 0),
 				child: Column (
 					crossAxisAlignment: CrossAxisAlignment.start,
-					children: <Widget>[
-						SizedBox (height: 5)
-					] + children.map<Widget> (
-						(String text) => Padding (
-							padding: const EdgeInsets.symmetric(vertical: 2.5),
-							child: Text (text, textScaleFactor: 1.25)
-						)
-					).toList()
+					children: [
+						SizedBox (height: 5),
+						...[
+							for (final String text in children) ...[
+								SizedBox(height: 2.5),
+								Text(text, textScaleFactor: 1.25),
+								SizedBox(height: 2.5),
+							]
+						]
+					] 
 				)
 			)
 		)

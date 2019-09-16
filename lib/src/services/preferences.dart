@@ -36,7 +36,7 @@ class Preferences {
 		return result;
 	}
 
-	/// Whether the calendar should be opened. 
+	/// Whether the calendar should be updated. 
 	/// 
 	/// Is true if the app was opened for the first time or 
 	/// the calendar was not last updated today.
