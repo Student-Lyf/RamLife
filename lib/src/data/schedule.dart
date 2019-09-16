@@ -177,16 +177,12 @@ class PeriodData {
 	/// 
 	/// If the JSON object is null, then it is considered a free period.
 	/// Otherwise, both `json ["room"]` and `json ["id"]` must be non-null.
-	factory PeriodData.fromJson (Map<String, dynamic> json) {
-		if (json == null) return PeriodData.free;
-		final String room = json ["room"], id = json ["id"];
-		if (room == null || id == null) 
-			throw JsonUnsupportedObjectError (json);
-		return PeriodData(
+	factory PeriodData.fromJson (Map<String, dynamic> json) => json == null
+		? PeriodData.free
+		: PeriodData(
 			room: json ["room"],
 			id: json ["id"]
 		);
-	}
 
 	@override 
 	String toString() => "PeriodData ($id, $room)";
