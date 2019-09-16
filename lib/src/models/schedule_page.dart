@@ -11,7 +11,11 @@ class ScheduleModel with ChangeNotifier {
 	static const Letters defaultLetter = Letters.M;
 
 	/// The default [Special] for the UI.
-	static final Special defaultSpecial = regular;
+	static const Special defaultSpecial = regular;
+
+	/// The default [Day] for the UI.
+	static final Day defaultDay = 
+		Day (letter: defaultLetter, special: defaultSpecial);
 
 	/// A list of valid Friday schedules.
 	static const List<Special> fridays = [
@@ -20,12 +24,6 @@ class ScheduleModel with ChangeNotifier {
 		fridayRoshChodesh, 
 		winterFridayRoshChodesh
 	];
-
-	/// Builds a new day from the given [Letters] and [Special].
-	static Day getDay (Letters letter, Special special) => Day (
-		letter: letter,
-		special: special
-	);
 
 	/// The schedule data model.
 	/// 
@@ -56,7 +54,7 @@ class ScheduleModel with ChangeNotifier {
 	{
 		day = schedule.hasSchool
 			? schedule.today
-			: getDay (defaultLetter, defaultSpecial);
+			: defaultDay;
 	}
 
 	/// Attempts to set the UI to the schedule of the given day. 

@@ -64,7 +64,7 @@ class Notes with ChangeNotifier {
 	/// Gets all notes that apply to the a given period. 
 	/// 
 	/// This method is a wrapper around [Note.getNotes], and should only be 
-	/// called by an object with access to the relevant period, ie, Schedule. 
+	/// called by an object with access to the relevant period. 
 	List<int> getNotes({
 		@required String subject,
 		@required String period,
@@ -111,10 +111,10 @@ class Notes with ChangeNotifier {
 	/// 
 	/// Does the following: 
 	/// 
-	/// 	1. Runs [verifyNotes] (if a note has changed and not simply added).
-	/// 	2. Runs [saveNotes].
-	/// 	3. Calls [notifyListeners].
-	/// 	
+	/// 1. Runs [verifyNotes] (if a note has changed and not simply added).
+	/// 2. Runs [saveNotes].
+	/// 3. Calls [notifyListeners].
+	/// 
 	void updateNotes([int changedIndex]) {
 		if (changedIndex != null) 
 			verifyNotes(changedIndex);
@@ -133,7 +133,7 @@ class Notes with ChangeNotifier {
 	/// Adds a note to the notes list. 
 	/// 
 	/// Use this method instead of simply `notes.add` to 
-	/// ensure that `updateNotes` is called. 
+	/// ensure that [updateNotes] is called. 
 	void addNote(Note note) {
 		if (note == null) return;
 		notes.add(note);
@@ -142,7 +142,7 @@ class Notes with ChangeNotifier {
 
 	/// Deletes the note at a given index.
 	/// 
-	/// Use this insead of `notes.removeAt` to ensure that `updateNotes` is called.
+	/// Use this insead of `notes.removeAt` to ensure that [updateNotes] is called.
 	void deleteNote(int index) {
 		notes.removeAt(index);
 		updateNotes(index);
@@ -154,16 +154,11 @@ class Notes with ChangeNotifier {
 	/// repeat and has been shown already (ie, in [currentNotes]), then calls 
 	/// [deleteNote] on them. 
 	void cleanNotes() {
-		final List<Note> toRemove = [];
-		for (final int index in readNotes) {
-			final Note note = notes[index];
-			if (
-				!note.time.repeats && !currentNotes.contains(index)
-			) toRemove.add (note);
-		}
-		for (final Note note in toRemove) {
-			print ("Note expired: $note");
+		for (final Note note in [
+			for (final int index in readNotes)
+				if (!notes [index].time.repeats && !currentNotes.contains(index))
+					notes [index]
+		]) 
 			deleteNote(notes.indexOf(note));
-		}
 	}
 }

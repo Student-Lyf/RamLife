@@ -73,12 +73,12 @@ class AndroidNotification {
 
 	/// The icon for this notification.
 	/// 
-	/// Defaults to the default app icon, but can be changed. 
+	/// Defaults to the default app icon, but can be customized. 
 	final String icon;
 
 	/// The group ID for this notification. 
 	/// 
-	/// All notifications with the same group ID
+	/// All notifications with the same group ID are bundled together.
 	final String groupId;
 
 	/// Whether this notification should play sound. 
@@ -166,7 +166,7 @@ class AndroidNotification {
 
 /// A notification configuration for iOS. 
 /// 
-/// This should be used instead of [AndroidNotificationDetails] so that other 
+/// This should be used instead of [IOSNotificationDetails] so that other 
 /// other libraries can import this module without importing the plugin. 
 @immutable
 class IOSNotification {

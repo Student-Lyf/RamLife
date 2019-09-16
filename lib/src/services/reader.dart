@@ -94,8 +94,8 @@ class Reader {
 	/// 
 	/// This function will be called in two placed: 
 	/// 
-	/// 	1. To try to get rid of bugs. If setup fails all data is erased. 
-	/// 	2. To clean up after logoff. 
+	/// 1. To try to get rid of bugs. If setup fails all data is erased. 
+	/// 2. To clean up after logoff. 
 	void deleteAll() {
 		if (studentFile.existsSync())
 			studentFile.deleteSync();

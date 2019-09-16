@@ -11,8 +11,6 @@ import "times.dart";
 /// This object holds their schedule, and is a convenience class for getting 
 /// their schedule, as well as some other noteable data, such as when and where
 /// to meet for homeroom. 
-/// 
-/// This class uses data from the `students` collection in the database.
 @immutable
 class Student {
 	/// This student's schedule.
@@ -46,7 +44,7 @@ class Student {
 		other.homeroomLocation == homeroomLocation
 	);
 
-	/// Returns a [Student] from a JSON object.
+	/// Creates a student from a JSON object.
 	/// 
 	/// Needs to be a factory so there can be proper error checking.
 	factory Student.fromJson (Map<String, dynamic> json) {
@@ -97,7 +95,7 @@ class Student {
 
 	/// Returns the schedule for this student on a given day. 
 	/// 
-	/// Iterates over the entry for [Day.letter] in [schedule], and converts the
+	/// Iterates over the schedule for [day] in [schedule], and converts the
 	/// [PeriodData]s to [Period] objects using the [Range]s in [Day.special]. 
 	List <Period> getPeriods (Day day) {
 		final List <Period> result = [];

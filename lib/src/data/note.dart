@@ -50,11 +50,11 @@ abstract class NoteTime {
 	/// Allows its subclasses to be `const`. 
 	const NoteTime(this.repeats);
 
-	/// Initializes a new instace from JSON.
+	/// Initializes a new instance from JSON.
 	/// 
 	/// Mainly looks at `json ["type"]` to choose which type of 
 	/// [NoteTime] it should instantiate, and then leaves the 
-	/// work to that subclasses `.fromJson` method. 
+	/// work to that subclass' `.fromJson` method. 
 	/// 
 	/// Example JSON: 
 	/// ```
@@ -143,7 +143,7 @@ class PeriodNoteTime extends NoteTime {
 	/// `json ["letter"]` should be one of the [Letters].
 	/// 
 	/// `json ["period"]` should be a valid period for that letter,
-	/// regardless of any schedule changes (like an "early dismissal").
+	/// notwithstanding any schedule changes (like an "early dismissal").
 	PeriodNoteTime.fromJson(Map<String, dynamic> json) :
 		letter = stringToLetters [json ["letter"]],
 		period = json ["period"],
@@ -162,7 +162,7 @@ class PeriodNoteTime extends NoteTime {
 		"type": noteTimeToString [type],
 	};
 
-	/// Returns true if [letter] and [period] match the parameters.
+	/// Returns true if [letter] and [period] match this instance's fields.
 	@override
 	bool doesApply({
 		@required Letters letter, 
@@ -203,24 +203,14 @@ class SubjectNoteTime extends NoteTime {
 		"type": noteTimeToString [type],
 	};
 
-	/// Returns true if [subject] matches the `subject` parameter.
+	/// Returns true if this instance's [subject] field 
+	/// matches the `subject` parameter.
 	@override
 	bool doesApply({
 		@required Letters letter, 
 		@required String subject, 
 		@required String period,
 	}) => subject == name;
-}
-
-/// A Python-like `range` function.
-/// 
-/// Like Python's `range`, this function returns an iterator
-/// that gives all values from 0 until `stop`, with 1 at a time. 
-/// This is simply for iterating over lists while keeping the index.
-Iterable<int> range(int stop) sync* {
-	for (int index = 0; index < stop; index++) {
-		yield index;
-	}
 }
 
 /// A user-generated note.
@@ -258,19 +248,18 @@ class Note {
 	/// The [NoteTime] for this note. 
 	final NoteTime time;
 
-	/// Returns a new note.
+	/// Creates a new note.
 	const Note({
 		@required this.message,
 		this.time,
 	});
 
-	/// Returns a new [Note] from a JSON object.
+	/// Creates a new [Note] from a JSON object.
 	/// 
 	/// Uses `json ["message"]` for the message and passes `json["time"]` to [NoteTime.fromJson]
-	factory Note.fromJson(Map<String, dynamic> json) => Note (
-		message: json ["message"],
-		time: NoteTime.fromJson(json ["time"]),
-	);
+	Note.fromJson(Map<String, dynamic> json) :
+		message = json ["message"],
+		time = NoteTime.fromJson(json);
 
 	@override String toString() => "$message ($time)";
 

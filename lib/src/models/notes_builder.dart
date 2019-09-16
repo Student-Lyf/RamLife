@@ -91,10 +91,10 @@ class NotesBuilderModel with ChangeNotifier {
 	/// 
 	/// In a nutshell, this field will be false if: 
 	/// 
-	/// 	- [message] is null or empty,
-	/// 	- [type] is null,
-	/// 	- [type] is [NoteTimeType.period] and [letter] or [period] is null, or
-	/// 	- [type] is [NoteTimeType.subject] and [course] is null.
+	/// - [message] is null or empty,
+	/// - [type] is null,
+	/// - [type] is [NoteTimeType.period] and [letter] or [period] is null, or
+	/// - [type] is [NoteTimeType.subject] and [course] is null.
 	/// 
 	bool get ready => (
 		(message?.isNotEmpty ?? false) && type != null && 
