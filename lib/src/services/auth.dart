@@ -14,22 +14,16 @@ class Auth {
 	/// This getter returns a [FirebaseUser], which should not be used 
 	/// outside this library. This method should only be called by 
 	/// methods that provide higher level functionality, such as [ready].
-	static Future<FirebaseUser> currentUser() async => await _firebase.currentUser();
+	static Future<FirebaseUser> get currentUser => _firebase.currentUser();
 
 	/// The user's email.
-	static Future<String> get email async => (await currentUser()).email;
+	static Future<String> get email async => (await currentUser)?.email;
 
 	/// The user's full name.
-	static Future<String> get name async => (await currentUser()).displayName;
-
-	/// Returns the email of the currently logged in user.
-	static Future<String> getEmail() async {
-		final FirebaseUser user = await currentUser();
-		return user == null ? null : user.email;
-	}
+	static Future<String> get name async => (await currentUser)?.displayName;
 
 	/// Determines whether the user is currently logged
-	static Future<bool> ready() async => await currentUser() != null;
+	static Future<bool> get ready async => await currentUser != null;
 
 	/// Signs out the currently logged in user.
 	static Future<void> signOut() async {

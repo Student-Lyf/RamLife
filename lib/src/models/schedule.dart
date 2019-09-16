@@ -19,7 +19,8 @@ class Schedule with ChangeNotifier {
 	/// The notes data model.
 	/// 
 	/// This is used to schedule notes based on the next and 
-	/// upcoming periods. See [updateNotes] and [scheduleNotes].
+	/// upcoming periods, as well as react to changes in user notes. 
+	/// See [updateNotes] and [scheduleNotes].
 	final Notes notes;
 
 	/// The student object for the user. 

@@ -31,7 +31,7 @@ class Feedback {
 	}) :
 		assert(
 			responseConsent || (name == null && email == null),
-			"If the user cannot consent to a follow up response, "
+			"If the user does not consent to a follow up response, "
 			"their name and email must not be submitted."
 		);
 

@@ -43,7 +43,7 @@ class Time {
 
 	/// Returns a new [Time] object from JSON data.
 	/// 
-	/// The json must have "hour" and "minutes" keys that map to integers.
+	/// The json must have `hour` and `minutes` fields that map to integers.
 	Time.fromJson(Map<String, dynamic> json) :
 		hour = json ["hour"],
 		minutes = json ["minutes"];
@@ -109,7 +109,7 @@ class Range {
 
 	/// Returns a new [Range] from JSON data
 	/// 
-	/// The json must have "start" and "end" fields that map to [Time] JSON objects.
+	/// The json must have `start` and `end` fields that map to [Time] JSON objects.
 	/// See [Time.fromJson] for more details.
 	Range.fromJson(Map<String, dynamic> json) :
 		start = Time.fromJson(Map<String, dynamic>.from(json ["start"])),
@@ -201,12 +201,12 @@ class Special {
 	/// 
 	/// The value must either be: 
 	/// 
-	/// 	- a string, in which case it should be in the [specials] list, or
-	/// 	- a map, in which case it will be interpreted as JSON. The JSON must have: 
-	/// 		- a "name" field, which should be a string. See [name].
-	/// 		- a "periods" field, which should be a list of [Range] JSON objects. See [Range.getList] for details.
-	/// 		- a "homeroom" field, which should be an integer. See [homeroom].
-	/// 		- a "skip" field, which should be a list of integers. See [skip].
+	/// - a string, in which case it should be in the [specials] list, or
+	/// - a map, in which case it will be interpreted as JSON. The JSON must have: 
+	/// 	- a "name" field, which should be a string. See [name].
+	/// 	- a "periods" field, which should be a list of [Range] JSON objects. See [Range.getList] for details.
+	/// 	- a "homeroom" field, which should be an integer. See [homeroom].
+	/// 	- a "skip" field, which should be a list of integers. See [skip].
 	/// 
 	factory Special.fromJson(dynamic value) {
 		if (value == null) return null;
@@ -358,7 +358,7 @@ const Special winterFriday = Special (
 	homeroom: 4
 );
 
-/// The [Special] for when a Rosh Chodesh falls on a winter Friday.
+/// The [Special] for when a Rosh Chodesh falls on a Winter Friday.
 const Special winterFridayRoshChodesh = Special (
 	"Winter Friday Rosh Chodesh",
 	[

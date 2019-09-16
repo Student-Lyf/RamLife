@@ -82,7 +82,6 @@ class Subject {
 	/// 
 	/// The keys are IDs to the subject, and the values are the
 	/// corresponding [Subject] instances.
-	/// 
 	/// See [Subject.fromJson] for more details. 
 	static Map<String, Subject> getSubjects(
 		Map<String, Map<String, dynamic>> data
@@ -132,12 +131,10 @@ class Subject {
 /// See [Special] for when the times can change.
 @immutable
 class PeriodData {
-
 	/// Returns a list of [PeriodData] from a JSON object.
 	/// 
 	/// Note that some entries in the list may be null.
 	/// They represent a free period in the schedule.
-	/// 
 	/// See [PeriodData.fromJson] for more details.
 	static List<PeriodData> getList(List json) => [
 		for (final dynamic periodJson in json)
@@ -147,7 +144,7 @@ class PeriodData {
 	/// The room the student needs to be in for this period.
 	final String room;
 
-	/// The id for thie period's subject.
+	/// The id for this period's subject.
 	/// 
 	/// See the [Subject] class for more details.
 	final String id;
@@ -155,22 +152,26 @@ class PeriodData {
 	/// A const constructor for a [PeriodData]. 
 	/// 
 	/// If both [id] and [room] are null, then it is a free period.
-	/// See [PeriodData.free]. Otherwise, it is considered an error
+	/// Use [PeriodData.free] instead. Otherwise, it is considered an error
 	/// to have a null [room] OR [id].
 	const PeriodData ({
 		@required this.room,
 		@required this.id
 	}) : 
 		assert (
-			(room != null && id != null) || (id == null && room == null),
+			room != null || id != null,
 			"Room and id must both be null or not."
 		);
 
-	/// Returns a [PeriodData] representing a free period.
+	const PeriodData._free() : 
+		room = null,
+		id = null;
+
+	/// A free period.
 	/// 
 	/// Use this instead of manually constructing a [PeriodData] 
 	/// to keep consistency throughtout the code. 
-	static const free = PeriodData(room: null, id: null);
+	static const free = PeriodData._free();
 
 	/// Returns a [PeriodData] from a JSON object.
 	/// 
@@ -204,7 +205,6 @@ class PeriodData {
 /// so that they alone contain all the information to represent a period.
 @immutable
 class Period {
-
 	/// The time this period takes place. 
 	final Range time;
 
@@ -245,12 +245,13 @@ class Period {
 	/// Returns a period that represents time for Mincha. 
 	/// 
 	/// Use this constructor to keep a consistent definition of "Mincha".
-	const Period.mincha (Range time) :
+	const Period.mincha(Range time) :
 		room = null,
 		id = null,
 		time = time,
 		period = "Mincha";
 
+	/// This is only for debug purposes. Use [getName] for UI labels.
 	@override 
 	String toString() => "Period $period";
 
@@ -276,6 +277,7 @@ class Period {
 	/// 1. A period with [PeriodData.free] will return "Free period"
 	/// 2. A period with `period == "Homeroom"` will return "Homeroom"
 	/// 3. A period with `period == "3"` will return the name of the [Subject].
+	/// 
 	String getName(Subject subject) => int.tryParse(period) != null && id == null
 		? "Free period"
 		: subject?.name ?? period;
@@ -284,12 +286,13 @@ class Period {
 	/// 
 	/// The expected subject can be retrieved by looking up the [id].
 	/// 
-	/// Useful for use throughout the UI. This function will: 
+	/// Useful throughout the UI. This function will: 
 	/// 
-	/// 1. Will always display the time.
+	/// 1. Always display the time.
 	/// 2. If [period] is a number, will display the period.
 	/// 3. If [room] is not null, will display the room.
 	/// 4. If [id] is valid, will return the name of the [Subject].
+	/// 
 	List <String> getInfo (Subject subject) => [
 		"Time: $time",
 		if (int.tryParse(period) != null) "Period: $period",
@@ -306,6 +309,8 @@ class Period {
 @immutable
 class Day {
 	/// The default [Special] for a given [Letters].
+	/// 
+	/// See [Special.getWinterFriday] for how to determine the Friday schedule.
 	static final Map<Letters, Special> specials = {
 		Letters.A: rotate,
 		Letters.B: rotate,
@@ -362,11 +367,11 @@ class Day {
 	/// `json ["letter"]` must be one of the specials in [stringToSpecial].
 	/// `json ["letter"]` must not be null.
 	/// 
-	/// `json ["special"] may be: 
+	/// `json ["special"]` may be: 
 	/// 
-	/// 	1. One of the specials from [specials].
-	/// 	2. JSON of a special. See [Special.fromJson].
-	/// 	3. null, in which case [specials] will be used.
+	/// 1. One of the specials from [specials].
+	/// 2. JSON of a special. See [Special.fromJson].
+	/// 3. null, in which case [specials] will be used.
 	/// 
 	/// This factory is not a constructor so it can dynamically check 
 	/// for a valid [letter] while keeping the field final.
@@ -406,7 +411,7 @@ class Day {
 			special == regular || special == rotate ? '' : ' ' + special.name
 		}";
 
-	/// Whether or not to say "a" or "an".
+	/// Whether to say "a" or "an".
 	/// 
 	/// This method is needed since [letter] is a letter and not a word. 
 	/// So a letter like "R" might need "an" while "B" would need "a".
