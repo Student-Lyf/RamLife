@@ -120,10 +120,7 @@ class Student {
 				final PeriodData period = periods [periodIndex]; 
 				if (period == null) result.add (
 					Period (
-						PeriodData (
-							room: null,
-							id: null
-						),
+						PeriodData.free,
 						period: (periodIndex + 1).toString(),
 						time: range,
 					) 
