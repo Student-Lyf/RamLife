@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 
+import "package:ramaz/constants.dart";
 import "package:ramaz/models.dart";
 import "package:ramaz/pages.dart";
 import "package:ramaz/widgets.dart";
@@ -24,7 +25,7 @@ class NotesPage extends StatelessWidget {
 				actions: [
 					IconButton(
 						icon: Icon (Icons.home),
-						onPressed: () => Navigator.of(context).pushReplacementNamed("home")
+						onPressed: () => Navigator.of(context).pushReplacementNamed(Routes.home)
 					)
 				]
 			),

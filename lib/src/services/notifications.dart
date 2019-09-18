@@ -124,7 +124,7 @@ class AndroidNotification {
 		importance = Importance.High,
 		priority = Priority.High,
 		style = AndroidNotificationType.normal,
-		color = RamazColors.BLUE,
+		color = RamazColors.blue,
 		channelId = "notes",
 		channelName = "Notes",
 		channelDescription = "Reminders when notes are due.",

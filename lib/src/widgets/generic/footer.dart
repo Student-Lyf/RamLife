@@ -20,7 +20,7 @@ class Footer extends StatelessWidget {
 							() {
 								final NavigatorState nav = Navigator.of(context);
 								if (nav.canPop()) nav.pop();
-								nav.pushReplacementNamed(Routes.HOME);
+								nav.pushReplacementNamed(Routes.home);
 							},
 						child: SizedBox (
 							height: 70,

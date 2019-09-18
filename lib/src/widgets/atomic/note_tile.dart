@@ -1,7 +1,7 @@
 import "package:flutter/material.dart";
 
-import "services.dart";
-import "notes_builder.dart";
+import "../ambient/services.dart";
+import "../generic/notes_builder.dart";
 
 import "package:ramaz/data.dart";
 import "package:ramaz/models.dart";

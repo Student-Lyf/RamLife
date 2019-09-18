@@ -1,7 +1,7 @@
 import "package:flutter/material.dart";
 
-import "images/loading_image.dart";
-import "images/link_icon.dart";
+import "../images/loading_image.dart";
+import "../images/link_icon.dart";
 
 import "package:ramaz/constants.dart";
 
@@ -47,27 +47,27 @@ class Logos {
 
 	static const Widget drive = LinkIcon (
 		path: "images/logos/drive.png",
-		url: Urls.GOOGLE_DRIVE
+		url: Urls.google_drive
 	);
 
 	static const Widget outlook = LinkIcon (
 		path: "images/logos/outlook.jpg",
-		url: Urls.EMAIL
+		url: Urls.email
 	);
 
 	static const Widget schoology = LinkIcon (
 		path: "images/logos/schoology.png",
-		url: Urls.SCHOOLOGY
+		url: Urls.schoology
 	);
 
 	static const Widget ramazIcon = LinkIcon (
 		path: "images/logos/ramaz/teal.jpg",
-		url: Urls.RAMAZ
+		url: Urls.ramaz
 	);
 
 	static const senior_systems = LinkIcon (
 		path: "images/logos/senior_systems.png",
-		url: Urls.SENIOR_SYSTEMS
+		url: Urls.seniorSystems
 	);
 }
 

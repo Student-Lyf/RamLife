@@ -2,7 +2,7 @@
 library time_dataclasses;
 
 import "package:flutter/foundation.dart";
-import "package:ramaz/mock.dart";  // for winter friday times
+import "package:ramaz/constants.dart";
 
 /// The hour and minute representation of a time. 
 /// 
@@ -241,21 +241,21 @@ class Special {
 	static Special getWinterFriday() {
 		final DateTime today = DateTime.now();
 		final int month = today.month, day = today.day;
-		if (month >= SCHOOL_START && month < WINTER_FRIDAY_MONTH_START)
+		if (month >= Times.schoolStart && month < Times.winterFridayMonthStart)
 			return friday;
 		else if (
-			month > WINTER_FRIDAY_MONTH_START ||
-			month < WINTER_FRIDAY_MONTH_END
+			month > Times.winterFridayMonthStart ||
+			month < Times.winterFridayMonthEnd
 		) return winterFriday;
 		else if (
-			month > WINTER_FRIDAY_MONTH_END &&
-			month <= SCHOOL_END
+			month > Times.winterFridayMonthEnd &&
+			month <= Times.schoolEnd
 		) return friday;
-		else if (month == WINTER_FRIDAY_MONTH_START) {
-			if (day < WINTER_FRIDAY_DAY_START) return friday;
+		else if (month == Times.winterFridayMonthStart) {
+			if (day < Times.winterFridayDayStart) return friday;
 			else return winterFriday;
-		} else if (month == WINTER_FRIDAY_MONTH_END) {
-			if (day < WINTER_FRIDAY_DAY_END) return winterFriday;
+		} else if (month == Times.winterFridayMonthEnd) {
+			if (day < Times.winterFridayDayEnd) return winterFriday;
 			else return friday;
 		} else {
 			print ("Tasked to find winter friday for the summer, assuming regular");

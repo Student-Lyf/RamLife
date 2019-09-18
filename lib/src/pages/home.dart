@@ -17,7 +17,7 @@ class HomePage extends StatelessWidget {
 				actions: [
 					if (schedule.hasSchool) Builder (
 						builder: (BuildContext context) => FlatButton(
-							child: Text ("Swipe left for schedule"),
+							child: Text ("Tap for schedule"),
 							textColor: Colors.white,
 							onPressed: () => Scaffold.of(context).openEndDrawer()
 						)

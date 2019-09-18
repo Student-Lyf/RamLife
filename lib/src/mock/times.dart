@@ -1,5 +1,0 @@
-const int SCHOOL_START = 9, SCHOOL_END = 7;
-const int WINTER_FRIDAY_MONTH_START = 11;
-const int WINTER_FRIDAY_MONTH_END = 3;
-const int WINTER_FRIDAY_DAY_START = 1;
-const int WINTER_FRIDAY_DAY_END = 1;

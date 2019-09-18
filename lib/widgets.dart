@@ -1,15 +1,19 @@
 library widgets;
 
-export "src/widgets/brightness_changer.dart";
-export "src/widgets/model_listener.dart";
-export "src/widgets/class_list.dart";
-export "src/widgets/date_picker.dart";
-export "src/widgets/footer.dart";
-export "src/widgets/icons.dart";
-export "src/widgets/info_card.dart";
-export "src/widgets/next_class.dart";
-export "src/widgets/note_tile.dart";
-export "src/widgets/notes_builder.dart";
-export "src/widgets/publication_tile.dart";
-export "src/widgets/services.dart";
-export "src/widgets/theme_changer.dart";
+// Ambient widgets can be accessed by any widget in the tree. 
+export "src/widgets/ambient/services.dart";
+export "src/widgets/ambient/theme_changer.dart";
+
+// Atomic widgets represent a single data object.
+export "src/widgets/atomic/next_class.dart";
+export "src/widgets/atomic/note_tile.dart";
+export "src/widgets/atomic/publication_tile.dart";
+
+// Generic widgets are used in all sorts of situations.
+export "src/widgets/ambient/brightness_changer.dart";
+export "src/widgets/generic/class_list.dart";
+export "src/widgets/generic/date_picker.dart";
+export "src/widgets/generic/footer.dart";
+export "src/widgets/generic/icons.dart";
+export "src/widgets/generic/model_listener.dart";
+export "src/widgets/generic/notes_builder.dart";

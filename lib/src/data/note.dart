@@ -259,7 +259,7 @@ class Note {
 	/// Uses `json ["message"]` for the message and passes `json["time"]` to [NoteTime.fromJson]
 	Note.fromJson(Map<String, dynamic> json) :
 		message = json ["message"],
-		time = NoteTime.fromJson(json);
+		time = NoteTime.fromJson(json ["time"]);
 
 	@override String toString() => "$message ($time)";
 

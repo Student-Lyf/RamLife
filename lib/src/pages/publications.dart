@@ -18,7 +18,7 @@ class PublicationsPage extends StatelessWidget {
 			actions: [
 				IconButton(
 					icon: Icon(Icons.home),
-					onPressed: () => Navigator.of(context).pushReplacementNamed(Routes.HOME),
+					onPressed: () => Navigator.of(context).pushReplacementNamed(Routes.home),
 				)
 			]
 		),
