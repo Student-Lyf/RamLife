@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import "package:flutter/services.dart";
 import "package:path_provider/path_provider.dart";
 import "package:shared_preferences/shared_preferences.dart";
 
@@ -30,6 +31,7 @@ Future<void> updateCalendar(ServicesCollection services) async {
 void main({bool restart = false}) async {
 	// This shows a splash screen but secretly 
 	// determines the desired `platformBrightness`
+	SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 	Brightness brightness;
 	runApp (
 		SplashScreen(
