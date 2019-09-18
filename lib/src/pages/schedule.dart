@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 
+import "package:ramaz/constants.dart";
 import "package:ramaz/data.dart";
 import "package:ramaz/models.dart";
 import "package:ramaz/pages.dart";
@@ -20,7 +21,7 @@ class SchedulePage extends StatelessWidget {
 						IconButton (
 							icon: Icon (Icons.home),
 							onPressed: () => Navigator.of(context)
-								.pushReplacementNamed("home")
+								.pushReplacementNamed(Routes.home)
 						)
 				],
 			),

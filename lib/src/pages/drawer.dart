@@ -17,17 +17,17 @@ class NavigationDrawer extends StatelessWidget {
 				ListTile (
 					title: Text ("Home"),
 					leading: Icon (Icons.home),
-					onTap: pushRoute(context, Routes.HOME),
+					onTap: pushRoute(context, Routes.home),
 				),
 				ListTile (
 					title: Text ("Schedule"),
 					leading: Icon (Icons.schedule),
-					onTap: pushRoute(context, Routes.SCHEDULE),
+					onTap: pushRoute(context, Routes.schedule),
 				),
 				ListTile (
 					title: Text ("Notes"),
 					leading: Icon (Icons.note),
-					onTap: pushRoute(context, Routes.NOTES),
+					onTap: pushRoute(context, Routes.notes),
 				),
 				BrightnessChanger.dropdown(prefs: Services.of(context).prefs),
 				// ListTile (
@@ -49,14 +49,14 @@ class NavigationDrawer extends StatelessWidget {
 				ListTile (
 					title: Text ("Logout"),
 					leading: Icon (Icons.lock),
-					onTap: pushRoute(context, Routes.LOGIN)
+					onTap: pushRoute(context, Routes.login)
 				),
 				ListTile (
 					title: Text ("Send Feedback"),
 					leading: Icon (Icons.feedback),
 					onTap: () => Navigator.of(context)
 						..pop()
-						..pushNamed(Routes.FEEDBACK)
+						..pushNamed(Routes.feedback)
 				),
 				AboutListTile (
 					icon: Icon (Icons.info),
