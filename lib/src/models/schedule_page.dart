@@ -39,11 +39,6 @@ class ScheduleModel with ChangeNotifier {
 	/// that day, have their schedule be shown to them.
 	DateTime selectedDay = DateTime.now();
 
-	/// The selected day from the calendar.
-	/// 
-	/// This day corresponds to [selectedDay] being passed to [Schedule.calendar].
-	Day currentDay;
-
 	/// Initializes the view model. 
 	/// 
 	/// Also initializes the default day shown to the user. 
@@ -69,7 +64,7 @@ class ScheduleModel with ChangeNotifier {
 		);
 		final Day selected = schedule.calendar [justDate];
 		if (!selected.school) throw ArgumentError("No School");
-		currentDay = selected;
+		day = selected;
 		selectedDay = justDate;
 		update (newLetter: selected.letter, newSpecial: selected.special);
 	}
@@ -83,8 +78,8 @@ class ScheduleModel with ChangeNotifier {
 	/// to avoid setting a Friday schedule to a day that isn't Friday, and vice
 	/// versa. See [fridays] for Friday schedules.  
 	void update({Letters newLetter, Special newSpecial}) {
-		Letters letter = currentDay.letter;
-		Special special = currentDay.special;
+		Letters letter = day.letter;
+		Special special = day.special;
 		if (newLetter != null) {
 			letter = newLetter;
 			day = Day(letter: letter, special: null);

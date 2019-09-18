@@ -151,7 +151,7 @@ class LoginState extends State<Login> {
 		),
 		onSuccess: () async {
 			loadingNotifier.value = true;
-			final String email = await Auth.getEmail();
+			final String email = await Auth.email;
 			if (email == null) {
 				loadingNotifier.value = false;
 				return;

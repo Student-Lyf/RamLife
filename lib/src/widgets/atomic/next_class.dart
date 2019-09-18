@@ -28,7 +28,7 @@ class NextClass extends StatelessWidget {
 			InfoCard (
 				icon: next ? Icons.restore : Icons.school,
 				children: period?.getInfo(subject),
-				page: Routes.SCHEDULE,
+				page: Routes.schedule,
 				title: period == null
 					? "School is over"
 					: "${next ? 'Next' : 'Current'} period: " 

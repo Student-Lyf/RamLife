@@ -138,7 +138,8 @@ class PeriodData {
 	/// See [PeriodData.fromJson] for more details.
 	static List<PeriodData> getList(List json) => [
 		for (final dynamic periodJson in json)
-			PeriodData.fromJson(Map<String, dynamic>.from(periodJson))
+			periodJson == null ? null : 
+				PeriodData.fromJson(Map<String, dynamic>.from(periodJson))
 	];
 
 	/// The room the student needs to be in for this period.
