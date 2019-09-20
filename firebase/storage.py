@@ -15,9 +15,7 @@ blob = bucket.blob("Rampage/issues.txt")
 if True: 
 	blob.metadata = {
 		"description": "A description",
-		"imagePath": "images/logos/ramaz/ram_square_words.png",
-		"recents": "Rampage/2019_05_22.pdf",
-		"allIssues": "Rampage/2019_05_22.pdf",
+		"issues": "Rampage/2019_05_22.pdf",
 	}
 	blob.update()
 else: blob.reload()
