@@ -87,7 +87,6 @@ firebase/rules_test/node_modules/
 .pub
 /build/
 # test
-pubspec.lock
 
 # Android related
 **/android/**/gradle-wrapper.jar
