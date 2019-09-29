@@ -3,11 +3,11 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>267381428578-nmanq8j02ula41q4b5rh3fqmu6b4rq83.apps.googleusercontent.com</string>
+	<string>267381428578-7a8kkf45mdkepv1vr4j39gmlclcgob1u.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.267381428578-nmanq8j02ula41q4b5rh3fqmu6b4rq83</string>
+	<string>com.googleusercontent.apps.267381428578-7a8kkf45mdkepv1vr4j39gmlclcgob1u</string>
 	<key>ANDROID_CLIENT_ID</key>
-	<string>267381428578-n4lbdi0caoi73ms32gehhsb8288uvsb6.apps.googleusercontent.com</string>
+	<string>267381428578-fjpj5ojak0grnccec1pg29n3quhn437b.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
 	<string>AIzaSyB6rEaYZeHcxeW5ZU2i_YQCYmwgwx8f07s</string>
 	<key>GCM_SENDER_ID</key>
@@ -15,7 +15,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.ramaz.student-life</string>
+	<string>com.ramaz.ramaz.student-life</string>
 	<key>PROJECT_ID</key>
 	<string>ramaz-go</string>
 	<key>STORAGE_BUCKET</key>
@@ -31,7 +31,7 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:267381428578:ios:cf65f33793da9ef5</string>
+	<string>1:267381428578:ios:91dc64bf9850b2632c5c3b</string>
 	<key>DATABASE_URL</key>
 	<string>https://ramaz-go.firebaseio.com</string>
 </dict>
