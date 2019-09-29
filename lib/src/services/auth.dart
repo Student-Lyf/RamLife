@@ -44,11 +44,11 @@ class Auth {
 	) async {
 		final GoogleSignInAccount account = await _google.signIn();
 		if (account == null) return;
-		if (!isValidGoogleAccount(account)) {
-			ifInvalid();
-			await _google.signOut();  // Prompt again 
-			return;
-		}
+		// if (!isValidGoogleAccount(account)) {
+		// 	ifInvalid();
+		// 	await _google.signOut();  // Prompt again 
+		// 	return;
+		// }
 		final GoogleSignInAuthentication _auth = await account.authentication;
 		AuthCredential credential = GoogleAuthProvider.getCredential (
 			accessToken: _auth.accessToken,
