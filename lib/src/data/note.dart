@@ -1,12 +1,5 @@
-/// This library handles serialization and deserialization of notes. 
-/// 
-/// Each note a [Note.time] property, which is a [NoteTime], describing when 
-/// said note should be displayed. Since notes could be shown on a specific
-/// class or period, the classes [PeriodNoteTime] and [SubjectNoteTime] were made. 
-library note_dataclasses;
-
-import "package:flutter/foundation.dart";
 import "dart:convert" show JsonUnsupportedObjectError;
+import "package:flutter/foundation.dart" show required, immutable;
 
 import "schedule.dart";
 
@@ -42,13 +35,13 @@ abstract class NoteTime {
 	/// The type of note. 
 	/// 
 	/// This field is here for other objects to use. 
-	final NoteTimeType type = null;
+	final NoteTimeType type;
 
 	/// Whether the note should repeat.
 	final bool repeats;
 
 	/// Allows its subclasses to be `const`. 
-	const NoteTime(this.repeats);
+	const NoteTime({@required this.repeats, @required this.type});
 
 	/// Initializes a new instance from JSON.
 	/// 
@@ -110,19 +103,11 @@ abstract class NoteTime {
 		@required String subject, 
 		@required String period,
 	});
-
-	/// Returns a String representation of this [NoteTime].
-	///
-	/// Used for debugging and throughout the UI.
-	String toString();
 }
 
 /// A [NoteTime] that depends on a [Letters] and period.
 @immutable
 class PeriodNoteTime extends NoteTime {
-	@override
-	final NoteTimeType type = NoteTimeType.period;
-
 	/// The [Letters] for when this [Note] should be displayed.
 	final Letters letter;
 
@@ -136,7 +121,7 @@ class PeriodNoteTime extends NoteTime {
 		@required this.letter,
 		@required this.period,
 		@required bool repeats
-	}) : super (repeats);
+	}) : super (repeats: repeats, type: NoteTimeType.period);
 
 	/// Creates a new [NoteTime] from JSON.
 	/// 
@@ -147,11 +132,11 @@ class PeriodNoteTime extends NoteTime {
 	PeriodNoteTime.fromJson(Map<String, dynamic> json) :
 		letter = stringToLetters [json ["letter"]],
 		period = json ["period"],
-		super (json ["repeats"]);
+		super (repeats: json ["repeats"], type: NoteTimeType.period);
 
 	@override
 	String toString() => 
-		(repeats ? "Repeats every " : "") + 
+		"${repeats ? 'Repeats every ' : ''}" 
 		"${lettersToString [letter]}-$period";
 
 	@override 
@@ -174,9 +159,6 @@ class PeriodNoteTime extends NoteTime {
 /// A [NoteTime] that depends on a subject. 
 @immutable
 class SubjectNoteTime extends NoteTime {
-	@override 
-	final NoteTimeType type = NoteTimeType.subject;
-
 	/// The name of the subject this [NoteTime] depends on.
 	final String name;
 
@@ -184,14 +166,14 @@ class SubjectNoteTime extends NoteTime {
 	const SubjectNoteTime({
 		@required this.name,
 		@required bool repeats,
-	}) : super (repeats);
+	}) : super (repeats: repeats, type: NoteTimeType.subject);
 
 	/// Returns a new [SubjectNoteTime] from a JSON object.
 	/// 
 	/// The fields `repeats` and `name` must not be null.
 	SubjectNoteTime.fromJson(Map<String, dynamic> json) :
 		name = json ["name"],
-		super (json ["repeats"]);
+		super (repeats: json ["repeats"], type: NoteTimeType.subject);
 
 	@override
 	String toString() => (repeats ? "Repeats every " : "") + name;
@@ -256,7 +238,8 @@ class Note {
 
 	/// Creates a new [Note] from a JSON object.
 	/// 
-	/// Uses `json ["message"]` for the message and passes `json["time"]` to [NoteTime.fromJson]
+	/// Uses `json ["message"]` for the message and passes 
+	/// `json["time"]` to [NoteTime.fromJson]
 	Note.fromJson(Map<String, dynamic> json) :
 		message = json ["message"],
 		time = NoteTime.fromJson(json ["time"]);
