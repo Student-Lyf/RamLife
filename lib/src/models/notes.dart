@@ -8,6 +8,7 @@ import "package:ramaz/services.dart";
 /// This data model abstracts all operations that have to do with notes, 
 /// and all other parts of the app that want to operate on notes should use
 /// this data model.
+// ignore: prefer_mixin
 class Notes with ChangeNotifier {
 	final Reader _reader;
 
@@ -55,7 +56,9 @@ class Notes with ChangeNotifier {
 	/// It will then be marked for deletion if it does not repeat.
 	/// See [readNotes] and [cleanNotes] for details.
 	void markShown(int index) {
-		if (readNotes.contains(index)) return;
+		if (readNotes.contains(index)) {
+			return;
+		}
 		readNotes.add(index);
 		cleanNotes();
 		updateNotes();
@@ -103,7 +106,9 @@ class Notes with ChangeNotifier {
 					break;
 				}
 			}
-			if (toRemove != null) notesList.removeAt(toRemove);
+			if (toRemove != null) {
+				notesList.removeAt(toRemove);
+			}
 		}
 	}
 
@@ -116,17 +121,21 @@ class Notes with ChangeNotifier {
 	/// 3. Calls [notifyListeners].
 	/// 
 	void updateNotes([int changedIndex]) {
-		if (changedIndex != null) 
+		if (changedIndex != null) {
 			verifyNotes(changedIndex);
+		}
 		saveNotes();
 		notifyListeners();
 	}
 
 	/// Replaces a note at a given index. 
 	void replaceNote(int index, Note note) {
-		if (note == null) return;
-		notes.removeAt(index);
-		notes.insert(index, note);
+		if (note == null) {
+			return;
+		}
+		notes
+			..removeAt(index)
+			..insert(index, note);
 		updateNotes(index);
 	}
 
@@ -135,7 +144,9 @@ class Notes with ChangeNotifier {
 	/// Use this method instead of simply `notes.add` to 
 	/// ensure that [updateNotes] is called. 
 	void addNote(Note note) {
-		if (note == null) return;
+		if (note == null) {
+			return;
+		}
 		notes.add(note);
 		updateNotes();
 	}
@@ -158,7 +169,8 @@ class Notes with ChangeNotifier {
 			for (final int index in readNotes)
 				if (!notes [index].time.repeats && !currentNotes.contains(index))
 					notes [index]
-		]) 
+		]) {
 			deleteNote(notes.indexOf(note));
+		}
 	}
 }

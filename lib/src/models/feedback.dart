@@ -4,6 +4,7 @@ import "package:ramaz/data.dart";
 import "package:ramaz/services.dart";
 
 /// A view model for the feedback page. 
+// ignore: prefer_mixin
 class FeedbackModel with ChangeNotifier {
 	String _message;
 	bool _responseConsent = false;
@@ -11,9 +12,7 @@ class FeedbackModel with ChangeNotifier {
 	/// Whether the user is ready to submit
 	/// 
 	/// Is true if the [message] is non-null and not empty. 
-	bool get ready => (
-		message != null && message.trim().isNotEmpty
-	);
+	bool get ready => message != null && message.trim().isNotEmpty;
 
 	/// The message that will be sent along with the feedback.
 	String get message => _message;
@@ -32,7 +31,7 @@ class FeedbackModel with ChangeNotifier {
 	/// Sends the feedback to Cloud Firestore. 
 	/// 
 	/// The feedback is anonymized unless [responseConsent] is true.
-	void send() async => Firestore.sendFeedback(
+	Future<void> send() async => Firestore.sendFeedback(
 		Feedback (
 			message: message,
 			timestamp: DateTime.now(),

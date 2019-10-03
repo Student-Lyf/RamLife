@@ -1,12 +1,13 @@
-import "package:flutter/foundation.dart";
 import "dart:async" show Timer;
-
-import "notes.dart";
+import "package:flutter/foundation.dart";
 
 import "package:ramaz/services.dart";
 import "package:ramaz/data.dart";
 
+import "notes.dart";
+
 /// A data model for the user's schedule.
+// ignore: prefer_mixin
 class Schedule with ChangeNotifier {
 	/// The current date.
 	/// 
@@ -83,7 +84,7 @@ class Schedule with ChangeNotifier {
 	/// A callback that runs whenever the notes data model changes.
 	/// 
 	/// See [updateNotes].
-	void notesListener() => updateNotes(true);
+	void notesListener() => updateNotes(scheduleNotifications: true);
 
 	/// The current subject.
 	Subject get subject => subjects [period?.id];
@@ -112,7 +113,7 @@ class Schedule with ChangeNotifier {
 			// initialize periods.
 			periods = student.getPeriods(today);
 			// initialize the current period.
-			onNewPeriod(true);
+			onNewPeriod(first: true);
 			// initialize the timer. See comments for [timer].
 			timer = Timer.periodic(
 				timerInterval,
@@ -122,7 +123,7 @@ class Schedule with ChangeNotifier {
 	}
 
 	/// Updates the current period.
-	void onNewPeriod([bool first = false]) {
+	void onNewPeriod({bool first = false}) {
 		final DateTime newDate = DateTime.now();
 
 		// Day changed. Probably midnight.
@@ -132,7 +133,7 @@ class Schedule with ChangeNotifier {
 		}
 
 		// first => schedule notifications.
-		updateNotes(first);  
+		updateNotes(scheduleNotifications: first);  
 
 		// no school today.
 		if (!today.school) {  
@@ -144,8 +145,9 @@ class Schedule with ChangeNotifier {
 		final int newIndex = today.period;
 
 		// Maybe the day changed
-		if (newIndex != null && newIndex == periodIndex) 
+		if (newIndex != null && newIndex == periodIndex) {
 			return notifyListeners();
+		}
 
 		// period changed since last checked.
 		periodIndex = newIndex;
@@ -158,8 +160,9 @@ class Schedule with ChangeNotifier {
 
 		// Period changed and there is still school.
 		period = periods [periodIndex];
-		if (periodIndex < periods.length - 1)
+		if (periodIndex < periods.length - 1) {
 			nextPeriod = periods [periodIndex + 1];
+		}
 	}
 
 	/// Updates the notes given the current period.
@@ -168,7 +171,7 @@ class Schedule with ChangeNotifier {
 	/// and calling [Notes.markShown]. Will also schedule notifications if that
 	/// has not been done yet today or as a response to changed notes. See 
 	/// [scheduleNotes] for more details on scheduling notifications.
-	void updateNotes([bool scheduleNotifications = false]) {
+	void updateNotes({bool scheduleNotifications = false}) {
 		notes
 			..currentNotes = notes.getNotes(
 				period: period?.period,
@@ -181,8 +184,7 @@ class Schedule with ChangeNotifier {
 				letter: today.letter,
 			);
 
-		for (final int index in notes.currentNotes ?? [])
-			notes.markShown(index);
+		(notes.currentNotes ?? []).forEach(notes.markShown);
 
 		if (scheduleNotifications) {
 			Future(scheduleNotes);
@@ -194,13 +196,14 @@ class Schedule with ChangeNotifier {
 	/// 
 	/// Starting from the current period, schedules a notification for the period
 	/// using [Notifications.scheduleNotification].
-	void scheduleNotes() async {
-		await Notifications.cancelAll();
+	Future<void> scheduleNotes() async {
+		Notifications.cancelAll();
 		final DateTime now = DateTime.now();
 
 		// No school today/right now
-		if (!today.school || periodIndex == null || periods == null)
+		if (!today.school || periodIndex == null || periods == null) {
 			return;
+		}
 
 		// For all periods starting from periodIndex, schedule applicable notes.
 		for (int index = periodIndex; index < periods.length; index++) {
@@ -209,19 +212,21 @@ class Schedule with ChangeNotifier {
 				period: period?.period,
 				subject: subjects [period?.id]?.name,
 				letter: today.letter,
-			)) await Notifications.scheduleNotification(
-				date: DateTime(
-					now.year, 
-					now.month, 
-					now.day,
-					period.time.start.hour,
-					period.time.start.minutes,
-				),
-				notification: Notification.note(
-					title: "New note",
-					message: notes.notes [noteIndex].message,
-				)
-			);
+			)) {
+				Notifications.scheduleNotification(
+					date: DateTime(
+						now.year, 
+						now.month, 
+						now.day,
+						period.time.start.hour,
+						period.time.start.minutes,
+					),
+					notification: Notification.note(
+						title: "New note",
+						message: notes.notes [noteIndex].message,
+					)
+				);
+			}
 		}
 	}
 }

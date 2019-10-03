@@ -5,6 +5,7 @@ import "package:ramaz/models.dart";
 import "package:ramaz/services_collection.dart";
 
 /// A view model for the dialog that allows the user to build a note. 
+// ignore: prefer_mixin
 class NotesBuilderModel with ChangeNotifier {
 	final Schedule _schedule;
 
@@ -55,7 +56,9 @@ class NotesBuilderModel with ChangeNotifier {
 				subject.name
 		]
 	{
-		if (note == null) return;
+		if (note == null) {
+			return;
+		}
 
 		message = note.message;
 		time = note.time;	
@@ -64,11 +67,13 @@ class NotesBuilderModel with ChangeNotifier {
 		type = time.type;
 		switch (type) {
 			case NoteTimeType.period: 
-				period = (time as PeriodNoteTime).period;
-				day = Day (letter: (time as PeriodNoteTime).letter);
+				final PeriodNoteTime noteTime = time;
+				period = noteTime.period;
+				day = Day (letter: noteTime.letter);
 				break;
 			case NoteTimeType.subject:
-				course = (time as SubjectNoteTime).name;
+				final SubjectNoteTime noteTime = time;
+				course = noteTime.name;
 				break;
 			default: 
 				throw ArgumentError.notNull("Note.time.type");
@@ -96,14 +101,13 @@ class NotesBuilderModel with ChangeNotifier {
 	/// - [type] is [NoteTimeType.period] and [letter] or [period] is null, or
 	/// - [type] is [NoteTimeType.subject] and [course] is null.
 	/// 
-	bool get ready => (
-		(message?.isNotEmpty ?? false) && type != null && 
+	bool get ready => (message?.isNotEmpty ?? false) && 
+		type != null &&
 		(type != NoteTimeType.period ||
 			(day?.letter != null && period != null)
 		) && (
 			type != NoteTimeType.subject || course != null			
-		)
-	);
+		);
 
 	/// A list of all the periods in [day].
 	/// 
@@ -125,6 +129,7 @@ class NotesBuilderModel with ChangeNotifier {
 	}
 
 	/// Toggles whether this note should repeat. 
+	// ignore: avoid_positional_boolean_parameters
 	void toggleRepeat(bool value) {
 		shouldRepeat = value;
 		notifyListeners();
