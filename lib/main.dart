@@ -1,8 +1,10 @@
+import "dart:async" show runZoned;
+
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 import "package:path_provider/path_provider.dart";
 import "package:shared_preferences/shared_preferences.dart";
-
+import "package:firebase_crashlytics/firebase_crashlytics.dart";
 
 import "package:ramaz/constants.dart";  // for route keys
 import "package:ramaz/pages.dart";
@@ -94,13 +96,19 @@ void main({bool restart = false}) async {
 		}
 	);
 
-	// Now we are ready to run the app
-	runApp (
-		RamazApp (
-			ready: ready,
-			brightness: brightness,
-			services: services,
-		)
+	// Now we are ready to run the app (with error catching)
+	FlutterError.onError = Crashlytics.instance.recordFlutterError;
+	runZoned<Future<void>>(
+		() async {
+			runApp (
+				RamazApp (
+					ready: ready,
+					brightness: brightness,
+					services: services,
+				)
+			);
+		},
+		onError: Crashlytics.instance.recordError,
 	);
 }
 
