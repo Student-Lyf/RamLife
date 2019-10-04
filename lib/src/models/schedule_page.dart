@@ -65,7 +65,7 @@ class ScheduleModel with ChangeNotifier {
 		);
 		final Day selected = schedule.calendar [justDate];
 		if (!selected.school) {
-			throw ArgumentError("No School");
+			throw Exception("No School");
 		}
 		day = selected;
 		_selectedDay = justDate;

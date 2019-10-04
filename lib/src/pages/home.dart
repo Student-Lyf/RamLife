@@ -5,26 +5,24 @@ import "package:ramaz/pages.dart";
 import "package:ramaz/widgets.dart";
 
 class HomePage extends StatelessWidget {
-	const HomePage();
-
 	@override 
 	Widget build (BuildContext context) => ModelListener<Schedule>(
 		model: () => Services.of(context).schedule,
 		dispose: false,
 		builder: (BuildContext context, Schedule schedule, _) => Scaffold (
 			appBar: AppBar (
-				title: Text ("Home"),
+				title: const Text ("Home"),
 				actions: [
 					if (schedule.hasSchool) Builder (
 						builder: (BuildContext context) => FlatButton(
-							child: Text ("Tap for schedule"),
 							textColor: Colors.white,
-							onPressed: () => Scaffold.of(context).openEndDrawer()
+							onPressed: () => Scaffold.of(context).openEndDrawer(),
+							child: const Text ("Tap for schedule"),
 						)
 					)
 				],
 			),
-			drawer: NavigationDrawer(),
+			drawer: const NavigationDrawer(),
 			endDrawer: !schedule.hasSchool ? null : Drawer (
 				child: ClassList(
 					day: schedule.today,
@@ -44,7 +42,7 @@ class HomePage extends StatelessWidget {
 				child: ListView (
 					children: [
 						RamazLogos.ram_rectangle,
-						Divider(),
+						const Divider(),
 						Text (
 							schedule.hasSchool
 								? "Today is a${schedule.today.n} "
@@ -53,7 +51,7 @@ class HomePage extends StatelessWidget {
 							textScaleFactor: 2,
 							textAlign: TextAlign.center
 						),
-						SizedBox (height: 20),
+						const SizedBox (height: 20),
 						if (schedule.hasSchool) NextClass(
 							notes: schedule.notes.currentNotes,
 							period: schedule.period,

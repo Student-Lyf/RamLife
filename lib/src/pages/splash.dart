@@ -4,7 +4,7 @@ import "package:ramaz/widgets.dart";
 
 class SplashScreen extends StatelessWidget {
 	final void Function (Brightness) setBrightness;
-	SplashScreen({this.setBrightness});
+	const SplashScreen({this.setBrightness});
 
 	@override Widget build (BuildContext context) => MaterialApp (
 		home: Scaffold (

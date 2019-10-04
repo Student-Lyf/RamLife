@@ -7,6 +7,8 @@ import "package:ramaz/widgets.dart";
 class Footer extends StatelessWidget {
 	static const double textScale = 1.25;
 
+	const Footer();
+
 	@override Widget build (BuildContext context) => ModelListener<Schedule>(
 			model: () => Services.of(context).schedule,
 			dispose: false,

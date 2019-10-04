@@ -10,7 +10,8 @@ class NotesPage extends StatelessWidget {
 	Widget build(BuildContext context) => ModelListener<Notes>(
 		model: () => Services.of(context).notes,
 		dispose: false,
-		child: Center (
+		// ignore: sort_child_properties_last
+		child: const Center (
 			child: Text (
 				"You don't have any notes yet",
 				textScaleFactor: 1.5,
@@ -18,10 +19,10 @@ class NotesPage extends StatelessWidget {
 			),
 		),
 		builder: (BuildContext context, Notes model, Widget none) => Scaffold(
-			bottomNavigationBar: Footer(),
-			drawer: NavigationDrawer(),
+			bottomNavigationBar: const Footer(),
+			drawer: const NavigationDrawer(),
 			appBar: AppBar(
-				title: Text ("Notes"),
+				title: const Text ("Notes"),
 				actions: [
 					IconButton(
 						icon: Icon (Icons.home),
@@ -30,15 +31,15 @@ class NotesPage extends StatelessWidget {
 				]
 			),
 			floatingActionButton: FloatingActionButton(
-				child: Icon (Icons.note_add),
 				onPressed: () async => 
 					model.addNote(await NotesBuilder.buildNote(context)),
+				child: const Icon (Icons.note_add),
 			),
 			body: model.notes.isEmpty
 				? none 
 				: ListView.separated (
 					itemCount: model.notes.length,
-					separatorBuilder: (_, __) => Divider(),
+					separatorBuilder: (_, __) => const Divider(),
 					itemBuilder: (BuildContext context, int index) => 
 						NoteTile(index: index),
 				)

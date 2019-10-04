@@ -5,14 +5,17 @@ import "package:ramaz/widgets.dart";
 import "package:ramaz/constants.dart";  // for route names
 
 class NavigationDrawer extends StatelessWidget {
-	static pushRoute(BuildContext context, String name) => 
+	static Future<void> Function() pushRoute(BuildContext context, String name) => 
 		() => Navigator.of(context).pushReplacementNamed(name);
 
 	const NavigationDrawer({Key key}) : super(key: key);
 
 	@override Widget build (BuildContext context) => Drawer (
 		child: LayoutBuilder(
-			builder: (BuildContext context, BoxConstraints constraints) => SingleChildScrollView(
+			builder: (
+				BuildContext context, 
+				BoxConstraints constraints
+			) => SingleChildScrollView(
 				child: ConstrainedBox(
 					constraints: BoxConstraints(
 						minHeight: constraints.maxHeight,
@@ -22,17 +25,17 @@ class NavigationDrawer extends StatelessWidget {
 							children: [
 								DrawerHeader (child: RamazLogos.ram_square),
 								ListTile (
-									title: Text ("Home"),
+									title: const Text ("Home"),
 									leading: Icon (Icons.home),
 									onTap: pushRoute(context, Routes.home),
 								),
 								ListTile (
-									title: Text ("Schedule"),
+									title: const Text ("Schedule"),
 									leading: Icon (Icons.schedule),
 									onTap: pushRoute(context, Routes.schedule),
 								),
 								ListTile (
-									title: Text ("Notes"),
+									title: const Text ("Notes"),
 									leading: Icon (Icons.note),
 									onTap: pushRoute(context, Routes.notes),
 								),
@@ -45,7 +48,7 @@ class NavigationDrawer extends StatelessWidget {
 								// ListTile (
 								// 	title: Text ("Lost and Found (coming soon)"),
 								// 	leading: Icon (Icons.help),
-								// 	onTap: () => Navigator.of(context).pushReplacementNamed(LOST_AND_FOUND)
+								// 	onTap: pushRoute(context, LOST_AND_FOUND)
 								// ),
 								// ListTile (
 								// 	title: Text ("Sports (coming soon)"),
@@ -54,19 +57,20 @@ class NavigationDrawer extends StatelessWidget {
 								// ),
 								// Divider(),
 								ListTile (
-									title: Text ("Logout"),
+									title: const Text ("Logout"),
 									leading: Icon (Icons.lock),
 									onTap: pushRoute(context, Routes.login)
 								),
 								ListTile (
-									title: Text ("Send Feedback"),
+									title: const Text ("Send Feedback"),
 									leading: Icon (Icons.feedback),
 									onTap: () => Navigator.of(context)
 										..pop()
 										..pushNamed(Routes.feedback)
 								),
-								AboutListTile (
+								const AboutListTile (
 									icon: Icon (Icons.info),
+									// ignore: sort_child_properties_last
 									child: Text ("About"),
 									applicationName: "Ramaz Student Life",
 									applicationVersion: "0.5",
@@ -88,7 +92,7 @@ class NavigationDrawer extends StatelessWidget {
 									alignment: Alignment.bottomCenter,
 									child: Column (
 										children: [
-											Divider(),
+											const Divider(),
 											SingleChildScrollView (
 												scrollDirection: Axis.horizontal,
 												child: Row (
