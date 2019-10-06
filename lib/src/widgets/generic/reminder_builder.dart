@@ -5,7 +5,7 @@ import "package:ramaz/models.dart";
 import "package:ramaz/widgets.dart";
 
 // Must be stateful to keep [TextEditingController.text] intact
-class NotesBuilder extends StatefulWidget {	
+class ReminderBuilder extends StatefulWidget {	
 	static void noop(){}
 	static final Color disabledColor = RaisedButton(onPressed: noop)
 		.disabledTextColor;
@@ -30,39 +30,39 @@ class NotesBuilder extends StatefulWidget {
 		}
 	}
 
-	static Future<Note> buildNote(
-		BuildContext context, [Note note]
-	) async => await showDialog<Note>(
+	static Future<Reminder> buildReminder(
+		BuildContext context, [Reminder reminder]
+	) async => await showDialog<Reminder>(
 		context: context, 
-		builder: (_) => NotesBuilder(note: note),
+		builder: (_) => ReminderBuilder(reminder: reminder),
 	);
 
-	final Note note;
+	final Reminder reminder;
 
-	const NotesBuilder({
-		this.note
+	const ReminderBuilder({
+		this.reminder
 	}); 
 
 	@override 
-	NotesBuilderState createState() => NotesBuilderState();
+	ReminderBuilderState createState() => ReminderBuilderState();
 }
 
 // Exists solely to instantiate a TextEditingController
-class NotesBuilderState extends State<NotesBuilder> {
+class ReminderBuilderState extends State<ReminderBuilder> {
 	final TextEditingController controller = TextEditingController();
 
 	@override initState() {
 		super.initState();
-		controller.text = widget.note?.message;
+		controller.text = widget.reminder?.message;
 	}
 
 	@override
-	Widget build(BuildContext context) => ModelListener<NotesBuilderModel>(
+	Widget build(BuildContext context) => ModelListener<RemindersBuilderModel>(
 		child: FlatButton(
 			child: Text (
 				"Cancel", 
 				style: TextStyle (
-					color: NotesBuilder.getButtonTextColor(
+					color: ReminderBuilder.getButtonTextColor(
 						context, 
 						Theme.of(context).brightness,
 						true
@@ -71,20 +71,20 @@ class NotesBuilderState extends State<NotesBuilder> {
 			),
 			onPressed: Navigator.of(context).pop,
 		),
-		model: () => NotesBuilderModel(
+		model: () => RemindersBuilderModel(
 			services: Services.of(context).services, 
-			note: widget.note
+			reminder: widget.reminder
 		),
-		builder: (BuildContext context, NotesBuilderModel model, Widget back) =>
+		builder: (BuildContext context, RemindersBuilderModel model, Widget back) =>
 			AlertDialog(
-				title: Text (widget.note == null ? "Create note" : "Edit note"),
+				title: Text (widget.reminder == null ? "Create reminder" : "Edit reminder"),
 				actions: [
 					back,
 					RaisedButton(
 						child: Text (
 							"Save", 
 							style: TextStyle (
-								color: NotesBuilder.getButtonTextColor(
+								color: ReminderBuilder.getButtonTextColor(
 									context, 
 									ThemeData.estimateBrightnessForColor(
 										Theme.of(context).buttonColor
@@ -111,16 +111,16 @@ class NotesBuilderState extends State<NotesBuilder> {
 							SizedBox (height: 20),
 							Wrap(
 								children: [
-									RadioListTile<NoteTimeType> (
-										value: NoteTimeType.period,
+									RadioListTile<ReminderTimeType> (
+										value: ReminderTimeType.period,
 										groupValue: model.type,
 										onChanged: model.toggleRepeatType,
 										title: Text (
 											"${model.shouldRepeat ? 'Repeats every' : 'On'} period"
 										),
 									),
-									RadioListTile<NoteTimeType> (
-										value: NoteTimeType.subject,
+									RadioListTile<ReminderTimeType> (
+										value: ReminderTimeType.subject,
 										groupValue: model.type,
 										onChanged: model.toggleRepeatType,
 										title: Text (
@@ -130,7 +130,7 @@ class NotesBuilderState extends State<NotesBuilder> {
 								]
 							),
 							SizedBox (height: 20),
-							if (model.type == NoteTimeType.period) ...[
+							if (model.type == ReminderTimeType.period) ...[
 								ListTile (
 									title: Text ("Letter day"),
 									trailing: DropdownButton<Letters>(
@@ -161,7 +161,7 @@ class NotesBuilderState extends State<NotesBuilder> {
 										hint: Text ("Period"),
 									)
 								)
-							] else if (model.type == NoteTimeType.subject)
+							] else if (model.type == ReminderTimeType.subject)
 								ListTile (
 									title: Text ("Class"),
 									trailing: DropdownButton<String>(
@@ -169,7 +169,7 @@ class NotesBuilderState extends State<NotesBuilder> {
 											for (final String course in model.courses)
 												DropdownMenuItem(
 													value: course,
-													child: Text("${NotesBuilder.trimString(course, 14)}..."),
+													child: Text("${ReminderBuilder.trimString(course, 14)}..."),
 												)
 										],
 										onChanged: model.changeCourse,

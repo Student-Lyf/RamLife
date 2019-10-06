@@ -15,7 +15,7 @@ class RamazColors {
 class Routes {
 	static const String home = "home";
 	static const String schedule = "schedule";
-	static const String notes = "notes";
+	static const String reminders = "reminders";
 	static const String login = "login";
 	static const String feedback = "feedback";
 }

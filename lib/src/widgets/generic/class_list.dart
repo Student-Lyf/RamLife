@@ -7,12 +7,12 @@ import "package:ramaz/widgets.dart";
 class ClassPanel extends StatelessWidget {
 	final String title;
 	final List<String> children;
-	final List<int> notes;
+	final List<int> reminders;
 
 	const ClassPanel ({
 		@required this.title,
 		@required this.children,
-		@required this.notes,
+		@required this.reminders,
 	});
 
 	@override Widget build (BuildContext context) => ExpansionTile (
@@ -22,7 +22,7 @@ class ClassPanel extends StatelessWidget {
 				child: ListTile (
 					title: Text (title),
 					contentPadding: EdgeInsets.zero,
-					trailing: notes.isEmpty ? null : Icon(Icons.note)
+					trailing: reminders.isEmpty ? null : Icon(Icons.note)
 				)
 			)
 		),
@@ -39,8 +39,8 @@ class ClassPanel extends StatelessWidget {
 									padding: const EdgeInsets.symmetric(vertical: 5),
 									child: Text (label)
 								),
-							for (final int index in notes)
-								NoteTile (
+							for (final int index in reminders)
+								ReminderTile (
 									index: index,
 									height: 60,
 								)
@@ -64,8 +64,8 @@ class ClassList extends StatelessWidget {
 		this.periods,
 	});
 
-	@override Widget build(BuildContext context) => ModelListener<Notes>(
-		model: () => Services.of(context).notes,
+	@override Widget build(BuildContext context) => ModelListener<Reminders>(
+		model: () => Services.of(context).reminders,
 		dispose: false,
 		child: DrawerHeader (
 			child: Center (
@@ -76,7 +76,7 @@ class ClassList extends StatelessWidget {
 				)
 			)
 		),
-		builder: (BuildContext context, Notes notes, Widget header) {
+		builder: (BuildContext context, Reminders reminders, Widget header) {
 			final Services services = Services.of(context);
 			return ListView (
 				shrinkWrap: true,
@@ -107,7 +107,7 @@ class ClassList extends StatelessWidget {
 				? period.getName(subject)
 				: "${period.period}: ${period.getName(subject)}"
 			),
-			notes: services.notes.getNotes(
+			reminders: services.reminders.getReminders(
 				period: period.period,
 				letter: day.letter,
 				subject: subject?.name,

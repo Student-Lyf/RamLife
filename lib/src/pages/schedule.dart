@@ -13,7 +13,7 @@ class SchedulePage extends StatelessWidget {
 	Widget build (BuildContext context) => ModelListener<ScheduleModel>(
 		model: () => ScheduleModel(services: Services.of(context).services),
 		// ignore: sort_child_properties_last
-		child: const Footer(), 
+		child: Footer(), 
 		builder: (
 			BuildContext context, 
 			ScheduleModel model, 

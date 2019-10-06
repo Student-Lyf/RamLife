@@ -35,9 +35,9 @@ class NavigationDrawer extends StatelessWidget {
 									onTap: pushRoute(context, Routes.schedule),
 								),
 								ListTile (
-									title: const Text ("Notes"),
+									title: const Text ("Reminders"),
 									leading: Icon (Icons.note),
-									onTap: pushRoute(context, Routes.notes),
+									onTap: pushRoute(context, Routes.reminders),
 								),
 								BrightnessChanger.dropdown(prefs: Services.of(context).prefs),
 								// ListTile (

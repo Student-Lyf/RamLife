@@ -1,8 +1,10 @@
+import "dart:async" show runZoned;
+
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 import "package:path_provider/path_provider.dart";
 import "package:shared_preferences/shared_preferences.dart";
-
+import "package:firebase_crashlytics/firebase_crashlytics.dart";
 
 import "package:ramaz/constants.dart";  // for route keys
 import "package:ramaz/pages.dart";
@@ -18,7 +20,7 @@ Future<void> refresh(ServicesCollection services) async {
 		"Cannot refresh schedule because the user is not logged in."
 	);
 	await services.initOnLogin(email, false);
-	services.notes.setup();
+	services.reminders.setup();
 	services.schedule.setup(services.reader);
 }
 
@@ -63,7 +65,7 @@ void main({bool restart = false}) async {
 		
 		// To download, and login or go to main
 		ready = services.reader.ready && await Auth.ready;
-		if (ready) await services.initOnMain();
+		if (ready) await services.init();
 	} catch (error) {
 		print ("Error on main.");
 		if (!restart) {
@@ -94,13 +96,19 @@ void main({bool restart = false}) async {
 		}
 	);
 
-	// Now we are ready to run the app
-	runApp (
-		RamazApp (
-			ready: ready,
-			brightness: brightness,
-			services: services,
-		)
+	// Now we are ready to run the app (with error catching)
+	FlutterError.onError = Crashlytics.instance.recordFlutterError;
+	runZoned<Future<void>>(
+		() async {
+			runApp (
+				RamazApp (
+					ready: ready,
+					brightness: brightness,
+					services: services,
+				)
+			);
+		},
+		onError: Crashlytics.instance.recordError,
 	);
 }
 
@@ -180,7 +188,7 @@ class MainAppState extends State<RamazApp> {
 					Routes.login: (_) => Login(),
 					Routes.home: (_) => HomePage(),
 					Routes.schedule: (_) => SchedulePage(),
-					Routes.notes: (_) => NotesPage(),
+					Routes.reminders: (_) => RemindersPage(),
 					Routes.feedback: (_) => FeedbackPage(),
 				}
 			)
