@@ -65,7 +65,7 @@ void main({bool restart = false}) async {
 		
 		// To download, and login or go to main
 		ready = services.reader.ready && await Auth.ready;
-		if (ready) await services.initOnMain();
+		if (ready) await services.init();
 	} catch (error) {
 		print ("Error on main.");
 		if (!restart) {
