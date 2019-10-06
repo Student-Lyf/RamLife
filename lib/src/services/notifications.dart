@@ -116,19 +116,19 @@ class AndroidNotification {
 		this.styleInfo,
 	});
 
-	/// An optimal Android notification configuration for notes. 
+	/// An optimal Android notification configuration for reminders. 
 	/// 
 	/// If [root] is true, the notification is considered the group 
 	/// "summary", which is like a header for notifications. 
-	const AndroidNotification.note([bool root = false]) :
+	const AndroidNotification.reminder([bool root = false]) :
 		importance = Importance.High,
 		priority = Priority.High,
 		style = AndroidNotificationType.normal,
 		color = RamazColors.blue,
-		channelId = "notes",
-		channelName = "Notes",
-		channelDescription = "Reminders when notes are due.",
-		groupId = "notes",
+		channelId = "reminders",
+		channelName = "Reminders",
+		channelDescription = "When reminders are due.",
+		groupId = "reminders",
 		playSound = true,
 		shouldVibrate = true,
 		isGroupSummary = root,
@@ -170,8 +170,8 @@ class AndroidNotification {
 /// other libraries can import this module without importing the plugin. 
 @immutable
 class IOSNotification {
-	/// An optimal [IOSNotification] for notes. 
-	static const IOSNotification note = IOSNotification(
+	/// An optimal [IOSNotification] for reminders. 
+	static const IOSNotification reminder = IOSNotification(
 		showBadge: true,
 		playSound: true
 	);
@@ -228,14 +228,14 @@ class Notification {
 			android.details, ios.details,
 		);
 
-	/// The optimal configuration for a note notification.
-	Notification.note({
+	/// The optimal configuration for a reminder notification.
+	Notification.reminder({
 		@required this.title,
 		@required this.message,
 		bool root = false
 	}) : 
 		details = NotificationDetails(
-			AndroidNotification.note(root).details, IOSNotification.note.details,	
+			AndroidNotification.reminder(root).details, IOSNotification.reminder.details,	
 		);
 }
 

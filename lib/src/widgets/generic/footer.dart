@@ -16,7 +16,7 @@ class Footer extends StatelessWidget {
 					enableDrag: false,
 					onClosing: () {},
 					builder: (BuildContext context) => GestureDetector(
-						onTap: !schedule.notes.hasNote ? null : 
+						onTap: !schedule.reminders.hasReminder ? null : 
 							() {
 								final NavigatorState nav = Navigator.of(context);
 								if (nav.canPop()) nav.pop();
@@ -44,7 +44,7 @@ class Footer extends StatelessWidget {
 											).join (". "),
 											textScaleFactor: textScale,
 										),
-										if (schedule.notes.hasNote) Text ("Click to see note"),
+										if (schedule.reminders.hasReminder) Text ("Click to see reminder"),
 									]
 								)
 							)

@@ -55,14 +55,14 @@ class HomePage extends StatelessWidget {
 						),
 						SizedBox (height: 20),
 						if (schedule.hasSchool) NextClass(
-							notes: schedule.notes.currentNotes,
+							reminders: schedule.reminders.currentReminders,
 							period: schedule.period,
 							subject: schedule.subjects [schedule.period?.id]
 						),
 						// if school won't be over, show the next class
 						if (schedule.nextPeriod != null) NextClass (
 							next: true,
-							notes: schedule.notes.nextNotes,
+							reminders: schedule.reminders.nextReminders,
 							period: schedule.nextPeriod,
 							subject: schedule.subjects [schedule.nextPeriod?.id]
 						),

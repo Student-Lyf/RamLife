@@ -4,50 +4,50 @@ import "package:ramaz/data.dart";
 import "package:ramaz/models.dart";
 import "package:ramaz/services_collection.dart";
 
-/// A view model for the dialog that allows the user to build a note. 
-class NotesBuilderModel with ChangeNotifier {
+/// A view model for the dialog that allows the user to build a reminder. 
+class RemindersBuilderModel with ChangeNotifier {
 	final Schedule _schedule;
 
-	/// The type of note the user is building. 
-	NoteTimeType type;
+	/// The type of reminder the user is building. 
+	ReminderTimeType type;
 
-	/// The time this note will be displayed.
-	NoteTime time;
+	/// The time this reminder will be displayed.
+	ReminderTime time;
 
-	/// The message for this note.
+	/// The message for this reminder.
 	String message = "";
 
-	/// Whether this note repeats.
+	/// Whether this reminder repeats.
 	/// 
 	/// This affects whether it will be deleted after 
 	/// being displayed once. 
 	bool shouldRepeat = false;
 
-	/// The day this note should be displayed.
+	/// The day this reminder should be displayed.
 	/// 
-	/// Only relevant for [PeriodNoteTime].
+	/// Only relevant for [PeriodReminderTime].
 	Day day;
 
-	/// The period this note should be displayed.
+	/// The period this reminder should be displayed.
 	/// 
-	/// Only relevant for [PeriodNoteTime].
+	/// Only relevant for [PeriodReminderTime].
 	String period;
 
-	/// The name of the class this note should be displayed.
+	/// The name of the class this reminder should be displayed.
 	/// 
-	/// Only relevant for [SubjectNoteTime].
+	/// Only relevant for [SubjectReminderTime].
 	String course;
 
 	/// All the names of the user's courses. 
 	final List<String> courses;
 
-	/// Creates a new note builder model.
+	/// Creates a new reminder builder model.
 	/// 
-	/// If [note] is not null, then the relevant fields of this 
-	/// class are filled in with the corresponding fields of the note. 
-	NotesBuilderModel({
+	/// If [reminder] is not null, then the relevant fields of this 
+	/// class are filled in with the corresponding fields of the reminder. 
+	RemindersBuilderModel({
 		@required ServicesCollection services, 
-		Note note
+		Reminder reminder
 	}) : 
 		_schedule = services.schedule,
 		courses = [
@@ -55,30 +55,30 @@ class NotesBuilderModel with ChangeNotifier {
 				subject.name
 		]
 	{
-		if (note == null) return;
+		if (reminder == null) return;
 
-		message = note.message;
-		time = note.time;	
+		message = reminder.message;
+		time = reminder.time;	
 
 		shouldRepeat = time.repeats;
 		type = time.type;
 		switch (type) {
-			case NoteTimeType.period: 
-				period = (time as PeriodNoteTime).period;
-				day = Day (letter: (time as PeriodNoteTime).letter);
+			case ReminderTimeType.period: 
+				period = (time as PeriodReminderTime).period;
+				day = Day (letter: (time as PeriodReminderTime).letter);
 				break;
-			case NoteTimeType.subject:
-				course = (time as SubjectNoteTime).name;
+			case ReminderTimeType.subject:
+				course = (time as SubjectReminderTime).name;
 				break;
 			default: 
-				throw ArgumentError.notNull("Note.time.type");
+				throw ArgumentError.notNull("Reminder.time.type");
 		}
 	}
 
-	/// Returns a new note from the model's fields.
-	Note build() => Note (
+	/// Returns a new reminder from the model's fields.
+	Reminder build() => Reminder (
 		message: message, 
-		time: NoteTime.fromType(
+		time: ReminderTime.fromType(
 			type: type,
 			letter: letter,
 			period: period,
@@ -93,15 +93,15 @@ class NotesBuilderModel with ChangeNotifier {
 	/// 
 	/// - [message] is null or empty,
 	/// - [type] is null,
-	/// - [type] is [NoteTimeType.period] and [letter] or [period] is null, or
-	/// - [type] is [NoteTimeType.subject] and [course] is null.
+	/// - [type] is [ReminderTimeType.period] and [letter] or [period] is null, or
+	/// - [type] is [ReminderTimeType.subject] and [course] is null.
 	/// 
 	bool get ready => (
 		(message?.isNotEmpty ?? false) && type != null && 
-		(type != NoteTimeType.period ||
+		(type != ReminderTimeType.period ||
 			(day?.letter != null && period != null)
 		) && (
-			type != NoteTimeType.subject || course != null			
+			type != ReminderTimeType.subject || course != null			
 		)
 	);
 
@@ -124,38 +124,38 @@ class NotesBuilderModel with ChangeNotifier {
 		notifyListeners();
 	}
 
-	/// Toggles whether this note should repeat. 
+	/// Toggles whether this reminder should repeat. 
 	void toggleRepeat(bool value) {
 		shouldRepeat = value;
 		notifyListeners();
 	}
 
-	/// Changes the [type] of this note.
-	void toggleRepeatType(NoteTimeType value) {
+	/// Changes the [type] of this reminder.
+	void toggleRepeatType(ReminderTimeType value) {
 		type = value;
 		notifyListeners();
 	}
 
-	/// Changes the [period] of this note. 
+	/// Changes the [period] of this reminder. 
 	/// 
-	/// Only relevant when [type] is [NoteTimeType.period].
+	/// Only relevant when [type] is [ReminderTimeType.period].
 	void changeLetter(Letters value) {
 		day = Day (letter: value);
 		period = null;
 		notifyListeners();
 	}
 
-	/// Changes the [period] of this note. 
+	/// Changes the [period] of this reminder. 
 	/// 
-	/// Only relevant when [type] is [NoteTimeType.period]
+	/// Only relevant when [type] is [ReminderTimeType.period]
 	void changePeriod(String value) {
 		period = value;
 		notifyListeners();
 	}
 
-	/// Changes the [course] of this note. 
+	/// Changes the [course] of this reminder. 
 	/// 
-	/// Only relevant when [type] is [NoteTimeType.subject].
+	/// Only relevant when [type] is [ReminderTimeType.subject].
 	void changeCourse(String value) {
 		course = value;
 		notifyListeners();

@@ -22,15 +22,15 @@ class Firestore {
 	/// The name of the feedback collection
 	static const String FEEDBACK = "feedback";
 
-	/// The name of the notes collection
-	static const String NOTES = "notes";
+	/// The name of the reminders collection
+	static const String REMINDERS = "reminders";
 
 	static final FB.Firestore _firestore = FB.Firestore.instance;
 	static final FB.CollectionReference _students = _firestore.collection(STUDENTS);
 	static final FB.CollectionReference _classes = _firestore.collection (CLASSES);
 	static final FB.CollectionReference _feedback = _firestore.collection (FEEDBACK);
 	static final FB.CollectionReference _calendar = _firestore.collection(CALENDAR);
-	static final FB.CollectionReference _notes = _firestore.collection (NOTES);
+	static final FB.CollectionReference _reminders = _firestore.collection (REMINDERS);
 
 	/// Downloads the student's document in the student collection.
 	static Future<Map<String, dynamic>> get student async => 
@@ -77,31 +77,31 @@ class Firestore {
 		await _calendar.document(DateTime.now().month.toString()).get()
 	).data;
 
-	/// Downloads the notes for the user. 
+	/// Downloads the reminders for the user. 
 	/// 
 	/// At least for now, these are stored in a spearate collection than
-	/// the student profile data. This choice was made since notes are 
+	/// the student profile data. This choice was made since reminders are 
 	/// updated frequently and this saves the system from processing the
 	/// student's schedule every time this happens. 
-	static Future<Map<String, dynamic>> get notes async => 
-		(await _notes.document(await Auth.email).get()).data;
+	static Future<Map<String, dynamic>> get reminders async => 
+		(await _reminders.document(await Auth.email).get()).data;
 
-	/// Uploads the user's notes to the database. 
+	/// Uploads the user's reminders to the database. 
 	/// 
-	/// This function saves the notes along with a record of the notes that
-	/// were already read. Those notes will be deleted once they are irrelevant.
+	/// This function saves the reminders along with a record of the reminders that
+	/// were already read. Those reminders will be deleted once they are irrelevant.
 	/// 
 	/// This should be re-written to only accept a list of JSON elements, as 
 	/// this creates a dependency between this library and the data library.
-	/// This should also probably not persist the read notes in the database 
+	/// This should also probably not persist the read reminders in the database 
 	/// (ie, keep them local).
-	static Future<void> saveNotes(List<Note> notesList, List<int> readNotes) async => _notes
+	static Future<void> saveReminders(List<Reminder> remindersList, List<int> readReminders) async => _reminders
 		.document(await Auth.email)
 		.setData({
-			"notes": [
-				for (final Note note in notesList)
-					note.toJson()
+			"reminders": [
+				for (final Reminder reminder in remindersList)
+					reminder.toJson()
 			],
-			"read": readNotes
+			"read": readReminders
 		});
 }

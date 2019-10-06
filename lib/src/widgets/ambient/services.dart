@@ -21,7 +21,7 @@ class Services extends InheritedWidget {
 		prefs = services.prefs,
 		super (child: child);
 
-	Notes get notes => services.notes;
+	Reminders get reminders => services.reminders;
 	Schedule get schedule => services.schedule;
 
 	/// This instance will never be rebuilt with new data

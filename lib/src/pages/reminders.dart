@@ -5,23 +5,23 @@ import "package:ramaz/models.dart";
 import "package:ramaz/pages.dart";
 import "package:ramaz/widgets.dart";
 
-class NotesPage extends StatelessWidget {
+class RemindersPage extends StatelessWidget {
 	@override 
-	Widget build(BuildContext context) => ModelListener<Notes>(
-		model: () => Services.of(context).notes,
+	Widget build(BuildContext context) => ModelListener<Reminders>(
+		model: () => Services.of(context).reminders,
 		dispose: false,
 		child: Center (
 			child: Text (
-				"You don't have any notes yet",
+				"You don't have any reminders yet",
 				textScaleFactor: 1.5,
 				textAlign: TextAlign.center,
 			),
 		),
-		builder: (BuildContext context, Notes model, Widget none) => Scaffold(
+		builder: (BuildContext context, Reminders model, Widget none) => Scaffold(
 			bottomNavigationBar: Footer(),
 			drawer: NavigationDrawer(),
 			appBar: AppBar(
-				title: Text ("Notes"),
+				title: Text ("Reminders"),
 				actions: [
 					IconButton(
 						icon: Icon (Icons.home),
@@ -32,15 +32,15 @@ class NotesPage extends StatelessWidget {
 			floatingActionButton: FloatingActionButton(
 				child: Icon (Icons.note_add),
 				onPressed: () async => 
-					model.addNote(await NotesBuilder.buildNote(context)),
+					model.addReminder(await ReminderBuilder.buildReminder(context)),
 			),
-			body: model.notes.isEmpty
+			body: model.reminders.isEmpty
 				? none 
 				: ListView.separated (
-					itemCount: model.notes.length,
+					itemCount: model.reminders.length,
 					separatorBuilder: (_, __) => Divider(),
 					itemBuilder: (BuildContext context, int index) => 
-						NoteTile(index: index),
+						ReminderTile(index: index),
 				)
 		)
 	);

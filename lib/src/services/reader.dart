@@ -24,15 +24,15 @@ class Reader {
 	/// The file containing the calendar. 
 	final File calendarFile;
 
-	/// The file containing the user's notes. 
-	final File notesFile;
+	/// The file containing the user's reminders. 
+	final File remindersFile;
 
 	/// Initializes the files based on the path ([dir]) provided to it. 
 	Reader(this.dir) :
 		studentFile = File ("$dir/student.json"),
 		subjectFile = File ("$dir/subjects.json"),
 		calendarFile = File ("$dir/calendar.json"),
-		notesFile = File ("$dir/notes.json");
+		remindersFile = File ("$dir/reminders.json");
 
 	/// The JSON representation of the user's schedule.
 	Map<String, dynamic> get studentData => jsonDecode (
@@ -77,16 +77,16 @@ class Reader {
 		jsonEncode(data)
 	);
 
-	/// The JSON representation of the user's notes.
+	/// The JSON representation of the user's reminders.
 	/// 
-	/// This includes a list of the user's read notes. 
-	Map<String, dynamic> get notesData => Map<String, dynamic>.from(
+	/// This includes a list of the user's read reminders. 
+	Map<String, dynamic> get remindersData => Map<String, dynamic>.from(
 		jsonDecode(
-			notesFile.readAsStringSync()
+			remindersFile.readAsStringSync()
 		) ?? {}
 	);
 
-	set notesData(Map<String, dynamic> data) => notesFile.writeAsStringSync(
+	set remindersData(Map<String, dynamic> data) => remindersFile.writeAsStringSync(
 		jsonEncode(data ?? {})
 	);
 
@@ -103,8 +103,8 @@ class Reader {
 			subjectFile.deleteSync();
 		if (calendarFile.existsSync())
 			calendarFile.deleteSync();
-		if (notesFile.existsSync())
-			notesFile.deleteSync();
+		if (remindersFile.existsSync())
+			remindersFile.deleteSync();
 	}
 
 	/// Whether the files necessary are present. 
@@ -113,6 +113,6 @@ class Reader {
 	/// to the main app or prompt the user to login. 
 	bool get ready => (
 		studentFile.existsSync() && subjectFile.existsSync() 
-		&& notesFile.existsSync() && calendarFile.existsSync() 
+		&& remindersFile.existsSync() && calendarFile.existsSync() 
 	);
 }

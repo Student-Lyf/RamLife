@@ -20,7 +20,7 @@ Future<void> refresh(ServicesCollection services) async {
 		"Cannot refresh schedule because the user is not logged in."
 	);
 	await services.initOnLogin(email, false);
-	services.notes.setup();
+	services.reminders.setup();
 	services.schedule.setup(services.reader);
 }
 
@@ -188,7 +188,7 @@ class MainAppState extends State<RamazApp> {
 					Routes.login: (_) => Login(),
 					Routes.home: (_) => HomePage(),
 					Routes.schedule: (_) => SchedulePage(),
-					Routes.notes: (_) => NotesPage(),
+					Routes.reminders: (_) => RemindersPage(),
 					Routes.feedback: (_) => FeedbackPage(),
 				}
 			)

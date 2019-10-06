@@ -10,7 +10,7 @@ class ServicesCollection {
 	final Reader reader;
 	final Preferences prefs;
 
-	Notes notes;
+	Reminders reminders;
 	Schedule schedule;
 
 	ServicesCollection({
@@ -24,10 +24,10 @@ class ServicesCollection {
 	///
 	/// Use this function to initialize anything that requires a file.
 	void init() {
-		notes = Notes (reader);
+		reminders = Reminders (reader);
 		schedule = Schedule(
 			reader, 
-			notes: notes,
+			reminders: reminders,
 		);
 		verify();
 	}
@@ -35,7 +35,7 @@ class ServicesCollection {
 	/// Since [init] cannot be enforced, this function does null checks.
 	/// Put any variables that aren't final in here
 	void verify() {
-		final List properties = [notes, schedule];
+		final List properties = [reminders, schedule];
 
 		for (final property in properties) assert (
 			property != null,
@@ -53,7 +53,7 @@ class ServicesCollection {
 			..studentData = studentData
 			..subjectData = await Firestore.getClasses(student)
 			..calendarData =  await Firestore.month
-			..notesData = await Firestore.notes;
+			..remindersData = await Firestore.reminders;
 
 		if (first) init();
 	}
