@@ -8,6 +8,7 @@ import "package:ramaz/services.dart";
 /// This data model abstracts all operations that have to do with reminders, 
 /// and all other parts of the app that want to operate on reminders should use
 /// this data model.
+// ignore: prefer_mixin
 class Reminders with ChangeNotifier {
 	final Reader _reader;
 
@@ -55,7 +56,9 @@ class Reminders with ChangeNotifier {
 	/// It will then be marked for deletion if it does not repeat.
 	/// See [readReminders] and [cleanReminders] for details.
 	void markShown(int index) {
-		if (readReminders.contains(index)) return;
+		if (readReminders.contains(index)) {
+			return;
+		}
 		readReminders.add(index);
 		cleanReminders();
 		updateReminders();
@@ -63,8 +66,8 @@ class Reminders with ChangeNotifier {
 
 	/// Gets all reminders that apply to the a given period. 
 	/// 
-	/// This method is a wrapper around [Reminder.getReminders], and should only be 
-	/// called by an object with access to the relevant period. 
+	/// This method is a wrapper around [Reminder.getReminders], and should only
+	/// be called by an object with access to the relevant period. 
 	List<int> getReminders({
 		@required String subject,
 		@required String period,
@@ -78,7 +81,8 @@ class Reminders with ChangeNotifier {
 
 	/// Saves all reminders to the device and the cloud. 
 	/// 
-	/// This method sets [Reader.remindersData] and calls [Firestore.saveReminders].
+	/// This method sets [Reader.remindersData] and calls 
+	/// [Firestore.saveReminders].
 	void saveReminders() {
 		_reader.remindersData = {
 			"reminders": [
@@ -92,10 +96,15 @@ class Reminders with ChangeNotifier {
 
 	/// Checks if any reminders have been modified and removes them. 
 	/// 
-	/// This makes sure that any reminders in [currentReminders], [nextReminders], and 
-	/// [readReminders] are all up-to-date. 
+	/// This makes sure that any reminders in [currentReminders], 
+	/// [nextReminders], and [readReminders] are all up-to-date. 
 	void verifyReminders(int changedIndex) {
-		for (final List<int> remindersList in [currentReminders, nextReminders, readReminders]) {
+		final List<List<int>> reminderLists = [
+			currentReminders, 
+			nextReminders, 
+			readReminders
+		];
+		for (final List<int> remindersList in reminderLists) {
 			int toRemove;
 			for (final int index in remindersList ?? []) {
 				if (index == changedIndex) {
@@ -103,7 +112,9 @@ class Reminders with ChangeNotifier {
 					break;
 				}
 			}
-			if (toRemove != null) remindersList.removeAt(toRemove);
+			if (toRemove != null) {
+				remindersList.removeAt(toRemove);
+			}
 		}
 	}
 
@@ -116,17 +127,21 @@ class Reminders with ChangeNotifier {
 	/// 3. Calls [notifyListeners].
 	/// 
 	void updateReminders([int changedIndex]) {
-		if (changedIndex != null) 
+		if (changedIndex != null) {
 			verifyReminders(changedIndex);
+		}
 		saveReminders();
 		notifyListeners();
 	}
 
 	/// Replaces a reminder at a given index. 
 	void replaceReminder(int index, Reminder reminder) {
-		if (reminder == null) return;
-		reminders.removeAt(index);
-		reminders.insert(index, reminder);
+		if (reminder == null) {
+			return;
+		}
+		reminders
+			..removeAt(index)
+			..insert(index, reminder);
 		updateReminders(index);
 	}
 
@@ -135,14 +150,17 @@ class Reminders with ChangeNotifier {
 	/// Use this method instead of simply `reminders.add` to 
 	/// ensure that [updateReminders] is called. 
 	void addReminder(Reminder reminder) {
-		if (reminder == null) return;
+		if (reminder == null) {
+			return;
+		}
 		reminders.add(reminder);
 		updateReminders();
 	}
 
 	/// Deletes the reminder at a given index.
 	/// 
-	/// Use this insead of `reminders.removeAt` to ensure that [updateReminders] is called.
+	/// Use this insead of `reminders.removeAt` to ensure that 
+	/// [updateReminders] is called.
 	void deleteReminder(int index) {
 		reminders.removeAt(index);
 		updateReminders(index);
@@ -150,15 +168,16 @@ class Reminders with ChangeNotifier {
 
 	/// Deletes expired reminders. 
 	/// 
-	/// This method searches all reminders in [readReminders] for a reminder that does not 
-	/// repeat and has been shown already (ie, in [currentReminders]), then calls 
-	/// [deleteReminder] on them. 
+	/// This method searches all reminders in [readReminders] for a reminder that
+	/// does not repeat and has been shown already (ie, in [currentReminders]), 
+	/// then calls [deleteReminder] on them. 
 	void cleanReminders() {
 		for (final Reminder reminder in [
 			for (final int index in readReminders)
 				if (!reminders [index].time.repeats && !currentReminders.contains(index))
 					reminders [index]
-		]) 
+		]) {
 			deleteReminder(reminders.indexOf(reminder));
+		}
 	}
 }

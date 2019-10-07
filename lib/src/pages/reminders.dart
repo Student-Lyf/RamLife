@@ -19,8 +19,8 @@ class RemindersPage extends StatelessWidget {
 			),
 		),
 		builder: (BuildContext context, Reminders model, Widget none) => Scaffold(
-			bottomNavigationBar: Footer(),
-			drawer: NavigationDrawer(),
+			bottomNavigationBar: const Footer(),
+			drawer: const NavigationDrawer(),
 			appBar: AppBar(
 				title: const Text ("Reminders"),
 				actions: [

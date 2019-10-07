@@ -167,10 +167,11 @@ class Schedule with ChangeNotifier {
 
 	/// Updates the reminders given the current period.
 	/// 
-	/// Is responsible for updating [Reminders.currentReminders], [Reminders.nextReminders], 
-	/// and calling [Reminders.markShown]. Will also schedule notifications if that
-	/// has not been done yet today or as a response to changed reminders. See 
-	/// [scheduleReminders] for more details on scheduling notifications.
+	/// Is responsible for updating [Reminders.currentReminders], 
+	/// [Reminders.nextReminders] and calling [Reminders.markShown]. Will also
+	/// schedule notifications if that has not been done yet today or as a 
+	/// response to changed reminders. See [scheduleReminders] for more details
+	/// on scheduling notifications.
 	void updateReminders({bool scheduleNotifications = false}) {
 		reminders
 			..currentReminders = reminders.getReminders(
@@ -197,7 +198,7 @@ class Schedule with ChangeNotifier {
 	/// Starting from the current period, schedules a notification for the period
 	/// using [Notifications.scheduleNotification].
 	Future<void> scheduleReminders() async {
-		await Notifications.cancelAll();
+		Notifications.cancelAll();
 		final DateTime now = DateTime.now();
 
 		// No school today/right now
@@ -213,7 +214,7 @@ class Schedule with ChangeNotifier {
 				subject: subjects [period?.id]?.name,
 				letter: today.letter,
 			)) {
-				await Notifications.scheduleNotification(
+				Notifications.scheduleNotification(
 					date: DateTime(
 						now.year, 
 						now.month, 
