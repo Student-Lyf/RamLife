@@ -26,7 +26,10 @@ enum AndroidNotificationType {
 /// 
 /// This is done so other libraries that import this module do not need to 
 /// import `flutter_local_notifications`. 
-const Map<AndroidNotificationType, AndroidNotificationStyle> androidNotificationTypes = {
+const Map<
+	AndroidNotificationType, 
+	AndroidNotificationStyle
+> androidNotificationTypes = {
 	AndroidNotificationType.message: AndroidNotificationStyle.Messaging,
 	AndroidNotificationType.image: AndroidNotificationStyle.BigPicture,
 	AndroidNotificationType.normal: AndroidNotificationStyle.Default,
@@ -120,7 +123,7 @@ class AndroidNotification {
 	/// 
 	/// If [root] is true, the notification is considered the group 
 	/// "summary", which is like a header for notifications. 
-	const AndroidNotification.reminder([bool root = false]) :
+	const AndroidNotification.reminder({bool root = false}) :
 		importance = Importance.High,
 		priority = Priority.High,
 		style = AndroidNotificationType.normal,
@@ -235,10 +238,12 @@ class Notification {
 		bool root = false
 	}) : 
 		details = NotificationDetails(
-			AndroidNotification.reminder(root).details, IOSNotification.reminder.details,	
+			AndroidNotification.reminder(root: root).details, 
+			IOSNotification.reminder.details,	
 		);
 }
 
+// ignore: avoid_classes_with_only_static_members
 /// An abstract wrapper around the notifications plugin. 
 /// 
 /// This class uses static methods to send and schedule
@@ -246,7 +251,7 @@ class Notification {
 class Notifications {
 	static final _plugin = FlutterLocalNotificationsPlugin()
 		..initialize(
-			InitializationSettings(
+			const InitializationSettings(
 				AndroidInitializationSettings(
 					"@mipmap/bright_yellow"  // default icon of app
 				),

@@ -28,7 +28,7 @@ class ClassPanel extends StatelessWidget {
 		),
 		children: [
 			Padding (
-				padding: EdgeInsets.only(left: 30),
+				padding: const EdgeInsets.only(left: 30),
 				child: Align (
 					alignment: Alignment.centerLeft,					
 					child: Column (
@@ -67,6 +67,7 @@ class ClassList extends StatelessWidget {
 	@override Widget build(BuildContext context) => ModelListener<Reminders>(
 		model: () => Services.of(context).reminders,
 		dispose: false,
+		// ignore: sort_child_properties_last
 		child: DrawerHeader (
 			child: Center (
 				child: Text (
@@ -103,10 +104,9 @@ class ClassList extends StatelessWidget {
 				if (period.id != null) 
 					"ID: ${period.id}",
 			],
-			title: (int.tryParse(period.period) == null 
+			title: int.tryParse(period.period) == null 
 				? period.getName(subject)
-				: "${period.period}: ${period.getName(subject)}"
-			),
+				: "${period.period}: ${period.getName(subject)}",
 			reminders: services.reminders.getReminders(
 				period: period.period,
 				letter: day.letter,

@@ -34,11 +34,13 @@ class LoadingImageState extends State<LoadingImage> {
 	@override void initState() {
 		super.initState();
 		image = AssetImage(widget.path);
-		stream = image.resolve(ImageConfiguration());
+		stream = image.resolve(const ImageConfiguration());
 		listener = ImageStreamListener (onLoad);
 		stream.addListener(listener);
 	}
 
+	// this is a Flutter function override
+	// ignore: avoid_positional_boolean_parameters
 	void onLoad (ImageInfo info, bool _) {
 		setState(() => loading = false);
 		final Size size = Size (
@@ -46,14 +48,15 @@ class LoadingImageState extends State<LoadingImage> {
 			info.image.height.toDouble()
 		);
 		aspectRatio = size.aspectRatio;
-		if (widget.aspectRatio == null)
-			print ("LoadingImage: Aspect ratio for ${widget.path} is $aspectRatio");
+		if (widget.aspectRatio == null) {
+			debugPrint("LoadingImage: Aspect ratio for ${widget.path} is $aspectRatio");
+		}
 	}
 
 	@override Widget build(BuildContext context) => loading
 		? AspectRatio (
-			child: Center (child: CircularProgressIndicator()),
-			aspectRatio: widget.aspectRatio ?? 1
+			aspectRatio: widget.aspectRatio ?? 1,
+			child: const Center (child: CircularProgressIndicator()),
 		)
 		: AspectRatio (
 			aspectRatio: aspectRatio,

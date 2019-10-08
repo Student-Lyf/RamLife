@@ -14,8 +14,8 @@ class Services extends InheritedWidget {
 	final Preferences prefs;
 
 	Services({
-		this.services,
 		@required Widget child,
+		this.services,
 	}) :
 		reader = services.reader,
 		prefs = services.prefs,

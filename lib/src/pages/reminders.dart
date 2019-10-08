@@ -6,6 +6,8 @@ import "package:ramaz/pages.dart";
 import "package:ramaz/widgets.dart";
 
 class RemindersPage extends StatelessWidget {
+	const RemindersPage();
+
 	@override 
 	Widget build(BuildContext context) => ModelListener<Reminders>(
 		model: () => Services.of(context).reminders,

@@ -86,9 +86,8 @@ class Reader {
 		) ?? {}
 	);
 
-	set remindersData(Map<String, dynamic> data) => remindersFile.writeAsStringSync(
-		jsonEncode(data ?? {})
-	);
+	set remindersData(Map<String, dynamic> data) => 
+		remindersFile.writeAsStringSync(jsonEncode(data ?? {}));
 
 	/// Deletes all files that contain user data. 
 	/// 
@@ -97,22 +96,25 @@ class Reader {
 	/// 1. To try to get rid of bugs. If setup fails all data is erased. 
 	/// 2. To clean up after logoff. 
 	void deleteAll() {
-		if (studentFile.existsSync())
+		if (studentFile.existsSync()) {
 			studentFile.deleteSync();
-		if (subjectFile.existsSync())
+		}
+		if (subjectFile.existsSync()) {
 			subjectFile.deleteSync();
-		if (calendarFile.existsSync())
+		}
+		if (calendarFile.existsSync()) {
 			calendarFile.deleteSync();
-		if (remindersFile.existsSync())
+		}
+		if (remindersFile.existsSync()) {
 			remindersFile.deleteSync();
+		}
 	}
 
 	/// Whether the files necessary are present. 
 	/// 
 	/// This helps the setup logic determine whether to proceed 
 	/// to the main app or prompt the user to login. 
-	bool get ready => (
+	bool get ready => 
 		studentFile.existsSync() && subjectFile.existsSync() 
-		&& remindersFile.existsSync() && calendarFile.existsSync() 
-	);
+		&& remindersFile.existsSync() && calendarFile.existsSync();
 }

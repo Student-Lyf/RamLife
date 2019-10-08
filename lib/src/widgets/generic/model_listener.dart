@@ -1,6 +1,7 @@
 import "package:flutter/material.dart";
 
-typedef ModelBuilder<T extends ChangeNotifier> = Widget Function(BuildContext, T, Widget);
+typedef ModelBuilder<T extends ChangeNotifier> = 
+  Widget Function(BuildContext, T, Widget);
 
 class ModelListener<Model extends ChangeNotifier> extends StatefulWidget {
   final Model Function() model;
@@ -26,14 +27,16 @@ class ModelListenerState<Model extends ChangeNotifier>
 
   @override void initState() {
     super.initState();
-    model = widget.model();
-    model.addListener(listener);
+    model = widget.model()
+      ..addListener(listener);
     // if (widget.setup != null) widget.setup();
   }
 
   @override void dispose() {
     model.removeListener(listener);
-    if (widget.dispose) model.dispose();
+    if (widget.dispose) {
+      model.dispose();
+    }
     super.dispose();
   }
 

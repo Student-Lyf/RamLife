@@ -1,10 +1,10 @@
 import "package:flutter/material.dart";
 
-import "../ambient/services.dart";
-import "../generic/reminder_builder.dart";
-
 import "package:ramaz/data.dart";
 import "package:ramaz/models.dart";
+
+import "../ambient/services.dart";
+import "../generic/reminder_builder.dart";
 
 class ReminderTile extends StatelessWidget {
 	final int index;

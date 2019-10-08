@@ -19,11 +19,9 @@ class Preferences {
 	/// Returns whether a [DateTime] is today.
 	static bool isToday(DateTime other) {
 		final DateTime now = DateTime.now();
-		return (
-			now.year == other.year &&
+		return now.year == other.year &&
 			now.month == other.month &&
-			now.day == other.day
-		);
+			now.day == other.day;
 	}
 
 	/// Determines whether this is the first time opening the app.

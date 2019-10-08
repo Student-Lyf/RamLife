@@ -5,6 +5,8 @@ import "package:ramaz/pages.dart";
 import "package:ramaz/widgets.dart";
 
 class HomePage extends StatelessWidget {
+	const HomePage();
+
 	@override 
 	Widget build (BuildContext context) => ModelListener<Schedule>(
 		model: () => Services.of(context).schedule,
@@ -41,7 +43,7 @@ class HomePage extends StatelessWidget {
 				onRefresh: () async => schedule.onNewPeriod(),
 				child: ListView (
 					children: [
-						RamazLogos.ram_rectangle,
+						RamazLogos.ramRectangle,
 						const Divider(),
 						Text (
 							schedule.hasSchool

@@ -37,13 +37,15 @@ class ServicesCollection {
 	void verify() {
 		final List properties = [reminders, schedule];
 
-		for (final property in properties) assert (
-			property != null,
-			"ServicesCollection.init was not called"
-		);
+		for (final property in properties) {
+			assert (
+				property != null,
+				"ServicesCollection.init was not called"
+			);
+		}
 	}
 
-	Future<void> initOnLogin(String email, [bool first = true]) async {
+	Future<void> initOnLogin(String email, {bool first = true}) async {
 		// Save and initialize the student to get the subjects
 		final Map<String, dynamic> studentData = await Firestore.student;
 		final Student student = Student.fromJson(studentData);		
@@ -55,7 +57,9 @@ class ServicesCollection {
 			..calendarData =  await Firestore.month
 			..remindersData = await Firestore.reminders;
 
-		if (first) init();
+		if (first) {
+			init();
+		}
 	}
 }
 

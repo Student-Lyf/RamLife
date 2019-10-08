@@ -23,7 +23,7 @@ class NavigationDrawer extends StatelessWidget {
 					child: IntrinsicHeight(
 						child: Column(
 							children: [
-								DrawerHeader (child: RamazLogos.ram_square),
+								DrawerHeader (child: RamazLogos.ramSquare),
 								ListTile (
 									title: const Text ("Home"),
 									leading: Icon (Icons.home),
@@ -101,7 +101,7 @@ class NavigationDrawer extends StatelessWidget {
 														Logos.outlook,
 														Logos.schoology,
 														Logos.drive,
-														Logos.senior_systems
+														Logos.seniorSystems
 													]
 												)
 											)

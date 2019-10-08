@@ -1,9 +1,9 @@
 import "package:flutter/material.dart";
 
-import "../images/loading_image.dart";
-import "../images/link_icon.dart";
-
 import "package:ramaz/constants.dart";
+
+import "../images/link_icon.dart";
+import "../images/loading_image.dart";
 
 const double radius = 40;
 
@@ -29,8 +29,8 @@ class SportsIcons {
 	);
 
 	static final Widget tennis = CircleAvatar (
+		backgroundColor: Colors.white,
 		child: Image.asset ("images/icons/tennis.png"),
-		backgroundColor: Colors.white
 	);
 
 	static const Widget volleyball = CircleAvatar (
@@ -47,7 +47,7 @@ class Logos {
 
 	static const Widget drive = LinkIcon (
 		path: "images/logos/drive.png",
-		url: Urls.google_drive
+		url: Urls.googleDrive
 	);
 
 	static const Widget outlook = LinkIcon (
@@ -65,7 +65,7 @@ class Logos {
 		url: Urls.ramaz
 	);
 
-	static const senior_systems = LinkIcon (
+	static const seniorSystems = LinkIcon (
 		path: "images/logos/senior_systems.png",
 		url: Urls.seniorSystems
 	);
@@ -77,17 +77,17 @@ class RamazLogos {
 		aspectRatio: 1
 	);
 
-	static const Widget ram_square_words = LoadingImage (
+	static const Widget ramSquareWords = LoadingImage (
 		"images/logos/ramaz/ram_square_words.png",
 		aspectRatio: 0.9276218611521418
 	);
 
-	static const Widget ram_square = LoadingImage(
+	static const Widget ramSquare = LoadingImage(
 		"images/logos/ramaz/ram_square.png",
 		aspectRatio: 1.0666666666666667
 	);
 
-	static const Widget ram_rectangle = LoadingImage (
+	static const Widget ramRectangle = LoadingImage (
 		"images/logos/ramaz/ram_rectangle.png",
 		aspectRatio: 2.8915864378401004
 	);

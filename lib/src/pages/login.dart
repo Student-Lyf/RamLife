@@ -42,7 +42,7 @@ class LoginState extends State<Login> {
 						borderRadius: BorderRadius.circular (20),
 						child: RamazLogos.teal
 					)
-					else RamazLogos.ram_square_words, 
+					else RamazLogos.ramSquareWords, 
 					const SizedBox (height: 50),
 					Center (
 						child: Container (

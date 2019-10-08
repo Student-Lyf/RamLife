@@ -15,7 +15,7 @@ class SplashScreen extends StatelessWidget {
 							MediaQuery.of(context).platformBrightness
 						)
 					);
-					return Center (child: RamazLogos.ram_square_words);
+					return Center (child: RamazLogos.ramSquareWords);
 				}
 			)
 		)

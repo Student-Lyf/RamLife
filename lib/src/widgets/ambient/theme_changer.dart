@@ -8,7 +8,7 @@ class ThemeChanger extends StatefulWidget {
 	final ThemeData light, dark;
 	final Map<String, ThemeData> themes;
 
-	ThemeChanger ({
+	const ThemeChanger ({
 		@required this.builder,
 		@required this.defaultBrightness,
 		@required this.light, 
@@ -19,12 +19,13 @@ class ThemeChanger extends StatefulWidget {
 	@override ThemeChangerState createState() => ThemeChangerState();
 
 	static ThemeChangerState of (BuildContext context) => 
-		context.ancestorStateOfType(TypeMatcher<ThemeChangerState>());
+		context.ancestorStateOfType(const TypeMatcher<ThemeChangerState>());
 }
 
 class ThemeChangerState extends State<ThemeChanger> {
 	ThemeData _theme;
 	Brightness _brightness;
+	String _key;
 
 	@override void initState() {
 		super.initState();
@@ -42,9 +43,12 @@ class ThemeChangerState extends State<ThemeChanger> {
 	set theme(ThemeData data) => setState(() => _theme = data);
 	ThemeData get theme => _theme;
 
-	set themeName (String key) => setState(() => 
-		_theme = (widget.themes ?? {}) [key]
-	);
+	set themeName (String key) => setState(() {
+		_theme = (widget.themes ?? {}) [key];
+		_key = key;
+	});
+
+	String get themeName => _key; 
 
 	@override Widget build (BuildContext context) =>
 		widget.builder (context, _theme);

@@ -1,9 +1,10 @@
-import "package:cloud_firestore/cloud_firestore.dart" as FB;
-
-import "auth.dart";
+import "package:cloud_firestore/cloud_firestore.dart" as fb;
 
 import "package:ramaz/data.dart";
 
+import "auth.dart";
+
+// ignore: avoid_classes_with_only_static_members
 /// An abstraction wrapper around Cloud Firestore. 
 /// 
 /// This class only handles raw data transfer to and from Cloud Firestore.
@@ -11,26 +12,36 @@ import "package:ramaz/data.dart";
 /// between this library and the data library. 
 class Firestore {
 	/// The name for the student schedule collection
-	static const String STUDENTS = "students";
+	static const String students = "students";
 
 	/// The name of the classes collection
-	static const String CLASSES = "classes";
+	static const String classes = "classes";
 
 	/// The name of the calendar collection
-	static const String CALENDAR = "calendar";
+	static const String calendar = "calendar";
 	
 	/// The name of the feedback collection
-	static const String FEEDBACK = "feedback";
+	static const String feedback = "feedback";
 
 	/// The name of the reminders collection
-	static const String REMINDERS = "reminders";
+	static const String remindersKey = "reminders";
 
-	static final FB.Firestore _firestore = FB.Firestore.instance;
-	static final FB.CollectionReference _students = _firestore.collection(STUDENTS);
-	static final FB.CollectionReference _classes = _firestore.collection (CLASSES);
-	static final FB.CollectionReference _feedback = _firestore.collection (FEEDBACK);
-	static final FB.CollectionReference _calendar = _firestore.collection(CALENDAR);
-	static final FB.CollectionReference _reminders = _firestore.collection (REMINDERS);
+	static final fb.Firestore _firestore = fb.Firestore.instance;
+
+	static final fb.CollectionReference _students = 
+		_firestore.collection(students);
+	
+	static final fb.CollectionReference _classes = 
+		_firestore.collection (classes);
+	
+	static final fb.CollectionReference _feedback = 
+		_firestore.collection (feedback);
+	
+	static final fb.CollectionReference _calendar = 
+		_firestore.collection(calendar);
+	
+	static final fb.CollectionReference _reminders = 
+		_firestore.collection (remindersKey);
 
 	/// Downloads the student's document in the student collection.
 	static Future<Map<String, dynamic>> get student async => 
@@ -49,19 +60,25 @@ class Firestore {
 	/// This function should be re-written to only accept a list of IDs
 	/// instead of a student, as this creates a dependency between this 
 	/// library and the data library.
-	static Future<Map<String, Map<String, dynamic>>> getClasses(Student student) async {
-		Set<String> ids = {};
+	static Future<Map<String, Map<String, dynamic>>> getClasses(
+		Student student
+	) async {
+		final Set<String> ids = {};
 		for (final List<PeriodData> schedule in student.schedule.values) {
 			for (final PeriodData period in schedule) {
-				if (period == null) continue;  // skip free periods
-				else if (period.id == null) continue;
+				if (
+					period == null || period.id == null
+				) {
+					continue;  // skip free periods
+				}
 				ids.add(period.id);
 			}
 		}
 		ids.add (student.homeroom);
-		Map<String, Map<String, dynamic>> result = {};
-		for (final String id in ids) 
+		final Map<String, Map<String, dynamic>> result = {};
+		for (final String id in ids) {
 			result [id] = await getClass(id);
+		}
 		return result;
 	}
 
@@ -88,14 +105,18 @@ class Firestore {
 
 	/// Uploads the user's reminders to the database. 
 	/// 
-	/// This function saves the reminders along with a record of the reminders that
-	/// were already read. Those reminders will be deleted once they are irrelevant.
+	/// This function saves the reminders along with a record of the reminders
+	/// that were already read. Those reminders will be deleted once they are
+	/// irrelevant.
 	/// 
 	/// This should be re-written to only accept a list of JSON elements, as 
 	/// this creates a dependency between this library and the data library.
 	/// This should also probably not persist the read reminders in the database 
 	/// (ie, keep them local).
-	static Future<void> saveReminders(List<Reminder> remindersList, List<int> readReminders) async => _reminders
+	static Future<void> saveReminders(
+		List<Reminder> remindersList, 
+		List<int> readReminders
+	) async => _reminders
 		.document(await Auth.email)
 		.setData({
 			"reminders": [

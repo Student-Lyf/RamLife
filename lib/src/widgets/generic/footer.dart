@@ -12,6 +12,7 @@ class Footer extends StatelessWidget {
 	@override Widget build (BuildContext context) => ModelListener<Schedule>(
 			model: () => Services.of(context).schedule,
 			dispose: false,
+			// ignore: sort_child_properties_last
 			child: Container(height: 0, width: 0),
 			builder: (BuildContext context, Schedule schedule, Widget blank) =>
 				schedule.period == null ? blank : BottomSheet (
@@ -21,7 +22,9 @@ class Footer extends StatelessWidget {
 						onTap: !schedule.reminders.hasReminder ? null : 
 							() {
 								final NavigatorState nav = Navigator.of(context);
-								if (nav.canPop()) nav.pop();
+								if (nav.canPop()) {
+									nav.pop();
+								}
 								nav.pushReplacementNamed(Routes.home);
 							},
 						child: SizedBox (
@@ -46,7 +49,8 @@ class Footer extends StatelessWidget {
 											).join (". "),
 											textScaleFactor: textScale,
 										),
-										if (schedule.reminders.hasReminder) Text ("Click to see reminder"),
+										if (schedule.reminders.hasReminder) 
+											const Text ("Click to see reminder"),
 									]
 								)
 							)

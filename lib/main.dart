@@ -16,10 +16,12 @@ import "package:ramaz/widgets.dart";
 /// Basically simulate the login sequence
 Future<void> refresh(ServicesCollection services) async {
 	final String email = await Auth.email;
-	if (email == null) throw StateError(
-		"Cannot refresh schedule because the user is not logged in."
-	);
-	await services.initOnLogin(email, false);
+	if (email == null) {
+		throw StateError(
+			"Cannot refresh schedule because the user is not logged in."
+		);
+	}
+	await services.initOnLogin(email, first: false);
 	services.reminders.setup();
 	services.schedule.setup(services.reader);
 }
@@ -30,10 +32,10 @@ Future<void> updateCalendar(ServicesCollection services) async {
 	services.schedule.setup(services.reader);
 }
 
-void main({bool restart = false}) async {
+Future<void> main({bool restart = false}) async {
 	// This shows a splash screen but secretly 
 	// determines the desired `platformBrightness`
-	SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+	await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 	Brightness brightness;
 	runApp (
 		SplashScreen(
@@ -65,40 +67,47 @@ void main({bool restart = false}) async {
 		
 		// To download, and login or go to main
 		ready = services.reader.ready && await Auth.ready;
-		if (ready) await services.init();
-	} catch (error) {
-		print ("Error on main.");
+		if (ready) {
+			services.init();
+		}
+	} on Exception {
+		debugPrint ("Error on main.");
 		if (!restart) {
-			print ("Trying again...");
+			debugPrint ("Trying again...");
 			await Auth.signOut();
 			reader.deleteAll();
-			main(restart: true);
-		} else rethrow;
+			return main(restart: true);
+		} else {
+			rethrow;
+		}
 	}
 
 	// Determine the appropriate brightness. 
 	final bool savedBrightness = services.prefs.brightness;
-	if (savedBrightness != null) brightness = savedBrightness
-		? Brightness.light
-		: Brightness.dark;
+	if (savedBrightness != null) {
+		brightness = savedBrightness
+			? Brightness.light
+			: Brightness.dark;
+	}
 
 	// Register for FCM notifications. 
+	// We don't care when this happens
+	// ignore: unawaited_futures 
 	Future(
 		() async {
 			await FCM.registerNotifications(
 				{
-					"refresh": () async => await refresh(services),
-					"updateCalendar": () async => await updateCalendar(services),
+					"refresh": () => refresh(services),
+					"updateCalendar": () => updateCalendar(services),
 				}
 			);
 			await FCM.subscribeToCalendar();
-			print ("Device notification id: ${await FCM.token}");
 		}
 	);
 
 	// Now we are ready to run the app (with error catching)
 	FlutterError.onError = Crashlytics.instance.recordFlutterError;
-	runZoned<Future<void>>(
+	await runZoned<Future<void>>(
 		() async {
 			runApp (
 				RamazApp (
@@ -116,7 +125,7 @@ class RamazApp extends StatefulWidget {
 	final Brightness brightness;
 	final ServicesCollection services;
 	final bool ready;
-	RamazApp ({
+	const RamazApp ({
 		@required this.brightness,
 		@required this.ready,
 		@required this.services,
@@ -179,16 +188,16 @@ class MainAppState extends State<RamazApp> {
 			),
 			builder: (BuildContext context, ThemeData theme) => MaterialApp (
 				home: widget.ready
-					? HomePage()
+					? const HomePage()
 					: Login(),
 				title: "Student Life",
 				color: RamazColors.blue,
 				theme: theme,
 				routes: {
 					Routes.login: (_) => Login(),
-					Routes.home: (_) => HomePage(),
-					Routes.schedule: (_) => SchedulePage(),
-					Routes.reminders: (_) => RemindersPage(),
+					Routes.home: (_) => const HomePage(),
+					Routes.schedule: (_) => const SchedulePage(),
+					Routes.reminders: (_) => const RemindersPage(),
 					Routes.feedback: (_) => FeedbackPage(),
 				}
 			)
@@ -212,7 +221,9 @@ class MainAppState extends State<RamazApp> {
 // 				)
 // 			]
 // 		),
-// 		body: Center (child: Text ("This page is coming soon!", textScaleFactor: 2))
+// 		body: Center (
+// 			child: Text ("This page is coming soon!", textScaleFactor: 2)
+// 		)
 // 	);
 // }
 

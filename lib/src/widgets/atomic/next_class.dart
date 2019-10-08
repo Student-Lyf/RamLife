@@ -1,10 +1,10 @@
 import "package:flutter/material.dart";
 
-import "info_card.dart";
-import "reminder_tile.dart";
-
 import "package:ramaz/constants.dart";
 import "package:ramaz/data.dart";
+
+import "info_card.dart";
+import "reminder_tile.dart";
 
 class NextClass extends StatelessWidget {
 	static const TextStyle white = TextStyle (color: Colors.white);
@@ -32,11 +32,11 @@ class NextClass extends StatelessWidget {
 				title: period == null
 					? "School is over"
 					: "${next ? 'Next' : 'Current'} period: " 
-						+ (subject?.name ?? period.period),
+						"${subject?.name ?? period.period}",
 			),
 
 			for (final int index in reminders) Padding (
-				padding: EdgeInsets.symmetric(horizontal: reminderPadding),
+				padding: const EdgeInsets.symmetric(horizontal: reminderPadding),
 				child: Container (
 					foregroundDecoration: ShapeDecoration(
 						shape: RoundedRectangleBorder(
