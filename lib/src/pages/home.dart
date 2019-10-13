@@ -5,7 +5,8 @@ import "package:ramaz/pages.dart";
 import "package:ramaz/widgets.dart";
 
 class HomePage extends StatelessWidget {
-	const HomePage();
+	// ignore_for_file: prefer_const_constructors_in_immutables
+	HomePage();
 
 	@override 
 	Widget build (BuildContext context) => ModelListener<Schedule>(
@@ -24,7 +25,7 @@ class HomePage extends StatelessWidget {
 					)
 				],
 			),
-			drawer: const NavigationDrawer(),
+			drawer: NavigationDrawer(),
 			endDrawer: !schedule.hasSchool ? null : Drawer (
 				child: ClassList(
 					day: schedule.today,

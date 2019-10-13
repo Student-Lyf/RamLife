@@ -7,7 +7,8 @@ import "package:ramaz/pages.dart";
 import "package:ramaz/widgets.dart";
 
 class SchedulePage extends StatelessWidget {
-	const SchedulePage();
+	// ignore_for_file: prefer_const_constructors_in_immutables
+	SchedulePage();
 
 	@override
 	Widget build (BuildContext context) => ModelListener<ScheduleModel>(
@@ -37,7 +38,7 @@ class SchedulePage extends StatelessWidget {
 					child: const Icon (Icons.calendar_today),
 				)
 			),
-			drawer: ModalRoute.of(context).isFirst ? const NavigationDrawer() : null,
+			drawer: ModalRoute.of(context).isFirst ? NavigationDrawer() : null,
 			body: Column (
 				children: [
 					ListTile (
