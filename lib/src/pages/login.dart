@@ -79,10 +79,14 @@ class LoginState extends State<Login> {
 		)
 	);
 
-	void onError() {
+	Future<void> onError(dynamic error, StackTrace stack) async {
 		loadingNotifier.value = false;
+		await Crashlytics.instance.setUserEmail(await Auth.email);
+		Crashlytics.instance.log("Attempting to log in...");
+		await Crashlytics.instance.recordError(error, stack);
 
-		showDialog (
+		await Auth.signOut();
+		await showDialog (
 			context: context,
 			builder: (dialogContext) => AlertDialog (
 				title: const Text ("Cannot connect"),
@@ -120,24 +124,18 @@ class LoginState extends State<Login> {
 				loadingNotifier.value = false;
 				return;
 			} else {
-				onError();
-				await Crashlytics.instance.setUserEmail(await Auth.email);
-				Crashlytics.instance.log("Attempting to log in...");
-				await Crashlytics.instance.recordError(error, stack);
+				await onError(error, stack);
 				rethrow;
 			}
 		// ignore: avoid_catches_without_on_clauses
 		} catch (error, stack) {
-			onError();
-			await Crashlytics.instance.setUserEmail(await Auth.email);
-			Crashlytics.instance.log("Attempting to log in...");
-			await Crashlytics.instance.recordError(error, stack);
+			await onError(error, stack);
 			rethrow;
 		}
 		onSuccess();
 	}
 
-	void downloadData(
+	Future<void> downloadData(
 		String username, 
 		BuildContext scaffoldContext
 	) => safely(
@@ -150,8 +148,8 @@ class LoginState extends State<Login> {
 	/// Scaffold. But since that will rebuild (because of loading = true), 
 	/// we need another context that is higher up the tree than that.
 	/// For that we use the implicit `BuildContext` with `StatefulWidget`
-	void googleLogin(BuildContext scaffoldContext) => safely(
-		function: () async => Auth.signInWithGoogle(
+	Future<void> googleLogin(BuildContext scaffoldContext) async => safely(
+		function: () async => Auth.signInWithGoogle(  // async so it is Future
 			() => Scaffold.of(scaffoldContext).showSnackBar(
 				const SnackBar (
 					content: Text ("You need to sign in with your Ramaz email")
@@ -165,7 +163,7 @@ class LoginState extends State<Login> {
 				loadingNotifier.value = false;
 				return;
 			}
-			downloadData(email.toLowerCase(), scaffoldContext);
+			await downloadData(email.toLowerCase(), scaffoldContext);
 		},
 		scaffoldContext: scaffoldContext,
 	);
