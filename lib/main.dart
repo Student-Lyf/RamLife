@@ -35,7 +35,6 @@ Future<void> updateCalendar(ServicesCollection services) async {
 Future<void> main({bool restart = false}) async {
 	// This shows a splash screen but secretly 
 	// determines the desired `platformBrightness`
-	await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 	Brightness brightness;
 	runApp (
 		SplashScreen(
@@ -43,6 +42,7 @@ Future<void> main({bool restart = false}) async {
 				(Brightness platform) => brightness = platform
 		)
 	);
+	await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 
 	// Initialize basic backend
 	// 
@@ -70,7 +70,9 @@ Future<void> main({bool restart = false}) async {
 		if (ready) {
 			services.init();
 		}
-	} on Exception {
+	// We want to at least try again on ANY error. 
+	// ignore: avoid_catches_without_on_clauses
+	} catch (_) {
 		debugPrint ("Error on main.");
 		if (!restart) {
 			debugPrint ("Trying again...");
