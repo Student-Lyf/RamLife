@@ -121,7 +121,9 @@ class LoginState extends State<Login> {
 				onError(context);
 				rethrow;
 			}
-		} on Exception {
+		// } on Exception {
+		// ignore: avoid_catches_without_on_clauses
+		} catch (error) {
 			onError(context);
 			rethrow;
 		}
