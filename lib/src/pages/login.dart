@@ -1,6 +1,7 @@
 import "package:flutter/material.dart";
 import "package:flutter/services.dart" show PlatformException;
 
+import "package:firebase_crashlytics/firebase_crashlytics.dart";
 import "package:url_launcher/url_launcher.dart";
 
 import "package:ramaz/widgets.dart";
@@ -78,8 +79,9 @@ class LoginState extends State<Login> {
 		)
 	);
 
-	void onError(BuildContext context) {
+	void onError() {
 		loadingNotifier.value = false;
+
 		showDialog (
 			context: context,
 			builder: (dialogContext) => AlertDialog (
@@ -110,7 +112,7 @@ class LoginState extends State<Login> {
 		@required BuildContext scaffoldContext,
 	}) async {
 		try {await function();} 
-		on PlatformException catch (error) {
+		on PlatformException catch (error, stack) {
 			if (error.code == "ERROR_NETWORK_REQUEST_FAILED") {
 				Scaffold.of(scaffoldContext).showSnackBar (
 					const SnackBar (content: Text ("No internet")),
@@ -118,13 +120,18 @@ class LoginState extends State<Login> {
 				loadingNotifier.value = false;
 				return;
 			} else {
-				onError(context);
+				onError();
+				await Crashlytics.instance.setUserEmail(await Auth.email);
+				Crashlytics.instance.log("Attempting to log in...");
+				await Crashlytics.instance.recordError(error, stack);
 				rethrow;
 			}
-		// } on Exception {
 		// ignore: avoid_catches_without_on_clauses
-		} catch (error) {
-			onError(context);
+		} catch (error, stack) {
+			onError();
+			await Crashlytics.instance.setUserEmail(await Auth.email);
+			Crashlytics.instance.log("Attempting to log in...");
+			await Crashlytics.instance.recordError(error, stack);
 			rethrow;
 		}
 		onSuccess();
