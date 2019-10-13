@@ -11,6 +11,8 @@ import "package:ramaz/services.dart";
 /// This widget is only stateful so it doesn't get disposed when 
 /// the theme changes, and then we can keep using the BuildContext
 class Login extends StatefulWidget {
+	// ignore_for_file: prefer_const_constructors_in_immutables
+
 	@override LoginState createState() => LoginState();
 }
 

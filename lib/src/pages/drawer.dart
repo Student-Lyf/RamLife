@@ -8,7 +8,8 @@ class NavigationDrawer extends StatelessWidget {
 	static Future<void> Function() pushRoute(BuildContext context, String name) => 
 		() => Navigator.of(context).pushReplacementNamed(name);
 
-	const NavigationDrawer({Key key}) : super(key: key);
+	// ignore_for_file: prefer_const_constructors_in_immutables
+	NavigationDrawer({Key key}) : super(key: key);
 
 	@override Widget build (BuildContext context) => Drawer (
 		child: LayoutBuilder(

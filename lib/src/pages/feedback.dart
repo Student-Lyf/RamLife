@@ -4,6 +4,8 @@ import "package:ramaz/widgets.dart";
 import "package:ramaz/models.dart";
 
 class FeedbackPage extends StatelessWidget {
+	// ignore_for_file: prefer_const_constructors_in_immutables
+
 	@override 
 	Widget build (BuildContext context) => Scaffold (
 		appBar: AppBar (title: const Text ("Send Feedback")),

@@ -189,16 +189,16 @@ class MainAppState extends State<RamazApp> {
 			),
 			builder: (BuildContext context, ThemeData theme) => MaterialApp (
 				home: widget.ready
-					? const HomePage()
+					? HomePage()
 					: Login(),
 				title: "Student Life",
 				color: RamazColors.blue,
 				theme: theme,
 				routes: {
 					Routes.login: (_) => Login(),
-					Routes.home: (_) => const HomePage(),
-					Routes.schedule: (_) => const SchedulePage(),
-					Routes.reminders: (_) => const RemindersPage(),
+					Routes.home: (_) => HomePage(),
+					Routes.schedule: (_) => SchedulePage(),
+					Routes.reminders: (_) => RemindersPage(),
 					Routes.feedback: (_) => FeedbackPage(),
 				}
 			)

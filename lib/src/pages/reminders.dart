@@ -6,7 +6,9 @@ import "package:ramaz/pages.dart";
 import "package:ramaz/widgets.dart";
 
 class RemindersPage extends StatelessWidget {
-	const RemindersPage();
+	// ignore_for_file: prefer_const_constructors_in_immutables
+
+	RemindersPage();
 
 	@override 
 	Widget build(BuildContext context) => ModelListener<Reminders>(
@@ -22,7 +24,7 @@ class RemindersPage extends StatelessWidget {
 		),
 		builder: (BuildContext context, Reminders model, Widget none) => Scaffold(
 			bottomNavigationBar: const Footer(),
-			drawer: const NavigationDrawer(),
+			drawer: NavigationDrawer(),
 			appBar: AppBar(
 				title: const Text ("Reminders"),
 				actions: [
