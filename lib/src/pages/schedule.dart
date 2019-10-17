@@ -14,11 +14,10 @@ class SchedulePage extends StatelessWidget {
 	Widget build (BuildContext context) => ModelListener<ScheduleModel>(
 		model: () => ScheduleModel(services: Services.of(context).services),
 		// ignore: sort_child_properties_last
-		child: const Footer(), 
 		builder: (
 			BuildContext context, 
 			ScheduleModel model, 
-			Widget footer
+			Widget _
 		) => Scaffold(
 			appBar: AppBar (
 				title: const Text ("Schedule"),
@@ -31,7 +30,7 @@ class SchedulePage extends StatelessWidget {
 						)
 				],
 			),
-			bottomNavigationBar: footer,
+			bottomNavigationBar: Footer(),
 			floatingActionButton: Builder (
 				builder: (BuildContext context) => FloatingActionButton (
 					onPressed: () => viewDay (model, context),
