@@ -57,7 +57,8 @@ class LoginState extends State<Login> {
 								builder: (BuildContext context) => ListTile (
 									leading: Logos.google,
 									title: const Text ("Sign in with Google"),
-									onTap: () => googleLogin(context)  // see func
+									// onTap: () => googleLogin(context)  // see func
+									onTap: temp
 								)
 							)
 						)
@@ -80,6 +81,11 @@ class LoginState extends State<Login> {
 			)
 		)
 	);
+
+	Future<void> temp() async {
+		await Future.delayed(Duration(seconds: 1));
+		print([1, 2, 3] [5]);
+	}
 
 	Future<void> onError(dynamic error, StackTrace stack) async {
 		loadingNotifier.value = false;

@@ -109,16 +109,38 @@ Future<void> main({bool restart = false}) async {
 	);
 
 	// Now we are ready to run the app (with error catching)
-	FlutterError.onError = Crashlytics.instance.recordFlutterError;
-	await runZoned<Future<void>>(
-		() async => runApp (
-			RamazApp (
-				ready: ready,
-				brightness: brightness,
-				services: services,
-			)
+	// FlutterError.onError = Crashlytics.instance.recordFlutterError;
+	FlutterError.onError = (_) {
+		print("Flutter caught an error");
+		onCrash();
+	};
+	runZoned(
+		() => runApp (
+			MaterialApp(
+				home: TempApp(),
+			),
+			// RamazApp (
+			// 	ready: ready,
+			// 	brightness: brightness,
+			// 	services: services,
+			// )
 		),
-		onError: Crashlytics.instance.recordError,
+		// onError: Crashlytics.instance.recordError,
+		onError: (_, [__]) {
+			print("Zone caught an error");
+			onCrash();
+		}
+	);
+}
+
+void onCrash() {
+	runApp(
+		MaterialApp(
+			home: Scaffold(
+				appBar: AppBar(title: Text("Error")),
+				body: Center(child: Text("There was an error")),
+			)
+		)
 	);
 }
 
@@ -205,6 +227,24 @@ class MainAppState extends State<RamazApp> {
 		)
 	);
 }
+
+Future<void> throwError() async {
+	await Future.delayed(Duration(seconds: 1));
+	throw Exception("This is an error");
+}
+
+class TempApp extends StatelessWidget {
+	@override
+	Widget build(BuildContext context) => Scaffold(
+		appBar: AppBar(title: Text("Demo")),
+		body: Center(child: Text("This will crash")),
+		floatingActionButton: FloatingActionButton(
+			child: Icon(Icons.error),
+			onPressed: throwError,
+		)
+	);
+}
+
 	
 // Placeholder
 // class PlaceholderPage extends StatelessWidget {
