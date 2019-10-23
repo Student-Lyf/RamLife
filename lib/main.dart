@@ -113,8 +113,8 @@ Future<void> main({bool restart = false}) async {
 
 	// Now we are ready to run the app (with error catching)
 	FlutterError.onError = Crashlytics.instance.recordFlutterError;
-	await runZoned<Future<void>>(
-		() async => runApp (
+	runZoned(
+		() => runApp (
 			RamazApp (
 				ready: ready,
 				brightness: brightness,

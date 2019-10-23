@@ -117,8 +117,7 @@ class LoginState extends State<Login> {
 		@required void Function() onSuccess,
 		@required BuildContext scaffoldContext,
 	}) async {
-		// try {await function();} 
-		try {throw "Error";}
+		try {await function();} 
 		on PlatformException catch (error, stack) {
 			if (error.code == "ERROR_NETWORK_REQUEST_FAILED") {
 				Scaffold.of(scaffoldContext).showSnackBar (
