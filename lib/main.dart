@@ -37,11 +37,14 @@ Future<void> main({bool restart = false}) async {
 	// This shows a splash screen but secretly 
 	// determines the desired `platformBrightness`
 	Brightness brightness;
-	runApp (
-		SplashScreen(
-			setBrightness: 
-				(Brightness platform) => brightness = platform
-		)
+	runZoned(
+		() => runApp (
+			SplashScreen(
+				setBrightness: 
+					(Brightness platform) => brightness = platform
+			)
+		),
+		onError: Crashlytics.instance.recordError,
 	);
 	await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 
