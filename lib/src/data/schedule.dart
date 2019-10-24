@@ -4,8 +4,8 @@
 /// to make the code a whole lot simpler. 
 library schedule_dataclasses;
 
-import "package:flutter/foundation.dart";
 import "dart:convert" show JsonUnsupportedObjectError;
+import "package:flutter/foundation.dart";
 
 import "times.dart";
 
@@ -109,20 +109,23 @@ class Subject {
 	/// The JSON map must have a `teacher` and `name` field.
 	Subject.fromJson(Map<String, dynamic> json) :
 		name = json ["name"], 
-		teacher = json ["teacher"] {
-		if (name == null || teacher == null) 
+		teacher = json ["teacher"] 
+	{
+		if (name == null || teacher == null) {
 			throw JsonUnsupportedObjectError (json.toString());
 		}
+	}
 
 	@override 
 	String toString() => "$name ($teacher)";
 		
 	@override 
-	operator == (dynamic other) => (
-		other is Subject && 
+	int get hashCode => "$name-$teacher".hashCode;
+
+	@override 
+	bool operator == (dynamic other) => other is Subject && 
 		other.name == name &&
-		other.teacher == teacher
-	);
+		other.teacher == teacher;
 }
 
 /// A representation of a period, independent of the time. 
@@ -189,11 +192,12 @@ class PeriodData {
 	String toString() => "PeriodData ($id, $room)";
 
 	@override 
-	operator == (dynamic other) => (
-		other is PeriodData &&
+	int get hashCode => "$room-$id".hashCode;
+
+	@override 
+	bool operator == (dynamic other) => other is PeriodData &&
 		other.id == id &&
-		other.room == room
-	);
+		other.room == room;
 }
 
 /// A representation of a period, including the time it takes place. 
@@ -232,34 +236,32 @@ class Period {
 	/// Unpacks a [PeriodData] object and returns a Period. 
 	Period(
 		PeriodData data,
-		{@required Range time, @required String period}
+		{@required this.time, @required this.period}
 	) : 
-		time = time,
 		room = data.room,
-		period = period,
 		id = data.id;
 
 	/// Returns a period that represents time for Mincha. 
 	/// 
 	/// Use this constructor to keep a consistent definition of "Mincha".
-	const Period.mincha(Range time) :
+	const Period.mincha(this.time) :
 		room = null,
 		id = null,
-		time = time,
 		period = "Mincha";
 
 	/// This is only for debug purposes. Use [getName] for UI labels.
 	@override 
 	String toString() => "Period $period";
 
+	@override
+	int get hashCode => "$period-$id".hashCode;
+	
 	@override 
-	operator == (other) => (
-		other is Period && 
+	bool operator == (dynamic other) => other is Period && 
 		other.time == time &&
 		other.room == room && 
 		other.period == period && 
-		other.id == id
-	);
+		other.id == id;
 
 	/// Returns a String representation of this period. 
 	/// 
@@ -373,14 +375,18 @@ class Day {
 	/// This factory is not a constructor so it can dynamically check 
 	/// for a valid [letter] while keeping the field final.
 	factory Day.fromJson(Map<dynamic, dynamic> json) {
-		if (!json.containsKey("letter")) throw JsonUnsupportedObjectError(json);
+		if (!json.containsKey("letter")) {
+			throw JsonUnsupportedObjectError(json);
+		}
 		final String jsonLetter = json ["letter"];
 		final jsonSpecial = json ["special"];
-		if (!stringToLetters.containsKey (jsonLetter)) throw ArgumentError.value(
-			jsonLetter,  // invalid value
-			"letter",  // arg name
-			"$jsonLetter is not a valid letter",  // message
-		); 
+		if (!stringToLetters.containsKey (jsonLetter)) {
+			throw ArgumentError.value(
+				jsonLetter,  // invalid value
+				"letter",  // arg name
+				"$jsonLetter is not a valid letter",  // message
+			); 
+		}
 		final Letters letter = stringToLetters [jsonLetter];
 		final Special special = Special.fromJson(jsonSpecial);
 		return Day (letter: letter, special: special);
@@ -389,13 +395,14 @@ class Day {
 	@override 
 	String toString() => name;
 
+	@override
+	int get hashCode => name.hashCode;
+
 	@override 
-	operator == (other) => (
-		other is Day && 
+	bool operator == (dynamic other) => other is Day && 
 		other.letter == letter &&
 		// other.lunch == lunch &&
-		other.special == special
-	);
+		other.special == special;
 
 	/// A human-readable string representation of this day.
 	/// 
@@ -405,7 +412,7 @@ class Day {
 	String get name => letter == null
 		? null
 		: "${lettersToString [letter]} day${
-			special == regular || special == rotate ? '' : ' ' + special.name
+			special == regular || special == rotate ? '' : ' ${special.name}'
 		}";
 
 	/// Whether to say "a" or "an".
@@ -447,8 +454,11 @@ class Day {
 					special.periods [index - 1] < time && 
 					range > time
 				)
-			) return index;
+			) {
+				return index;
+			}
 		}
+		// ignore: avoid_returning_null
 		return null;
 	}
 }

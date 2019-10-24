@@ -1,7 +1,7 @@
 library student_dataclasses;
 
-import "package:flutter/foundation.dart";
 import "dart:convert" show JsonUnsupportedObjectError;
+import "package:flutter/foundation.dart";
 
 import "schedule.dart";
 import "times.dart";
@@ -37,12 +37,16 @@ class Student {
 		@required this.homeroom,
 	});
 
-	@override String toString() => schedule.toString();
-	@override operator == (other) => (
-		other is Student && 
+	@override 
+	String toString() => schedule.toString();
+
+	@override
+	int get hashCode => schedule.hashCode;
+
+	@override 
+	bool operator == (dynamic other) => other is Student && 
 		other.schedule == schedule && 
-		other.homeroomLocation == homeroomLocation
-	);
+		other.homeroomLocation == homeroomLocation;
 
 	/// Creates a student from a JSON object.
 	/// 
@@ -53,28 +57,36 @@ class Student {
 
 		// Check for null homeroom
 		const String homeroomLocationKey = "homeroom meeting room";
-		if (!json.containsKey(homeroomLocationKey)) 
+		if (!json.containsKey(homeroomLocationKey)) {
 			throw JsonUnsupportedObjectError(
 				json, cause: "No homeroom location present"
 			);
+		}
 		final String homeroomLocation = json [homeroomLocationKey];
-		if (homeroomLocation == null) 
+		if (homeroomLocation == null) {
 			throw ArgumentError.notNull(homeroomLocationKey);
+		}
 
 		const String homeroomKey = "homeroom";
-		if (!json.containsKey (homeroomKey)) 
+		if (!json.containsKey (homeroomKey)) {
 			throw JsonUnsupportedObjectError(json, cause: "No homeroom present");
+		}
 		final String homeroom = json [homeroomKey];
-		if (homeroom == null) throw ArgumentError.notNull(homeroomKey);
+		if (homeroom == null) {
+			throw ArgumentError.notNull(homeroomKey);
+		}
 
 		// Check for null schedules
 		const List<String> letters = ["A", "B", "C", "E", "F", "M", "R"];
 		for (final String letter in letters) {
-			if (!json.containsKey (letter)) throw JsonUnsupportedObjectError(
-				json, cause: "Cannot find letter $letter"
-			);
-			if (json [letter] == null) 
+			if (!json.containsKey (letter)) {
+				throw JsonUnsupportedObjectError(
+					json, cause: "Cannot find letter $letter"
+				);
+			}
+			if (json [letter] == null) {
 				throw ArgumentError.notNull ("$letter has no schedule");
+			}
 		}
 
 		// Real code starts here
@@ -99,38 +111,49 @@ class Student {
 	/// [PeriodData]s to [Period] objects using the [Range]s in [Day.special]. 
 	List <Period> getPeriods (Day day) {
 		final List <Period> result = [];
-		if (!day.school) return result;
+		if (!day.school) {
+			return result;
+		}
 		final List <PeriodData> periods = schedule [day.letter];
 		final Special special = day.special;
 		int periodIndex = 0;
 
 		for (int index = 0; index < special.periods.length; index++) {
 			final Range range = special.periods [index];
-			while ((special?.skip ?? const []).contains(periodIndex + 1))
+			while ((special?.skip ?? const []).contains(periodIndex + 1)) {
 				periodIndex++; 
-			if (special.homeroom == index) result.add (
-				Period (
-					getHomeroom(day),
-					time: range,
-					period: "Homeroom",
-				)
-			); else if (special.mincha == index) result.add (
-				Period.mincha(range)
-			); else {
+			}
+			if (special.homeroom == index) {
+				result.add (
+					Period (
+						getHomeroom(day),
+						time: range,
+						period: "Homeroom",
+					)
+				); 
+			} else if (special.mincha == index) {
+				result.add (
+					Period.mincha(range)
+				); 
+			} else {
 				final PeriodData period = periods [periodIndex]; 
-				if (period == null) result.add (
-					Period (
-						PeriodData.free,
-						period: (periodIndex + 1).toString(),
-						time: range,
-					) 
-				); else result.add (
-					Period (
-						period,
-						time: range,
-						period: (periodIndex + 1).toString()
-					) 
-				);
+				if (period == null) {
+					result.add (
+						Period (
+							PeriodData.free,
+							period: (periodIndex + 1).toString(),
+							time: range,
+						) 
+					);
+				} else {
+					result.add (
+						Period (
+							period,
+							time: range,
+							period: (periodIndex + 1).toString()
+						) 
+					);
+				}
 				periodIndex++;
 			}
 		}

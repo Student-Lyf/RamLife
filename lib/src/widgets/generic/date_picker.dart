@@ -11,7 +11,7 @@ Future<DateTime> pickDate({
 	final DateTime endOfMonth = DateTime (
 		now.year, now.month + 1, 0
 	);
-	return await showDatePicker(
+	return showDatePicker(
 		context: context,
 		initialDate: initialDate,
 		firstDate: beginningOfMonth,

@@ -1,3 +1,4 @@
+
 # Ramaz Student Life
 
 This is an app to help Ramaz students navigate their student life.
@@ -8,18 +9,20 @@ It tells you what classes you have when, the latest sports news, lost and found 
 	You can login with your Ramaz email to get your schedule sent directly to the app!
 - ### Schedule explorer
 	A complete schedule built-in to your phone. It can tell you what you have now, later, or you can specify a letter and schedule (eg, Rosh Chodesh) to explore your schedule. 
-- ### Lunch
-	A calendar with all the lunches of the year is right on your phone, so you always know what's for lunch -- and when to use your priveleges.
-- ### Sports
-	See upcoming games across all of Ramaz's sports teams. After the games you can see the score and team's overal record.
-- ### Newspapers
-	Have instant access to all of Ramaz's student publications, including RamPage, XeVeX, Breakthrough, and more.
-- ### Lost & Found
-	Tired of getting notifications every second when something is lost, but still want everyone else to be notified when **you** lose something? The Lost & Found feature introduces a chat-based system that notifies only the people involved. An image-recognition based system is coming soon, so finding your lost objects will require less effort than ever.
+- ### Notes
+	You can now schedule reminders for individual classes or periods, such as every B-4 or a reminder to bring your textbook to history class. 
+<!-- - ### Lunch -->
+<!-- A calendar with all the lunches of the year is right on your phone, so you always know what's for lunch -- and when to use your priveleges. -->
+<!-- - ### Sports -->
+<!-- See upcoming games across all of Ramaz's sports teams. After the games you can see the score and team's overal record. -->
+<!-- - ### Newspapers -->
+<!-- Have instant access to all of Ramaz's student publications, including RamPage, XeVeX, Breakthrough, and more. -->
+<!-- - ### Lost & Found -->
+<!-- Tired of getting notifications every second when something is lost, but still want everyone else to be notified when **you** lose something? The Lost & Found feature introduces a chat-based system that notifies only the people involved. An image-recognition based system is coming soon, so finding your lost objects will require less effort than ever. -->
 
 ## Your feedback is appreciated
 
-We want to hear what you have to say, so please use the "Send Feedback" button in the app to tell us what you do -- and don't -- like, and we'll do our best to keep you happy.
+We want to hear what you have to say, so please use the "Send Feedback" button in the app to tell us what you do -- or don't -- like, and we'll work on it.
 
 # Contributing
 
@@ -27,7 +30,7 @@ This repo is to be modified *only* by the Ramaz Coding Club. It follows a simple
 
 - ## The `android` folder: 
 
-	This folder contains Android=specific implementation details. The only notable files in it are the gradle configurations: `gradle.properties`, `build.gradle`, and `app\build.gradle` (which have been changed to configured Firebase). An adjustment was made to `gradle\wrapper\gradle-wrapper.properties` to upgrade to the latest version of Gradle. Android-specific assets are stored under `app\src\main\res`, and modifications have been made to `AndroidManifest.xml` accordingly.
+	This folder contains Android-specific implementation details. The only notable files in it are the gradle configurations: `gradle.properties`, `build.gradle`, and `app\build.gradle` (which have been changed to configured Firebase). An adjustment was made to `gradle\wrapper\gradle-wrapper.properties` to upgrade to the latest version of Gradle. Android-specific assets are stored under `app\src\main\res`, and modifications have been made to `AndroidManifest.xml` accordingly.
 
 - ## The `data` folder: 
 
@@ -57,37 +60,48 @@ This repo is to be modified *only* by the Ramaz Coding Club. It follows a simple
 
 - ## The `lib` folder: 
 	
-	This is, of course, where the main Dart code lies. This will be discussed in detail next section. 
+	This is, where the main Dart code lies. This will be discussed in detail next section. 
 
 ## Code related folders:
 
-  Inside `lib\`, there are five folders, each of which define a different part of the structure of the app: 
+  Inside `lib\`, there are five libraries, each of which define a different part of the structure of the app. Each library two sections -- a folder under `lib\src`, containing all the code, and a file under `lib\`, which declares the library (sort of like a header file).
 
-  - ### The `data` folder: 
+  - ### The `data` library: 
 
-  	This folder contains data models for everything in the app, separated into files by topic. Here, all the business logic is implemented either as complex factories or methods. 
+  	This library contains data models for everything in the app, separated into files by topic. Here, all the business logic is implemented either as complex factories or methods. 
 
-  - ### The `mock` folder: 
+  - ### The `services` library: 
 
-  	This is a temporary folder to hold any constant data that needs to be mocked out for testing. The only reason this folder will make it into production is so that we do not have to keep deleting it. But no file inside should be used during production -- they are simply placeholders. 
+  	This library contains abstractions over many different APIs (data sources), separated into files by API.  
 
-  - ### The `pages` folder: 
+  - ### The `services_collection` library: 
 
-  	This folder contains all the screens of the app, separated into files. These files may import data models (from `data\`), APIs (from `services\`), or other UI elements (from `widgets\`). 
+	  This library contains logic for initializing the services. It can act as a wrapper around all the services, so function and constructor signatures can remain the same even after services are added or removed. 
 
-  - ### The `services` folder: 
+- ### The `models` library: 
+		
+	This library contains two types of models: 
+ 	1. Data models. Data models control the state of the data across the lifespan of the app. The user profile is a good example of a data model, since it needs to be accessible to all code. 
+ 	2. View models. view models control the state of data in an element of UI, such as a page. View models can interact with data models to get their data, and should generally have a field for every label, and a method for every input action in the UI. 
 
-  	This folder contains abstractions over many different APIs (data sources), separated into files by API. It contains a file, `main.dart` which holds two functions: `initOnMain`, to initialize the services when the app launches, and `initOnLogin`, which calls upon different APIs for the login flow. 
+ - ### The `widgets` library: 
 
-  - ### The `widgets` folder: 
+  	This folder contains UI elements ("widgets") that are independent enough from the rest of the screen to be able to be imported and used reliably anywhere in the app (even if they in reality aren't). There are a few categories of widgets: 
 
-  	This folder contains UI elements ("widgets") that are independent enough from the rest of the screen to be able to be imported and used reliably anywhere in the app (even if they in reality aren't). 
+  	1. Ambient widgets are widgets that are exposed to the whole app (usually via [`InheritedWidgets`](https://api.flutter.dev/flutter/widgets/InheritedWidget-class.html)).
+  	2. Atomic widgets are widgets that represent individual pieces of data. They should be used throughout the app exclusively to represent those data types. 
+  	3. Generic widgets are miscellaneous widgets that help compose the UI.
+  	4. Other helper widgets to display images and iconography throughout the UI. 
+
+  - ### The `pages` library: 
+
+  	This library contains all the screens of the app, separated into files. These files may import data templates (from `data`), APIs (from `services`), page states (from `models`), or other UI elements (from `widgets`). 
 
  ## Running the app: 
 
  To run the app, make sure you have [Flutter](https://flutter.dev) installed, and run these commands: 
 	<pre>
-		git clone https://github.com/Levi-Lesches/ramaz.git
+		git clone https://github.com/Levi-Lesches/Ramaz-Student-Life.git
 		cd ramaz
 	</pre>
 

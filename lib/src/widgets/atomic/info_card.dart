@@ -22,12 +22,12 @@ class InfoCard extends StatelessWidget {
 				child: Column (
 					crossAxisAlignment: CrossAxisAlignment.start,
 					children: [
-						SizedBox (height: 5),
+						const SizedBox (height: 5),
 						...[
 							for (final String text in children) ...[
-								SizedBox(height: 2.5),
+								const SizedBox(height: 2.5),
 								Text(text, textScaleFactor: 1.25),
-								SizedBox(height: 2.5),
+								const SizedBox(height: 2.5),
 							]
 						]
 					] 

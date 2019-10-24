@@ -1,6 +1,7 @@
 import "package:flutter/material.dart";
 import "package:flutter/services.dart" show PlatformException;
 
+import "package:firebase_crashlytics/firebase_crashlytics.dart";
 import "package:url_launcher/url_launcher.dart";
 
 import "package:ramaz/widgets.dart";
@@ -10,7 +11,7 @@ import "package:ramaz/services.dart";
 /// This widget is only stateful so it doesn't get disposed when 
 /// the theme changes, and then we can keep using the BuildContext
 class Login extends StatefulWidget {
-	const Login();
+	// ignore_for_file: prefer_const_constructors_in_immutables
 
 	@override LoginState createState() => LoginState();
 }
@@ -28,25 +29,24 @@ class LoginState extends State<Login> {
 	@override 
 	void didChangeDependencies() {
 		super.didChangeDependencies();
-		print ("Login dependencies changed. Deleting files...");
 		services = Services.of(context).services;
 		services.reader.deleteAll();
 	}
 
 	@override
-	Widget build (BuildContext widgetContext) => ValueListenableBuilder(
+	Widget build (BuildContext context) => ValueListenableBuilder(
 		valueListenable: loadingNotifier,
+		// ignore: sort_child_properties_last
 		child: Padding (
-			padding: EdgeInsets.all (20),
+			padding: const EdgeInsets.all (20),
 			child: Column (
 				children: [
-					ThemeChanger.of(widgetContext).brightness == Brightness.light 
-						? ClipRRect (
-							borderRadius: BorderRadius.circular (20),
-							child: RamazLogos.teal
-						)
-						: RamazLogos.ram_square_words, 
-					SizedBox (height: 50),
+					if (ThemeChanger.of(context).brightness == Brightness.light) ClipRRect(
+						borderRadius: BorderRadius.circular (20),
+						child: RamazLogos.teal
+					)
+					else RamazLogos.ramSquareWords, 
+					const SizedBox (height: 50),
 					Center (
 						child: Container (
 							decoration: BoxDecoration (
@@ -56,7 +56,7 @@ class LoginState extends State<Login> {
 							child: Builder (
 								builder: (BuildContext context) => ListTile (
 									leading: Logos.google,
-									title: Text ("Sign in with Google"),
+									title: const Text ("Sign in with Google"),
 									onTap: () => googleLogin(context)  // see func
 								)
 							)
@@ -67,72 +67,81 @@ class LoginState extends State<Login> {
 		),
 		builder: (BuildContext context, bool loading, Widget child) => Scaffold (
 			appBar: AppBar (
-				title: Text ("Login"),
+				title: const Text ("Login"),
 				actions: [
 					BrightnessChanger.iconButton(prefs: services.prefs),
 				],
 			),
 			body: ListView (
 				children: [
-					if (loading) LinearProgressIndicator(),
+					if (loading) const LinearProgressIndicator(),
 					child,
 				]
 			)
 		)
 	);
 
-	void onError(BuildContext context) {
+	Future<void> onError(dynamic error, StackTrace stack) async {
 		loadingNotifier.value = false;
-		showDialog (
+		await Crashlytics.instance.setUserEmail(await Auth.email);
+		Crashlytics.instance.log("Attempting to log in...");
+		await Crashlytics.instance.recordError(error, stack);
+
+		await Auth.signOut();
+		await showDialog (
 			context: context,
 			builder: (dialogContext) => AlertDialog (
-				title: Text ("Cannot connect"),
-				content: Text (
+				title: const Text ("Cannot connect"),
+				content: const Text (
 					"Due to technical difficulties, your account cannot be accessed.\n\n"
 					"If the problem persists, please contact Levi Lesches "
 					"(class of '21) for help" 
 				),
 				actions: [
 					FlatButton (
-						child: Text ("Cancel"),
-						onPressed: Navigator.of(dialogContext).pop
+						onPressed: () => Navigator.of(dialogContext).pop(),
+						child: const Text ("Cancel"),
 					),
 					RaisedButton (
-						child: Text ("levilesches@gmail.com"),
 						onPressed: () => launch ("mailto:levilesches@gmail.com"),
-						color: Theme.of(dialogContext).primaryColorLight
+						color: Theme.of(dialogContext).primaryColorLight,
+						child: const Text ("levilesches@gmail.com"),
 					)
 				]
 			)
 		);
 	}
 
-	void safely({
+	Future<void> safely({
 		@required Future<void> Function() function, 
 		@required void Function() onSuccess,
 		@required BuildContext scaffoldContext,
 	}) async {
 		try {await function();} 
-		on PlatformException catch (error) {
+		on PlatformException catch (error, stack) {
 			if (error.code == "ERROR_NETWORK_REQUEST_FAILED") {
 				Scaffold.of(scaffoldContext).showSnackBar (
-					SnackBar (content: Text ("No internet")),
+					const SnackBar (content: Text ("No internet")),
 				);
 				loadingNotifier.value = false;
 				return;
 			} else {
-				onError(context);
+				await onError(error, stack);
 				rethrow;
 			}
-		} catch (error) {
-			onError(context);
+		// ignore: avoid_catches_without_on_clauses
+		} catch (error, stack) {
+			await onError(error, stack);
 			rethrow;
 		}
 		onSuccess();
 	}
 
-	void downloadData(String username, BuildContext scaffoldContext) async => safely(
-		function: () async => await services.initOnLogin(username),
+	Future<void> downloadData(
+		String username, 
+		BuildContext scaffoldContext
+	) => safely(
+		function: () => services.initOnLogin(username),
 		onSuccess: () => Navigator.of(context).pushReplacementNamed("home"),
 		scaffoldContext: scaffoldContext,
 	);
@@ -141,10 +150,10 @@ class LoginState extends State<Login> {
 	/// Scaffold. But since that will rebuild (because of loading = true), 
 	/// we need another context that is higher up the tree than that.
 	/// For that we use the implicit `BuildContext` with `StatefulWidget`
-	void googleLogin(BuildContext scaffoldContext) async => safely(
-		function: () async => Auth.signInWithGoogle(
+	Future<void> googleLogin(BuildContext scaffoldContext) async => safely(
+		function: () async => Auth.signInWithGoogle(  // async so it is Future
 			() => Scaffold.of(scaffoldContext).showSnackBar(
-				SnackBar (
+				const SnackBar (
 					content: Text ("You need to sign in with your Ramaz email")
 				)
 			)

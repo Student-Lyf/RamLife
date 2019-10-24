@@ -14,14 +14,14 @@ class Services extends InheritedWidget {
 	final Preferences prefs;
 
 	Services({
-		this.services,
 		@required Widget child,
+		this.services,
 	}) :
 		reader = services.reader,
 		prefs = services.prefs,
 		super (child: child);
 
-	Notes get notes => services.notes;
+	Reminders get reminders => services.reminders;
 	Schedule get schedule => services.schedule;
 
 	/// This instance will never be rebuilt with new data

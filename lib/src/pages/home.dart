@@ -5,7 +5,8 @@ import "package:ramaz/pages.dart";
 import "package:ramaz/widgets.dart";
 
 class HomePage extends StatelessWidget {
-	const HomePage();
+	// ignore_for_file: prefer_const_constructors_in_immutables
+	HomePage();
 
 	@override 
 	Widget build (BuildContext context) => ModelListener<Schedule>(
@@ -13,13 +14,13 @@ class HomePage extends StatelessWidget {
 		dispose: false,
 		builder: (BuildContext context, Schedule schedule, _) => Scaffold (
 			appBar: AppBar (
-				title: Text ("Home"),
+				title: const Text ("Home"),
 				actions: [
 					if (schedule.hasSchool) Builder (
 						builder: (BuildContext context) => FlatButton(
-							child: Text ("Tap for schedule"),
 							textColor: Colors.white,
-							onPressed: () => Scaffold.of(context).openEndDrawer()
+							onPressed: () => Scaffold.of(context).openEndDrawer(),
+							child: const Text ("Tap for schedule"),
 						)
 					)
 				],
@@ -43,8 +44,8 @@ class HomePage extends StatelessWidget {
 				onRefresh: () async => schedule.onNewPeriod(),
 				child: ListView (
 					children: [
-						RamazLogos.ram_rectangle,
-						Divider(),
+						RamazLogos.ramRectangle,
+						const Divider(),
 						Text (
 							schedule.hasSchool
 								? "Today is a${schedule.today.n} "
@@ -53,16 +54,16 @@ class HomePage extends StatelessWidget {
 							textScaleFactor: 2,
 							textAlign: TextAlign.center
 						),
-						SizedBox (height: 20),
+						const SizedBox (height: 20),
 						if (schedule.hasSchool) NextClass(
-							notes: schedule.notes.currentNotes,
+							reminders: schedule.reminders.currentReminders,
 							period: schedule.period,
 							subject: schedule.subjects [schedule.period?.id]
 						),
 						// if school won't be over, show the next class
 						if (schedule.nextPeriod != null) NextClass (
 							next: true,
-							notes: schedule.notes.nextNotes,
+							reminders: schedule.reminders.nextReminders,
 							period: schedule.nextPeriod,
 							subject: schedule.subjects [schedule.nextPeriod?.id]
 						),

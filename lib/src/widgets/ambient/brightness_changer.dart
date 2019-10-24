@@ -1,8 +1,8 @@
 import "package:flutter/material.dart";
 
-import "theme_changer.dart" show ThemeChanger;
-
 import "package:ramaz/services.dart";
+
+import "theme_changer.dart" show ThemeChanger;
 
 enum BrightnessChangerForm {button, dropdown}
 
@@ -20,8 +20,8 @@ class BrightnessChanger extends StatelessWidget {
 				onFalse: Icons.brightness_low,
 			)
 		),
-		assert (prefs != null),
-		assert (form != null);
+		assert (prefs != null, "Cannot load user preference"),
+		assert (form != null, "Cannot build widget without selected appearance");
 
 	factory BrightnessChanger.iconButton({@required Preferences prefs}) => 
 		BrightnessChanger (prefs: prefs, form: BrightnessChangerForm.button);
@@ -45,12 +45,12 @@ class BrightnessChanger extends StatelessWidget {
 			);
 
 			case BrightnessChangerForm.dropdown: return ListTile (
-				title: Text ("Change theme"),
+				title: const Text ("Change theme"),
 				leading: icon, 
 				trailing: DropdownButton<bool>(
-					onChanged: (bool value) => setBrightness(context, value),
+					onChanged: (bool value) => setBrightness(context, value: value),
 					value: prefs.brightness, 
-					items: [
+					items: const [
 						DropdownMenuItem<bool> (
 							value: null,
 							child: Text ("Automatic")
@@ -73,7 +73,7 @@ class BrightnessChanger extends StatelessWidget {
 
 	void buttonToggle(BuildContext context) => setBrightness(
 		context, 
-		caseConverter<bool>(
+		value: caseConverter<bool>(
 			value: prefs.brightness,
 			onTrue: false,
 			onFalse: null,
@@ -81,7 +81,7 @@ class BrightnessChanger extends StatelessWidget {
 		),
 	);
 
-	void setBrightness (BuildContext context, bool value) {
+	void setBrightness (BuildContext context, {bool value}) {
 		ThemeChanger.of(context).brightness = caseConverter<Brightness> (
 			value: value,
 			onTrue: Brightness.light,

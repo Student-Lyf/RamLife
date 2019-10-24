@@ -10,7 +10,7 @@ class ServicesCollection {
 	final Reader reader;
 	final Preferences prefs;
 
-	Notes notes;
+	Reminders reminders;
 	Schedule schedule;
 
 	ServicesCollection({
@@ -24,10 +24,10 @@ class ServicesCollection {
 	///
 	/// Use this function to initialize anything that requires a file.
 	void init() {
-		notes = Notes (reader);
+		reminders = Reminders (reader);
 		schedule = Schedule(
 			reader, 
-			notes: notes,
+			reminders: reminders,
 		);
 		verify();
 	}
@@ -35,22 +35,17 @@ class ServicesCollection {
 	/// Since [init] cannot be enforced, this function does null checks.
 	/// Put any variables that aren't final in here
 	void verify() {
-		final List properties = [notes, schedule];
+		final List properties = [reminders, schedule];
 
-		for (final property in properties) assert (
-			property != null,
-			"ServicesCollection.init was not called"
-		);
+		for (final property in properties) {
+			assert (
+				property != null,
+				"ServicesCollection.init was not called"
+			);
+		}
 	}
 
-	Future<void> initOnMain() async {
-		if (prefs.shouldUpdateCalendar)
-			reader.calendarData = await Firestore.month;
-
-		init();
-	}
-
-	Future<void> initOnLogin(String email, [bool first = true]) async {
+	Future<void> initOnLogin(String email, {bool first = true}) async {
 		// Save and initialize the student to get the subjects
 		final Map<String, dynamic> studentData = await Firestore.student;
 		final Student student = Student.fromJson(studentData);		
@@ -60,11 +55,11 @@ class ServicesCollection {
 			..studentData = studentData
 			..subjectData = await Firestore.getClasses(student)
 			..calendarData =  await Firestore.month
-			..notesData = await Firestore.notes;
+			..remindersData = await Firestore.reminders;
 
-		prefs.lastCalendarUpdate = DateTime.now();
-
-		if (first) init();
+		if (first) {
+			init();
+		}
 	}
 }
 

@@ -1,11 +1,12 @@
 import "package:flutter/foundation.dart" show ChangeNotifier, required;
 
-import "schedule.dart";
-
 import "package:ramaz/data.dart";
 import "package:ramaz/services_collection.dart";
 
+import "schedule.dart";
+
 /// A view model for the schedule page. 
+// ignore: prefer_mixin
 class ScheduleModel with ChangeNotifier {
 	/// The default [Letters] for the UI.
 	static const Letters defaultLetter = Letters.M;
@@ -37,7 +38,7 @@ class ScheduleModel with ChangeNotifier {
 	/// 
 	/// The user can select a date from the calendar and, if there is school 
 	/// that day, have their schedule be shown to them.
-	DateTime selectedDay = DateTime.now();
+	DateTime _selectedDay = DateTime.now();
 
 	/// Initializes the view model. 
 	/// 
@@ -63,11 +64,16 @@ class ScheduleModel with ChangeNotifier {
 			date.day
 		);
 		final Day selected = schedule.calendar [justDate];
-		if (!selected.school) throw ArgumentError("No School");
+		if (!selected.school) {
+			throw Exception("No School");
+		}
 		day = selected;
-		selectedDay = justDate;
+		_selectedDay = justDate;
 		update (newLetter: selected.letter, newSpecial: selected.special);
 	}
+
+	/// Gets the date whose schedule the user is looking at
+	DateTime get date => _selectedDay;
 
 	/// Updates the UI to a new day given a new letter or special.
 	/// 
@@ -94,14 +100,16 @@ class ScheduleModel with ChangeNotifier {
 				case Letters.C:
 				case Letters.M:
 				case Letters.R:
-					if (!fridays.contains (newSpecial)) 
+					if (!fridays.contains (newSpecial)) {
 						special = newSpecial;
+					}
 					break;
 				// Cannot set a non-Friday schedule to a Friday
 				case Letters.E:
 				case Letters.F:
-					if (fridays.contains (newSpecial))
+					if (fridays.contains (newSpecial)) {
 						special = newSpecial;
+					}
 			}
 			day = Day (letter: letter, special: special);
 			notifyListeners();

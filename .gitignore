@@ -61,6 +61,7 @@ doc
 android/key.properties
 firebase/admin.json
 firebase/rules_test/node_modules/
+firebase/temp.py
 
 
 # android
@@ -87,7 +88,6 @@ firebase/rules_test/node_modules/
 .pub
 /build/
 # test
-pubspec.lock
 
 # Android related
 **/android/**/gradle-wrapper.jar

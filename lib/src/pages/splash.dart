@@ -3,8 +3,10 @@ import "package:flutter/material.dart";
 import "package:ramaz/widgets.dart";
 
 class SplashScreen extends StatelessWidget {
+	// ignore_for_file: prefer_const_constructors_in_immutables
+
 	final void Function (Brightness) setBrightness;
-	SplashScreen({this.setBrightness});
+	const SplashScreen({this.setBrightness});
 
 	@override Widget build (BuildContext context) => MaterialApp (
 		home: Scaffold (
@@ -15,7 +17,7 @@ class SplashScreen extends StatelessWidget {
 							MediaQuery.of(context).platformBrightness
 						)
 					);
-					return Center (child: RamazLogos.ram_square_words);
+					return Center (child: RamazLogos.ramSquareWords);
 				}
 			)
 		)

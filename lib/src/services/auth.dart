@@ -1,6 +1,7 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import "package:firebase_auth/firebase_auth.dart";
 import "package:google_sign_in/google_sign_in.dart";
 
+// ignore: avoid_classes_with_only_static_members
 /// An abstraction around FirebaseAuth.
 /// 
 /// This class handles all authentication operations via static methods.
@@ -43,14 +44,17 @@ class Auth {
 		void Function() ifInvalid,
 	) async {
 		final GoogleSignInAccount account = await _google.signIn();
-		if (account == null) return;
-		if (!isValidGoogleAccount(account)) {
-			ifInvalid();
-			await _google.signOut();  // Prompt again 
+		if (account == null) {
 			return;
+			// ignore: avoid_as, 
 		}
+		// if (!isValidGoogleAccount(account)) {
+		// 	ifInvalid();
+		// 	await _google.signOut();  // Prompt again 
+		// 	return;
+		// }
 		final GoogleSignInAuthentication _auth = await account.authentication;
-		AuthCredential credential = GoogleAuthProvider.getCredential (
+		final AuthCredential credential = GoogleAuthProvider.getCredential (
 			accessToken: _auth.accessToken,
 			idToken: _auth.idToken
 		);

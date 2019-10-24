@@ -1,8 +1,11 @@
+import "dart:async" show runZoned;
+
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
+
+import "package:firebase_crashlytics/firebase_crashlytics.dart";
 import "package:path_provider/path_provider.dart";
 import "package:shared_preferences/shared_preferences.dart";
-
 
 import "package:ramaz/constants.dart";  // for route keys
 import "package:ramaz/pages.dart";
@@ -14,11 +17,13 @@ import "package:ramaz/widgets.dart";
 /// Basically simulate the login sequence
 Future<void> refresh(ServicesCollection services) async {
 	final String email = await Auth.email;
-	if (email == null) throw StateError(
-		"Cannot refresh schedule because the user is not logged in."
-	);
-	await services.initOnLogin(email, false);
-	services.notes.setup();
+	if (email == null) {
+		throw StateError(
+			"Cannot refresh schedule because the user is not logged in."
+		);
+	}
+	await services.initOnLogin(email, first: false);
+	services.reminders.setup();
 	services.schedule.setup(services.reader);
 }
 
@@ -28,17 +33,20 @@ Future<void> updateCalendar(ServicesCollection services) async {
 	services.schedule.setup(services.reader);
 }
 
-void main({bool restart = false}) async {
+Future<void> main({bool restart = false}) async {
 	// This shows a splash screen but secretly 
 	// determines the desired `platformBrightness`
-	SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 	Brightness brightness;
-	runApp (
-		SplashScreen(
-			setBrightness: 
-				(Brightness platform) => brightness = platform
-		)
+	runZoned(
+		() => runApp (
+			SplashScreen(
+				setBrightness: 
+					(Brightness platform) => brightness = platform
+			)
+		),
+		onError: Crashlytics.instance.recordError,
 	);
+	await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 
 	// Initialize basic backend
 	// 
@@ -63,44 +71,57 @@ void main({bool restart = false}) async {
 		
 		// To download, and login or go to main
 		ready = services.reader.ready && await Auth.ready;
-		if (ready) await services.initOnMain();
-	} catch (error) {
-		print ("Error on main.");
+		if (ready) {
+			services.init();
+		}
+	// We want to at least try again on ANY error. 
+	// ignore: avoid_catches_without_on_clauses
+	} catch (_) {
+		debugPrint ("Error on main.");
 		if (!restart) {
-			print ("Trying again...");
+			debugPrint ("Trying again...");
 			await Auth.signOut();
 			reader.deleteAll();
-			main(restart: true);
-		} else rethrow;
+			return main(restart: true);
+		} else {
+			rethrow;
+		}
 	}
 
 	// Determine the appropriate brightness. 
 	final bool savedBrightness = services.prefs.brightness;
-	if (savedBrightness != null) brightness = savedBrightness
-		? Brightness.light
-		: Brightness.dark;
+	if (savedBrightness != null) {
+		brightness = savedBrightness
+			? Brightness.light
+			: Brightness.dark;
+	}
 
 	// Register for FCM notifications. 
+	// We don't care when this happens
+	// ignore: unawaited_futures 
 	Future(
 		() async {
 			await FCM.registerNotifications(
 				{
-					"refresh": () async => await refresh(services),
-					"updateCalendar": () async => await updateCalendar(services),
+					"refresh": () => refresh(services),
+					"updateCalendar": () => updateCalendar(services),
 				}
 			);
 			await FCM.subscribeToCalendar();
-			print ("Device notification id: ${await FCM.token}");
 		}
 	);
 
-	// Now we are ready to run the app
-	runApp (
-		RamazApp (
-			ready: ready,
-			brightness: brightness,
-			services: services,
-		)
+	// Now we are ready to run the app (with error catching)
+	FlutterError.onError = Crashlytics.instance.recordFlutterError;
+	runZoned(
+		() => runApp (
+			RamazApp (
+				ready: ready,
+				brightness: brightness,
+				services: services,
+			)
+		),
+		onError: Crashlytics.instance.recordError,
 	);
 }
 
@@ -108,7 +129,7 @@ class RamazApp extends StatefulWidget {
 	final Brightness brightness;
 	final ServicesCollection services;
 	final bool ready;
-	RamazApp ({
+	const RamazApp ({
 		@required this.brightness,
 		@required this.ready,
 		@required this.services,
@@ -180,7 +201,7 @@ class MainAppState extends State<RamazApp> {
 					Routes.login: (_) => Login(),
 					Routes.home: (_) => HomePage(),
 					Routes.schedule: (_) => SchedulePage(),
-					Routes.notes: (_) => NotesPage(),
+					Routes.reminders: (_) => RemindersPage(),
 					Routes.feedback: (_) => FeedbackPage(),
 				}
 			)
@@ -204,7 +225,9 @@ class MainAppState extends State<RamazApp> {
 // 				)
 // 			]
 // 		),
-// 		body: Center (child: Text ("This page is coming soon!", textScaleFactor: 2))
+// 		body: Center (
+// 			child: Text ("This page is coming soon!", textScaleFactor: 2)
+// 		)
 // 	);
 // }
 

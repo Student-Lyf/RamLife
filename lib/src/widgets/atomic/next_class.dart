@@ -1,24 +1,24 @@
 import "package:flutter/material.dart";
 
-import "info_card.dart";
-import "note_tile.dart";
-
 import "package:ramaz/constants.dart";
 import "package:ramaz/data.dart";
 
+import "info_card.dart";
+import "reminder_tile.dart";
+
 class NextClass extends StatelessWidget {
 	static const TextStyle white = TextStyle (color: Colors.white);
-	static const double notePadding = 10;
+	static const double reminderPadding = 10;
 
 	final bool next;
 	final Period period;
 	final Subject subject;
-	final List<int> notes;
+	final List<int> reminders;
 
 	const NextClass({
 		@required this.period,
 		@required this.subject,
-		@required this.notes,
+		@required this.reminders,
 		this.next = false
 	});
 
@@ -32,11 +32,11 @@ class NextClass extends StatelessWidget {
 				title: period == null
 					? "School is over"
 					: "${next ? 'Next' : 'Current'} period: " 
-						+ (subject?.name ?? period.period),
+						"${subject?.name ?? period.period}",
 			),
 
-			for (final int index in notes) Padding (
-				padding: EdgeInsets.symmetric(horizontal: notePadding),
+			for (final int index in reminders) Padding (
+				padding: const EdgeInsets.symmetric(horizontal: reminderPadding),
 				child: Container (
 					foregroundDecoration: ShapeDecoration(
 						shape: RoundedRectangleBorder(
@@ -44,7 +44,7 @@ class NextClass extends StatelessWidget {
 							borderRadius:  BorderRadius.circular (20),
 						)
 					),
-					child: NoteTile(index: index),
+					child: ReminderTile(index: index),
 				)
 			)
 		]

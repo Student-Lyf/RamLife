@@ -36,8 +36,11 @@ class Time {
 	/// When after-school events are introduced, this should be fixed. 
 	factory Time.fromDateTime (DateTime date) {
 		int hour = date.hour;
-		if (hour >= 17 || hour < 8) hour = 5;  // garbage value
-		else if (hour > 12) hour -= 12;
+		if (hour >= 17 || hour < 8) {
+			hour = 5;  // garbage value
+		} else if (hour > 12) {
+			hour -= 12;
+		}
 		return Time (hour, date.minute);
 	}
 
@@ -48,30 +51,29 @@ class Time {
 		hour = json ["hour"],
 		minutes = json ["minutes"];
 
+	@override 
+	int get hashCode => toString().hashCode;
+
 	@override
-	operator == (dynamic other) => (
-		other.runtimeType == Time && 
-		other.hour == this.hour && 
-		other.minutes == this.minutes
-	);
+	bool operator == (dynamic other) => other.runtimeType == Time && 
+		other.hour == hour && 
+		other.minutes == minutes;
 
 	/// Returns whether this [Time] is before another [Time].
-	operator < (Time other) => (
+	bool operator < (Time other) => 
 		clock.indexOf (hour) < clock.indexOf (other.hour) || 
-		(this.hour == other.hour && this.minutes < other.minutes)
-	);
+		(hour == other.hour && minutes < other.minutes);
 
 	/// Returns whether this [Time] is at or before another [Time].
-	operator <= (Time other) => this < other || this == other;
+	bool operator <= (Time other) => this < other || this == other;
 
 	/// Returns whether this [Time] is after another [Time].
-	operator > (Time other) => (
+	bool operator > (Time other) => 
 		clock.indexOf (hour) > clock.indexOf (other.hour) ||
-		(this.hour == other.hour && this.minutes > other.minutes)
-	);
+		(hour == other.hour && minutes > other.minutes);
 
 	/// Returns whether this [Time] is at or after another [Time].
-	operator >= (Time other) => this > other || this == other;
+	bool operator >= (Time other) => this > other || this == other;
 
 	@override 
 	String toString() => "$hour:${minutes.toString().padLeft(2, '0')}";
@@ -109,7 +111,8 @@ class Range {
 
 	/// Returns a new [Range] from JSON data
 	/// 
-	/// The json must have `start` and `end` fields that map to [Time] JSON objects.
+	/// The json must have `start` and `end` fields 
+	/// that map to [Time] JSON objects.
 	/// See [Time.fromJson] for more details.
 	Range.fromJson(Map<String, dynamic> json) :
 		start = Time.fromJson(Map<String, dynamic>.from(json ["start"])),
@@ -121,21 +124,17 @@ class Range {
 	@override String toString() => "$start-$end";
 
 	/// Returns whether this range is before another range.
-	operator < (Time other) => (
-		this.end.hour < other.hour ||
-		(
-			this.end.hour == other.hour &&
-			this.end.minutes < other.minutes
-		)
+	bool operator < (Time other) => end.hour < other.hour ||
+	(
+		end.hour == other.hour &&
+		end.minutes < other.minutes
 	);
 
 	/// Returns whether this range is after another range.
-	operator > (Time other) => (
-		this.start.hour > other.hour ||
-		(
-			this.start.hour == other.hour &&
-			this.start.minutes > other.minutes
-		)
+	bool operator > (Time other) => start.hour > other.hour ||
+	(
+		start.hour == other.hour &&
+		start.minutes > other.minutes
 	);
 }
 
@@ -204,26 +203,31 @@ class Special {
 	/// - a string, in which case it should be in the [specials] list, or
 	/// - a map, in which case it will be interpreted as JSON. The JSON must have: 
 	/// 	- a "name" field, which should be a string. See [name].
-	/// 	- a "periods" field, which should be a list of [Range] JSON objects. See [Range.getList] for details.
+	/// 	- a "periods" field, which should be a list of [Range] JSON objects. 
+	/// 			See [Range.getList] for details.
 	/// 	- a "homeroom" field, which should be an integer. See [homeroom].
 	/// 	- a "skip" field, which should be a list of integers. See [skip].
 	/// 
 	factory Special.fromJson(dynamic value) {
-		if (value == null) return null;
-		else if (!(value is Map || value is String))
+		if (value == null) {
+			return null;
+		}
+		else if (!(value is Map || value is String)) {
 			throw ArgumentError.value (
 				value, // invalid value
 				"Special.fromJson: value", // arg name
 				"$value is not a valid special", // message
 			);
-		else if (value is String && !stringToSpecial.containsKey(value))
+		} else if (value is String && !stringToSpecial.containsKey(value)) {
 			throw ArgumentError.value(
 				value, 
 				"Special.fromJson: value",
-				"'$value' needs to be one of " + 
-					stringToSpecial.keys.join(", ")
+				"'$value' needs to be one of ${stringToSpecial.keys.join(", ")}"
 			);
-		if (value is String) return stringToSpecial [value];
+		}
+		if (value is String) {
+			return stringToSpecial [value];
+		}
 
 		final Map<String, dynamic> json = Map<String, dynamic>.from(value);
 		return Special (
@@ -241,33 +245,37 @@ class Special {
 	static Special getWinterFriday() {
 		final DateTime today = DateTime.now();
 		final int month = today.month, day = today.day;
-		if (month >= Times.schoolStart && month < Times.winterFridayMonthStart)
+		if (month >= Times.schoolStart && month < Times.winterFridayMonthStart) {
 			return friday;
-		else if (
+		} else if (
 			month > Times.winterFridayMonthStart ||
 			month < Times.winterFridayMonthEnd
-		) return winterFriday;
-		else if (
+		) {
+			return winterFriday;
+		} else if (
 			month > Times.winterFridayMonthEnd &&
 			month <= Times.schoolEnd
-		) return friday;
-		else if (month == Times.winterFridayMonthStart) {
-			if (day < Times.winterFridayDayStart) return friday;
-			else return winterFriday;
+		) {
+			return friday;
+		} else if (month == Times.winterFridayMonthStart) {
+			return day < Times.winterFridayDayStart ? friday : winterFriday;
 		} else if (month == Times.winterFridayMonthEnd) {
-			if (day < Times.winterFridayDayEnd) return winterFriday;
-			else return friday;
+			return day < Times.winterFridayDayEnd ? winterFriday : friday;
 		} else {
-			print ("Tasked to find winter friday for the summer, assuming regular");
+			// print("Tasked to find winter friday for the summer, assuming regular");
 			return friday;
 		}
 	}
 
-	@override String toString() => name;
-	@override operator == (other) => (
-		other is Special && 
-		other.name == name
-	);
+	@override 
+	String toString() => name;
+
+	@override
+	int get hashCode => name.hashCode;
+
+	@override 
+	bool operator == (dynamic other) => 
+		other is Special && other.name == name;
 }
 
 /// The [Special] for Rosh Chodesh
@@ -307,7 +315,7 @@ const Special fastDay = Special (
 		Range (Time (1, 35), Time (2, 05))
 	],
 	mincha: 8,
-	skip: const [6, 7, 8]
+	skip: [6, 7, 8]
 );
 
 /// The [Special] for Fridays. 

@@ -7,19 +7,25 @@ import "package:ramaz/widgets.dart";
 class Footer extends StatelessWidget {
 	static const double textScale = 1.25;
 
+	// ignore: prefer_const_constructors_in_immutables
+	Footer();
+
 	@override Widget build (BuildContext context) => ModelListener<Schedule>(
 			model: () => Services.of(context).schedule,
 			dispose: false,
+			// ignore: sort_child_properties_last
 			child: Container(height: 0, width: 0),
 			builder: (BuildContext context, Schedule schedule, Widget blank) =>
 				schedule.period == null ? blank : BottomSheet (
 					enableDrag: false,
 					onClosing: () {},
 					builder: (BuildContext context) => GestureDetector(
-						onTap: !schedule.notes.hasNote ? null : 
+						onTap: !schedule.reminders.hasReminder ? null : 
 							() {
 								final NavigatorState nav = Navigator.of(context);
-								if (nav.canPop()) nav.pop();
+								if (nav.canPop()) {
+									nav.pop();
+								}
 								nav.pushReplacementNamed(Routes.home);
 							},
 						child: SizedBox (
@@ -44,7 +50,8 @@ class Footer extends StatelessWidget {
 											).join (". "),
 											textScaleFactor: textScale,
 										),
-										if (schedule.notes.hasNote) Text ("Click to see note"),
+										if (schedule.reminders.hasReminder) 
+											const Text ("Click to see reminder"),
 									]
 								)
 							)
