@@ -4,23 +4,35 @@ import "package:ramaz/services.dart";
 import "package:ramaz/models.dart";
 import "package:ramaz/data.dart";
 
-DateTime now = DateTime.now();
-
+/// A class to wrap the services library into a singleton
 class ServicesCollection {
+	/// The [Reader] for this collection.
 	final Reader reader;
+
+	/// The [Preferences] for this collection.
 	final Preferences prefs;
 
+	/// A [Reminders] data model.
 	Reminders reminders;
+
+	/// A [Schedule] data model.
 	Schedule schedule;
 
+	/// Creates a new services collection. 
+	/// 
+	/// Generally, there should only be one of these, 
+	/// as they manage their own services.
 	ServicesCollection({
 		@required this.reader,
 		@required this.prefs,
 	});
 
+	/// Initializes the collection.
+	/// 
 	/// This function is a safety!
-	/// In the event a file is unavailable, the try, catch in main will catch it
-	/// After the files are verifiably available, this function is called. 
+	/// In the event a file is unavailable, the try-catch 
+	/// in main will throw an error. After the files are verifiably available, 
+	/// this function is called. 
 	///
 	/// Use this function to initialize anything that requires a file.
 	void init() {
@@ -32,8 +44,10 @@ class ServicesCollection {
 		verify();
 	}
 
-	/// Since [init] cannot be enforced, this function does null checks.
-	/// Put any variables that aren't final in here
+	/// Verifies any properties that needed to be manually initialized are. 
+	/// 
+	/// Since calling [init] cannot be enforced, this function does null checks.
+	/// Put any variables that aren't final in here. 
 	void verify() {
 		final List properties = [reminders, schedule];
 
@@ -45,6 +59,11 @@ class ServicesCollection {
 		}
 	}
 
+	/// The login protocol. 
+	/// 
+	/// Downloads data from Firebase, and serializes them to [reader].
+	/// If the user is actually logging in (as opposed to a full refresh),
+	/// then [init] will be called to initialize the data models. 
 	Future<void> initOnLogin(String email, {bool first = true}) async {
 		// Save and initialize the student to get the subjects
 		final Map<String, dynamic> studentData = await Firestore.student;
