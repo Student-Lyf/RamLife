@@ -57,7 +57,7 @@
 .svn/
 *.txt.yaml
 /data
-doc
+# doc
 android/key.properties
 firebase/admin.json
 firebase/rules_test/node_modules/
@@ -80,7 +80,7 @@ firebase/temp.py
 .vscode/
 
 # Flutter/Dart/Pub related
-**/doc/api/
+# **/doc/api/
 .dart_tool/
 .flutter-plugins
 .packages

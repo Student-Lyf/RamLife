@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
+  <meta name="description" content="API docs for the PeriodData class from the data library, for the Dart programming language.">
+  <title>PeriodData class - data library - Dart API</title>
+  <!-- required because all the links are pseudo-absolute -->
+  <base href="..">
+
+  <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:500,400i,400,300|Source+Sans+Pro:400,300,700" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="static-assets/github.css">
+  <link rel="stylesheet" href="static-assets/styles.css">
+  <link rel="icon" href="static-assets/favicon.png">
+  <!-- header placeholder -->
+</head>
+
+<body>
+
+<div id="overlay-under-drawer"></div>
+
+<header id="title">
+  <button id="sidenav-left-toggle" type="button">&nbsp;</button>
+  <ol class="breadcrumbs gt-separated dark hidden-xs">
+    <li><a href="index.html">ramaz</a></li>
+    <li><a href="data/data-library.html">data</a></li>
+    <li class="self-crumb">PeriodData class</li>
+  </ol>
+  <div class="self-name">PeriodData</div>
+  <form class="search navbar-right" role="search">
+    <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+
+<main>
+
+  <div id="dartdoc-sidebar-left" class="col-xs-6 col-sm-3 col-md-2 sidebar sidebar-offcanvas-left">
+    <header id="header-search-sidebar" class="hidden-l">
+      <form class="search-sidebar" role="search">
+        <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+      </form>
+    </header>
+    
+    <ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
+      <li><a href="index.html">ramaz</a></li>
+      <li><a href="data/data-library.html">data</a></li>
+      <li class="self-crumb">PeriodData class</li>
+    </ol>
+    
+    <h5>data library</h5>
+    <ol>
+      <li class="section-title"><a href="data/data-library.html#classes">Classes</a></li>
+      <li><a href="data/Day-class.html">Day</a></li>
+      <li><a href="data/Feedback-class.html">Feedback</a></li>
+      <li><a href="data/Period-class.html">Period</a></li>
+      <li><a href="data/PeriodData-class.html">PeriodData</a></li>
+      <li><a href="data/PeriodReminderTime-class.html">PeriodReminderTime</a></li>
+      <li><a href="data/Range-class.html">Range</a></li>
+      <li><a href="data/Reminder-class.html">Reminder</a></li>
+      <li><a href="data/ReminderTime-class.html">ReminderTime</a></li>
+      <li><a href="data/Special-class.html">Special</a></li>
+      <li><a href="data/Student-class.html">Student</a></li>
+      <li><a href="data/Subject-class.html">Subject</a></li>
+      <li><a href="data/SubjectReminderTime-class.html">SubjectReminderTime</a></li>
+      <li><a href="data/Time-class.html">Time</a></li>
+    
+    
+      <li class="section-title"><a href="data/data-library.html#constants">Constants</a></li>
+      <li><a href="data/amAssembly-constant.html">amAssembly</a></li>
+      <li><a href="data/early-constant.html">early</a></li>
+      <li><a href="data/fastDay-constant.html">fastDay</a></li>
+      <li><a href="data/friday-constant.html">friday</a></li>
+      <li><a href="data/fridayRoshChodesh-constant.html">fridayRoshChodesh</a></li>
+      <li><a href="data/lettersToString-constant.html">lettersToString</a></li>
+      <li><a href="data/pmAssembly-constant.html">pmAssembly</a></li>
+      <li><a href="data/regular-constant.html">regular</a></li>
+      <li><a href="data/reminderTimeToString-constant.html">reminderTimeToString</a></li>
+      <li><a href="data/roshChodesh-constant.html">roshChodesh</a></li>
+      <li><a href="data/rotate-constant.html">rotate</a></li>
+      <li><a href="data/specials-constant.html">specials</a></li>
+      <li><a href="data/stringToLetters-constant.html">stringToLetters</a></li>
+      <li><a href="data/stringToReminderTime-constant.html">stringToReminderTime</a></li>
+      <li><a href="data/winterFriday-constant.html">winterFriday</a></li>
+      <li><a href="data/winterFridayRoshChodesh-constant.html">winterFridayRoshChodesh</a></li>
+    
+      <li class="section-title"><a href="data/data-library.html#properties">Properties</a></li>
+      <li><a href="data/stringToSpecial.html">stringToSpecial</a></li>
+    
+    
+      <li class="section-title"><a href="data/data-library.html#enums">Enums</a></li>
+      <li><a href="data/Letters-class.html">Letters</a></li>
+      <li><a href="data/ReminderTimeType-class.html">ReminderTimeType</a></li>
+    
+    
+    </ol>
+  </div>
+
+  <div id="dartdoc-main-content" class="col-xs-12 col-sm-9 col-md-8 main-content">
+      <div>  <div id="external-links" class="btn-group"><a title="View source code" class="source-link" href="https://github.com/Levi-Lesches/Ramaz-Student-Life/blob/master/lib/src/data/schedule.dart#L136"><i class="material-icons">description</i></a></div>
+<h1><span class="kind-class">PeriodData</span> class </h1></div>
+
+    <section class="desc markdown">
+      <p>A representation of a period, independent of the time. </p>
+<p>This is needed since the time can change on any day.
+See <a href="data/Special-class.html">Special</a> for when the times can change.</p>
+    </section>
+    
+    <section>
+      <dl class="dl-horizontal">
+
+
+
+
+        <dt>Annotations</dt>
+        <dd><ul class="annotation-list clazz-relationships">
+          <li>@immutable</li>
+        </ul></dd>
+      </dl>
+    </section>
+
+    <section class="summary offset-anchor" id="constructors">
+      <h2>Constructors</h2>
+
+      <dl class="constructor-summary-list">
+        <dt id="PeriodData" class="callable">
+          <span class="name"><a href="data/PeriodData/PeriodData.html">PeriodData</a></span><span class="signature">({<span class="parameter" id="-param-room"><span>@required</span> <span class="type-annotation"><a href="dart-core/String-class.html">String</a></span> <span class="parameter-name">room</span>, </span> <span class="parameter" id="-param-id"><span>@required</span> <span class="type-annotation"><a href="dart-core/String-class.html">String</a></span> <span class="parameter-name">id</span></span> })</span>
+        </dt>
+        <dd>
+          A const constructor for a <a href="data/PeriodData-class.html">PeriodData</a>.  <a href="data/PeriodData/PeriodData.html">[...]</a>
+          <div class="constructor-modifier features">const</div>
+        </dd>
+        <dt id="PeriodData.fromJson" class="callable">
+          <span class="name"><a href="data/PeriodData/PeriodData.fromJson.html">PeriodData.fromJson</a></span><span class="signature">(<span class="parameter" id="fromJson-param-json"><span class="type-annotation"><a href="dart-core/Map-class.html">Map</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="dart-core/String-class.html">String</a></span>, <span class="type-parameter">dynamic</span>&gt;</span></span> <span class="parameter-name">json</span></span>)</span>
+        </dt>
+        <dd>
+          Returns a <a href="data/PeriodData-class.html">PeriodData</a> from a JSON object. <a href="data/PeriodData/PeriodData.fromJson.html">[...]</a>
+          <div class="constructor-modifier features">factory</div>
+        </dd>
+      </dl>
+    </section>
+
+    <section class="summary offset-anchor" id="instance-properties">
+      <h2>Properties</h2>
+
+      <dl class="properties">
+        <dt id="hashCode" class="property">
+          <span class="name"><a href="data/PeriodData/hashCode.html">hashCode</a></span>
+          <span class="signature">&#8594; <a href="dart-core/int-class.html">int</a></span>         
+        </dt>
+        <dd>
+          The hash code for this object. <a href="data/PeriodData/hashCode.html">[...]</a>
+                  <div class="features">read-only, override</div>
+</dd>
+        <dt id="id" class="property">
+          <span class="name"><a href="data/PeriodData/id.html">id</a></span>
+          <span class="signature">&#8594; <a href="dart-core/String-class.html">String</a></span>         
+        </dt>
+        <dd>
+          The id for this period's subject. <a href="data/PeriodData/id.html">[...]</a>
+                  <div class="features">final</div>
+</dd>
+        <dt id="room" class="property">
+          <span class="name"><a href="data/PeriodData/room.html">room</a></span>
+          <span class="signature">&#8594; <a href="dart-core/String-class.html">String</a></span>         
+        </dt>
+        <dd>
+          The room the student needs to be in for this period.
+                  <div class="features">final</div>
+</dd>
+        <dt id="runtimeType" class="property inherited">
+          <span class="name"><a href="dart-core/Object/runtimeType.html">runtimeType</a></span>
+          <span class="signature">&#8594; <a href="dart-core/Type-class.html">Type</a></span>         
+        </dt>
+        <dd class="inherited">
+          A representation of the runtime type of the object.
+                  <div class="features">read-only, inherited</div>
+</dd>
+      </dl>
+    </section>
+
+    <section class="summary offset-anchor" id="instance-methods">
+      <h2>Methods</h2>
+      <dl class="callables">
+        <dt id="toString" class="callable">
+          <span class="name"><a href="data/PeriodData/toString.html">toString</a></span><span class="signature">(<wbr>)
+            <span class="returntype parameter">&#8594; <a href="dart-core/String-class.html">String</a></span>
+          </span>
+                  </dt>
+        <dd>
+          Returns a string representation of this object.
+                  <div class="features">override</div>
+</dd>
+        <dt id="noSuchMethod" class="callable inherited">
+          <span class="name"><a href="dart-core/Object/noSuchMethod.html">noSuchMethod</a></span><span class="signature">(<wbr><span class="parameter" id="noSuchMethod-param-invocation"><span class="type-annotation"><a href="dart-core/Invocation-class.html">Invocation</a></span> <span class="parameter-name">invocation</span></span>)
+            <span class="returntype parameter">&#8594; dynamic</span>
+          </span>
+                  </dt>
+        <dd class="inherited">
+          Invoked when a non-existent method or property is accessed. <a href="dart-core/Object/noSuchMethod.html">[...]</a>
+                  <div class="features">inherited</div>
+</dd>
+      </dl>
+    </section>
+
+    <section class="summary offset-anchor" id="operators">
+      <h2>Operators</h2>
+      <dl class="callables">
+        <dt id="operator ==" class="callable">
+          <span class="name"><a href="data/PeriodData/operator_equals.html">operator ==</a></span><span class="signature">(<wbr><span class="parameter" id="==-param-other"><span class="type-annotation">dynamic</span> <span class="parameter-name">other</span></span>)
+            <span class="returntype parameter">&#8594; <a href="dart-core/bool-class.html">bool</a></span>
+          </span>
+                  </dt>
+        <dd>
+          The equality operator. <a href="data/PeriodData/operator_equals.html">[...]</a>
+                  <div class="features">override</div>
+</dd>
+      </dl>
+    </section>
+
+
+    <section class="summary offset-anchor" id="static-methods">
+      <h2>Static Methods</h2>
+      <dl class="callables">
+        <dt id="getList" class="callable">
+          <span class="name"><a href="data/PeriodData/getList.html">getList</a></span><span class="signature">(<wbr><span class="parameter" id="getList-param-json"><span class="type-annotation"><a href="dart-core/List-class.html">List</a></span> <span class="parameter-name">json</span></span>)
+            <span class="returntype parameter">&#8594; <a href="dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="data/PeriodData-class.html">PeriodData</a></span>&gt;</span></span>
+          </span>
+                  </dt>
+        <dd>
+          Returns a list of <a href="data/PeriodData-class.html">PeriodData</a> from a JSON object. <a href="data/PeriodData/getList.html">[...]</a>
+                  
+</dd>
+      </dl>
+    </section>
+
+    <section class="summary offset-anchor" id="constants">
+      <h2>Constants</h2>
+
+      <dl class="properties">
+        <dt id="free" class="constant">
+          <span class="name "><a href="data/PeriodData/free-constant.html">free</a></span>
+          <span class="signature">&#8594; const <a href="data/PeriodData-class.html">PeriodData</a></span>
+                  </dt>
+        <dd>
+          A free period. <a href="data/PeriodData/free-constant.html">[...]</a>
+                  
+  <div>
+            <span class="signature"><code>const PeriodData._free()</code></span>
+          </div>
+        </dd>
+      </dl>
+    </section>
+
+  </div> <!-- /.main-content -->
+
+  <div id="dartdoc-sidebar-right" class="col-xs-6 col-sm-6 col-md-2 sidebar sidebar-offcanvas-right">
+    <ol>
+      <li class="section-title"><a href="data/PeriodData-class.html#constructors">Constructors</a></li>
+      <li><a href="data/PeriodData/PeriodData.html">PeriodData</a></li>
+      <li><a href="data/PeriodData/PeriodData.fromJson.html">fromJson</a></li>
+    
+      <li class="section-title">
+        <a href="data/PeriodData-class.html#instance-properties">Properties</a>
+      </li>
+      <li><a href="data/PeriodData/hashCode.html">hashCode</a></li>
+      <li><a href="data/PeriodData/id.html">id</a></li>
+      <li><a href="data/PeriodData/room.html">room</a></li>
+      <li class="inherited"><a href="dart-core/Object/runtimeType.html">runtimeType</a></li>
+    
+      <li class="section-title"><a href="data/PeriodData-class.html#instance-methods">Methods</a></li>
+      <li><a href="data/PeriodData/toString.html">toString</a></li>
+      <li class="inherited"><a href="dart-core/Object/noSuchMethod.html">noSuchMethod</a></li>
+    
+      <li class="section-title"><a href="data/PeriodData-class.html#operators">Operators</a></li>
+      <li><a href="data/PeriodData/operator_equals.html">operator ==</a></li>
+    
+    
+      <li class="section-title"><a href="data/PeriodData-class.html#static-methods">Static methods</a></li>
+      <li><a href="data/PeriodData/getList.html">getList</a></li>
+    
+      <li class="section-title"><a href="data/PeriodData-class.html#constants">Constants</a></li>
+      <li><a href="data/PeriodData/free-constant.html">free</a></li>
+    </ol>
+  </div><!--/.sidebar-offcanvas-->
+
+</main>
+
+<footer>
+  <span class="no-break">
+    ramaz
+      1.0.1+3
+  </span>
+
+  <!-- footer-text placeholder -->
+</footer>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="static-assets/typeahead.bundle.min.js"></script>
+<script src="static-assets/highlight.pack.js"></script>
+<script src="static-assets/URI.js"></script>
+<script src="static-assets/script.js"></script>
+<!-- footer placeholder -->
+
+</body>
+
+</html>

@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
+  <meta name="description" content="API docs for the registerNotifications method from the FCM class, for the Dart programming language.">
+  <title>registerNotifications method - FCM class - ramaz_services library - Dart API</title>
+  <!-- required because all the links are pseudo-absolute -->
+  <base href="../..">
+
+  <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:500,400i,400,300|Source+Sans+Pro:400,300,700" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="static-assets/github.css">
+  <link rel="stylesheet" href="static-assets/styles.css">
+  <link rel="icon" href="static-assets/favicon.png">
+  <!-- header placeholder -->
+</head>
+
+<body>
+
+<div id="overlay-under-drawer"></div>
+
+<header id="title">
+  <button id="sidenav-left-toggle" type="button">&nbsp;</button>
+  <ol class="breadcrumbs gt-separated dark hidden-xs">
+    <li><a href="index.html">ramaz</a></li>
+    <li><a href="ramaz_services/ramaz_services-library.html">ramaz_services</a></li>
+    <li><a href="ramaz_services/FCM-class.html">FCM</a></li>
+    <li class="self-crumb">registerNotifications method</li>
+  </ol>
+  <div class="self-name">registerNotifications</div>
+  <form class="search navbar-right" role="search">
+    <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+
+<main>
+
+  <div id="dartdoc-sidebar-left" class="col-xs-6 col-sm-3 col-md-2 sidebar sidebar-offcanvas-left">
+    <header id="header-search-sidebar" class="hidden-l">
+      <form class="search-sidebar" role="search">
+        <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+      </form>
+    </header>
+    
+    <ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
+      <li><a href="index.html">ramaz</a></li>
+      <li><a href="ramaz_services/ramaz_services-library.html">ramaz_services</a></li>
+      <li><a href="ramaz_services/FCM-class.html">FCM</a></li>
+      <li class="self-crumb">registerNotifications method</li>
+    </ol>
+    
+    <h5>FCM class</h5>
+    <ol>
+      <li class="section-title"><a href="ramaz_services/FCM-class.html#constructors">Constructors</a></li>
+      <li><a href="ramaz_services/FCM/FCM.html">FCM</a></li>
+    
+      <li class="section-title inherited">
+        <a href="ramaz_services/FCM-class.html#instance-properties">Properties</a>
+      </li>
+      <li class="inherited"><a href="dart-core/Object/hashCode.html">hashCode</a></li>
+      <li class="inherited"><a href="dart-core/Object/runtimeType.html">runtimeType</a></li>
+    
+      <li class="section-title inherited"><a href="ramaz_services/FCM-class.html#instance-methods">Methods</a></li>
+      <li class="inherited"><a href="dart-core/Object/noSuchMethod.html">noSuchMethod</a></li>
+      <li class="inherited"><a href="dart-core/Object/toString.html">toString</a></li>
+    
+      <li class="section-title inherited"><a href="ramaz_services/FCM-class.html#operators">Operators</a></li>
+      <li class="inherited"><a href="dart-core/Object/operator_equals.html">operator ==</a></li>
+    
+      <li class="section-title"><a href="ramaz_services/FCM-class.html#static-properties">Static properties</a></li>
+      <li><a href="ramaz_services/FCM/token.html">token</a></li>
+    
+      <li class="section-title"><a href="ramaz_services/FCM-class.html#static-methods">Static methods</a></li>
+      <li><a href="ramaz_services/FCM/registerNotifications.html">registerNotifications</a></li>
+      <li><a href="ramaz_services/FCM/subscribeToCalendar.html">subscribeToCalendar</a></li>
+    
+    </ol>
+  </div><!--/.sidebar-offcanvas-->
+
+  <div id="dartdoc-main-content" class="col-xs-12 col-sm-9 col-md-8 main-content">
+      <div>  <div id="external-links" class="btn-group"><a title="View source code" class="source-link" href="https://github.com/Levi-Lesches/Ramaz-Student-Life/blob/master/lib/src/services/fcm.dart#L37"><i class="material-icons">description</i></a></div>
+<h1><span class="kind-method">registerNotifications</span> method</h1></div>
+
+    <section class="multi-line-signature">
+      <span class="returntype"><a href="dart-async/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter">void</span>&gt;</span></span>
+            <span class="name ">registerNotifications</span>
+(<wbr><span class="parameter" id="registerNotifications-param-commands"><span class="type-annotation"><a href="dart-core/Map-class.html">Map</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="dart-core/String-class.html">String</a></span>, <span class="type-parameter"><a href="ramaz_services/VoidCallback.html">VoidCallback</a></span>&gt;</span></span> <span class="parameter-name">commands</span></span>)
+      
+    </section>
+    <section class="desc markdown">
+      <p>Registers a group of callbacks with Firebase Cloud Messaging. </p>
+<p>The callbacks should be a map of command keys and functions. 
+The value of the <code>command</code> field of the data message will be passed
+as the key to the <code>commands</code>. This function should be called from a scope
+with access to data models and services.</p>
+    </section>
+    
+    <section class="summary source-code" id="source">
+      <h2><span>Implementation</span></h2>
+      <pre class="language-dart"><code class="language-dart">static Future&lt;void&gt; registerNotifications(
+	Map&lt;String, VoidCallback&gt; commands
+) async {
+	&#47;&#47; First, get permission on iOS:
+	_firebase.requestNotificationPermissions();
+
+	&#47;&#47;&#47; Calls the correct function based on the data message.
+	&#47;&#47;&#47;
+	&#47;&#47;&#47; This function handles validation of the notification and looks
+	&#47;&#47;&#47; up the correct callback function based on the command in the
+	&#47;&#47;&#47; data payload of the notification.
+	Future&lt;void&gt; callback(Map&lt;String, dynamic&gt; message) async {
+		&#47;&#47; DO NOT TRY TO GIVE THIS TYPE ARGUMENTS
+		&#47;&#47; For some reason adding Map&lt;String, dynamic&gt; won&#39;t let the code
+		&#47;&#47; continue, not even throwing an error. I think I spent like an
+		&#47;&#47; hour debugging this with 0 progress whatsoever. Attempt at
+		&#47;&#47; your own risk, but you&#39;ve been warned.
+		final Map data = message[&quot;data&quot;] ?? message;
+
+		final String command = data [&quot;command&quot;];
+		if (command == null) {
+			throw JsonUnsupportedObjectError(
+				message,
+				cause: &quot;Data payload doesn&#39;t contain a &#39;command&#39; field&#39;&quot;,
+				partialResult: data.toString(),
+			);
+		}
+
+		&#47;&#47; final VoidCallback function = commands [command];
+		final function = commands [command];
+		if (function == null) {
+			throw ArgumentError.value(
+				command,
+				&quot;Command&quot;,
+				&quot;The &#39;command&#39; field of the Firebase Cloud Message must be one of: &quot;
+					&quot;${commands.keys.toList().join(&quot;, &quot;)}&quot;
+			);
+		} else {
+			await function();
+		}
+	}
+
+	&#47;&#47; Register the callback
+	_firebase.configure(
+		onMessage: callback,
+		onResume: callback,
+		onLaunch: callback,
+	);
+}</code></pre>
+    </section>
+
+  </div> <!-- /.main-content -->
+
+  <div id="dartdoc-sidebar-right" class="col-xs-6 col-sm-6 col-md-2 sidebar sidebar-offcanvas-right">
+  </div><!--/.sidebar-offcanvas-->
+
+</main>
+
+<footer>
+  <span class="no-break">
+    ramaz
+      1.0.1+3
+  </span>
+
+  <!-- footer-text placeholder -->
+</footer>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="static-assets/typeahead.bundle.min.js"></script>
+<script src="static-assets/highlight.pack.js"></script>
+<script src="static-assets/URI.js"></script>
+<script src="static-assets/script.js"></script>
+<!-- footer placeholder -->
+
+</body>
+
+</html>
