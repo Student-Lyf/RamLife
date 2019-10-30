@@ -90,9 +90,8 @@ class ScheduleModel with ChangeNotifier {
 			letter = newLetter;
 			day = Day(letter: letter, special: null);
 			notifyListeners();
-			return;
 		} 
-		else if (newSpecial != null) {
+		if (newSpecial != null) {
 			switch (letter) {
 				// Cannot set a Friday schedule to a non-Friday
 				case Letters.A:
