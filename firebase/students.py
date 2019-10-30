@@ -53,10 +53,10 @@ class Period:
 def get_students() -> {"student_id": Student}:
 	result = {}
 	for entry in CSVReader (data_dir / "students.csv"): 
-		first = entry ["StuFirstName"]
-		last = entry ["StuLastName"]
+		first = entry ["First Name"]
+		last = entry ["Last Name"]
 		student_id = entry ["ID"]
-		email = entry ["StuEmail"]
+		email = entry ["Student E-mail"]
 		student = Student (
 			first = first, 
 			last = last,
@@ -74,6 +74,7 @@ def get_periods(bundle = False) -> (dict, dict):
 		day = entry ["WEEKDAY_NAME"]
 		period = entry ["BLOCK_NAME"]
 		room = entry ["ROOM"]
+		if class_id == "UADV09-7": quit("Found it")
 		try: int (period)  # "Mincha" will fail
 		except: 
 			if period == "HOMEROOM": 
@@ -97,19 +98,21 @@ def get_schedule(
 	result = DefaultDict(lambda key: DefaultDict (lambda key: [None] * DAYS [key]))
 	for entry in CSVReader (data_dir / "schedule.csv"):
 		# Filter out lower/middle school (for now) and empty entries
-		if entry ["SCHOOL_ID_SORT"] != "3" or entry ["STUDENT_ID"] in EXPELLED: continue
+		if entry ["SCHOOL_ID"] != "Upper" or entry ["STUDENT_ID"] in EXPELLED: continue
 		student = students [entry ["STUDENT_ID"]]
 		section_id = entry ["SECTION_ID"]
-		if section_id.startswith("11") or section_id.startswith("12"): JUNIORS.add(student)
+		# if section_id.startswith("11") or section_id.startswith("12"): JUNIORS.add(student)
+		if section_id.startswith("12"): JUNIORS.add(student)
 		broken = False  # workaround for classes not in section_schedule.csv
 		try: times = periods [section_id]
 		except KeyError: 
 			course_id = section_id
 			if "-" in course_id: course_id = course_id [:course_id.find ("-")]
-			if section_id.startswith("UADV") and not section_id.startswith("UADV11"): 
+			# if section_id.startswith("UADV") and not section_id.startswith("UADV11"): 
+			if "UADV" in section_id: 
 				# homerooms [student] = homerooms [section_id]
 				homerooms [student] = section_id
-				continue
+				# continue
 			MISSING_ROOMS.add(course_id)
 			broken = True
 			continue
@@ -132,12 +135,14 @@ def setup(
 				username = student.email.lower(),
 				first = student.first,
 				last = student.last,
-				homeroom = homerooms [student] if student not in JUNIORS else None,
-				homeroom_location = (
-					homeroom_locations [homerooms [student]] 
-					if student not in JUNIORS else 
-					None
-				),
+				homeroom = homerooms [student] if student not in JUNIORS else "SENIOR_HOMEROOM",
+				# homeroom = ""
+				homeroom_location = "Unavailable",
+				# homeroom_location = (
+				# 	homeroom_locations [homerooms [student]] 
+				# 	if student not in JUNIORS else 
+				# 	None
+				# ),
 				**{  # A, B, C, M, R, E, F
 					day: [
 						(None if period is None else 
@@ -206,4 +211,23 @@ if __name__ == '__main__':
 	students = setup(schedules, homerooms, homeroom_locations)
 	print ("Setting up Firebase...")
 	main(students, upload = args.upload, auth = args.auth, create = args.create)
+
+	if False:
+		print("Testing")
+		from classes import *
+		class_names = get_class_names()
+		teachers = get_teachers()
+		subjects, errors = get_subjects(names = class_names, teachers = teachers)
+		for student in students: 
+			for schedule in [student.A, student.B, student.C, student.M ,student.R, student.E, student.F]:
+				for json in schedule: 
+					if json is None: continue
+					section_id = json ["id"]
+					# print(section_id)
+					assert section_id.split("-") [0].lstrip("0") in class_names.keys(), section_id
+					assert section_id in teachers.keys(), section_id
+					# break
+				# break
+			# break
+
 	print ("Finished!")
