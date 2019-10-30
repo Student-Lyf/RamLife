@@ -4,6 +4,7 @@ collection = db.collection("calendar")
 
 ROTATE = "A, B, or C day"
 REGULAR = "M or R day"
+FRIDAY = "Friday"
 
 def upload_calendar(calendar): 
 	batch = db.batch()
@@ -25,7 +26,9 @@ def get_default_special(letter):
 		return ROTATE
 	elif letter in {"M", "R"}: 
 		return REGULAR
-	else: return None 
+	elif letter in {"E", "F"}: 
+		return FRIDAY 
+	else: return None
 
 def upload_month(month, calendar): 
 	batch = db.batch()
