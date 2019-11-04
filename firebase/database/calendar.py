@@ -21,15 +21,6 @@ def upload_calendar(calendar):
 		)
 	batch.commit()
 
-def get_default_special(letter): 
-	if letter in {'A', 'B', 'C'}:
-		return ROTATE
-	elif letter in {"M", "R"}: 
-		return REGULAR
-	elif letter in {"E", "F"}: 
-		return FRIDAY 
-	else: return None
-
 def upload_month(month, calendar): 
 	batch = db.batch()
 	batch.set(
@@ -37,7 +28,7 @@ def upload_month(month, calendar):
 		{
 			str (day.date.day): {
 				"letter": day.letter,
-				"special": day.special if day.special != None else get_default_special(day.letter)
+				"special": day.special
 			}
 			for day in calendar
 		}
