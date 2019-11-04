@@ -30,10 +30,10 @@ class Teacher:
 
 def get_teachers(path): return {
 	entry ["ID"]: Teacher (
-		code = entry ["Email"],
-		first = entry ["FirstName"],
-		last = entry ["LastName"],
-		email = entry ["Email"].lower()
+		code = entry ["E-mail"],
+		first = entry ["First Name"],
+		last = entry ["Last Name"],
+		email = entry ["E-mail"].lower()
 	)
 	for entry in CSVReader(path / "faculty.csv")
 }
@@ -59,6 +59,7 @@ def get_teacher_schedule(
 	teachers: {Teacher: ["section_id"]},
 	periods: {"section_id": [Period]},
 	homerooms: {"section_id": "room"},
+	verbose: bool = False,
 ) -> {Teacher: [Period]}:
 	result = {}
 	for teacher, section_id_list in teachers.items(): 
@@ -76,8 +77,11 @@ def get_teacher_schedule(
 
 				course_id = section_id
 				if "-" in section_id:
-					course_id = section_id.split("-") [0]
-				MISSING_ROOMS.add(course_id)
+					if verbose: 
+						MISSING_ROOMS.add(section_id)
+					else: 
+						course_id = section_id.split("-") [0]
+						MISSING_ROOMS.add(course_id)
 		result [teacher] = teacher_entry
 
 	return result
@@ -104,8 +108,8 @@ def get_teacher_records(schedules: {Teacher: [Period]}) -> [TeacherRecord]:
 				username = teacher.email,
 				first = teacher.first,
 				last = teacher.last,
-				homeroom = teacher.homeroom,
-				homeroom_location = teacher.homeroom_location,
+				homeroom = "TEST_HOMEROOM",
+				homeroom_location = "Unavailable",
 				**{
 					day: [
 						(None if period is None else 
@@ -144,6 +148,15 @@ if __name__ == '__main__':
 		action = "store_true",
 		help = "Whether or not to recreate student FirebaseAuth accounts. This takes time"
 	)
+	parser.add_argument(
+		"-v",
+		"--verbose",
+		action = "store_true",
+		help = (
+			"Whether to show all section IDs that are missing room locations. "
+			"Default is to show course ID"
+		)
+	)
 	args = parser.parse_args()
 
 	from main import init, get_path
@@ -155,7 +168,7 @@ if __name__ == '__main__':
 	# periods is a dict: {section_id: [Period]}
 	# homeroom_locations is also a dict: {section_id: room}
 	periods, homerooms = get_periods()
-	teachers_schedule = get_teacher_schedule(teachers, periods, homerooms)
+	teachers_schedule = get_teacher_schedule(teachers, periods, homerooms, args.verbose)
 	if MISSING_ROOMS: 
 		print ("Missing some room locations: ")
 		print (MISSING_ROOMS)
