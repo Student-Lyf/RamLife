@@ -74,7 +74,6 @@ def get_periods(bundle = False) -> (dict, dict):
 		day = entry ["WEEKDAY_NAME"]
 		period = entry ["BLOCK_NAME"]
 		room = entry ["ROOM"]
-		if class_id == "UADV09-7": quit("Found it")
 		try: int (period)  # "Mincha" will fail
 		except: 
 			if period == "HOMEROOM": 
