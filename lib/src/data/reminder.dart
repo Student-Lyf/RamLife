@@ -51,7 +51,7 @@ abstract class ReminderTime {
 	/// Allows its subclasses to be `const`. 
 	const ReminderTime({
 		@required this.repeats, 
-		this.type
+		@required this.type
 	});
 
 	/// Initializes a new instance from JSON.
@@ -149,7 +149,7 @@ class PeriodReminderTime extends ReminderTime {
 	PeriodReminderTime.fromJson(Map<String, dynamic> json) :
 		letter = stringToLetters [json ["letter"]],
 		period = json ["period"],
-		super (repeats: json ["repeats"]);
+		super (repeats: json ["repeats"], type: ReminderTimeType.period);
 
 	@override
 	String toString() => 
@@ -189,7 +189,7 @@ class SubjectReminderTime extends ReminderTime {
 	/// The fields `repeats` and `name` must not be null.
 	SubjectReminderTime.fromJson(Map<String, dynamic> json) :
 		name = json ["name"],
-		super (repeats: json ["repeats"]);
+		super (repeats: json ["repeats"], type: ReminderTimeType.subject);
 
 	@override
 	String toString() => (repeats ? "Repeats every " : "") + name;
