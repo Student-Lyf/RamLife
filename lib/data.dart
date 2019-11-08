@@ -8,6 +8,7 @@
 /// other app should be implemented in this library.
 library data;
 
+export "src/data/admin.dart";
 export "src/data/feedback.dart";
 export "src/data/reminder.dart";
 export "src/data/schedule.dart";

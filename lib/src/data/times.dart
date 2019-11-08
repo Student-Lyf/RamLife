@@ -10,16 +10,7 @@ import "package:ramaz/constants.dart";
 /// to provide the `>` and `<` operators. 
 @immutable
 class Time {
-	/// Defines the order of the hours in terms of the school day. 
-	/// 
-	/// Numbers on this clock ignore AM and PM by finding their index in this
-	/// list instead. Numbers not in this list are considered to be invalid, 
-	/// since they are not real school hours. 
-	static const List <int> clock = [
-		8, 9, 10, 11, 12, 1, 2, 3, 4, 5
-	];
-
-	/// The hour in 12-hour format. 
+	/// The hour in 24-hour format. 
 	final int hour;
 
 	/// The minutes. 
@@ -29,20 +20,9 @@ class Time {
 	const Time (this.hour, this.minutes);
 
 	/// Simplifies a [DateTime] object to a [Time].
-	/// 
-	/// If the hour is outside of the values listed in [clock], it is set to 5.
-	/// This is to demonstrate that it is after school. 
-	/// 
-	/// When after-school events are introduced, this should be fixed. 
-	factory Time.fromDateTime (DateTime date) {
-		int hour = date.hour;
-		if (hour >= 17 || hour < 8) {
-			hour = 5;  // garbage value
-		} else if (hour > 12) {
-			hour -= 12;
-		}
-		return Time (hour, date.minute);
-	}
+	Time.fromDateTime (DateTime date) :
+		hour = date.hour, 
+		minutes = date.minute;
 
 	/// Returns a new [Time] object from JSON data.
 	/// 
@@ -50,6 +30,12 @@ class Time {
 	Time.fromJson(Map<String, dynamic> json) :
 		hour = json ["hour"],
 		minutes = json ["minutes"];
+
+	/// Returns this obect in JSON form
+	Map<String, dynamic> toJson() => {
+		"hour": hour, 
+		"minutes": minutes,
+	};
 
 	@override 
 	int get hashCode => toString().hashCode;
@@ -60,16 +46,14 @@ class Time {
 		other.minutes == minutes;
 
 	/// Returns whether this [Time] is before another [Time].
-	bool operator < (Time other) => 
-		clock.indexOf (hour) < clock.indexOf (other.hour) || 
+	bool operator < (Time other) => hour < other.hour || 
 		(hour == other.hour && minutes < other.minutes);
 
 	/// Returns whether this [Time] is at or before another [Time].
 	bool operator <= (Time other) => this < other || this == other;
 
 	/// Returns whether this [Time] is after another [Time].
-	bool operator > (Time other) => 
-		clock.indexOf (hour) > clock.indexOf (other.hour) ||
+	bool operator > (Time other) => hour > other.hour ||
 		(hour == other.hour && minutes > other.minutes);
 
 	/// Returns whether this [Time] is at or after another [Time].
@@ -82,14 +66,6 @@ class Time {
 /// A range of times.
 @immutable
 class Range {
-	/// Returns a list of [Range]s from a list of JSON objects
-	/// 
-	/// See [Range.fromJson] for more details.
-	static List<Range> getList(List json) => [
-		for (final dynamic jsonElement in json) 
-			Range.fromJson(Map<String, dynamic>.from(jsonElement))
-	];
-
 	/// When this range starts.
 	final Time start;
 
@@ -117,6 +93,12 @@ class Range {
 	Range.fromJson(Map<String, dynamic> json) :
 		start = Time.fromJson(Map<String, dynamic>.from(json ["start"])),
 		end = Time.fromJson(Map<String, dynamic>.from(json ["end"]));
+
+	/// Returns a JSON representation of this range. 
+	Map<String, dynamic> toJson() => {
+		"start": start.toJson(),
+		"end": end.toJson(),
+	};
 
 	/// Returns whether [other] is in this range. 
 	bool contains (Time other) => start <= other && other <= end;
@@ -200,43 +182,46 @@ class Special {
 	/// 
 	/// The value must either be: 
 	/// 
+	/// - `null`, in which case, `null` will be returned. 
 	/// - a string, in which case it should be in the [specials] list, or
 	/// - a map, in which case it will be interpreted as JSON. The JSON must have: 
 	/// 	- a "name" field, which should be a string. See [name].
 	/// 	- a "periods" field, which should be a list of [Range] JSON objects. 
-	/// 			See [Range.getList] for details.
 	/// 	- a "homeroom" field, which should be an integer. See [homeroom].
 	/// 	- a "skip" field, which should be a list of integers. See [skip].
 	/// 
 	factory Special.fromJson(dynamic value) {
 		if (value == null) {
 			return null;
-		}
-		else if (!(value is Map || value is String)) {
+		} else if (value is String) {
+			if (!stringToSpecial.containsKey(value)) {
+				throw ArgumentError.value(
+					value, 
+					"Special.fromJson: value",
+					"'$value' needs to be one of ${stringToSpecial.keys.join(", ")}"
+				);				
+			} else {
+				return stringToSpecial [value];
+			}
+		} else if (value is Map) {
+			final Map<String, dynamic> json = Map<String, dynamic>.from(value);
+			return Special (
+				json ["name"],  // name
+				[  // list of periods
+					for (final dynamic jsonElement in json ["periods"]) 
+						Range.fromJson(Map<String, dynamic>.from(jsonElement))
+				],
+				homeroom: json ["homeroom"],
+				mincha: json ["mincha"],
+				skip: List<int>.from(json ["skip"]),
+			);
+		} else {
 			throw ArgumentError.value (
 				value, // invalid value
 				"Special.fromJson: value", // arg name
 				"$value is not a valid special", // message
 			);
-		} else if (value is String && !stringToSpecial.containsKey(value)) {
-			throw ArgumentError.value(
-				value, 
-				"Special.fromJson: value",
-				"'$value' needs to be one of ${stringToSpecial.keys.join(", ")}"
-			);
 		}
-		if (value is String) {
-			return stringToSpecial [value];
-		}
-
-		final Map<String, dynamic> json = Map<String, dynamic>.from(value);
-		return Special (
-			json ["name"],
-			Range.getList(json ["periods"]),
-			homeroom: json ["homeroom"],
-			mincha: json ["mincha"],
-			skip: List<int>.from(json ["skip"]),
-		);
 	}
 
 	/// Determines whether to use a Winter Friday or regular Friday schedule. 
@@ -267,6 +252,21 @@ class Special {
 		}
 	}
 
+	/// Compares two lists
+	/// 
+	/// This function is used to compare the [periods] property of two Specials. 
+	static bool deepEquals<E>(List<E> a, List<E> b) {
+		if (a.length != b.length) {
+			return false;
+		}
+		for (int index = 0; index < a.length; index++) {
+			if (a [index] != b [index]) {
+				return false;
+			}
+		}
+		return true;
+	}
+
 	@override 
 	String toString() => name;
 
@@ -274,242 +274,258 @@ class Special {
 	int get hashCode => name.hashCode;
 
 	@override 
-	bool operator == (dynamic other) => 
-		other is Special && other.name == name;
+	bool operator == (dynamic other) => other is Special && 
+		other.name == name &&
+		deepEquals<Range>(other.periods, periods) &&
+		deepEquals<int>(other.skip, skip) &&
+		other.mincha == mincha &&
+		other.homeroom == homeroom;
+
+	/// Returns a JSON representation of this Special.
+	Map<String, dynamic> toJson() => {
+		"periods": [
+			for (final Range period in periods) 
+				period.toJson()
+		],
+		"skip": skip,
+		"name": name,
+		"mincha": mincha,
+		"homeroom": homeroom,
+	};
+
+	/// The [Special] for Rosh Chodesh.
+	static const Special roshChodesh = Special (
+		"Rosh Chodesh", 
+		[
+			Range (Time (8, 00), Time (9, 05)),
+			Range (Time (9, 10), Time (9, 50)),
+			Range (Time (9, 55), Time (10, 35)),
+			Range (Time (10, 35), Time (10, 50)),
+			Range (Time (10, 50), Time (11, 30)), 
+			Range (Time (11, 35), Time (12, 15)),
+			Range (Time (12, 20), Time (12, 55)),
+			Range (Time (1, 00), Time (1, 35)),
+			Range (Time (1, 40), Time (2, 15)),
+			Range (Time (2, 30), Time (3, 00)),
+			Range (Time (3, 00), Time (3, 20)),
+			Range (Time (3, 20), Time (4, 00)),
+			Range (Time (4, 05), Time (4, 45))
+		],
+		homeroom: 3,
+		mincha: 10,
+	);
+
+	/// The [Special] for fast days. 
+	static const Special fastDay = Special (
+		"Tzom",
+		[
+			Range (Time (8, 00), Time (8, 55)),
+			Range (Time (9, 00), Time (9, 35)),
+			Range (Time (9, 40), Time (10, 15)),
+			Range (Time (10, 20), Time (10, 55)), 
+			Range (Time (11, 00), Time (11, 35)), 
+			Range (Time (11, 40), Time (12, 15)),
+			Range (Time (12, 20), Time (12, 55)), 
+			Range (Time (1, 00), Time (1, 35)), 
+			Range (Time (1, 35), Time (2, 05))
+		],
+		mincha: 8,
+		skip: [6, 7, 8]
+	);
+
+	/// The [Special] for Fridays. 
+	static const Special friday = Special (
+		"Friday",
+		[
+			Range (Time (8, 00), Time (8, 45)),
+			Range (Time (8, 50), Time (9, 30)),
+			Range (Time (9, 35), Time (10, 15)),
+			Range (Time (10, 20), Time (11, 00)),
+			Range (Time (11, 00), Time (11, 20)),
+			Range (Time (11, 20), Time (12, 00)),
+			Range (Time (12, 05), Time (12, 45)),
+			Range (Time (12, 50), Time (1, 30))
+		],
+		homeroom: 4
+	);
+
+	/// The [Special] for when Rosh Chodesh falls on a Friday. 
+	static const Special fridayRoshChodesh = Special (
+		"Friday Rosh Chodesh",
+		[
+			Range(Time (8, 00), Time (9, 05)),
+			Range(Time (9, 10), Time (9, 45)),
+			Range(Time (9, 50), Time (10, 25)),
+			Range(Time (10, 30), Time (11, 05)),
+			Range(Time (11, 05), Time (11, 25)),
+			Range(Time (11, 25), Time (12, 00)),
+			Range(Time (12, 05), Time (12, 40)),
+			Range(Time (12, 45), Time (1, 20))
+		],
+		homeroom: 4
+	);
+
+	/// The [Special] for a winter Friday. See [Special.getWinterFriday].
+	static const Special winterFriday = Special (
+		"Winter Friday",
+		[
+			Range(Time (8, 00), Time (8, 45)),
+			Range(Time (8, 50), Time (9, 25)), 
+			Range(Time (9, 30), Time (10, 05)), 
+			Range(Time (10, 10), Time (10, 45)),
+			Range(Time (10, 45), Time (11, 05)), 
+			Range(Time (11, 05), Time (11, 40)),
+			Range(Time (11, 45), Time (12, 20)),
+			Range(Time (12, 25), Time (1, 00))
+		],
+		homeroom: 4
+	);
+
+	/// The [Special] for when a Rosh Chodesh falls on a Winter Friday.
+	static const Special winterFridayRoshChodesh = Special (
+		"Winter Friday Rosh Chodesh",
+		[
+			Range(Time (8, 00), Time (9, 05)),
+			Range(Time (9, 10), Time (9, 40)),
+			Range(Time (9, 45), Time (10, 15)),
+			Range(Time (10, 20), Time (10, 50)), 
+			Range(Time (10, 50), Time (11, 10)),
+			Range(Time (11, 10), Time (11, 40)),
+			Range(Time (11, 45), Time (12, 15)),
+			Range(Time (12, 20), Time (12, 50))
+		],
+		homeroom: 4
+	);
+
+	/// The [Special] for when there is an assembly during Homeroom.
+	static const Special amAssembly = Special (
+		"AM Assembly",
+		[
+			Range(Time (8, 00), Time (8, 50)),
+			Range(Time (8, 55), Time (9, 30)),
+			Range(Time (9, 35), Time (10, 10)),
+			Range(Time (10, 10), Time (11, 10)),
+			Range(Time (11, 10), Time (11, 45)), 
+			Range(Time (11, 50), Time (12, 25)),
+			Range(Time (12, 30), Time (1, 05)),
+			Range(Time (1, 10), Time (1, 45)),
+			Range(Time (1, 50), Time (2, 25)),
+			Range(Time (2, 30), Time (3, 05)),
+			Range(Time (3, 05), Time (3, 25)), 
+			Range(Time (3, 25), Time (4, 00)),
+			Range(Time (4, 05), Time (4, 45))
+		],
+		homeroom: 3,
+
+		mincha: 10
+	);
+
+	/// The [Special] for when there is an assembly during Mincha.
+	static const Special pmAssembly = Special (
+		"PM Assembly",
+		[
+			Range(Time (8, 00), Time (8, 50)), 
+			Range(Time (8, 55), Time (9, 30)),
+			Range(Time (9, 35), Time (10, 10)),
+			Range(Time (10, 15), Time (10, 50)),
+			Range(Time (10, 55), Time (11, 30)),
+			Range(Time (11, 35), Time (12, 10)),
+			Range(Time (12, 15), Time (12, 50)),
+			Range(Time (12, 55), Time (1, 30)),
+			Range(Time (1, 35), Time (2, 10)), 
+			Range(Time (2, 10), Time (3, 30)),
+			Range(Time (3, 30), Time (4, 05)),
+			Range(Time (4, 10), Time (4, 45))
+		],
+		mincha: 9
+	);
+
+	/// The [Special] for Mondays and Thursdays.
+	static const Special regular = Special (
+		"M or R day",
+		[
+			Range(Time (8, 00), Time (8, 50)),
+			Range(Time (8, 55), Time (9, 35)),
+			Range(Time (9, 40), Time (10, 20)),
+			Range(Time (10, 20), Time (10, 35)),
+			Range(Time (10, 35), Time (11, 15)), 
+			Range(Time (11, 20), Time (12, 00)),
+			Range(Time (12, 05), Time (12, 45)),
+			Range(Time (12, 50), Time (1, 30)),
+			Range(Time (1, 35), Time (2, 15)), 
+			Range(Time (2, 20), Time (3, 00)),
+			Range(Time (3, 00), Time (3, 20)), 
+			Range(Time (3, 20), Time (4, 00)),
+			Range(Time (4, 05), Time (4, 45))
+		],
+		homeroom: 3,
+		mincha: 10
+	);
+
+	/// The [Special] for Tuesday and Wednesday (letters A, B, and C)
+	static const Special rotate = Special (
+		"A, B, or C day",
+		[
+			Range(Time (8, 00), Time (8, 45)), 
+			Range(Time (8, 50), Time (9, 30)),
+			Range(Time (9, 35), Time (10, 15)),
+			Range(Time (10, 15), Time (10, 35)),
+			Range(Time (10, 35), Time (11, 15)),
+			Range(Time (11, 20), Time (12, 00)),
+			Range(Time (12, 05), Time (12, 45)),
+			Range(Time (12, 50), Time (1, 30)),
+			Range(Time (1, 35), Time (2, 15)),
+			Range(Time (2, 20), Time (3, 00)),
+			Range(Time (3, 00), Time (3, 20)),
+			Range(Time (3, 20), Time (4, 00)),
+			Range(Time (4, 05), Time (4, 45))
+		],
+		homeroom: 3,
+		mincha: 10
+	);
+
+	/// The [Special] for an early dismissal.
+	static const Special early = Special (
+		"Early Dismissal",
+		[
+			Range(Time (8, 00), Time (8, 45)),
+			Range(Time (8, 50), Time (9, 25)), 
+			Range(Time (9, 30), Time (10, 05)),
+			Range(Time (10, 05), Time (10, 20)),
+			Range(Time (10, 20), Time (10, 55)),
+			Range(Time (11, 00), Time (11, 35)),
+			Range(Time (11, 40), Time (12, 15)),
+			Range(Time (12, 20), Time (12, 55)),
+			Range(Time (1, 00), Time (1, 35)), 
+			Range(Time (1, 40), Time (2, 15)),
+			Range(Time (2, 15), Time (2, 35)),
+			Range(Time (2, 35), Time (3, 10)),
+			Range(Time (3, 15), Time (3, 50))
+		],
+		homeroom: 3,
+		mincha: 10
+	);
+
+	/// A collection of all the [Special]s
+	/// 
+	/// Used in the UI
+	static const List<Special> specials = [
+		regular,
+		roshChodesh,
+		fastDay,
+		friday,
+		fridayRoshChodesh,
+		winterFriday,
+		winterFridayRoshChodesh,
+		amAssembly,
+		pmAssembly,
+		rotate,
+		early,
+	];
+
+	/// Maps the default special names to their [Special] objects
+	static final Map<String, Special> stringToSpecial = Map.fromIterable(
+		specials,
+		key: (special) => special.name,
+	);
 }
-
-/// The [Special] for Rosh Chodesh
-const Special roshChodesh = Special (
-	"Rosh Chodesh", 
-	[
-		Range (Time (8, 00), Time (9, 05)),
-		Range (Time (9, 10), Time (9, 50)),
-		Range (Time (9, 55), Time (10, 35)),
-		Range (Time (10, 35), Time (10, 50)),
-		Range (Time (10, 50), Time (11, 30)), 
-		Range (Time (11, 35), Time (12, 15)),
-		Range (Time (12, 20), Time (12, 55)),
-		Range (Time (1, 00), Time (1, 35)),
-		Range (Time (1, 40), Time (2, 15)),
-		Range (Time (2, 30), Time (3, 00)),
-		Range (Time (3, 00), Time (3, 20)),
-		Range (Time (3, 20), Time (4, 00)),
-		Range (Time (4, 05), Time (4, 45))
-	],
-	homeroom: 3,
-	mincha: 10,
-);
-
-/// The [Special] for fast days. 
-const Special fastDay = Special (
-	"Tzom",
-	[
-		Range (Time (8, 00), Time (8, 55)),
-		Range (Time (9, 00), Time (9, 35)),
-		Range (Time (9, 40), Time (10, 15)),
-		Range (Time (10, 20), Time (10, 55)), 
-		Range (Time (11, 00), Time (11, 35)), 
-		Range (Time (11, 40), Time (12, 15)),
-		Range (Time (12, 20), Time (12, 55)), 
-		Range (Time (1, 00), Time (1, 35)), 
-		Range (Time (1, 35), Time (2, 05))
-	],
-	mincha: 8,
-	skip: [6, 7, 8]
-);
-
-/// The [Special] for Fridays. 
-const Special friday = Special (
-	"Friday",
-	[
-		Range (Time (8, 00), Time (8, 45)),
-		Range (Time (8, 50), Time (9, 30)),
-		Range (Time (9, 35), Time (10, 15)),
-		Range (Time (10, 20), Time (11, 00)),
-		Range (Time (11, 00), Time (11, 20)),
-		Range (Time (11, 20), Time (12, 00)),
-		Range (Time (12, 05), Time (12, 45)),
-		Range (Time (12, 50), Time (1, 30))
-	],
-	homeroom: 4
-);
-
-/// The [Special] for when Rosh Chodesh falls on a Friday. 
-const Special fridayRoshChodesh = Special (
-	"Friday Rosh Chodesh",
-	[
-		Range(Time (8, 00), Time (9, 05)),
-		Range(Time (9, 10), Time (9, 45)),
-		Range(Time (9, 50), Time (10, 25)),
-		Range(Time (10, 30), Time (11, 05)),
-		Range(Time (11, 05), Time (11, 25)),
-		Range(Time (11, 25), Time (12, 00)),
-		Range(Time (12, 05), Time (12, 40)),
-		Range(Time (12, 45), Time (1, 20))
-	],
-	homeroom: 4
-);
-
-/// The [Special] for a winter Friday. See [Special.getWinterFriday].
-const Special winterFriday = Special (
-	"Winter Friday",
-	[
-		Range(Time (8, 00), Time (8, 45)),
-		Range(Time (8, 50), Time (9, 25)), 
-		Range(Time (9, 30), Time (10, 05)), 
-		Range(Time (10, 10), Time (10, 45)),
-		Range(Time (10, 45), Time (11, 05)), 
-		Range(Time (11, 05), Time (11, 40)),
-		Range(Time (11, 45), Time (12, 20)),
-		Range(Time (12, 25), Time (1, 00))
-	],
-	homeroom: 4
-);
-
-/// The [Special] for when a Rosh Chodesh falls on a Winter Friday.
-const Special winterFridayRoshChodesh = Special (
-	"Winter Friday Rosh Chodesh",
-	[
-		Range(Time (8, 00), Time (9, 05)),
-		Range(Time (9, 10), Time (9, 40)),
-		Range(Time (9, 45), Time (10, 15)),
-		Range(Time (10, 20), Time (10, 50)), 
-		Range(Time (10, 50), Time (11, 10)),
-		Range(Time (11, 10), Time (11, 40)),
-		Range(Time (11, 45), Time (12, 15)),
-		Range(Time (12, 20), Time (12, 50))
-	],
-	homeroom: 4
-);
-
-/// The [Special] for when there is an assembly during Homeroom.
-const Special amAssembly = Special (
-	"AM Assembly",
-	[
-		Range(Time (8, 00), Time (8, 50)),
-		Range(Time (8, 55), Time (9, 30)),
-		Range(Time (9, 35), Time (10, 10)),
-		Range(Time (10, 10), Time (11, 10)),
-		Range(Time (11, 10), Time (11, 45)), 
-		Range(Time (11, 50), Time (12, 25)),
-		Range(Time (12, 30), Time (1, 05)),
-		Range(Time (1, 10), Time (1, 45)),
-		Range(Time (1, 50), Time (2, 25)),
-		Range(Time (2, 30), Time (3, 05)),
-		Range(Time (3, 05), Time (3, 25)), 
-		Range(Time (3, 25), Time (4, 00)),
-		Range(Time (4, 05), Time (4, 45))
-	],
-	homeroom: 3,
-
-	mincha: 10
-);
-
-/// The [Special] for when there is an assembly during Mincha.
-const Special pmAssembly = Special (
-	"PM Assembly",
-	[
-		Range(Time (8, 00), Time (8, 50)), 
-		Range(Time (8, 55), Time (9, 30)),
-		Range(Time (9, 35), Time (10, 10)),
-		Range(Time (10, 15), Time (10, 50)),
-		Range(Time (10, 55), Time (11, 30)),
-		Range(Time (11, 35), Time (12, 10)),
-		Range(Time (12, 15), Time (12, 50)),
-		Range(Time (12, 55), Time (1, 30)),
-		Range(Time (1, 35), Time (2, 10)), 
-		Range(Time (2, 10), Time (3, 30)),
-		Range(Time (3, 30), Time (4, 05)),
-		Range(Time (4, 10), Time (4, 45))
-	],
-	mincha: 9
-);
-
-/// The [Special] for Mondays and Thursdays.
-const Special regular = Special (
-	"M or R day",
-	[
-		Range(Time (8, 00), Time (8, 50)),
-		Range(Time (8, 55), Time (9, 35)),
-		Range(Time (9, 40), Time (10, 20)),
-		Range(Time (10, 20), Time (10, 35)),
-		Range(Time (10, 35), Time (11, 15)), 
-		Range(Time (11, 20), Time (12, 00)),
-		Range(Time (12, 05), Time (12, 45)),
-		Range(Time (12, 50), Time (1, 30)),
-		Range(Time (1, 35), Time (2, 15)), 
-		Range(Time (2, 20), Time (3, 00)),
-		Range(Time (3, 00), Time (3, 20)), 
-		Range(Time (3, 20), Time (4, 00)),
-		Range(Time (4, 05), Time (4, 45))
-	],
-	homeroom: 3,
-	mincha: 10
-);
-
-/// The [Special] for Tuesday and Wednesday (letters A, B, and C)
-const Special rotate = Special (
-	"A, B, or C day",
-	[
-		Range(Time (8, 00), Time (8, 45)), 
-		Range(Time (8, 50), Time (9, 30)),
-		Range(Time (9, 35), Time (10, 15)),
-		Range(Time (10, 15), Time (10, 35)),
-		Range(Time (10, 35), Time (11, 15)),
-		Range(Time (11, 20), Time (12, 00)),
-		Range(Time (12, 05), Time (12, 45)),
-		Range(Time (12, 50), Time (1, 30)),
-		Range(Time (1, 35), Time (2, 15)),
-		Range(Time (2, 20), Time (3, 00)),
-		Range(Time (3, 00), Time (3, 20)),
-		Range(Time (3, 20), Time (4, 00)),
-		Range(Time (4, 05), Time (4, 45))
-	],
-	homeroom: 3,
-	mincha: 10
-);
-
-/// The [Special] for an early dismissal.
-const Special early = Special (
-	"Early Dismissal",
-	[
-		Range(Time (8, 00), Time (8, 45)),
-		Range(Time (8, 50), Time (9, 25)), 
-		Range(Time (9, 30), Time (10, 05)),
-		Range(Time (10, 05), Time (10, 20)),
-		Range(Time (10, 20), Time (10, 55)),
-		Range(Time (11, 00), Time (11, 35)),
-		Range(Time (11, 40), Time (12, 15)),
-		Range(Time (12, 20), Time (12, 55)),
-		Range(Time (1, 00), Time (1, 35)), 
-		Range(Time (1, 40), Time (2, 15)),
-		Range(Time (2, 15), Time (2, 35)),
-		Range(Time (2, 35), Time (3, 10)),
-		Range(Time (3, 15), Time (3, 50))
-	],
-	homeroom: 3,
-	mincha: 10
-);
-
-/// A collection of all the [Special]s
-/// 
-/// Used in the UI
-const List<Special> specials = [
-	regular,
-	roshChodesh,
-	fastDay,
-	friday,
-	fridayRoshChodesh,
-	winterFriday,
-	winterFridayRoshChodesh,
-	amAssembly,
-	pmAssembly,
-	rotate,
-	early,
-];
-
-/// Maps the default special names to their [Special] objects
-final Map<String, Special> stringToSpecial = Map.fromIterable(
-	specials,
-	key: (special) => special.name,
-);

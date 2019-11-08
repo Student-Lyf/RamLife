@@ -311,11 +311,11 @@ class Day {
 	/// 
 	/// See [Special.getWinterFriday] for how to determine the Friday schedule.
 	static final Map<Letters, Special> specials = {
-		Letters.A: rotate,
-		Letters.B: rotate,
-		Letters.C: rotate,
-		Letters.M: regular,
-		Letters.R: regular,
+		Letters.A: Special.rotate,
+		Letters.B: Special.rotate,
+		Letters.C: Special.rotate,
+		Letters.M: Special.regular,
+		Letters.R: Special.regular,
 		Letters.E: Special.getWinterFriday(),
 		Letters.F: Special.getWinterFriday(),
 	};
@@ -363,7 +363,7 @@ class Day {
 
 	/// Returns a Day from a JSON object.
 	/// 
-	/// `json ["letter"]` must be one of the specials in [stringToSpecial].
+	/// `json ["letter"]` must be one of the specials in [Special.stringToSpecial].
 	/// `json ["letter"]` must not be null.
 	/// 
 	/// `json ["special"]` may be: 
@@ -404,6 +404,18 @@ class Day {
 		// other.lunch == lunch &&
 		other.special == special;
 
+	/// Returns a JSON representation of this Day. 
+	/// 
+	/// Will convert [special] to its name if it is a built-in special.
+	/// Otherwise it will convert it to JSON form. 
+	Map<String, dynamic> toJson() => {
+		"letter": lettersToString [letter],
+		"special": special == null ? null : 
+			Special.stringToSpecial.containsKey(special.name)
+				? special.name
+				: special.toJson()
+	};
+
 	/// A human-readable string representation of this day.
 	/// 
 	/// If the letter is null, returns null. 
@@ -412,7 +424,8 @@ class Day {
 	String get name => letter == null
 		? null
 		: "${lettersToString [letter]} day${
-			special == regular || special == rotate ? '' : ' ${special.name}'
+			special == Special.regular || special == Special.rotate 
+				? '' : ' ${special.name}'
 		}";
 
 	/// Whether to say "a" or "an".
