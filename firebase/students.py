@@ -100,18 +100,19 @@ def get_schedule(
 		if entry ["SCHOOL_ID"] != "Upper" or entry ["STUDENT_ID"] in EXPELLED: continue
 		student = students [entry ["STUDENT_ID"]]
 		section_id = entry ["SECTION_ID"]
+		if section_id.endswith("5") and not section_id.endswith("-5"): continue
 		# if section_id.startswith("11") or section_id.startswith("12"): JUNIORS.add(student)
 		if section_id.startswith("12"): JUNIORS.add(student)
 		broken = False  # workaround for classes not in section_schedule.csv
+		if "UADV" in section_id: 
+			# homerooms [student] = homerooms [section_id]
+			homerooms [student] = section_id
+			continue
 		try: times = periods [section_id]
 		except KeyError: 
 			course_id = section_id
 			if "-" in course_id: course_id = course_id [:course_id.find ("-")]
 			# if section_id.startswith("UADV") and not section_id.startswith("UADV11"): 
-			if "UADV" in section_id: 
-				# homerooms [student] = homerooms [section_id]
-				homerooms [student] = section_id
-				# continue
 			MISSING_ROOMS.add(course_id)
 			broken = True
 			continue
