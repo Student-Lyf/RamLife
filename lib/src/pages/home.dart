@@ -58,14 +58,16 @@ class HomePage extends StatelessWidget {
 						if (schedule.hasSchool) NextClass(
 							reminders: schedule.reminders.currentReminders,
 							period: schedule.period,
-							subject: schedule.subjects [schedule.period?.id]
+							subject: schedule.subjects [schedule.period?.id],
+							modified: schedule.today.isModified,
 						),
 						// if school won't be over, show the next class
-						if (schedule.nextPeriod != null) NextClass (
+						if (schedule.nextPeriod != null && !schedule.today.isModified) NextClass (
 							next: true,
 							reminders: schedule.reminders.nextReminders,
 							period: schedule.nextPeriod,
-							subject: schedule.subjects [schedule.nextPeriod?.id]
+							subject: schedule.subjects [schedule.nextPeriod?.id],
+							modified: schedule.today.isModified,
 						),
 					]
 				)

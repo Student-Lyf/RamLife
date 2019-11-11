@@ -207,6 +207,9 @@ class PeriodData {
 @immutable
 class Period {
 	/// The time this period takes place. 
+	/// 
+	/// If the time is not known (ie, the schedule is [modified]), 
+	/// then this will be null. 
 	final Range time;
 
 	/// The room this period is in.

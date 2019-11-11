@@ -88,7 +88,7 @@ class ClassList extends StatelessWidget {
 							final Period period in 
 							periods ?? services.schedule.student.getPeriods(day)
 						) getPanel(services, period)
-					]
+					],
 				]
 			);
 		}
