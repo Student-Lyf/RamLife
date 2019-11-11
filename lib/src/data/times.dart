@@ -255,17 +255,16 @@ class Special {
 	/// Compares two lists
 	/// 
 	/// This function is used to compare the [periods] property of two Specials. 
-	static bool deepEquals<E>(List<E> a, List<E> b) {
-		if (a.length != b.length) {
-			return false;
-		}
-		for (int index = 0; index < a.length; index++) {
-			if (a [index] != b [index]) {
-				return false;
-			}
-		}
-		return true;
-	}
+	static bool deepEquals<E>(List<E> a, List<E> b) => 
+		(a == null) == (b == null) ||
+		(a == null && b == null) &&
+		a.length == b.length &&
+		<int>[
+			for (int index = 0; index < 10; index++) 
+				index
+		].every(
+			(int index) => a [index] == b [index]
+		);
 
 	@override 
 	String toString() => name;
