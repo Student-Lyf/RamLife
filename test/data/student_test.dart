@@ -1,15 +1,15 @@
-import "../unit.dart";
-
 import "dart:convert" show JsonUnsupportedObjectError;
 
 import "package:ramaz/data.dart";
+
+import "../unit.dart";
 
 const Map<String, dynamic> invalidJson = {
 	"this": "is",
 	"totally": false
 };
 
-void main() => test_suite (
+void main() => testSuite (
 	const {
 		"Student": {
 			"Equality Test": StudentTester.equalityTest,
@@ -108,7 +108,9 @@ class StudentTester {
 		final List<Period> periods = student.getPeriods(day);
 		compare<int> (periods.length, 13);
 		for (final Period period in periods) {
-			if (int.tryParse (period.period) == null) continue;
+			if (int.tryParse (period.period) == null) {
+				continue;
+			}
 			compare<String> (period.id, StudentTester.period.id);
 		}
 		compare<List<Period>> (
@@ -120,7 +122,7 @@ class StudentTester {
 	static void homeroomTest() {
 		compare<PeriodData> (
 			student.getHomeroom(day), 
-			PeriodData (
+			const PeriodData (
 				room: homeroomLocation,
 				id: homeroom
 			),

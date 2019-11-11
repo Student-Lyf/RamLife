@@ -1,15 +1,15 @@
 import "dart:convert" show JsonUnsupportedObjectError;
 
-import "../unit.dart";
-
 import "package:ramaz/data.dart";
+
+import "../unit.dart";
 
 const Map<String, dynamic> invalidJson = {
 	"This": "is",
 	"very": false,
 };
 
-void main() => test_suite (
+void main() => testSuite (
 	{
 		"Subject": {
 			"Equality test": SubjectTester.equalityTest,
@@ -57,9 +57,14 @@ class SubjectTester {
 
 
 	static void equalityTest() {
-		compare<Subject> (testSubject, Subject (name: name, teacher: teacher));
-		compare<Subject> (testSubject2, Subject (name: name2, teacher: teacher2));
-
+		compare<Subject> (
+			testSubject, 
+			const Subject (name: name, teacher: teacher)
+		);
+		compare<Subject> (
+			testSubject2, 
+			const Subject (name: name2, teacher: teacher2)
+		);
 	}
 
 	static void factoryTest() {
@@ -98,13 +103,13 @@ class PeriodDataTester {
 	static const PeriodData period = PeriodData (room: room, id: id);
 
 	static void equalityTest() {
-		compare<PeriodData> (PeriodData (room: room, id: id), period);
+		compare<PeriodData> (const PeriodData (room: room, id: id), period);
 	}
 
 	static void factoryTest() {
 		compare<PeriodData> (
 			PeriodData.fromJson(
-				{
+				const {
 					roomKey: room,					
 					idKey: id,
 				}
@@ -112,7 +117,7 @@ class PeriodDataTester {
 			period
 		);
 		compare<PeriodData> (PeriodData.fromJson (null), PeriodData.free);
-		willThrow<JsonUnsupportedObjectError> (
+		willThrow<AssertionError> (
 			() => PeriodData.fromJson (invalidJson),
 		);
 	}
@@ -219,11 +224,11 @@ class PeriodTester {
 }
 
 class DayTester {
-	static const Map<String, dynamic> mJson = const {"letter": "M"};
-	static const Map<String, dynamic> nullJson = const {"letter": null};
-	static const Map<String, dynamic> gJson = const {"letter": "G"};
+	static const Map<String, dynamic> mJson = {"letter": "M"};
+	static const Map<String, dynamic> nullJson = {"letter": null};
+	static const Map<String, dynamic> gJson = {"letter": "G"};
 	static const Letters letter = Letters.M;
-	static const Special special = roshChodesh;
+	static const Special special = Special.roshChodesh;
 	static Day day1 = Day (
 		letter: letter,
 		special: special

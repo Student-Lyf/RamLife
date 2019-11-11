@@ -5,8 +5,8 @@ export "package:flutter_test/flutter_test.dart" show WidgetTester;
 
 // typedef Widget = void Function();
 
-void test_suite(Map<String, WidgetTesterCallback> suite) {
-	for (MapEntry<String, WidgetTesterCallback> entry in suite.entries) {
+void testSuite(Map<String, WidgetTesterCallback> suite) {
+	for (final MapEntry<String, WidgetTesterCallback> entry in suite.entries) {
 		testWidgets (entry.key, entry.value);
 	}
 }
