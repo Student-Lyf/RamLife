@@ -491,6 +491,11 @@ const Special early = Special (
 	mincha: 10
 );
 
+const Special modified = Special (
+	"Modified", 
+	null,
+);
+
 /// A collection of all the [Special]s
 /// 
 /// Used in the UI
@@ -506,6 +511,7 @@ const List<Special> specials = [
 	pmAssembly,
 	rotate,
 	early,
+	modified,
 ];
 
 /// Maps the default special names to their [Special] objects
