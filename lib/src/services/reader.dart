@@ -27,11 +27,14 @@ class Reader {
 	/// The file containing the user's reminders. 
 	final File remindersFile;
 
+	final File adminFile;
+
 	/// Initializes the files based on the path ([dir]) provided to it. 
 	Reader(this.dir) :
 		studentFile = File ("$dir/student.json"),
 		subjectFile = File ("$dir/subjects.json"),
 		calendarFile = File ("$dir/calendar.json"),
+		adminFile = File("$dir/admin.json"),
 		remindersFile = File ("$dir/reminders.json");
 
 	/// The JSON representation of the user's schedule.
@@ -89,6 +92,14 @@ class Reader {
 	set remindersData(Map<String, dynamic> data) => 
 		remindersFile.writeAsStringSync(jsonEncode(data ?? {}));
 
+	Map<String, dynamic> get adminData => jsonDecode(
+		adminFile.readAsStringSync()
+	);
+
+	set adminData (Map<String, dynamic> data) => adminFile.writeAsStringSync(
+		jsonEncode(data)
+	);
+
 	/// Deletes all files that contain user data. 
 	/// 
 	/// This function will be called in two placed: 
@@ -107,6 +118,9 @@ class Reader {
 		}
 		if (remindersFile.existsSync()) {
 			remindersFile.deleteSync();
+		}
+		if (adminFile.existsSync()) {
+			adminFile.deleteSync();
 		}
 	}
 

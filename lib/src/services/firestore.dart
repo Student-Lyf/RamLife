@@ -14,6 +14,8 @@ class Firestore {
 	/// The name for the student schedule collection
 	static const String students = "students";
 
+	static const String admins = "admin";
+
 	/// The name of the classes collection
 	static const String classes = "classes";
 
@@ -30,6 +32,9 @@ class Firestore {
 
 	static final fb.CollectionReference _students = 
 		_firestore.collection(students);
+
+	static final fb.CollectionReference _admin = 
+		_firestore.collection(admins);
 	
 	static final fb.CollectionReference _classes = 
 		_firestore.collection (classes);
@@ -94,6 +99,12 @@ class Firestore {
 		await _calendar.document(DateTime.now().month.toString()).get()
 	).data;
 
+	static Future<void> saveCalendar(int mont, Map<String, dynamic> json) => 
+		_calendar.document(month.toString()).setData(json);
+
+	static Stream<fb.DocumentSnapshot> getCalendar(int month) => 
+		_calendar.document(month.toString()).snapshots();
+
 	/// Downloads the reminders for the user. 
 	/// 
 	/// At least for now, these are stored in a spearate collection than
@@ -125,4 +136,10 @@ class Firestore {
 			],
 			"read": readReminders
 		});
+
+	static Future<Map<String, dynamic>> get admin async => 
+		(await _admin.document(await Auth.email).get()).data;
+
+	static Future<void> saveAdmin (Map<String, dynamic> data) async => 
+		_admin.document(await Auth.email).setData(data);
 }

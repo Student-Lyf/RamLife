@@ -40,25 +40,16 @@ class Auth {
 		.email.endsWith("@ramaz.org");
 
 	/// Signs in the user with Google as the provider. 
-	static Future<void> signInWithGoogle(
-		void Function() ifInvalid,
-	) async {
+	static Future<void> signInWithGoogle(void Function() ifInvalid) async {
 		final GoogleSignInAccount account = await _google.signIn();
 		if (account == null) {
 			return;
-			// ignore: avoid_as, 
 		}
-		// if (!isValidGoogleAccount(account)) {
-		// 	ifInvalid();
-		// 	await _google.signOut();  // Prompt again 
-		// 	return;
-		// }
 		final GoogleSignInAuthentication _auth = await account.authentication;
 		final AuthCredential credential = GoogleAuthProvider.getCredential (
 			accessToken: _auth.accessToken,
 			idToken: _auth.idToken
 		);
 		await _firebase.signInWithCredential(credential);
-		return;
 	}
 }
