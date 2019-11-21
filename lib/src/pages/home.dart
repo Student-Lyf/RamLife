@@ -1,18 +1,26 @@
+// ignore_for_file: prefer_const_constructors_in_immutables
 import "package:flutter/material.dart";
+import "package:flutter/services.dart";
 
 import "package:ramaz/models.dart";
 import "package:ramaz/pages.dart";
 import "package:ramaz/widgets.dart";
 
-class HomePage extends StatelessWidget {
-	// ignore_for_file: prefer_const_constructors_in_immutables
-	HomePage();
+class HomePage extends StatefulWidget {
+	@override
+	HomePageState createState() => HomePageState();
+}
+
+class HomePageState extends State<HomePage> {
+	final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
+	bool loading = false;
 
 	@override 
 	Widget build (BuildContext context) => ModelListener<Schedule>(
 		model: () => Services.of(context).schedule,
 		dispose: false,
 		builder: (BuildContext context, Schedule schedule, _) => Scaffold (
+			key: scaffoldKey,
 			appBar: AppBar (
 				title: const Text ("Home"),
 				actions: [
@@ -41,9 +49,34 @@ class HomePage extends StatelessWidget {
 				)
 			),
 			body: RefreshIndicator (  // so you can refresh the period
-				onRefresh: () async => schedule.onNewPeriod(),
+				onRefresh: () {
+					Future<void> downloadCalendar() async {
+						try {
+							await Services.of(context).services.updateCalendar();
+						} on PlatformException catch(error) {
+							if (error.code == "Error performing get") {
+								scaffoldKey.currentState.showSnackBar(
+									SnackBar(
+										content: const Text("No internet"), 
+										action: SnackBarAction(
+											label: "RETRY", 
+											onPressed: () async {
+												setState(() => loading = true);
+												await downloadCalendar();
+												setState(() => loading = false);
+											}
+										),
+									)
+								);
+							}
+							schedule.onNewPeriod();
+						}
+					}
+					return downloadCalendar;
+				}(),
 				child: ListView (
 					children: [
+						if (loading) const LinearProgressIndicator(),
 						RamazLogos.ramRectangle,
 						const Divider(),
 						Text (
