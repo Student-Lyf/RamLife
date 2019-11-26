@@ -168,14 +168,6 @@ between this library and the data library.</p>
       <h2>Static Properties</h2>
 
       <dl class="properties">
-        <dt id="month" class="property">
-          <span class="name"><a href="ramaz_services/Firestore/month.html">month</a></span>
-          <span class="signature">&#8594; <a href="dart-async/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="dart-core/Map-class.html">Map</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="dart-core/String-class.html">String</a></span>, <span class="type-parameter">dynamic</span>&gt;</span></span>&gt;</span></span>         
-        </dt>
-        <dd>
-          Downloads the calendar for the current month.
-                  <div class="features">read-only</div>
-</dd>
         <dt id="reminders" class="property">
           <span class="name"><a href="ramaz_services/Firestore/reminders.html">reminders</a></span>
           <span class="signature">&#8594; <a href="dart-async/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="dart-core/Map-class.html">Map</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="dart-core/String-class.html">String</a></span>, <span class="type-parameter">dynamic</span>&gt;</span></span>&gt;</span></span>         
@@ -214,6 +206,15 @@ between this library and the data library.</p>
                   </dt>
         <dd>
           Gets all class documents for a students schedule <a href="ramaz_services/Firestore/getClasses.html">[...]</a>
+                  
+</dd>
+        <dt id="getMonth" class="callable">
+          <span class="name"><a href="ramaz_services/Firestore/getMonth.html">getMonth</a></span><span class="signature">(<wbr>{<span class="parameter" id="getMonth-param-download"><span class="type-annotation"><a href="dart-core/bool-class.html">bool</a></span> <span class="parameter-name">download</span>: <span class="default-value">false</span></span> })
+            <span class="returntype parameter">&#8594; <a href="dart-async/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="dart-core/Map-class.html">Map</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="dart-core/String-class.html">String</a></span>, <span class="type-parameter">dynamic</span>&gt;</span></span>&gt;</span></span>
+          </span>
+                  </dt>
+        <dd>
+          Downloads the calendar for the current month.
                   
 </dd>
         <dt id="saveReminders" class="callable">
@@ -320,13 +321,13 @@ between this library and the data library.</p>
       <li class="inherited"><a href="dart-core/Object/operator_equals.html">operator ==</a></li>
     
       <li class="section-title"><a href="ramaz_services/Firestore-class.html#static-properties">Static properties</a></li>
-      <li><a href="ramaz_services/Firestore/month.html">month</a></li>
       <li><a href="ramaz_services/Firestore/reminders.html">reminders</a></li>
       <li><a href="ramaz_services/Firestore/student.html">student</a></li>
     
       <li class="section-title"><a href="ramaz_services/Firestore-class.html#static-methods">Static methods</a></li>
       <li><a href="ramaz_services/Firestore/getClass.html">getClass</a></li>
       <li><a href="ramaz_services/Firestore/getClasses.html">getClasses</a></li>
+      <li><a href="ramaz_services/Firestore/getMonth.html">getMonth</a></li>
       <li><a href="ramaz_services/Firestore/saveReminders.html">saveReminders</a></li>
       <li><a href="ramaz_services/Firestore/sendFeedback.html">sendFeedback</a></li>
     
@@ -344,7 +345,7 @@ between this library and the data library.</p>
 <footer>
   <span class="no-break">
     ramaz
-      1.0.1+3
+      1.0.1+4
   </span>
 
   <!-- footer-text placeholder -->

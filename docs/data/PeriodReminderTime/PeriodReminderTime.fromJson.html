@@ -102,7 +102,7 @@ notwithstanding any schedule changes (like an "early dismissal").</p>
       <pre class="language-dart"><code class="language-dart">PeriodReminderTime.fromJson(Map&lt;String, dynamic&gt; json) :
 	letter = stringToLetters [json [&quot;letter&quot;]],
 	period = json [&quot;period&quot;],
-	super (repeats: json [&quot;repeats&quot;]);</code></pre>
+	super (repeats: json [&quot;repeats&quot;], type: ReminderTimeType.period);</code></pre>
     </section>
 
   </div> <!-- /.main-content -->
@@ -115,7 +115,7 @@ notwithstanding any schedule changes (like an "early dismissal").</p>
 <footer>
   <span class="no-break">
     ramaz
-      1.0.1+3
+      1.0.1+4
   </span>
 
   <!-- footer-text placeholder -->

@@ -61,6 +61,7 @@
         <a href="data/Day-class.html#instance-properties">Properties</a>
       </li>
       <li><a href="data/Day/hashCode.html">hashCode</a></li>
+      <li><a href="data/Day/isModified.html">isModified</a></li>
       <li><a href="data/Day/letter.html">letter</a></li>
       <li><a href="data/Day/n.html">n</a></li>
       <li><a href="data/Day/name.html">name</a></li>
@@ -107,8 +108,9 @@ and uses <a href="dart-core/DateTime/DateTime.now.html">DateTime.now()</a> to lo
                 <section class="summary source-code" id="source">
           <h2><span>Implementation</span></h2>
           <pre class="language-dart"><code class="language-dart">int get period {
+	&#47;&#47; if
 	final Time time = Time.fromDateTime (DateTime.now());
-	for (int index = 0; index &lt; special.periods.length; index++) {
+	for (int index = 0; index &lt; (special.periods?.length ?? 0); index++) {
 		final Range range = special.periods [index];
 		if (
 			range.contains(time) ||  &#47;&#47; during class
@@ -137,7 +139,7 @@ and uses <a href="dart-core/DateTime/DateTime.now.html">DateTime.now()</a> to lo
 <footer>
   <span class="no-break">
     ramaz
-      1.0.1+3
+      1.0.1+4
   </span>
 
   <!-- footer-text placeholder -->

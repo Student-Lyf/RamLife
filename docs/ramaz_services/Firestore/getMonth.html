@@ -69,33 +69,34 @@
       <li class="section-title inherited"><a href="ramaz_services/Firestore-class.html#operators">Operators</a></li>
       <li class="inherited"><a href="dart-core/Object/operator_equals.html">operator ==</a></li>
     
+      <li class="section-title"><a href="ramaz_services/Firestore-class.html#static-properties">Static properties</a></li>
+      <li><a href="ramaz_services/Firestore/reminders.html">reminders</a></li>
+      <li><a href="ramaz_services/Firestore/student.html">student</a></li>
     
       <li class="section-title"><a href="ramaz_services/Firestore-class.html#static-methods">Static methods</a></li>
       <li><a href="ramaz_services/Firestore/getClass.html">getClass</a></li>
       <li><a href="ramaz_services/Firestore/getClasses.html">getClasses</a></li>
       <li><a href="ramaz_services/Firestore/getMonth.html">getMonth</a></li>
-      <li><a href="ramaz_services/Firestore/getNotes.html">getNotes</a></li>
-      <li><a href="ramaz_services/Firestore/getStudent.html">getStudent</a></li>
-      <li><a href="ramaz_services/Firestore/saveNotes.html">saveNotes</a></li>
+      <li><a href="ramaz_services/Firestore/saveReminders.html">saveReminders</a></li>
       <li><a href="ramaz_services/Firestore/sendFeedback.html">sendFeedback</a></li>
     
       <li class="section-title"><a href="ramaz_services/Firestore-class.html#constants">Constants</a></li>
-      <li><a href="ramaz_services/Firestore/CALENDAR-constant.html">CALENDAR</a></li>
-      <li><a href="ramaz_services/Firestore/CLASSES-constant.html">CLASSES</a></li>
-      <li><a href="ramaz_services/Firestore/FEEDBACK-constant.html">FEEDBACK</a></li>
-      <li><a href="ramaz_services/Firestore/NOTES-constant.html">NOTES</a></li>
-      <li><a href="ramaz_services/Firestore/STUDENTS-constant.html">STUDENTS</a></li>
+      <li><a href="ramaz_services/Firestore/calendar-constant.html">calendar</a></li>
+      <li><a href="ramaz_services/Firestore/classes-constant.html">classes</a></li>
+      <li><a href="ramaz_services/Firestore/feedback-constant.html">feedback</a></li>
+      <li><a href="ramaz_services/Firestore/remindersKey-constant.html">remindersKey</a></li>
+      <li><a href="ramaz_services/Firestore/students-constant.html">students</a></li>
     </ol>
   </div><!--/.sidebar-offcanvas-->
 
   <div id="dartdoc-main-content" class="col-xs-12 col-sm-9 col-md-8 main-content">
-      <div>  <div id="external-links" class="btn-group"><a title="View source code" class="source-link" href="https://github.com/Levi-Lesches/Ramaz-Student-Life/blob/master/lib/src/services/firestore.dart#L76"><i class="material-icons">description</i></a></div>
+      <div>  <div id="external-links" class="btn-group"><a title="View source code" class="source-link" href="https://github.com/Levi-Lesches/Ramaz-Student-Life/blob/master/lib/src/services/firestore.dart#L93"><i class="material-icons">description</i></a></div>
 <h1><span class="kind-method">getMonth</span> method</h1></div>
 
     <section class="multi-line-signature">
       <span class="returntype"><a href="dart-async/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="dart-core/Map-class.html">Map</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="dart-core/String-class.html">String</a></span>, <span class="type-parameter">dynamic</span>&gt;</span></span>&gt;</span></span>
             <span class="name ">getMonth</span>
-(<wbr>)
+(<wbr>{<span class="parameter" id="getMonth-param-download"><span class="type-annotation"><a href="dart-core/bool-class.html">bool</a></span> <span class="parameter-name">download</span>: <span class="default-value">false</span></span> })
       
     </section>
     <section class="desc markdown">
@@ -104,8 +105,12 @@
     
     <section class="summary source-code" id="source">
       <h2><span>Implementation</span></h2>
-      <pre class="language-dart"><code class="language-dart">static Future&lt;Map&lt;String, dynamic&gt;&gt; getMonth() async =&gt; (
-	await _calendar.document(DateTime.now().month.toString()).get()
+      <pre class="language-dart"><code class="language-dart">static Future&lt;Map&lt;String, dynamic&gt;&gt; getMonth(
+	{bool download = false}
+) async =&gt; (
+	await _calendar.document(DateTime.now().month.toString()).get(
+		source: download ? fb.Source.server : fb.Source.serverAndCache,
+	)
 ).data;</code></pre>
     </section>
 
@@ -119,7 +124,7 @@
 <footer>
   <span class="no-break">
     ramaz
-      2.0.0+1
+      1.0.1+4
   </span>
 
   <!-- footer-text placeholder -->

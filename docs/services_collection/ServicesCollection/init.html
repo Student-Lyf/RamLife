@@ -69,6 +69,8 @@
       <li class="section-title"><a href="services_collection/ServicesCollection-class.html#instance-methods">Methods</a></li>
       <li><a href="services_collection/ServicesCollection/init.html">init</a></li>
       <li><a href="services_collection/ServicesCollection/initOnLogin.html">initOnLogin</a></li>
+      <li><a href="services_collection/ServicesCollection/refresh.html">refresh</a></li>
+      <li><a href="services_collection/ServicesCollection/updateCalendar.html">updateCalendar</a></li>
       <li><a href="services_collection/ServicesCollection/verify.html">verify</a></li>
       <li class="inherited"><a href="dart-core/Object/noSuchMethod.html">noSuchMethod</a></li>
       <li class="inherited"><a href="dart-core/Object/toString.html">toString</a></li>
@@ -82,7 +84,7 @@
   </div><!--/.sidebar-offcanvas-->
 
   <div id="dartdoc-main-content" class="col-xs-12 col-sm-9 col-md-8 main-content">
-      <div>  <div id="external-links" class="btn-group"><a title="View source code" class="source-link" href="https://github.com/Levi-Lesches/Ramaz-Student-Life/blob/master/lib/services_collection.dart#L38"><i class="material-icons">description</i></a></div>
+      <div>  <div id="external-links" class="btn-group"><a title="View source code" class="source-link" href="https://github.com/Levi-Lesches/Ramaz-Student-Life/blob/master/lib/services_collection.dart#L55"><i class="material-icons">description</i></a></div>
 <h1><span class="kind-method">init</span> method</h1></div>
 
     <section class="multi-line-signature">
@@ -109,6 +111,20 @@ this function is called. </p>
 		reminders: reminders,
 	);
 	verify();
+	&#47;&#47; Register for FCM notifications.
+	&#47;&#47; We don&#39;t care when this happens
+	&#47;&#47; ignore: unawaited_futures
+	Future(
+		() async {
+			await FCM.registerNotifications(
+				{
+					&quot;refresh&quot;: refresh,
+					&quot;updateCalendar&quot;: updateCalendar,
+				}
+			);
+			await FCM.subscribeToCalendar();
+		}
+	);
 }</code></pre>
     </section>
 
@@ -122,7 +138,7 @@ this function is called. </p>
 <footer>
   <span class="no-break">
     ramaz
-      1.0.1+3
+      1.0.1+4
   </span>
 
   <!-- footer-text placeholder -->

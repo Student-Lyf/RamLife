@@ -81,7 +81,7 @@
   </div><!--/.sidebar-offcanvas-->
 
   <div id="dartdoc-main-content" class="col-xs-12 col-sm-9 col-md-8 main-content">
-      <div>  <div id="external-links" class="btn-group"><a title="View source code" class="source-link" href="https://github.com/Levi-Lesches/Ramaz-Student-Life/blob/master/lib/src/data/student.dart#L112"><i class="material-icons">description</i></a></div>
+      <div>  <div id="external-links" class="btn-group"><a title="View source code" class="source-link" href="https://github.com/Levi-Lesches/Ramaz-Student-Life/blob/master/lib/src/data/student.dart#L115"><i class="material-icons">description</i></a></div>
 <h1><span class="kind-method">getPeriods</span> method</h1></div>
 
     <section class="multi-line-signature">
@@ -93,7 +93,9 @@
     <section class="desc markdown">
       <p>Returns the schedule for this student on a given day. </p>
 <p>Iterates over the schedule for <code>day</code> in <a href="data/Student/schedule.html">schedule</a>, and converts the
-<a href="data/PeriodData-class.html">PeriodData</a>s to <a href="data/Period-class.html">Period</a> objects using the <a href="data/Range-class.html">Range</a>s in <a href="data/Day/special.html">Day.special</a>.</p>
+<a href="data/PeriodData-class.html">PeriodData</a>s to <a href="data/Period-class.html">Period</a> objects using the <a href="data/Range-class.html">Range</a>s in <a href="data/Day/special.html">Day.special</a>. </p>
+<p>If <code>day.special</code> is <a href="data/modified-constant.html">modified</a>, every <a href="data/Period-class.html">Period</a> will have their 
+<a href="data/Period/time.html">Period.time</a> property set to null.</p>
     </section>
     
     <section class="summary source-code" id="source">
@@ -106,6 +108,22 @@
 	final List &lt;PeriodData&gt; periods = schedule [day.letter];
 	final Special special = day.special;
 	int periodIndex = 0;
+	if (day.isModified) {
+		return [
+			for (final PeriodData period in periods)
+				if (period != null)
+					Period(
+						period,
+						time: null,
+						period: (periodIndex++).toString(),
+					)
+				else Period(
+					PeriodData.free,
+					period: (periodIndex + 1).toString(),
+					time: null
+				)
+		];
+	}
 
 	for (int index = 0; index &lt; special.periods.length; index++) {
 		final Range range = special.periods [index];
@@ -160,7 +178,7 @@
 <footer>
   <span class="no-break">
     ramaz
-      1.0.1+3
+      1.0.1+4
   </span>
 
   <!-- footer-text placeholder -->

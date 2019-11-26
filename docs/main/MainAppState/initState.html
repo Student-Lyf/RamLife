@@ -113,8 +113,8 @@ or on the widget used to configure this object (i.e., <code>widget</code>).</p>
 <p>If a <code>State</code>'s <a href="main/MainAppState/build.html">build</a> method depends on an object that can itself
 change state, for example a <code>ChangeNotifier</code> or <a href="dart-async/Stream-class.html">Stream</a>, or some
 other object to which one can subscribe to receive notifications, then
-be sure to subscribe and unsubscribe properly in <a href="main/MainAppState/initState.html">initState</a>,
-<code>didUpdateWidget</code>, and <code>dispose</code>:</p><ul><li>In <a href="main/MainAppState/initState.html">initState</a>, subscribe to the object.</li><li>In <code>didUpdateWidget</code> unsubscribe from the old object and subscribe
+be sure to subscribe and unsubscribe properly in <a href="pages/HomePageState/initState.html">initState</a>,
+<code>didUpdateWidget</code>, and <code>dispose</code>:</p><ul><li>In <a href="pages/HomePageState/initState.html">initState</a>, subscribe to the object.</li><li>In <code>didUpdateWidget</code> unsubscribe from the old object and subscribe
 to the new one if the updated widget configuration requires
 replacing the object.</li><li>In <code>dispose</code>, unsubscribe from the object.
 You cannot use <code>BuildContext.inheritFromWidgetOfExactType</code> from this
@@ -144,7 +144,7 @@ void initState() {
 <footer>
   <span class="no-break">
     ramaz
-      1.0.1+3
+      1.0.1+4
   </span>
 
   <!-- footer-text placeholder -->
