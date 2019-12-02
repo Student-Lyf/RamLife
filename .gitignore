@@ -63,6 +63,7 @@ firebase/admin.json
 firebase/rules_test/node_modules/
 firebase/temp.py
 firebase/rules_test/firestore.rules
+docs/
 
 
 # android
