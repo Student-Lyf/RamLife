@@ -113,70 +113,91 @@ class Student {
 	/// If `day.special` is [modified], every [Period] will have their 
 	/// [Period.time] property set to null. 
 	List <Period> getPeriods (Day day) {
-		final List <Period> result = [];
 		if (!day.school) {
-			return result;
+			return [];
 		} 
-		final List <PeriodData> periods = schedule [day.letter];
-		final Special special = day.special;
-		int periodIndex = 0;
-		if (day.isModified) {
-			return [
-				for (final PeriodData period in periods) 
-					if (period != null) 
-						Period(
-							period,
-							time: null,
-							period: (periodIndex++).toString(),
-						)
-					else Period(
-						PeriodData.free,
-						period: (periodIndex + 1).toString(),
-						time: null
-					)
-			];
-		}
+		// final List <PeriodData> periods = schedule [day.letter];
+		// final Special day.special = day.day.special;
+		// int periodIndex = 0;
+		// if (day.isModified) {
+		// 	return [
+		// 		for (final PeriodData period in periods) 
+		// 			if (period != null) 
+		// 				Period(
+		// 					period,
+		// 					time: null,
+		// 					period: (++periodIndex).toString(),
+		// 				)
+		// 			else Period(
+		// 				PeriodData.free,
+		// 				period: (++periodIndex).toString(),
+		// 				time: null
+		// 			)
+		// 	];
+		// }
 
-		for (int index = 0; index < special.periods.length; index++) {
-			final Range range = special.periods [index];
-			while ((special?.skip ?? const []).contains(periodIndex + 1)) {
-				periodIndex++; 
-			}
-			if (special.homeroom == index) {
-				result.add (
-					Period (
+		final List<int> periodIndices = [
+			for (int index = 0; index < day.special.periods.length; index++)
+				if (!(day.special?.skip?.contains(index) ?? false))
+					index
+		];
+
+		return [
+			for (int index = 0; index < day.special.periods.length; index++)
+				if (day.special.homeroom == index)
+					Period(
 						getHomeroom(day),
-						time: range,
+						time: day.special.periods [index],
 						period: "Homeroom",
 					)
-				); 
-			} else if (special.mincha == index) {
-				result.add (
-					Period.mincha(range)
-				); 
-			} else {
-				final PeriodData period = periods [periodIndex]; 
-				if (period == null) {
-					result.add (
-						Period (
-							PeriodData.free,
-							period: (periodIndex + 1).toString(),
-							time: range,
-						) 
-					);
-				} else {
-					result.add (
-						Period (
-							period,
-							time: range,
-							period: (periodIndex + 1).toString()
-						) 
-					);
-				}
-				periodIndex++;
-			}
-		}
-		return result;
+				else if (day.special.mincha == index)
+					Period.mincha(day.special.periods [index])
+				else Period(
+					schedule [day.letter] [periodIndices [index]] ?? PeriodData.free,
+					period: (index + 1).toString(),
+					time: day.special.periods [index]
+				),
+		];
+
+		// for (int index = 0; index < special.periods.length; index++) {
+		// 	final Range range = special.periods [index];
+		// 	while ((special?.skip ?? const []).contains(periodIndex + 1)) {
+		// 		periodIndex++; 
+		// 	}
+		// 	if (special.homeroom == index) {
+		// 		result.add (
+		// 			Period (
+		// 				getHomeroom(day),
+		// 				time: range,
+		// 				period: "Homeroom",
+		// 			)
+		// 		); 
+		// 	} else if (special.mincha == index) {
+		// 		result.add (
+		// 			Period.mincha(range)
+		// 		); 
+		// 	} else {
+		// 		final PeriodData period = periods [periodIndex]; 
+		// 		if (period == null) {
+		// 			result.add (
+		// 				Period (
+		// 					PeriodData.free,
+		// 					period: (++periodIndex).toString(),
+		// 					time: range,
+		// 				) 
+		// 			);
+		// 		} else {
+		// 			result.add (
+		// 				Period (
+		// 					period,
+		// 					time: range,
+		// 					period: (++periodIndex).toString()
+		// 				) 
+		// 			);
+		// 		}
+		// 	}
+		// }
+		// return result;
 	}
 
 	/// Returns a [PeriodData] for this student's homeroom period on a given day.
