@@ -10,7 +10,7 @@ class NextClass extends StatelessWidget {
 	static const TextStyle white = TextStyle (color: Colors.white);
 	static const double reminderPadding = 10;
 
-	final bool next;
+	final bool modified, next;
 	final Period period;
 	final Subject subject;
 	final List<int> reminders;
@@ -19,7 +19,8 @@ class NextClass extends StatelessWidget {
 		@required this.period,
 		@required this.subject,
 		@required this.reminders,
-		this.next = false
+		@required this.modified,
+		this.next = false,
 	});
 
 	@override 
@@ -27,9 +28,12 @@ class NextClass extends StatelessWidget {
 		children: [
 			InfoCard (
 				icon: next ? Icons.restore : Icons.school,
-				children: period?.getInfo(subject),
+				children: modified 
+					? const ["See side panel or click for schedule"] 
+					: period?.getInfo(subject),
 				page: Routes.schedule,
-				title: period == null
+				title: modified ? "Times unavailable" : 
+					period == null
 					? "School is over"
 					: "${next ? 'Next' : 'Current'} period: " 
 						"${subject?.name ?? period.period}",
@@ -41,7 +45,7 @@ class NextClass extends StatelessWidget {
 					foregroundDecoration: ShapeDecoration(
 						shape: RoundedRectangleBorder(
 							side: BorderSide(color: Theme.of(context).primaryColor),
-							borderRadius:  BorderRadius.circular (20),
+							borderRadius: BorderRadius.circular (20),
 						)
 					),
 					child: ReminderTile(index: index),

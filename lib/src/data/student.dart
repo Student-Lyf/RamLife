@@ -109,14 +109,33 @@ class Student {
 	/// 
 	/// Iterates over the schedule for [day] in [schedule], and converts the
 	/// [PeriodData]s to [Period] objects using the [Range]s in [Day.special]. 
+	/// 
+	/// If `day.special` is [modified], every [Period] will have their 
+	/// [Period.time] property set to null. 
 	List <Period> getPeriods (Day day) {
 		final List <Period> result = [];
 		if (!day.school) {
 			return result;
-		}
+		} 
 		final List <PeriodData> periods = schedule [day.letter];
 		final Special special = day.special;
 		int periodIndex = 0;
+		if (day.isModified) {
+			return [
+				for (final PeriodData period in periods) 
+					if (period != null) 
+						Period(
+							period,
+							time: null,
+							period: (periodIndex++).toString(),
+						)
+					else Period(
+						PeriodData.free,
+						period: (periodIndex + 1).toString(),
+						time: null
+					)
+			];
+		}
 
 		for (int index = 0; index < special.periods.length; index++) {
 			final Range range = special.periods [index];

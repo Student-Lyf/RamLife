@@ -15,24 +15,6 @@ import "package:ramaz/widgets.dart";
 
 /// Completely refresh the user's schedule 
 /// Basically simulate the login sequence
-Future<void> refresh(ServicesCollection services) async {
-	final String email = await Auth.email;
-	if (email == null) {
-		throw StateError(
-			"Cannot refresh schedule because the user is not logged in."
-		);
-	}
-	await services.initOnLogin(email, first: false);
-	services.reminders.setup();
-	services.schedule.setup(services.reader);
-}
-
-Future<void> updateCalendar(ServicesCollection services) async {
-	final Map<String, dynamic> calendar = await Firestore.month;
-	services.reader.calendarData = calendar;
-	services.schedule.setup(services.reader);
-}
-
 Future<void> main({bool restart = false}) async {
 	// This shows a splash screen but secretly 
 	// determines the desired `platformBrightness`
@@ -95,21 +77,6 @@ Future<void> main({bool restart = false}) async {
 			? Brightness.light
 			: Brightness.dark;
 	}
-
-	// Register for FCM notifications. 
-	// We don't care when this happens
-	// ignore: unawaited_futures 
-	Future(
-		() async {
-			await FCM.registerNotifications(
-				{
-					"refresh": () => refresh(services),
-					"updateCalendar": () => updateCalendar(services),
-				}
-			);
-			await FCM.subscribeToCalendar();
-		}
-	);
 
 	// Now we are ready to run the app (with error catching)
 	FlutterError.onError = Crashlytics.instance.recordFlutterError;

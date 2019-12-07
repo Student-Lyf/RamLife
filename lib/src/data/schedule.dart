@@ -207,6 +207,9 @@ class PeriodData {
 @immutable
 class Period {
 	/// The time this period takes place. 
+	/// 
+	/// If the time is not known (ie, the schedule is [modified]), 
+	/// then this will be null. 
 	final Range time;
 
 	/// The room this period is in.
@@ -293,7 +296,7 @@ class Period {
 	/// 4. If [id] is valid, will return the name of the [Subject].
 	/// 
 	List <String> getInfo (Subject subject) => [
-		"Time: $time",
+		if (time != null) "Time: $time",
 		if (int.tryParse(period) != null) "Period: $period",
 		if (room != null) "Room: $room",
 		if (subject != null) "Teacher: ${subject.teacher}",
@@ -450,6 +453,8 @@ class Day {
 	/// Whether there is school on this day.
 	bool get school => letter != null;
 
+	bool get isModified => special == modified;
+
 	/// The period right now. 
 	/// 
 	/// Uses [special] to calculate the time slots for all the different periods,
@@ -457,8 +462,9 @@ class Day {
 	/// 
 	/// See [Time] and [Range] for implementation details.
 	int get period {
+		// if 
 		final Time time = Time.fromDateTime (DateTime.now());
-		for (int index = 0; index < special.periods.length; index++) {
+		for (int index = 0; index < (special.periods?.length ?? 0); index++) {
 			final Range range = special.periods [index];
 			if (
 				range.contains(time) ||  // during class

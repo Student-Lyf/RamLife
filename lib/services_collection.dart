@@ -27,6 +27,23 @@ class ServicesCollection {
 		@required this.prefs,
 	});
 
+	Future<void> refresh() async {
+		final String email = await Auth.email;
+		if (email == null) {
+			throw StateError(
+				"Cannot refresh schedule because the user is not logged in."
+			);
+		}
+		await initOnLogin(email, first: false);
+		reminders.setup();
+		schedule.setup(reader);
+	}
+
+	Future<void> updateCalendar() async {
+		reader.calendarData = await Firestore.getMonth(download: true);
+		schedule.setup(reader);
+	}
+
 	/// Initializes the collection.
 	/// 
 	/// This function is a safety!
@@ -42,6 +59,20 @@ class ServicesCollection {
 			reminders: reminders,
 		);
 		verify();
+		// Register for FCM notifications. 
+		// We don't care when this happens
+		// ignore: unawaited_futures 
+		Future(
+			() async {
+				await FCM.registerNotifications(
+					{
+						"refresh": refresh,
+						"updateCalendar": updateCalendar,
+					}
+				);
+				await FCM.subscribeToCalendar();
+			}
+		);
 	}
 
 	/// Verifies any properties that needed to be manually initialized are. 
@@ -73,7 +104,7 @@ class ServicesCollection {
 		reader
 			..studentData = studentData
 			..subjectData = await Firestore.getClasses(student)
-			..calendarData =  await Firestore.month
+			..calendarData =  await Firestore.getMonth()
 			..remindersData = await Firestore.reminders;
 
 		if (first) {

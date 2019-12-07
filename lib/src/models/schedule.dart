@@ -160,9 +160,9 @@ class Schedule with ChangeNotifier {
 
 		// Period changed and there is still school.
 		period = periods [periodIndex];
-		if (periodIndex < periods.length - 1) {
-			nextPeriod = periods [periodIndex + 1];
-		}
+		nextPeriod = periodIndex < periods.length - 1 
+			? periods [periodIndex + 1] 
+			: null;
 	}
 
 	/// Updates the reminders given the current period.
