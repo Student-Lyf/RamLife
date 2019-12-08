@@ -505,7 +505,8 @@ class Special {
 		mincha: 10
 	);
 
-	static const const Special modified = Special (
+	/// A day where the schedule is not known.
+	static const Special modified = Special (
 		"Modified", 
 		null,
 	);

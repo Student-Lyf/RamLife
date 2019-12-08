@@ -208,7 +208,7 @@ class PeriodData {
 class Period {
 	/// The time this period takes place. 
 	/// 
-	/// If the time is not known (ie, the schedule is [modified]), 
+	/// If the time is not known (ie, the schedule is [Special.modified]), 
 	/// then this will be null. 
 	final Range time;
 
@@ -453,7 +453,8 @@ class Day {
 	/// Whether there is school on this day.
 	bool get school => letter != null;
 
-	bool get isModified => special == modified;
+	/// Whether the times for this day are known.
+	bool get isModified => special == Special.modified;
 
 	/// The period right now. 
 	/// 

@@ -110,7 +110,7 @@ class Student {
 	/// Iterates over the schedule for [day] in [schedule], and converts the
 	/// [PeriodData]s to [Period] objects using the [Range]s in [Day.special]. 
 	/// 
-	/// If `day.special` is [modified], every [Period] will have their 
+	/// If `day.special` is [Special.modified], every [Period] will have their 
 	/// [Period.time] property set to null. 
 	List <Period> getPeriods (Day day) {
 		if (!day.school) {
