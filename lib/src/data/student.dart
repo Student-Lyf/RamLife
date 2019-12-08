@@ -109,55 +109,49 @@ class Student {
 	/// 
 	/// Iterates over the schedule for [day] in [schedule], and converts the
 	/// [PeriodData]s to [Period] objects using the [Range]s in [Day.special]. 
+	/// 
+	/// If `day.special` is [modified], every [Period] will have their 
+	/// [Period.time] property set to null. 
 	List <Period> getPeriods (Day day) {
-		final List <Period> result = [];
 		if (!day.school) {
-			return result;
-		}
-		final List <PeriodData> periods = schedule [day.letter];
-		final Special special = day.special;
+			return [];
+		} 
+
+		// Get indices for `schedule [day.letter]`, keeping skipped periods in mind
 		int periodIndex = 0;
+		final List<int> periodIndices = [];
+		final Special special = day.isModified 
+			? Day.specials [day.letter] 
+			: day.special;
 
 		for (int index = 0; index < special.periods.length; index++) {
-			final Range range = special.periods [index];
-			while ((special?.skip ?? const []).contains(periodIndex + 1)) {
-				periodIndex++; 
-			}
-			if (special.homeroom == index) {
-				result.add (
-					Period (
-						getHomeroom(day),
-						time: range,
-						period: "Homeroom",
-					)
-				); 
-			} else if (special.mincha == index) {
-				result.add (
-					Period.mincha(range)
-				); 
-			} else {
-				final PeriodData period = periods [periodIndex]; 
-				if (period == null) {
-					result.add (
-						Period (
-							PeriodData.free,
-							period: (periodIndex + 1).toString(),
-							time: range,
-						) 
-					);
-				} else {
-					result.add (
-						Period (
-							period,
-							time: range,
-							period: (periodIndex + 1).toString()
-						) 
-					);
-				}
+			while (special?.skip?.contains(periodIndex + 1) ?? false) {
 				periodIndex++;
 			}
+			periodIndices.add(
+				special.homeroom == index || special.mincha == index 
+					? null
+					: periodIndex++
+			);
 		}
-		return result;
+
+		// Loop over all the periods and assign each one a Period.
+		return [
+			for (int index = 0; index < special.periods.length; index++)
+				if (special.homeroom == index)
+					Period(
+						getHomeroom(day),
+						time: day.isModified ? null : special.periods [index],
+						period: "Homeroom",
+					)
+				else if (special.mincha == index)
+					Period.mincha(day.isModified ? null : special.periods [index])
+				else Period(
+					schedule [day.letter] [periodIndices [index]] ?? PeriodData.free,
+					time: day.isModified ? null : special.periods [index],
+					period: (periodIndices [index] + 1).toString(),
+				)
+		];
 	}
 
 	/// Returns a [PeriodData] for this student's homeroom period on a given day.

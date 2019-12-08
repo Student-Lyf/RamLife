@@ -505,6 +505,11 @@ class Special {
 		mincha: 10
 	);
 
+	static const const Special modified = Special (
+		"Modified", 
+		null,
+	);
+
 	/// A collection of all the [Special]s
 	/// 
 	/// Used in the UI
@@ -520,6 +525,7 @@ class Special {
 		pmAssembly,
 		rotate,
 		early,
+		modified,
 	];
 
 	/// Maps the default special names to their [Special] objects
