@@ -4,8 +4,6 @@ from data.calendar import Day
 
 from main import init, get_path
 
-# from birdseye import eye
-
 data_dir = get_path().parent / "data" / "calendar"
 SCHOOL_DAYS = (1, 2, 3, 4, 5)
 MONTHS = {9: "sept"}
@@ -14,6 +12,8 @@ LETTERS = {"A", "B", "C", "M", "R", "E", "F"}
 SPECIALS = {
 	"Rosh Chodesh": "Rosh Chodesh",
 	"Friday R.C.": "Friday Rosh Chodesh",
+	"Early Dismissal": "Early Dismissal",
+	"Modified": "Modified",
 }
 
 
@@ -24,15 +24,12 @@ def get_lines(lines): return zip(
 )
 
 
-# @eye
 def get_calendar(month): 
-	# filename = data_dir / f"{MONTHS [month]}.csv"
 	filename = data_dir / f"{month}.csv"
 
 	with open(filename) as file: 
 		file_contents = file.readlines()
 
-	# @eye
 	def get_days(file, lines): 
 		line_contents = tuple(file [line].split(",") for line in lines)
 		for index, (letter, special, date) in enumerate(zip(*line_contents)):
@@ -48,8 +45,7 @@ def get_calendar(month):
 			if special.endswith(" Schedule"): 
 				special = special [:special.find(" Schedule")]
 			if special.lower().startswith("modified"): 
-				# special = "Modified"
-				special = None
+				special = "Modified"
 			elif not special or special not in SPECIALS: special = None
 			else: special = SPECIALS [special]
 			yield Day (date, letter, special)

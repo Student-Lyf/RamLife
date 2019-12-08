@@ -26,11 +26,13 @@ def upload_month(month, calendar):
 	batch.set(
 		collection.document(str (month)),
 		{
-			str (day.date.day): {
-				"letter": day.letter,
-				"special": day.special
-			}
-			for day in calendar
+			"calendar": [
+				{
+					"letter": day.letter,
+					"special": day.special
+				}
+				for day in calendar
+			]
 		}
 	)
 	batch.commit()
