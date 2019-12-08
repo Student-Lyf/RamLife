@@ -103,7 +103,7 @@ class Firestore {
 		)
 	).data;
 
-	static Future<void> saveCalendar(int mont, Map<String, dynamic> json) => 
+	static Future<void> saveCalendar(int month, Map<String, dynamic> json) => 
 		_calendar.document(month.toString()).setData(json);
 
 	static Stream<fb.DocumentSnapshot> getCalendar(int month) => 
