@@ -105,8 +105,10 @@ class ScheduleModel with ChangeNotifier {
 				case Letters.M:
 				case Letters.R:
 					if (
-						letter != Letters.M && letter != Letters.R ||  // if it's M or R
-						newSpecial != Special.rotate &&  // and newSpecial isn't a rotate
+						(
+							letter != Letters.M && letter != Letters.R ||  // if it's M or R
+							newSpecial != Special.rotate  // and newSpecial isn't a rotate
+						) &&
 						!fridays.contains(newSpecial)  // AND newSpecial is not a Friday
 					) {
 						special = newSpecial;
