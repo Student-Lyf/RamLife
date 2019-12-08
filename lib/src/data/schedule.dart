@@ -329,13 +329,14 @@ class Day {
 	/// and the value is a JSON representation of a [Day].
 	/// 
 	/// See [Day.fromJson] for details on how a [Day] looks in JSON
-	static Map<DateTime, Day> getCalendar(Map<String, dynamic> data) {
+	// static Map<DateTime, Day> getCalendar(Map<String, dynamic> data) {
+	static Map<DateTime, Day> getCalendar(List data) {
 		final DateTime now = DateTime.now();
 		final int month = now.month;
 		final int year = now.year;
 		final Map<DateTime, Day> result = {};
-		for (final MapEntry<String, dynamic> entry in data.entries) {
-			final int day = int.parse (entry.key);
+		for (final MapEntry<int, dynamic> entry in data.asMap().entries) {
+			final int day = entry.key + 1;
 			final DateTime date = DateTime.utc(
 				year, 
 				month, 

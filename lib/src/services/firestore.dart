@@ -95,13 +95,13 @@ class Firestore {
 	) => _feedback.document().setData(json);
 
 	/// Downloads the calendar for the current month. 
-	static Future<Map<String, dynamic>> getMonth(
+	static Future<List> getMonth(
 		{bool download = false}
 	) async => (
 		await _calendar.document(DateTime.now().month.toString()).get(
 			source: download ? fb.Source.server : fb.Source.serverAndCache,
 		)
-	).data;
+	).data ["calendar"];
 
 	static Future<void> saveCalendar(int month, Map<String, dynamic> json) => 
 		_calendar.document(month.toString()).setData(json);

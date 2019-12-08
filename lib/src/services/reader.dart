@@ -72,11 +72,11 @@ class Reader {
 	}
 
 	/// The JSON representation of the calendar. 
-	Map<String, dynamic> get calendarData => jsonDecode(
+	List get calendarData => jsonDecode(
 		calendarFile.readAsStringSync()
 	);
 
-	set calendarData (Map<String, dynamic> data) => calendarFile.writeAsStringSync(
+	set calendarData (List data) => calendarFile.writeAsStringSync(
 		jsonEncode(data)
 	);
 
