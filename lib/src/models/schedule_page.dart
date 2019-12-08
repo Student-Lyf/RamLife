@@ -48,7 +48,7 @@ class ScheduleModel with ChangeNotifier {
 	ScheduleModel ({@required ServicesCollection services}) : 
 		schedule = services.schedule
 	{
-		day = schedule.hasSchool
+		day = schedule.hasSchool && !schedule.today.isModified
 			? schedule.today
 			: defaultDay;
 	}
@@ -97,8 +97,16 @@ class ScheduleModel with ChangeNotifier {
 				case Letters.A:
 				case Letters.B:
 				case Letters.C:
+					if (newSpecial != regular) {
+						continue regular;
+					}
+					break;
+				regular: 
 				case Letters.M:
 				case Letters.R:
+					if ((letter == Letters.M || letter == Letters.R) && newSpecial == rotate) {
+						break;
+					}
 					if (!fridays.contains (newSpecial)) {
 						special = newSpecial;
 					}
