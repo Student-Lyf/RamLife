@@ -6,7 +6,6 @@ from main import init, get_path
 
 data_dir = get_path().parent / "data" / "calendar"
 SCHOOL_DAYS = (1, 2, 3, 4, 5)
-MONTHS = {9: "sept"}
 CURRENT_YEAR = 2019
 LETTERS = {"A", "B", "C", "M", "R", "E", "F"}
 SPECIALS = {
