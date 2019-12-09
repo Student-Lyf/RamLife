@@ -16,9 +16,6 @@ class Preferences {
 	/// The key for the user brightness preference.
 	static const String lightMode = "lightMode";
 
-	/// The key for the last month the calendar was downloaded.
-	static const String calendarKey = "calendar";
-
 	/// Returns whether a [DateTime] is today.
 	static bool isToday(DateTime other) {
 		final DateTime now = DateTime.now();
@@ -26,11 +23,6 @@ class Preferences {
 			now.month == other.month &&
 			now.day == other.day;
 	}
-
-	/// When the calendar was last downloaded.
-	int get calendarForMonth => _prefs.getInt(calendarKey);
-
-	set calendarForMonth(int value) => _prefs.setInt(calendarKey, value);
 
 	/// Determines whether this is the first time opening the app.
 	bool get firstTime {
