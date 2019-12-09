@@ -27,6 +27,7 @@ class ServicesCollection {
 		@required this.prefs,
 	});
 
+	/// Completely refresh the user's schedule, simulating the login sequence.
 	Future<void> refresh() async {
 		final String email = await Auth.email;
 		if (email == null) {
@@ -39,8 +40,10 @@ class ServicesCollection {
 		schedule.setup(reader);
 	}
 
+	/// Downloads the calendar and calls appropriate methods. 
 	Future<void> updateCalendar() async {
 		reader.calendarData = await Firestore.getMonth(download: true);
+		prefs.calendarForMonth = DateTime.now().month;
 		schedule.setup(reader);
 	}
 
@@ -53,6 +56,10 @@ class ServicesCollection {
 	///
 	/// Use this function to initialize anything that requires a file.
 	void init() {
+		final int currentMonth = DateTime.now().month;
+		if (prefs.calendarForMonth != currentMonth) {
+			updateCalendar().then((_) => prefs.calendarForMonth = currentMonth);
+		}
 		reminders = Reminders (reader);
 		schedule = Schedule(
 			reader, 
@@ -106,6 +113,8 @@ class ServicesCollection {
 			..subjectData = await Firestore.getClasses(student)
 			..calendarData =  await Firestore.getMonth()
 			..remindersData = await Firestore.reminders;
+
+		prefs.calendarForMonth = DateTime.now().month;
 
 		if (first) {
 			init();
