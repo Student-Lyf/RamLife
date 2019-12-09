@@ -55,11 +55,8 @@ class ServicesCollection {
 	///
 	/// Use this function to initialize anything that requires a file.
 	void init() {
-		reminders = Reminders (reader);
-		schedule = Schedule(
-			reader, 
-			reminders: reminders,
-		);
+		reminders = Reminders(reader);
+		schedule = Schedule(reader, reminders: reminders);
 		verify();
 		// Register for FCM notifications. 
 		// We don't care when this happens
