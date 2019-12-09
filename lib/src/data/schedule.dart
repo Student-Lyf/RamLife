@@ -323,29 +323,20 @@ class Day {
 		Letters.F: Special.getWinterFriday(),
 	};
 
-	/// Parses the calendar from a JSON map.
+	/// Gets the calendar for the whole year.
 	/// 
-	/// The key is the date (defaulting to today's month), 
-	/// and the value is a JSON representation of a [Day].
-	/// 
-	/// See [Day.fromJson] for details on how a [Day] looks in JSON
-	// static Map<DateTime, Day> getCalendar(Map<String, dynamic> data) {
-	static Map<DateTime, Day> getCalendar(List data) {
-		final DateTime now = DateTime.now();
-		final int month = now.month;
-		final int year = now.year;
-		final Map<DateTime, Day> result = {};
-		for (final MapEntry<int, dynamic> entry in data.asMap().entries) {
-			final int day = entry.key + 1;
-			final DateTime date = DateTime.utc(
-				year, 
-				month, 
-				day
-			);
-			result [date] = Day.fromJson(entry.value);
-		}
-		return result;
-	}
+	/// Each element of [data]'s months should be a JSON representation of a [Day].
+	/// See [Day.fromJson] for how to represent a Day in JSON. 
+	static List<List<Day>> getCalendar(List<List<Map<String, dynamic>>> data) => [
+		for (int month = 0; month < 12; month++) [
+			for (final dynamic json in data)
+				Day.fromJson(Map<String, dynamic>.from(json))
+		]
+	];
+
+	/// Gets the Day for [date] in the [calendar].
+	static Day getDate(List<List<Day>> calendar, DateTime date) => 
+		calendar [date.month - 1] [date.day - 1];
 
 	/// The letter of this day. 
 	/// 

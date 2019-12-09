@@ -20,7 +20,7 @@ class Firestore {
 	static const String classes = "classes";
 
 	/// The name of the calendar collection
-	static const String calendar = "calendar";
+	static const String calendarKey = "calendar";
 	
 	/// The name of the feedback collection
 	static const String feedback = "feedback";
@@ -43,7 +43,7 @@ class Firestore {
 		_firestore.collection (feedback);
 	
 	static final fb.CollectionReference _calendar = 
-		_firestore.collection(calendar);
+		_firestore.collection(calendarKey);
 	
 	static final fb.CollectionReference _reminders = 
 		_firestore.collection (remindersKey);
@@ -94,19 +94,20 @@ class Firestore {
 		Map<String, dynamic> json
 	) => _feedback.document().setData(json);
 
-	/// Downloads the calendar for the current month. 
-	static Future<List> getMonth(
+	/// Downloads the calendar for a given month. 
+	static Future<List<List<Map<String, dynamic>>>> getCalendar(
 		{bool download = false}
-	) async => (
-		await _calendar.document(DateTime.now().month.toString()).get(
-			source: download ? fb.Source.server : fb.Source.serverAndCache,
-		)
-	).data ["calendar"];
+	) async => [
+		for (int month = 1; month < 13; month++)
+			(await _calendar.document(month.toString()).get(
+				source: download ? fb.Source.server : fb.Source.serverAndCache,
+			)).data ["calendar"]
+	];
 
 	static Future<void> saveCalendar(int month, Map<String, dynamic> json) => 
 		_calendar.document(month.toString()).setData(json);
 
-	static Stream<fb.DocumentSnapshot> getCalendar(int month) => 
+	static Stream<fb.DocumentSnapshot> getCalendarSnapshots(int month) => 
 		_calendar.document(month.toString()).snapshots();
 
 	/// Downloads the reminders for the user. 

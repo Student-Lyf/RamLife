@@ -42,7 +42,7 @@ class ServicesCollection {
 
 	/// Downloads the calendar and calls appropriate methods. 
 	Future<void> updateCalendar() async {
-		reader.calendarData = await Firestore.getMonth(download: true);
+		reader.calendarData = await Firestore.getCalendar(download: true);
 		prefs.calendarForMonth = DateTime.now().month;
 		schedule.setup(reader);
 	}
@@ -111,7 +111,7 @@ class ServicesCollection {
 		reader
 			..studentData = studentData
 			..subjectData = await Firestore.getClasses(student)
-			..calendarData =  await Firestore.getMonth()
+			..calendarData =  await Firestore.getCalendar()
 			..remindersData = await Firestore.reminders;
 
 		prefs.calendarForMonth = DateTime.now().month;
