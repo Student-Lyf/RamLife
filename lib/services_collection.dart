@@ -42,8 +42,7 @@ class ServicesCollection {
 
 	/// Downloads the calendar and calls appropriate methods. 
 	Future<void> updateCalendar() async {
-		reader.calendarData = await Firestore.getMonth(download: true);
-		prefs.calendarForMonth = DateTime.now().month;
+		reader.calendarData = await Firestore.getCalendar(download: true);
 		schedule.setup(reader);
 	}
 
@@ -56,15 +55,8 @@ class ServicesCollection {
 	///
 	/// Use this function to initialize anything that requires a file.
 	void init() {
-		final int currentMonth = DateTime.now().month;
-		if (prefs.calendarForMonth != currentMonth) {
-			updateCalendar().then((_) => prefs.calendarForMonth = currentMonth);
-		}
-		reminders = Reminders (reader);
-		schedule = Schedule(
-			reader, 
-			reminders: reminders,
-		);
+		reminders = Reminders(reader);
+		schedule = Schedule(reader, reminders: reminders);
 		verify();
 		// Register for FCM notifications. 
 		// We don't care when this happens
@@ -111,10 +103,8 @@ class ServicesCollection {
 		reader
 			..studentData = studentData
 			..subjectData = await Firestore.getClasses(student)
-			..calendarData =  await Firestore.getMonth()
+			..calendarData =  await Firestore.getCalendar()
 			..remindersData = await Firestore.reminders;
-
-		prefs.calendarForMonth = DateTime.now().month;
 
 		if (first) {
 			init();

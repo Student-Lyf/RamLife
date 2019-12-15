@@ -31,7 +31,7 @@ class Schedule with ChangeNotifier {
 	Map<String, Subject> subjects;
 
 	/// The calendar for the month.
-	Map<DateTime, Day> calendar;
+	List<List<Day>> calendar;
 
 	/// A timer that updates the period. 
 	/// 
@@ -99,15 +99,8 @@ class Schedule with ChangeNotifier {
 	/// 
 	/// Only to be called when the day actually changes. 
 	void setToday() {
-		// Get rid of the time
-		final DateTime currentDate = DateTime.utc(
-			now.year, 
-			now.month,
-			now.day
-		); 
-		
 		// initialize today
-		today = calendar [currentDate];
+		today = Day.getDate(calendar, now);
 		timer?.cancel();
 		if (today.school) {
 			// initialize periods.
