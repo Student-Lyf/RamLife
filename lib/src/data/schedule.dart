@@ -455,7 +455,6 @@ class Day {
 	/// 
 	/// See [Time] and [Range] for implementation details.
 	int get period {
-		// if 
 		final Time time = Time.fromDateTime (DateTime.now());
 		for (int index = 0; index < (special.periods?.length ?? 0); index++) {
 			final Range range = special.periods [index];
