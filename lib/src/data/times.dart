@@ -60,7 +60,8 @@ class Time {
 	bool operator >= (Time other) => this > other || this == other;
 
 	@override 
-	String toString() => "$hour:${minutes.toString().padLeft(2, '0')}";
+	String toString() => 
+		"${hour > 12 ? hour - 12 : hour}:${minutes.toString().padLeft(2, '0')}";
 }
 
 /// A range of times.
