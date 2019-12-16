@@ -329,7 +329,7 @@ class Day {
 	/// See [Day.fromJson] for how to represent a Day in JSON. 
 	static List<List<Day>> getCalendar(List<List<Map<String, dynamic>>> data) => [
 		for (int month = 0; month < 12; month++) <Day>[
-			for (final Map<String, dynamic> json in data [month - 1])
+			for (final Map<String, dynamic> json in data [month])
 				Day.fromJson(json)
 		]
 	];
