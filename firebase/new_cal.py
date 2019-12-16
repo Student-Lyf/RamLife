@@ -55,14 +55,22 @@ def get_calendar(month):
 		for day in get_days(file_contents, lines)
 	]
 
+def get_empty(month): return [
+	Day(datetime(CURRENT_YEAR if month > 7 else CURRENT_YEAR + 1, month, date), None, None)
+	for date in range(1, 32)
+]
+
 if __name__ == "__main__":
 	init()
 	from database.calendar import upload_month
 	
 	for month in range(1, 13): 
 		if month in (7, 8): 
-			print(f"Skipping summer month {month}")
+			print(f"Uploading empty summer month {month}")
+			upload_month(month, get_empty(month))
 			continue
+
+
 		print(f"Parsing month {month}")
 		calendar = get_calendar (month)
 		days = set(range(1, 32))
