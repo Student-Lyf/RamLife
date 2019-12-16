@@ -328,7 +328,7 @@ class Day {
 	/// Each element of [data]'s months should be a JSON representation of a [Day].
 	/// See [Day.fromJson] for how to represent a Day in JSON. 
 	static List<List<Day>> getCalendar(List<List<Map<String, dynamic>>> data) => [
-		for (int month = 0; month < 12; month++) [
+		for (int month = 0; month < 12; month++) <Day>[
 			for (final Map<String, dynamic> json in data [month - 1])
 				Day.fromJson(Map<String, dynamic>.from(json))
 		]
@@ -369,7 +369,7 @@ class Day {
 	/// 
 	/// This factory is not a constructor so it can dynamically check 
 	/// for a valid [letter] while keeping the field final.
-	factory Day.fromJson(Map<dynamic, dynamic> json) {
+	factory Day.fromJson(Map<String, dynamic> json) {
 		if (!json.containsKey("letter")) {
 			throw JsonUnsupportedObjectError(json);
 		}
