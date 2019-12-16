@@ -98,7 +98,7 @@ class Firestore {
 	static Future<List<List<Map<String, dynamic>>>> getCalendar(
 		{bool download = false}
 	) async => [
-		for (int month = 1; month < 13; month++) [
+		for (int month = 1; month < 13; month++) <Map<String, dynamic>>[
 			for (final entry in List.from((await _calendar.document(month.toString()).get(
 				source: download ? fb.Source.server : fb.Source.serverAndCache,
 			)).data ["calendar"]))
