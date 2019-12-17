@@ -48,7 +48,7 @@ class ScheduleModel with ChangeNotifier {
 	ScheduleModel ({@required ServicesCollection services}) : 
 		schedule = services.schedule
 	{
-		day = schedule.hasSchool && !schedule.today.isModified
+		day = schedule.hasSchool
 			? schedule.today
 			: defaultDay;
 	}
