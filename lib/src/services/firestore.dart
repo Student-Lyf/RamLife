@@ -1,7 +1,5 @@
 import "package:cloud_firestore/cloud_firestore.dart" as fb;
 
-import "package:ramaz/data.dart";
-
 import "auth.dart";
 
 // ignore: avoid_classes_with_only_static_members
@@ -66,14 +64,8 @@ class Firestore {
 	/// instead of a student, as this creates a dependency between this 
 	/// library and the data library.
 	static Future<Map<String, Map<String, dynamic>>> getClasses(
-		Student student
+		Set<String> ids		
 	) async {
-		final Set<String> ids = {
-			for (final List<PeriodData> schedule in student.schedule.values)
-				for (final PeriodData period in schedule)
-					if (period != null && period != PeriodData.free)  // skip free periods
-						period.id
-		};
 		final Map<String, Map<String, dynamic>> result = {};
 		for (final String id in ids) {
 			result [id] = await getClass(id);
@@ -126,15 +118,12 @@ class Firestore {
 	/// This should also probably not persist the read reminders in the database 
 	/// (ie, keep them local).
 	static Future<void> saveReminders(
-		List<Reminder> remindersList, 
+		List<Map<String, dynamic>> remindersList, 
 		List<int> readReminders
 	) async => _reminders
 		.document(await Auth.email)
 		.setData({
-			"reminders": [
-				for (final Reminder reminder in remindersList)
-					reminder.toJson()
-			],
+			"reminders": remindersList,
 			"read": readReminders
 		});
 

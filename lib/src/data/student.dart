@@ -147,4 +147,15 @@ class Student {
 				)
 		];
 	}
+
+	/// Gets the section ids for this student. 
+	/// 
+	/// This includes every course in every day of the student's schedule,
+	/// without taking duplicates. 
+	Set<String> getIds() => {
+		for (final List<PeriodData> schedule in schedule.values)
+			for (final PeriodData period in schedule)
+				if (period != null && period != PeriodData.free)  // skip free periods
+					period.id
+	};
 }
