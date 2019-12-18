@@ -233,7 +233,11 @@ class Activity {
 	/// Creates an activity from a JSON object.
 	Activity.fromJson(Map<String, dynamic> json) : 
 		type = stringToActivityType[json ["type"]],
-		message = json ["message"];
+		message = json ["message"] is String
+			? json ["message"]
+			: GradeActivity.fromJson(
+				Map<String, dynamic>.from(json ["message"])
+			).toString();
 }
 
 /// A description of the time allotment for a day. 
