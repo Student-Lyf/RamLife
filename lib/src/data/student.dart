@@ -49,18 +49,12 @@ class Student {
 			);
 		}
 		final String homeroomLocation = json [homeroomLocationKey];
-		if (homeroomLocation == null) {
-			throw ArgumentError.notNull(homeroomLocationKey);
-		}
 
 		const String homeroomKey = "homeroom";
 		if (!json.containsKey (homeroomKey)) {
 			throw JsonUnsupportedObjectError(json, cause: "No homeroom present");
 		}
 		final String homeroom = json [homeroomKey];
-		if (homeroom == null) {
-			throw ArgumentError.notNull(homeroomKey);
-		}
 
 		// Check for null schedules
 		const List<String> letters = ["A", "B", "C", "E", "F", "M", "R"];
