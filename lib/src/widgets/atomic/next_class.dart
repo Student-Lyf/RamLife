@@ -57,7 +57,7 @@ class NextClass extends StatelessWidget {
 					: "${next ? 'Next' : 'Current'} period: " 
 						"${subject?.name ?? period.period}",
 			),
-			if (period.activity != null) 
+			if (period?.activity != null) 
 				SpecialTile(child: ActivityTile(period.activity)),
 			for (final int index in reminders) 
 				SpecialTile(
