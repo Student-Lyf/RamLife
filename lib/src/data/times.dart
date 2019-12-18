@@ -144,14 +144,64 @@ class Range {
 // }
 
 
+/// An activity for each grade. 
+@immutable
+class GradeActivity {
+	/// The activity for freshmen.
+	final Activity freshmen;
+
+	/// The activity for sophomores.
+	final Activity sophomores;
+
+	/// The activity for juniors.
+	final Activity juniors;
+
+	/// The activity for seniors.
+	final Activity seniors; 
+
+	/// Creates a container for activities by grade. 
+	const GradeActivity({
+		@required this.freshmen,
+		@required this.sophomores,
+		@required this.juniors,
+		@required this.seniors,
+	});
+
+	/// Creates a container for activities from a JSON object.
+	GradeActivity.fromJson(Map<String, dynamic> json) : 
+		freshmen = Activity.fromJson(Map<String, dynamic>.from(json ["freshmen"])),
+		sophomores = Activity.fromJson(
+			Map<String, dynamic>.from(json ["sophomores"])
+		),
+		juniors = Activity.fromJson(Map<String, dynamic>.from(json ["juniors"])),
+		seniors = Activity.fromJson(Map<String, dynamic>.from(json ["seniors"]));
+
+	@override 
+	String toString() => 
+		"${freshmen.toString()}\n"
+		"${sophomores.toString()}\n"
+		"${juniors.toString()}\n"
+		"${seniors.toString()}";
+}
+
+/// A type of activity during the day.
 enum ActivityType {
-	free, 
+	/// When students should go to their advisories.
+	/// 
+	/// The app will show everyone to their advisories. 
 	advisory,
+
+	/// When students should go to a certain room.
 	room,
 }
 
+/// An activity during a period. 
+/// 
+/// Students can either be directed to their adivories or to a certain room. 
+/// See [ActivityType] for details.
 @immutable
 class Activity {
+	/// Parses a JSON map of Activities still in JSON.
 	static Map<String, Activity> getActivities(Map<String, dynamic> json) {
 		final Map<String, Activity> result = {};
 		for (final MapEntry<String, dynamic> entry in json.entries) {
@@ -162,17 +212,25 @@ class Activity {
 		return result;
 	}
 
+	/// Maps JSON string values to [ActivityType]s.
 	static const Map<String, ActivityType> stringToActivityType = {
-		"free": ActivityType.free,
 		"advisory": ActivityType.advisory,
 		"room": ActivityType.room,
 	};
 
+	/// The type of this activity.
 	final ActivityType type;
+
+	/// A message to be displayed with this activity.
+	/// 
+	/// For example, this can be used to direct students to a certain room based
+	/// on grade, which is better handled by the user rather than the app.
 	final String message;
 
+	/// Creates an activity.
 	const Activity({@required this.type, @required this.message});	
 
+	/// Creates an activity from a JSON object.
 	Activity.fromJson(Map<String, dynamic> json) : 
 		type = stringToActivityType[json ["type"]],
 		message = json ["message"];
@@ -203,6 +261,7 @@ class Special {
 	/// The index in [periods] that represents homeroom.
 	final int homeroom;
 
+	/// Maps activities to the periods.  
 	final Map<String, Activity> activities;
 
 	/// A const constructor.
