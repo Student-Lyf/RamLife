@@ -32,11 +32,7 @@ class SchedulePage extends StatelessWidget {
 			),
 			bottomNavigationBar: Footer(),
 			floatingActionButton: FloatingActionButton(
-				// onPressed: () => viewDay (model, context),
-				onPressed: () {
-					model.day = Day(letter: model.day.letter, special: Special.temp);
-					model.notifyListeners();
-				},
+				onPressed: () => viewDay (model, context),
 				child: const Icon (Icons.calendar_today),
 			),
 			drawer: ModalRoute.of(context).isFirst ? NavigationDrawer() : null,
@@ -67,10 +63,6 @@ class SchedulePage extends StatelessWidget {
 											value: special,
 											child: Text (special.name),
 										),
-								DropdownMenuItem(
-									value: Special.temp,
-									child: Text(Special.temp.name)
-								)
 							]
 						)
 					),
