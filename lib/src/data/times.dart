@@ -143,6 +143,41 @@ class Range {
 // 	).isAfter(other);
 // }
 
+
+enum ActivityType {
+	free, 
+	advisory,
+	room,
+}
+
+@immutable
+class Activity {
+	static Map<String, Activity> getActivities(Map<String, dynamic> json) {
+		final Map<String, Activity> result = {};
+		for (final MapEntry<String, dynamic> entry in json.entries) {
+			result [entry.key] = Activity.fromJson(
+				Map<String, dynamic>.from(entry.value)
+			);
+		}
+		return result;
+	}
+
+	static const Map<String, ActivityType> stringToActivityType = {
+		"free": ActivityType.free,
+		"advisory": ActivityType.advisory,
+		"room": ActivityType.room,
+	};
+
+	final ActivityType type;
+	final String message;
+
+	const Activity({@required this.type, @required this.message});	
+
+	Activity.fromJson(Map<String, dynamic> json) : 
+		type = stringToActivityType[json ["type"]],
+		message = json ["message"];
+}
+
 /// A description of the time allotment for a day. 
 /// 
 /// Some days require different time periods, or even periods that 
@@ -168,6 +203,8 @@ class Special {
 	/// The index in [periods] that represents homeroom.
 	final int homeroom;
 
+	final Map<String, Activity> activities;
+
 	/// A const constructor.
 	const Special (
 		this.name, 
@@ -175,7 +212,8 @@ class Special {
 		{
 			this.homeroom, 
 			this.mincha,
-			this.skip
+			this.skip,
+			this.activities,
 		}
 	);
 
@@ -215,6 +253,9 @@ class Special {
 				homeroom: json ["homeroom"],
 				mincha: json ["mincha"],
 				skip: List<int>.from(json ["skip"]),
+				activities: Activity.getActivities(
+					Map<String, dynamic>.from(json ["activities"])
+				),
 			);
 		} else {
 			throw ArgumentError.value (
