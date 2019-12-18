@@ -84,14 +84,15 @@ class Reminders with ChangeNotifier {
 	/// This method sets [Reader.remindersData] and calls 
 	/// [Firestore.saveReminders].
 	void saveReminders() {
+		final List<Map<String, dynamic>> json = [
+			for (final Reminder reminder in reminders ?? [])
+				reminder.toJson()
+		];
 		_reader.remindersData = {
-			"reminders": [
-				for (final Reminder reminder in reminders)
-					reminder.toJson()
-			],
+			"reminders": json,
 			"read": readReminders ?? [],
 		};
-		Firestore.saveReminders(reminders ?? [], readReminders ?? []);
+		Firestore.saveReminders(json);
 	}
 
 	/// Checks if any reminders have been modified and removes them. 
@@ -125,7 +126,6 @@ class Reminders with ChangeNotifier {
 	/// 1. Runs [verifyReminders] (if a reminder has changed and not simply added).
 	/// 2. Runs [saveReminders].
 	/// 3. Calls [notifyListeners].
-	/// 
 	void updateReminders([int changedIndex]) {
 		if (changedIndex != null) {
 			verifyReminders(changedIndex);

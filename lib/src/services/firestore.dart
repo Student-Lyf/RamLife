@@ -104,8 +104,12 @@ class Firestore {
 	/// the student profile data. This choice was made since reminders are 
 	/// updated frequently and this saves the system from processing the
 	/// student's schedule every time this happens. 
-	static Future<Map<String, dynamic>> get reminders async => 
-		(await _reminders.document(await Auth.email).get()).data;
+	static Future<List<Map<String, dynamic>>> get reminders async => [
+		for (final entry in (await _reminders.document(
+			await Auth.email).get()
+		).data ["reminders"])
+			Map<String, dynamic>.from(entry)
+	];
 
 	/// Uploads the user's reminders to the database. 
 	/// 
@@ -119,13 +123,9 @@ class Firestore {
 	/// (ie, keep them local).
 	static Future<void> saveReminders(
 		List<Map<String, dynamic>> remindersList, 
-		List<int> readReminders
 	) async => _reminders
 		.document(await Auth.email)
-		.setData({
-			"reminders": remindersList,
-			"read": readReminders
-		});
+		.setData({"reminders": remindersList});
 
 	static Future<Map<String, dynamic>> get admin async => 
 		(await _admin.document(await Auth.email).get()).data;
