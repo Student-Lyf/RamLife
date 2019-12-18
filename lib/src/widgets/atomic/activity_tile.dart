@@ -22,11 +22,11 @@ class ActivityTile extends StatelessWidget {
 						? "Tap to see details"
 						: activity.toString(),
 				),
-				onTap: () => showDialog(
+				onTap: activity.message == null ? null : () => showDialog(
 					context: context,
 					builder: (_) => AlertDialog(
 						title: const Text("Activity"),
-						content: Text(activity.message),
+						content: Text(activity.message ),
 					)
 				)
 			)

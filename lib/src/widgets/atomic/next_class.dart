@@ -2,14 +2,33 @@ import "package:flutter/material.dart";
 
 import "package:ramaz/constants.dart";
 import "package:ramaz/data.dart";
+import "package:ramaz/widgets.dart";
 
 import "info_card.dart";
 import "reminder_tile.dart";
 
-class NextClass extends StatelessWidget {
-	static const TextStyle white = TextStyle (color: Colors.white);
-	static const double reminderPadding = 10;
+class SpecialTile extends StatelessWidget {
+	static const double padding = 10;
 
+	final Widget child;
+	const SpecialTile({this.child});
+
+	@override
+	Widget build (BuildContext context) => Padding (
+		padding: const EdgeInsets.symmetric(horizontal: padding),
+		child: Container (
+			foregroundDecoration: ShapeDecoration(
+				shape: RoundedRectangleBorder(
+					side: BorderSide(color: Theme.of(context).primaryColor),
+					borderRadius: BorderRadius.circular(20),
+				)
+			),
+			child: child,
+		)
+	);
+}
+
+class NextClass extends StatelessWidget {
 	final bool modified, next;
 	final Period period;
 	final Subject subject;
@@ -38,19 +57,12 @@ class NextClass extends StatelessWidget {
 					: "${next ? 'Next' : 'Current'} period: " 
 						"${subject?.name ?? period.period}",
 			),
-
-			for (final int index in reminders) Padding (
-				padding: const EdgeInsets.symmetric(horizontal: reminderPadding),
-				child: Container (
-					foregroundDecoration: ShapeDecoration(
-						shape: RoundedRectangleBorder(
-							side: BorderSide(color: Theme.of(context).primaryColor),
-							borderRadius: BorderRadius.circular (20),
-						)
-					),
+			if (period.activity != null) 
+				SpecialTile(child: ActivityTile(period.activity)),
+			for (final int index in reminders) 
+				SpecialTile(
 					child: ReminderTile(index: index),
 				)
-			)
 		]
 	);
 }
