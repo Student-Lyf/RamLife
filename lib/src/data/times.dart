@@ -178,10 +178,10 @@ class GradeActivity {
 
 	@override 
 	String toString() => 
-		"${freshmen.toString()}\n"
-		"${sophomores.toString()}\n"
-		"${juniors.toString()}\n"
-		"${seniors.toString()}";
+		"Freshmen: ${freshmen.toString()}\n\n"
+		"Sophomores: ${sophomores.toString()}\n\n"
+		"Juniors: ${juniors.toString()}\n\n"
+		"Seniors: ${seniors.toString()}";
 }
 
 /// A type of activity during the day.
@@ -227,17 +227,36 @@ class Activity {
 	/// on grade, which is better handled by the user rather than the app.
 	final String message;
 
+	/// Whether the activity differs by grade.
+	final bool byGrade;
+
 	/// Creates an activity.
-	const Activity({@required this.type, @required this.message});	
+	const Activity({
+		@required this.type, 
+		@required this.message, 
+		@required this.byGrade
+	}) : 
+		assert(type != null, "Type cannot be null");
 
 	/// Creates an activity from a JSON object.
 	Activity.fromJson(Map<String, dynamic> json) : 
 		type = stringToActivityType[json ["type"]],
+		byGrade = json ["message"] is Map,
 		message = json ["message"] is String
 			? json ["message"]
 			: GradeActivity.fromJson(
 				Map<String, dynamic>.from(json ["message"])
 			).toString();
+
+	@override
+	String toString() {
+		switch (type) {
+			case ActivityType.advisory: 
+				return "Advisory${message != null ? ': $message' : ''}";
+			case ActivityType.room: return message;
+			default: return "Activity";
+		}
+	}
 }
 
 /// A description of the time allotment for a day. 
