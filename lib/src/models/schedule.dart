@@ -89,6 +89,9 @@ class Schedule with ChangeNotifier {
 	/// The current subject.
 	Subject get subject => subjects [period?.id];
 
+	/// The next subject.
+	Subject get nextSubject => subjects [nextPeriod?.id];
+
 	/// Whether there is school today.
 	bool get hasSchool => today.school;
 
