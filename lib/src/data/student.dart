@@ -108,6 +108,7 @@ class Student {
 		// Get indices for `schedule [day.letter]`, keeping skipped periods in mind
 		int periodIndex = 0;
 		final List<int> periodIndices = [];
+		final Map<String, Activity> activities = day.special.activities ?? {};
 		final Special special = day.isModified 
 			? Day.specials [day.letter] 
 			: day.special;
@@ -131,13 +132,18 @@ class Student {
 						PeriodData.free,
 						time: day.isModified ? null : special.periods [index],
 						period: "Homeroom",
+						activity: activities ["Homeroom"]
 					)
 				else if (special.mincha == index)
-					Period.mincha(day.isModified ? null : special.periods [index])
+					Period.mincha(
+						day.isModified ? null : special.periods [index],
+						activity: activities ["Mincha"],
+					)
 				else Period(
 					schedule [day.letter] [periodIndices [index]] ?? PeriodData.free,
 					time: day.isModified ? null : special.periods [index],
 					period: (periodIndices [index] + 1).toString(),
+					activity: activities [(periodIndices [index] + 1).toString()]
 				)
 		];
 	}
