@@ -31,11 +31,9 @@ class SchedulePage extends StatelessWidget {
 				],
 			),
 			bottomNavigationBar: Footer(),
-			floatingActionButton: Builder (
-				builder: (BuildContext context) => FloatingActionButton (
-					onPressed: () => viewDay (model, context),
-					child: const Icon (Icons.calendar_today),
-				)
+			floatingActionButton: FloatingActionButton(
+				onPressed: () => viewDay (model, context),
+				child: const Icon (Icons.calendar_today),
 			),
 			drawer: ModalRoute.of(context).isFirst ? NavigationDrawer() : null,
 			body: Column (
