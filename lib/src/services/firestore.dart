@@ -68,18 +68,12 @@ class Firestore {
 	static Future<Map<String, Map<String, dynamic>>> getClasses(
 		Student student
 	) async {
-		final Set<String> ids = {};
-		for (final List<PeriodData> schedule in student.schedule.values) {
-			for (final PeriodData period in schedule) {
-				if (
-					period == null || period.id == null
-				) {
-					continue;  // skip free periods
-				}
-				ids.add(period.id);
-			}
-		}
-		ids.add (student.homeroom);
+		final Set<String> ids = {
+			for (final List<PeriodData> schedule in student.schedule.values)
+				for (final PeriodData period in schedule)
+					if (period != null && period != PeriodData.free)  // skip free periods
+						period.id
+		};
 		final Map<String, Map<String, dynamic>> result = {};
 		for (final String id in ids) {
 			result [id] = await getClass(id);
