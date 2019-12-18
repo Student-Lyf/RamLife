@@ -19,9 +19,17 @@ class Student {
 	/// See [Letters] and [PeriodData] for more information.
 	final Map <Letters, List<PeriodData>> schedule;
 
+	/// The section ID for this student's homeroom; 
+	final String homeroomId;
+
+	/// The room location for this student's homeroom;
+	final String homeroomLocation;
+
 	/// `const` constructor for a student.
 	const Student ({
 		@required this.schedule,
+		@required this.homeroomId,
+		@required this.homeroomLocation,
 	});
 
 	@override 
@@ -54,7 +62,7 @@ class Student {
 		if (!json.containsKey (homeroomKey)) {
 			throw JsonUnsupportedObjectError(json, cause: "No homeroom present");
 		}
-		final String homeroom = json [homeroomKey];
+		final String homeroomId = json [homeroomKey];
 
 		// Check for null schedules
 		const List<String> letters = ["A", "B", "C", "E", "F", "M", "R"];
@@ -80,6 +88,8 @@ class Student {
 				Letters.M: PeriodData.getList (json ["M"]),
 				Letters.R: PeriodData.getList (json ["R"]),
 			},
+			homeroomId: homeroomId, 
+			homeroomLocation: homeroomLocation,
 		);
 	}
 
