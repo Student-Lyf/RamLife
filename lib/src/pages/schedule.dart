@@ -59,10 +59,15 @@ class SchedulePage extends StatelessWidget {
 							onChanged: (Special special) => model.update(newSpecial: special),
 							items: [
 								for (final Special special in Special.specials)
-										DropdownMenuItem(
-											value: special,
-											child: Text (special.name),
-										),
+									DropdownMenuItem(
+										value: special,
+										child: Text (special.name),
+									),
+								if (!Special.specials.contains(model.day.special))
+									DropdownMenuItem(
+										value: model.day.special,
+										child: Text(model.day.special.name)
+									)
 							]
 						)
 					),

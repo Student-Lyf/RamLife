@@ -229,6 +229,8 @@ class Activity {
 	static const Map<String, ActivityType> stringToActivityType = {
 		"advisory": ActivityType.advisory,
 		"room": ActivityType.room,
+		"grade": ActivityType.grade,
+		"misc": ActivityType.misc,
 	};
 
 	/// The type of this activity.
@@ -239,9 +241,6 @@ class Activity {
 	/// For example, this can be used to direct students to a certain room based
 	/// on grade, which is better handled by the user rather than the app.
 	final String message;
-
-	/// Whether the activity differs by grade.
-	bool get byGrade => type == ActivityType.grade;
 
 	/// Creates an activity.
 	const Activity({
@@ -268,9 +267,9 @@ class Activity {
 	@override
 	String toString() {
 		switch (type) {
-			// case ActivityType.misc: return message;
+			case ActivityType.misc: return message;
 			case ActivityType.advisory: 
-				return "Advisory${message != null ? ': $message' : ''}";
+				return "Advisory${message != null ? ' -- $message' : ''}";
 			case ActivityType.room: return message;
 			default: return "Activity";
 		}
@@ -352,9 +351,9 @@ class Special {
 				],
 				homeroom: json ["homeroom"],
 				mincha: json ["mincha"],
-				skip: List<int>.from(json ["skip"]),
+				skip: List<int>.from(json ["skip"] ?? []),
 				activities: Activity.getActivities(
-					Map<String, dynamic>.from(json ["activities"])
+					Map<String, dynamic>.from(json ["activities"] ?? {})
 				),
 			);
 		} else {

@@ -3,6 +3,11 @@ import "package:flutter/material.dart";
 import "package:ramaz/data.dart";
 
 class ActivityTile extends StatelessWidget {
+	static const Set<ActivityType> detailedActivities = {
+		ActivityType.grade,
+		ActivityType.misc,
+	};
+
 	final Activity activity;
 	final double height;
 
@@ -16,9 +21,13 @@ class ActivityTile extends StatelessWidget {
 		height: height,
 		child: Center(
 			child: ListTile(
-				title: const Text("Activity"),
+				title: Text(
+					activity.type == ActivityType.grade 
+						? "Activity by grade"
+						: "Activity"
+				),
 				subtitle: Text(
-					activity.byGrade
+					detailedActivities.contains(activity.type)
 						? "Tap to see details"
 						: activity.toString(),
 				),

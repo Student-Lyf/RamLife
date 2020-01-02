@@ -103,32 +103,7 @@ class Schedule with ChangeNotifier {
 	/// Only to be called when the day actually changes. 
 	void setToday() {
 		// initialize today
-		// today = Day.getDate(calendar, now);
-		today = Day(letter: Letters.B, special: Special (
-		"Tzom",
-		const [
-			Range(Time(8, 00), Time(8, 55)),
-			Range(Time(9, 00), Time(9, 35)),
-			Range(Time(9, 40), Time(10, 15)),
-			Range(Time(10, 20), Time(10, 55)),
-			Range(Time(11, 00), Time(11, 35)),
-			Range(Time(11, 40), Time(12, 15)),
-			Range(Time(12, 20), Time(12, 55)),
-			Range(Time(13, 00), Time(13, 35)),
-			Range(Time(13, 35), Time(14, 05)),
-		],
-		mincha: 8,
-		activities: {
-			"Mincha": Activity.grade(
-				GradeActivity(
-					freshmen: Activity(type: ActivityType.room, message: "fhdjkfsdlk\n\tfhdjkfs\n\tfhdjkfsdlk\n\tfhdjkfs\n\tfhdjkfsdlk\n\tfhdjkfs\n\tfhdjkfsdlk\n\tfhdjkfs\n\tfhdjkfsdlk\n\tfhdjkfs\n\tfhdjkfsdlk\n\tfhdjkfs\n\tfhdjkfsdlk\n\tfhdjkfs\n\tfhdjkfsdlk\n\tfhdjkfs"),
-					sophomores: Activity(type: ActivityType.room, message: "fhdjkfsdlk\n\tfhdjkfs\n\tfhdjkfsdlk\n\tfhdjkfs\n\tfhdjkfsdlk\n\tfhdjkfs\n\tfhdjkfsdlk\n\tfhdjkfs\n\tfhdjkfsdlk\n\tfhdjkfs\n\tfhdjkfsdlk\n\tfhdjkfs\n\tfhdjkfsdlk\n\tfhdjkfs\n\tfhdjkfsdlk\n\tfhdjkfs"),
-					juniors: Activity(type: ActivityType.room, message: "fhdjkfsdlk\n\tfhdjkfs\n\tfhdjkfsdlk\n\tfhdjkfs\n\tfhdjkfsdlk\n\tfhdjkfs\n\tfhdjkfsdlk\n\tfhdjkfs\n\tfhdjkfsdlk\n\tfhdjkfs\n\tfhdjkfsdlk\n\tfhdjkfs\n\tfhdjkfsdlk\n\tfhdjkfs\n\tfhdjkfsdlk\n\tfhdjkfs"),
-					seniors: Activity(type: ActivityType.room, message: "fhdjkfsdlk\n\tfhdjkfs\n\tfhdjkfsdlk\n\tfhdjkfs\n\tfhdjkfsdlk\n\tfhdjkfs\n\tfhdjkfsdlk\n\tfhdjkfs\n\tfhdjkfsdlk\n\tfhdjkfs\n\tfhdjkfsdlk\n\tfhdjkfs\n\tfhdjkfsdlk\n\tfhdjkfs\n\tfhdjkfsdlk\n\tfhdjkfs"),
-				)
-			)
-		}
-	));
+		today = Day.getDate(calendar, now);
 		timer?.cancel();
 		if (today.school) {
 			// initialize periods.
@@ -171,8 +146,7 @@ class Schedule with ChangeNotifier {
 		}
 
 		// period changed since last checked.
-		// periodIndex = newIndex;
-		periodIndex = 5;
+		periodIndex = newIndex;
 
 		// School ended
 		if (periodIndex == null) { 
