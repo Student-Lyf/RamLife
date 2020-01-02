@@ -193,12 +193,25 @@ enum ActivityType {
 
 	/// When students should go to a certain room.
 	room,
+
+	/// A grade activity.
+	/// 
+	/// Students will be shown the activities for each grade, and in the future, 
+	/// students can be shown their grade's activity. 
+	grade,
+
+	/// This type of activity should not be parsed by the app.
+	/// 
+	/// Just shows the message associated with the action.
+	misc,
 }
 
 /// An activity during a period. 
 /// 
 /// Students can either be directed to their adivories or to a certain room. 
-/// See [ActivityType] for details.
+/// See [ActivityType] for a description of different activities.
+/// 
+/// Activities can also be nested. 
 @immutable
 class Activity {
 	/// Parses a JSON map of Activities still in JSON.
@@ -228,15 +241,18 @@ class Activity {
 	final String message;
 
 	/// Whether the activity differs by grade.
-	final bool byGrade;
+	bool get byGrade => type == ActivityType.grade;
 
 	/// Creates an activity.
 	const Activity({
 		@required this.type, 
 		@required this.message, 
-		@required this.byGrade
 	}) : 
 		assert(type != null, "Type cannot be null");
+
+	const Activity.group({
+		@required this.message,
+		})
 
 	/// Creates an activity from a JSON object.
 	Activity.fromJson(Map<String, dynamic> json) : 
@@ -251,6 +267,7 @@ class Activity {
 	@override
 	String toString() {
 		switch (type) {
+			case ActivityType.misc: return message;
 			case ActivityType.advisory: 
 				return "Advisory${message != null ? ': $message' : ''}";
 			case ActivityType.room: return message;

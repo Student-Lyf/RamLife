@@ -26,7 +26,9 @@ class ActivityTile extends StatelessWidget {
 					context: context,
 					builder: (_) => AlertDialog(
 						title: const Text("Activity"),
-						content: Text(activity.message ),
+						content: SingleChildScrollView(
+							child: Text(activity.message),
+						)
 					)
 				)
 			)
