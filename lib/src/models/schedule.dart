@@ -119,15 +119,13 @@ class Schedule with ChangeNotifier {
 		],
 		mincha: 8,
 		activities: {
-			"Mincha": Activity(
-				byGrade: true,
-				type: ActivityType.misc,
-				message: GradeActivity(
-					freshmen: Activity(byGrade: true, type: ActivityType.misc, message: "fhdjkfsdlk\n\tfhdjkfs\n\tfhdjkfsdlk\n\tfhdjkfs\n\tfhdjkfsdlk\n\tfhdjkfs\n\tfhdjkfsdlk\n\tfhdjkfs\n\tfhdjkfsdlk\n\tfhdjkfs\n\tfhdjkfsdlk\n\tfhdjkfs\n\tfhdjkfsdlk\n\tfhdjkfs\n\tfhdjkfsdlk\n\tfhdjkfs\n\t"),
-					sophomores: Activity(byGrade: true, type: ActivityType.misc, message: "fhdjkfsdlk\n\tfhdjkfs\n\tfhdjkfsdlk\n\tfhdjkfs\n\tfhdjkfsdlk\n\tfhdjkfs\n\tfhdjkfsdlk\n\tfhdjkfs\n\tfhdjkfsdlk\n\tfhdjkfs\n\tfhdjkfsdlk\n\tfhdjkfs\n\tfhdjkfsdlk\n\tfhdjkfs\n\tfhdjkfsdlk\n\tfhdjkfs\n\t"),
-					juniors: Activity(byGrade: true, type: ActivityType.misc, message: "fhdjkfsdlk\n\tfhdjkfs\n\tfhdjkfsdlk\n\tfhdjkfs\n\tfhdjkfsdlk\n\tfhdjkfs\n\tfhdjkfsdlk\n\tfhdjkfs\n\tfhdjkfsdlk\n\tfhdjkfs\n\tfhdjkfsdlk\n\tfhdjkfs\n\tfhdjkfsdlk\n\tfhdjkfs\n\tfhdjkfsdlk\n\tfhdjkfs\n\t"),
-					seniors: Activity(byGrade: true, type: ActivityType.misc, message: "fhdjkfsdlk\n\tfhdjkfs\n\tfhdjkfsdlk\n\tfhdjkfs\n\tfhdjkfsdlk\n\tfhdjkfs\n\tfhdjkfsdlk\n\tfhdjkfs\n\tfhdjkfsdlk\n\tfhdjkfs\n\tfhdjkfsdlk\n\tfhdjkfs\n\tfhdjkfsdlk\n\tfhdjkfs\n\tfhdjkfsdlk\n\tfhdjkfs\n\t"),
-				).toString(),
+			"Mincha": Activity.grade(
+				GradeActivity(
+					freshmen: Activity(type: ActivityType.room, message: "fhdjkfsdlk\n\tfhdjkfs\n\tfhdjkfsdlk\n\tfhdjkfs\n\tfhdjkfsdlk\n\tfhdjkfs\n\tfhdjkfsdlk\n\tfhdjkfs\n\tfhdjkfsdlk\n\tfhdjkfs\n\tfhdjkfsdlk\n\tfhdjkfs\n\tfhdjkfsdlk\n\tfhdjkfs\n\tfhdjkfsdlk\n\tfhdjkfs"),
+					sophomores: Activity(type: ActivityType.room, message: "fhdjkfsdlk\n\tfhdjkfs\n\tfhdjkfsdlk\n\tfhdjkfs\n\tfhdjkfsdlk\n\tfhdjkfs\n\tfhdjkfsdlk\n\tfhdjkfs\n\tfhdjkfsdlk\n\tfhdjkfs\n\tfhdjkfsdlk\n\tfhdjkfs\n\tfhdjkfsdlk\n\tfhdjkfs\n\tfhdjkfsdlk\n\tfhdjkfs"),
+					juniors: Activity(type: ActivityType.room, message: "fhdjkfsdlk\n\tfhdjkfs\n\tfhdjkfsdlk\n\tfhdjkfs\n\tfhdjkfsdlk\n\tfhdjkfs\n\tfhdjkfsdlk\n\tfhdjkfs\n\tfhdjkfsdlk\n\tfhdjkfs\n\tfhdjkfsdlk\n\tfhdjkfs\n\tfhdjkfsdlk\n\tfhdjkfs\n\tfhdjkfsdlk\n\tfhdjkfs"),
+					seniors: Activity(type: ActivityType.room, message: "fhdjkfsdlk\n\tfhdjkfs\n\tfhdjkfsdlk\n\tfhdjkfs\n\tfhdjkfsdlk\n\tfhdjkfs\n\tfhdjkfsdlk\n\tfhdjkfs\n\tfhdjkfsdlk\n\tfhdjkfs\n\tfhdjkfsdlk\n\tfhdjkfs\n\tfhdjkfsdlk\n\tfhdjkfs\n\tfhdjkfsdlk\n\tfhdjkfs"),
+				)
 			)
 		}
 	));

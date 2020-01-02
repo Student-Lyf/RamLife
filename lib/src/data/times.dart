@@ -250,24 +250,25 @@ class Activity {
 	}) : 
 		assert(type != null, "Type cannot be null");
 
-	const Activity.group({
-		@required this.message,
-		})
+	/// Creates an activity for each grade
+	Activity.grade(GradeActivity gradeActivty) : 
+		message = gradeActivty.toString(),
+		type = ActivityType.grade;
 
 	/// Creates an activity from a JSON object.
-	Activity.fromJson(Map<String, dynamic> json) : 
-		type = stringToActivityType[json ["type"]],
-		byGrade = json ["message"] is Map,
-		message = json ["message"] is String
-			? json ["message"]
-			: GradeActivity.fromJson(
-				Map<String, dynamic>.from(json ["message"])
-			).toString();
+	factory Activity.fromJson(Map<String, dynamic> json) => json ["message"] is Map
+		? Activity.grade(
+			GradeActivity.fromJson(Map<String, dynamic>.from(json ["message"]))
+		)
+		: Activity(
+			type: stringToActivityType[json ["type"]],
+			message: json ["message"]
+		);
 
 	@override
 	String toString() {
 		switch (type) {
-			case ActivityType.misc: return message;
+			// case ActivityType.misc: return message;
 			case ActivityType.advisory: 
 				return "Advisory${message != null ? ': $message' : ''}";
 			case ActivityType.room: return message;
