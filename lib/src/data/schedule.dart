@@ -236,10 +236,15 @@ class Period {
 	/// must both be null, or both must be non-null. See [PeriodData()] for more.
 	final String id;
 
+	/// The activity for this period. 
+	/// 
+	/// This is set in [Special.activities].
+	final Activity activity;
+
 	/// Unpacks a [PeriodData] object and returns a Period. 
 	Period(
 		PeriodData data,
-		{@required this.time, @required this.period}
+		{@required this.time, @required this.period, @required this.activity}
 	) : 
 		room = data.room,
 		id = data.id;
@@ -247,7 +252,7 @@ class Period {
 	/// Returns a period that represents time for Mincha. 
 	/// 
 	/// Use this constructor to keep a consistent definition of "Mincha".
-	const Period.mincha(this.time) :
+	const Period.mincha(this.time, {this.activity}) :
 		room = null,
 		id = null,
 		period = "Mincha";

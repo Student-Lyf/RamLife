@@ -73,7 +73,7 @@ class Reader {
 
 	/// The JSON representation of the calendar. 
 	List<List<Map<String, dynamic>>> get calendarData => [
-		for (final List entry in jsonDecode(calendarFile.readAsStringSync())) <Map<String, dynamic>>[
+		for (final List entry in jsonDecode(calendarFile.readAsStringSync())) [
 			for (final entry2 in entry) 
 				Map<String, dynamic>.from(entry2)
 		]

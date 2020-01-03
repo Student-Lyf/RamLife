@@ -1,7 +1,5 @@
 import "package:cloud_firestore/cloud_firestore.dart" as fb;
 
-import "package:ramaz/data.dart";
-
 import "auth.dart";
 
 // ignore: avoid_classes_with_only_static_members
@@ -66,20 +64,8 @@ class Firestore {
 	/// instead of a student, as this creates a dependency between this 
 	/// library and the data library.
 	static Future<Map<String, Map<String, dynamic>>> getClasses(
-		Student student
+		Set<String> ids		
 	) async {
-		final Set<String> ids = {};
-		for (final List<PeriodData> schedule in student.schedule.values) {
-			for (final PeriodData period in schedule) {
-				if (
-					period == null || period.id == null
-				) {
-					continue;  // skip free periods
-				}
-				ids.add(period.id);
-			}
-		}
-		ids.add (student.homeroom);
 		final Map<String, Map<String, dynamic>> result = {};
 		for (final String id in ids) {
 			result [id] = await getClass(id);
@@ -99,9 +85,9 @@ class Firestore {
 		{bool download = false}
 	) async => [
 		for (int month = 1; month < 13; month++) <Map<String, dynamic>>[
-			for (final entry in List.from((await _calendar.document(month.toString()).get(
+			for (final entry in (await _calendar.document(month.toString()).get(
 				source: download ? fb.Source.server : fb.Source.serverAndCache,
-			)).data ["calendar"]))
+			)).data ["calendar"])
 				Map<String, dynamic>.from(entry)
 		]
 	];
@@ -118,8 +104,12 @@ class Firestore {
 	/// the student profile data. This choice was made since reminders are 
 	/// updated frequently and this saves the system from processing the
 	/// student's schedule every time this happens. 
-	static Future<Map<String, dynamic>> get reminders async => 
-		(await _reminders.document(await Auth.email).get()).data;
+	static Future<List<Map<String, dynamic>>> get reminders async => [
+		for (final entry in (await _reminders.document(
+			await Auth.email).get()
+		).data ["reminders"])
+			Map<String, dynamic>.from(entry)
+	];
 
 	/// Uploads the user's reminders to the database. 
 	/// 
@@ -132,17 +122,10 @@ class Firestore {
 	/// This should also probably not persist the read reminders in the database 
 	/// (ie, keep them local).
 	static Future<void> saveReminders(
-		List<Reminder> remindersList, 
-		List<int> readReminders
+		List<Map<String, dynamic>> remindersList, 
 	) async => _reminders
 		.document(await Auth.email)
-		.setData({
-			"reminders": [
-				for (final Reminder reminder in remindersList)
-					reminder.toJson()
-			],
-			"read": readReminders
-		});
+		.setData({"reminders": remindersList});
 
 	static Future<Map<String, dynamic>> get admin async => 
 		(await _admin.document(await Auth.email).get()).data;

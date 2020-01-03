@@ -6,6 +6,7 @@ export "src/widgets/ambient/services.dart";
 export "src/widgets/ambient/theme_changer.dart";
 
 // Atomic widgets represent a single data object.
+export "src/widgets/atomic/activity_tile.dart";
 export "src/widgets/atomic/next_class.dart";
 export "src/widgets/atomic/reminder_tile.dart";
 

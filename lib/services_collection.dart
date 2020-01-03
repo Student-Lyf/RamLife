@@ -102,9 +102,12 @@ class ServicesCollection {
 		// save the data
 		reader
 			..studentData = studentData
-			..subjectData = await Firestore.getClasses(student)
+			..subjectData = await Firestore.getClasses(student.getIds())
 			..calendarData =  await Firestore.getCalendar()
-			..remindersData = await Firestore.reminders;
+			..remindersData = {
+				"reminders": await Firestore.reminders,
+				"read": [],
+			};
 
 		if (first) {
 			init();
