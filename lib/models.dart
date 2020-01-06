@@ -25,8 +25,12 @@
 /// 
 library models;
 
-export "src/models/feedback.dart";
-export "src/models/reminder_builder.dart";
-export "src/models/reminders.dart";
-export "src/models/schedule.dart";
-export "src/models/schedule_page.dart";
+// data models
+export "src/models/data/admin.dart";
+export "src/models/data/reminders.dart";
+export "src/models/data/schedule.dart";
+
+// view models
+export "src/models/view/feedback.dart";
+export "src/models/view/reminder_builder.dart";
+export "src/models/view/schedule.dart";

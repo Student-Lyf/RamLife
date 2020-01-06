@@ -4,12 +4,12 @@ import "package:ramaz/data.dart";
 import "package:ramaz/services.dart";
 
 // ignore: prefer_mixin
-class AdminModel with ChangeNotifier {
+class AdminUserModel with ChangeNotifier {
 	final Reader reader;
 
 	final Admin admin;
 
-	AdminModel(this.reader) :
+	AdminUserModel(this.reader) :
 		admin = Admin.fromJson(reader.adminData);
 
 	void save() {

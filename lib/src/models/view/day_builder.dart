@@ -1,17 +1,16 @@
 import "package:flutter/foundation.dart" show ChangeNotifier;
 
 import "package:ramaz/data.dart";
+import "package:ramaz/models.dart";
 import "package:ramaz/services.dart";
-
-import "admin.dart";
 
 // ignore: prefer_mixin
 class DayBuilderModel with ChangeNotifier {
-	final AdminModel admin;
+	final AdminUserModel admin;
 	Letters _letter;
 	Special _special;
 
-	DayBuilderModel(this.admin) {
+	DayBuilderModel(AdminModel adminModel) : admin = adminModel.user {
 		admin.addListener(notifyListeners);
 	}
 
