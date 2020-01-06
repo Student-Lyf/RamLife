@@ -137,6 +137,7 @@ class PeriodTester {
 	static final Period lunch = Period (
 		periodData,
 		time: range, 
+		activity: null,
 		period: periodNum
 	);
 
@@ -146,12 +147,14 @@ class PeriodTester {
 			id: periodData.id,
 		),
 		time: range,
+		activity: null,
 		period: "Homeroom",
 	);
 
 	static final Period free = Period (
 		PeriodData.free,
 		time: range, 
+		activity: null,
 		period: periodNum,
 	);
 
@@ -170,6 +173,7 @@ class PeriodTester {
 			Period (
 				periodData,
 				time: range, 
+				activity: null,
 				period: periodNum
 			),
 			lunch
@@ -305,16 +309,18 @@ class DayTester {
 	}
 
 	static void calendarTest() {
-		const Map<String, dynamic> json = {
-			"1": mJson, "2": nullJson,
-		};
-		final DateTime now = DateTime.now();
-		compare<Map<DateTime, Day>> (
-			Day.getCalendar (json),
-			{
-				DateTime.utc (now.year, now.month, 1): day2,
-				DateTime.utc (now.year, now.month, 2): day3
-			},
+		final List<List<Map<String, dynamic>>> json = [
+			[mJson, nullJson], ...List.filled(11, [])
+		];
+		compare<List<List<Day>>> (
+			Day.getCalendar(json),
+			[
+				[
+					day2,
+					day3
+				],
+				...List.filled(11, [])
+			]
 		);
 	}
 }
