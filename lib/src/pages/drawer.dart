@@ -88,7 +88,7 @@ class NavigationDrawer extends StatelessWidget {
 										),
 									]
 								),
-								Spacer(),
+								const Spacer(),
 								Align (
 									alignment: Alignment.bottomCenter,
 									child: Column (
