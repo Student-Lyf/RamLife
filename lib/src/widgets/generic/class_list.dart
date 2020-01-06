@@ -117,7 +117,7 @@ class ClassList extends StatelessWidget {
 				letter: day.letter,
 				subject: subject?.name,
 			),
-			activity: period.activity,
+			activity: period?.activity,
 		);
 	}
 }

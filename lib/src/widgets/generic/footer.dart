@@ -50,7 +50,7 @@ class Footer extends StatelessWidget {
 										).join (". "),
 										textScaleFactor: textScale,
 									),
-									if (schedule.nextPeriod.activity != null) 
+									if (schedule.nextPeriod?.activity != null) 
 										const Text("There is an activity"),
 									if (schedule.reminders.hasReminder) 
 										const Text ("Click to see reminder"),
