@@ -12,7 +12,7 @@ class ScheduleModel with ChangeNotifier {
 	static const Letters defaultLetter = Letters.M;
 
 	/// The default [Special] for the UI.
-	static const Special defaultSpecial = regular;
+	static const Special defaultSpecial = Special.regular;
 
 	/// The default [Day] for the UI.
 	static final Day defaultDay = 
@@ -20,10 +20,10 @@ class ScheduleModel with ChangeNotifier {
 
 	/// A list of valid Friday schedules.
 	static const List<Special> fridays = [
-		friday, 
-		winterFriday, 
-		fridayRoshChodesh, 
-		winterFridayRoshChodesh
+		Special.friday, 
+		Special.winterFriday, 
+		Special.fridayRoshChodesh, 
+		Special.winterFridayRoshChodesh
 	];
 
 	/// The schedule data model.
@@ -63,7 +63,7 @@ class ScheduleModel with ChangeNotifier {
 			date.month,
 			date.day
 		);
-		final Day selected = schedule.calendar [justDate];
+		final Day selected = Day.getDate(schedule.calendar, justDate);
 		if (!selected.school) {
 			throw Exception("No School");
 		}
@@ -97,9 +97,20 @@ class ScheduleModel with ChangeNotifier {
 				case Letters.A:
 				case Letters.B:
 				case Letters.C:
+					if (newSpecial != Special.regular) {
+						continue regular;
+					}
+					break;
+				regular: 
 				case Letters.M:
 				case Letters.R:
-					if (!fridays.contains (newSpecial)) {
+					if (
+						(
+							letter != Letters.M && letter != Letters.R ||  // if it's M or R
+							newSpecial != Special.rotate  // and newSpecial isn't a rotate
+						) &&
+						!fridays.contains(newSpecial)  // AND newSpecial is not a Friday
+					) {
 						special = newSpecial;
 					}
 					break;

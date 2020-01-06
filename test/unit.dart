@@ -6,12 +6,15 @@ typedef VoidCallback = void Function();
 void compare<T> (T target, T result) => expect (target, result);
 void compareNot<T> (T target, T result) => expect (target, isNot (result));
 
-void test_suite(Map<String, Map<String, VoidCallback>> suite) {
-	for (MapEntry<String, Map<String, VoidCallback>> entry in suite.entries) {
+void testSuite(Map<String, Map<String, VoidCallback>> suite) {
+	for (
+		final MapEntry<String, Map<String, VoidCallback>> entry 
+		in suite.entries
+	) {
 		group (
 			entry.key, 
 			() {
-				for (MapEntry<String, VoidCallback> entry2 in entry.value.entries) {
+				for (final MapEntry<String, VoidCallback> entry2 in entry.value.entries) {
 					test (entry2.key, entry2.value);
 				}
 			}
@@ -30,7 +33,7 @@ void compareList<E> (List<E> a, List<E> b) => expect (
 void compareDeepMaps<Key, ListValue> (
 	Map<Key, List<ListValue>> a, Map<Key, List<ListValue>> b
 ) {
-	for (MapEntry<Key, List<ListValue>> entry in a.entries) {
+	for (final MapEntry<Key, List<ListValue>> entry in a.entries) {
 		// compareList<
 		compare<bool> (b.containsKey(entry.key), true);
 		compareList<ListValue> (b[entry.key], entry.value);

@@ -7,7 +7,7 @@ import "package:ramaz/widgets.dart";
 // Must be stateful to keep [TextEditingController.text] intact
 class ReminderBuilder extends StatefulWidget {	
 	static void noop(){}
-	static final Color disabledColor = RaisedButton(onPressed: noop)
+	static final Color disabledColor = const RaisedButton(onPressed: noop)
 		.disabledTextColor;
 
 	static String trimString (String text, int length) => text.length > length
@@ -111,6 +111,7 @@ class ReminderBuilderState extends State<ReminderBuilder> {
 								controller: controller,
 								onChanged: model.onMessageChanged,
 								textCapitalization: TextCapitalization.sentences,
+								autofocus: true,
 							),
 							const SizedBox (height: 20),
 							Wrap(

@@ -60,7 +60,8 @@ class Time {
 	bool operator >= (Time other) => this > other || this == other;
 
 	@override 
-	String toString() => "$hour:${minutes.toString().padLeft(2, '0')}";
+	String toString() => 
+		"${hour > 12 ? hour - 12 : hour}:${minutes.toString().padLeft(2, '0')}";
 }
 
 /// A range of times.
@@ -142,6 +143,139 @@ class Range {
 // 	).isAfter(other);
 // }
 
+
+/// An activity for each grade. 
+@immutable
+class GradeActivity {
+	/// The activity for freshmen.
+	final Activity freshmen;
+
+	/// The activity for sophomores.
+	final Activity sophomores;
+
+	/// The activity for juniors.
+	final Activity juniors;
+
+	/// The activity for seniors.
+	final Activity seniors; 
+
+	/// Creates a container for activities by grade. 
+	const GradeActivity({
+		@required this.freshmen,
+		@required this.sophomores,
+		@required this.juniors,
+		@required this.seniors,
+	});
+
+	/// Creates a container for activities from a JSON object.
+	GradeActivity.fromJson(Map<String, dynamic> json) : 
+		freshmen = Activity.fromJson(Map<String, dynamic>.from(json ["freshmen"])),
+		sophomores = Activity.fromJson(
+			Map<String, dynamic>.from(json ["sophomores"])
+		),
+		juniors = Activity.fromJson(Map<String, dynamic>.from(json ["juniors"])),
+		seniors = Activity.fromJson(Map<String, dynamic>.from(json ["seniors"]));
+
+	@override 
+	String toString() => 
+		"Freshmen: ${freshmen.toString()}\n\n"
+		"Sophomores: ${sophomores.toString()}\n\n"
+		"Juniors: ${juniors.toString()}\n\n"
+		"Seniors: ${seniors.toString()}";
+}
+
+/// A type of activity during the day.
+enum ActivityType {
+	/// When students should go to their advisories.
+	/// 
+	/// The app will show everyone to their advisories. 
+	advisory,
+
+	/// When students should go to a certain room.
+	room,
+
+	/// A grade activity.
+	/// 
+	/// Students will be shown the activities for each grade, and in the future, 
+	/// students can be shown their grade's activity. 
+	grade,
+
+	/// This type of activity should not be parsed by the app.
+	/// 
+	/// Just shows the message associated with the action.
+	misc,
+}
+
+/// An activity during a period. 
+/// 
+/// Students can either be directed to their adivories or to a certain room. 
+/// See [ActivityType] for a description of different activities.
+/// 
+/// Activities can also be nested. 
+@immutable
+class Activity {
+	/// Parses a JSON map of Activities still in JSON.
+	static Map<String, Activity> getActivities(Map<String, dynamic> json) {
+		final Map<String, Activity> result = {};
+		for (final MapEntry<String, dynamic> entry in json.entries) {
+			result [entry.key] = Activity.fromJson(
+				Map<String, dynamic>.from(entry.value)
+			);
+		}
+		return result;
+	}
+
+	/// Maps JSON string values to [ActivityType]s.
+	static const Map<String, ActivityType> stringToActivityType = {
+		"advisory": ActivityType.advisory,
+		"room": ActivityType.room,
+		"grade": ActivityType.grade,
+		"misc": ActivityType.misc,
+	};
+
+	/// The type of this activity.
+	final ActivityType type;
+
+	/// A message to be displayed with this activity.
+	/// 
+	/// For example, this can be used to direct students to a certain room based
+	/// on grade, which is better handled by the user rather than the app.
+	final String message;
+
+	/// Creates an activity.
+	const Activity({
+		@required this.type, 
+		@required this.message, 
+	}) : 
+		assert(type != null, "Type cannot be null");
+
+	/// Creates an activity for each grade
+	Activity.grade(GradeActivity gradeActivty) : 
+		message = gradeActivty.toString(),
+		type = ActivityType.grade;
+
+	/// Creates an activity from a JSON object.
+	factory Activity.fromJson(Map<String, dynamic> json) => json ["message"] is Map
+		? Activity.grade(
+			GradeActivity.fromJson(Map<String, dynamic>.from(json ["message"]))
+		)
+		: Activity(
+			type: stringToActivityType[json ["type"]],
+			message: json ["message"]
+		);
+
+	@override
+	String toString() {
+		switch (type) {
+			case ActivityType.misc: return message;
+			case ActivityType.advisory: 
+				return "Advisory${message != null ? ' -- $message' : ''}";
+			case ActivityType.room: return message;
+			default: return "Activity";
+		}
+	}
+}
+
 /// A description of the time allotment for a day. 
 /// 
 /// Some days require different time periods, or even periods that 
@@ -167,6 +301,9 @@ class Special {
 	/// The index in [periods] that represents homeroom.
 	final int homeroom;
 
+	/// Maps activities to the periods.  
+	final Map<String, Activity> activities;
+
 	/// A const constructor.
 	const Special (
 		this.name, 
@@ -174,7 +311,8 @@ class Special {
 		{
 			this.homeroom, 
 			this.mincha,
-			this.skip
+			this.skip,
+			this.activities,
 		}
 	);
 
@@ -213,7 +351,10 @@ class Special {
 				],
 				homeroom: json ["homeroom"],
 				mincha: json ["mincha"],
-				skip: List<int>.from(json ["skip"]),
+				skip: List<int>.from(json ["skip"] ?? []),
+				activities: Activity.getActivities(
+					Map<String, dynamic>.from(json ["activities"] ?? {})
+				),
 			);
 		} else {
 			throw ArgumentError.value (
@@ -255,17 +396,16 @@ class Special {
 	/// Compares two lists
 	/// 
 	/// This function is used to compare the [periods] property of two Specials. 
-	static bool deepEquals<E>(List<E> a, List<E> b) {
-		if (a.length != b.length) {
-			return false;
-		}
-		for (int index = 0; index < a.length; index++) {
-			if (a [index] != b [index]) {
-				return false;
-			}
-		}
-		return true;
-	}
+	static bool deepEquals<E>(List<E> a, List<E> b) => 
+		(a == null) == (b == null) ||
+		(a == null && b == null) &&
+		a.length == b.length &&
+		<int>[
+			for (int index = 0; index < 10; index++) 
+				index
+		].every(
+			(int index) => a [index] == b [index]
+		);
 
 	@override 
 	String toString() => name;
@@ -297,19 +437,19 @@ class Special {
 	static const Special roshChodesh = Special (
 		"Rosh Chodesh", 
 		[
-			Range (Time (8, 00), Time (9, 05)),
-			Range (Time (9, 10), Time (9, 50)),
-			Range (Time (9, 55), Time (10, 35)),
-			Range (Time (10, 35), Time (10, 50)),
-			Range (Time (10, 50), Time (11, 30)), 
-			Range (Time (11, 35), Time (12, 15)),
-			Range (Time (12, 20), Time (12, 55)),
-			Range (Time (1, 00), Time (1, 35)),
-			Range (Time (1, 40), Time (2, 15)),
-			Range (Time (2, 30), Time (3, 00)),
-			Range (Time (3, 00), Time (3, 20)),
-			Range (Time (3, 20), Time (4, 00)),
-			Range (Time (4, 05), Time (4, 45))
+			Range(Time(8, 00), Time(9, 05)),
+			Range(Time(9, 10), Time(9, 50)),
+			Range(Time(9, 55), Time(10, 35)),
+			Range(Time(10, 35), Time(10, 50)),
+			Range(Time(10, 50), Time(11, 30)),
+			Range(Time(11, 35), Time(12, 15)),
+			Range(Time(12, 20), Time(12, 55)),
+			Range(Time(13, 00), Time(13, 35)),
+			Range(Time(13, 40), Time(14, 15)),
+			Range(Time(14, 30), Time(15, 00)),
+			Range(Time(15, 00), Time(15, 20)),
+			Range(Time(15, 20), Time(16, 00)),
+			Range(Time(16, 05), Time(16, 45)),
 		],
 		homeroom: 3,
 		mincha: 10,
@@ -319,15 +459,15 @@ class Special {
 	static const Special fastDay = Special (
 		"Tzom",
 		[
-			Range (Time (8, 00), Time (8, 55)),
-			Range (Time (9, 00), Time (9, 35)),
-			Range (Time (9, 40), Time (10, 15)),
-			Range (Time (10, 20), Time (10, 55)), 
-			Range (Time (11, 00), Time (11, 35)), 
-			Range (Time (11, 40), Time (12, 15)),
-			Range (Time (12, 20), Time (12, 55)), 
-			Range (Time (1, 00), Time (1, 35)), 
-			Range (Time (1, 35), Time (2, 05))
+			Range(Time(8, 00), Time(8, 55)),
+			Range(Time(9, 00), Time(9, 35)),
+			Range(Time(9, 40), Time(10, 15)),
+			Range(Time(10, 20), Time(10, 55)),
+			Range(Time(11, 00), Time(11, 35)),
+			Range(Time(11, 40), Time(12, 15)),
+			Range(Time(12, 20), Time(12, 55)),
+			Range(Time(13, 00), Time(13, 35)),
+			Range(Time(13, 35), Time(14, 05)),
 		],
 		mincha: 8,
 		skip: [6, 7, 8]
@@ -337,14 +477,14 @@ class Special {
 	static const Special friday = Special (
 		"Friday",
 		[
-			Range (Time (8, 00), Time (8, 45)),
-			Range (Time (8, 50), Time (9, 30)),
-			Range (Time (9, 35), Time (10, 15)),
-			Range (Time (10, 20), Time (11, 00)),
-			Range (Time (11, 00), Time (11, 20)),
-			Range (Time (11, 20), Time (12, 00)),
-			Range (Time (12, 05), Time (12, 45)),
-			Range (Time (12, 50), Time (1, 30))
+			Range(Time(8, 00), Time(8, 45)),
+			Range(Time(8, 50), Time(9, 30)),
+			Range(Time(9, 35), Time(10, 15)),
+			Range(Time(10, 20), Time(11, 00)),
+			Range(Time(11, 00), Time(11, 20)),
+			Range(Time(11, 20), Time(12, 00)),
+			Range(Time(12, 05), Time(12, 45)),
+			Range(Time(12, 50), Time(13, 30)),
 		],
 		homeroom: 4
 	);
@@ -353,14 +493,14 @@ class Special {
 	static const Special fridayRoshChodesh = Special (
 		"Friday Rosh Chodesh",
 		[
-			Range(Time (8, 00), Time (9, 05)),
-			Range(Time (9, 10), Time (9, 45)),
-			Range(Time (9, 50), Time (10, 25)),
-			Range(Time (10, 30), Time (11, 05)),
-			Range(Time (11, 05), Time (11, 25)),
-			Range(Time (11, 25), Time (12, 00)),
-			Range(Time (12, 05), Time (12, 40)),
-			Range(Time (12, 45), Time (1, 20))
+			Range(Time(8, 00), Time(9, 05)),
+			Range(Time(9, 10), Time(9, 45)),
+			Range(Time(9, 50), Time(10, 25)),
+			Range(Time(10, 30), Time(11, 05)),
+			Range(Time(11, 05), Time(11, 25)),
+			Range(Time(11, 25), Time(12, 00)),
+			Range(Time(12, 05), Time(12, 40)),
+			Range(Time(12, 45), Time(13, 20)),
 		],
 		homeroom: 4
 	);
@@ -369,14 +509,14 @@ class Special {
 	static const Special winterFriday = Special (
 		"Winter Friday",
 		[
-			Range(Time (8, 00), Time (8, 45)),
-			Range(Time (8, 50), Time (9, 25)), 
-			Range(Time (9, 30), Time (10, 05)), 
-			Range(Time (10, 10), Time (10, 45)),
-			Range(Time (10, 45), Time (11, 05)), 
-			Range(Time (11, 05), Time (11, 40)),
-			Range(Time (11, 45), Time (12, 20)),
-			Range(Time (12, 25), Time (1, 00))
+			Range(Time(8, 00), Time(8, 45)),
+			Range(Time(8, 50), Time(9, 25)),
+			Range(Time(9, 30), Time(10, 05)),
+			Range(Time(10, 10), Time(10, 45)),
+			Range(Time(10, 45), Time(11, 05)),
+			Range(Time(11, 05), Time(11, 40)),
+			Range(Time(11, 45), Time(12, 20)),
+			Range(Time(12, 25), Time(13, 00)),
 		],
 		homeroom: 4
 	);
@@ -385,14 +525,14 @@ class Special {
 	static const Special winterFridayRoshChodesh = Special (
 		"Winter Friday Rosh Chodesh",
 		[
-			Range(Time (8, 00), Time (9, 05)),
-			Range(Time (9, 10), Time (9, 40)),
-			Range(Time (9, 45), Time (10, 15)),
-			Range(Time (10, 20), Time (10, 50)), 
-			Range(Time (10, 50), Time (11, 10)),
-			Range(Time (11, 10), Time (11, 40)),
-			Range(Time (11, 45), Time (12, 15)),
-			Range(Time (12, 20), Time (12, 50))
+			Range(Time(8, 00), Time(9, 05)),
+			Range(Time(9, 10), Time(9, 40)),
+			Range(Time(9, 45), Time(10, 15)),
+			Range(Time(10, 20), Time(10, 50)),
+			Range(Time(10, 50), Time(11, 10)),
+			Range(Time(11, 10), Time(11, 40)),
+			Range(Time(11, 45), Time(12, 15)),
+			Range(Time(12, 20), Time(12, 50)),
 		],
 		homeroom: 4
 	);
@@ -401,19 +541,19 @@ class Special {
 	static const Special amAssembly = Special (
 		"AM Assembly",
 		[
-			Range(Time (8, 00), Time (8, 50)),
-			Range(Time (8, 55), Time (9, 30)),
-			Range(Time (9, 35), Time (10, 10)),
-			Range(Time (10, 10), Time (11, 10)),
-			Range(Time (11, 10), Time (11, 45)), 
-			Range(Time (11, 50), Time (12, 25)),
-			Range(Time (12, 30), Time (1, 05)),
-			Range(Time (1, 10), Time (1, 45)),
-			Range(Time (1, 50), Time (2, 25)),
-			Range(Time (2, 30), Time (3, 05)),
-			Range(Time (3, 05), Time (3, 25)), 
-			Range(Time (3, 25), Time (4, 00)),
-			Range(Time (4, 05), Time (4, 45))
+			Range(Time(8, 00), Time(8, 50)),
+			Range(Time(8, 55), Time(9, 30)),
+			Range(Time(9, 35), Time(10, 10)),
+			Range(Time(10, 10), Time(11, 10)),
+			Range(Time(11, 10), Time(11, 45)),
+			Range(Time(11, 50), Time(12, 25)),
+			Range(Time(12, 30), Time(13, 05)),
+			Range(Time(13, 10), Time(13, 45)),
+			Range(Time(13, 50), Time(14, 25)),
+			Range(Time(14, 30), Time(15, 05)),
+			Range(Time(15, 05), Time(15, 25)),
+			Range(Time(15, 25), Time(16, 00)),
+			Range(Time(16, 05), Time(16, 45)),
 		],
 		homeroom: 3,
 
@@ -424,18 +564,18 @@ class Special {
 	static const Special pmAssembly = Special (
 		"PM Assembly",
 		[
-			Range(Time (8, 00), Time (8, 50)), 
-			Range(Time (8, 55), Time (9, 30)),
-			Range(Time (9, 35), Time (10, 10)),
-			Range(Time (10, 15), Time (10, 50)),
-			Range(Time (10, 55), Time (11, 30)),
-			Range(Time (11, 35), Time (12, 10)),
-			Range(Time (12, 15), Time (12, 50)),
-			Range(Time (12, 55), Time (1, 30)),
-			Range(Time (1, 35), Time (2, 10)), 
-			Range(Time (2, 10), Time (3, 30)),
-			Range(Time (3, 30), Time (4, 05)),
-			Range(Time (4, 10), Time (4, 45))
+			Range(Time(8, 00), Time(8, 50)),
+			Range(Time(8, 55), Time(9, 30)),
+			Range(Time(9, 35), Time(10, 10)),
+			Range(Time(10, 15), Time(10, 50)),
+			Range(Time(10, 55), Time(11, 30)),
+			Range(Time(11, 35), Time(12, 10)),
+			Range(Time(12, 15), Time(12, 50)),
+			Range(Time(12, 55), Time(13, 30)),
+			Range(Time(13, 35), Time(14, 10)),
+			Range(Time(14, 10), Time(15, 30)),
+			Range(Time(15, 30), Time(16, 05)),
+			Range(Time(16, 10), Time(16, 45)),
 		],
 		mincha: 9
 	);
@@ -444,19 +584,19 @@ class Special {
 	static const Special regular = Special (
 		"M or R day",
 		[
-			Range(Time (8, 00), Time (8, 50)),
-			Range(Time (8, 55), Time (9, 35)),
-			Range(Time (9, 40), Time (10, 20)),
-			Range(Time (10, 20), Time (10, 35)),
-			Range(Time (10, 35), Time (11, 15)), 
-			Range(Time (11, 20), Time (12, 00)),
-			Range(Time (12, 05), Time (12, 45)),
-			Range(Time (12, 50), Time (1, 30)),
-			Range(Time (1, 35), Time (2, 15)), 
-			Range(Time (2, 20), Time (3, 00)),
-			Range(Time (3, 00), Time (3, 20)), 
-			Range(Time (3, 20), Time (4, 00)),
-			Range(Time (4, 05), Time (4, 45))
+			Range(Time(8, 00), Time(8, 50)),
+			Range(Time(8, 55), Time(9, 35)),
+			Range(Time(9, 40), Time(10, 20)),
+			Range(Time(10, 20), Time(10, 35)),
+			Range(Time(10, 35), Time(11, 15)),
+			Range(Time(11, 20), Time(12, 00)),
+			Range(Time(12, 05), Time(12, 45)),
+			Range(Time(12, 50), Time(13, 30)),
+			Range(Time(13, 35), Time(14, 15)),
+			Range(Time(14, 20), Time(15, 00)),
+			Range(Time(15, 00), Time(15, 20)),
+			Range(Time(15, 20), Time(16, 00)),
+			Range(Time(16, 05), Time(16, 45)),
 		],
 		homeroom: 3,
 		mincha: 10
@@ -466,19 +606,19 @@ class Special {
 	static const Special rotate = Special (
 		"A, B, or C day",
 		[
-			Range(Time (8, 00), Time (8, 45)), 
-			Range(Time (8, 50), Time (9, 30)),
-			Range(Time (9, 35), Time (10, 15)),
-			Range(Time (10, 15), Time (10, 35)),
-			Range(Time (10, 35), Time (11, 15)),
-			Range(Time (11, 20), Time (12, 00)),
-			Range(Time (12, 05), Time (12, 45)),
-			Range(Time (12, 50), Time (1, 30)),
-			Range(Time (1, 35), Time (2, 15)),
-			Range(Time (2, 20), Time (3, 00)),
-			Range(Time (3, 00), Time (3, 20)),
-			Range(Time (3, 20), Time (4, 00)),
-			Range(Time (4, 05), Time (4, 45))
+			Range(Time(8, 00), Time(8, 45)),
+			Range(Time(8, 50), Time(9, 30)),
+			Range(Time(9, 35), Time(10, 15)),
+			Range(Time(10, 15), Time(10, 35)),
+			Range(Time(10, 35), Time(11, 15)),
+			Range(Time(11, 20), Time(12, 00)),
+			Range(Time(12, 05), Time(12, 45)),
+			Range(Time(12, 50), Time(13, 30)),
+			Range(Time(13, 35), Time(14, 15)),
+			Range(Time(14, 20), Time(15, 00)),
+			Range(Time(15, 00), Time(15, 20)),
+			Range(Time(15, 20), Time(16, 00)),
+			Range(Time(16, 05), Time(16, 45)),
 		],
 		homeroom: 3,
 		mincha: 10
@@ -488,24 +628,25 @@ class Special {
 	static const Special early = Special (
 		"Early Dismissal",
 		[
-			Range(Time (8, 00), Time (8, 45)),
-			Range(Time (8, 50), Time (9, 25)), 
-			Range(Time (9, 30), Time (10, 05)),
-			Range(Time (10, 05), Time (10, 20)),
-			Range(Time (10, 20), Time (10, 55)),
-			Range(Time (11, 00), Time (11, 35)),
-			Range(Time (11, 40), Time (12, 15)),
-			Range(Time (12, 20), Time (12, 55)),
-			Range(Time (1, 00), Time (1, 35)), 
-			Range(Time (1, 40), Time (2, 15)),
-			Range(Time (2, 15), Time (2, 35)),
-			Range(Time (2, 35), Time (3, 10)),
-			Range(Time (3, 15), Time (3, 50))
+			Range(Time(8, 00), Time(8, 45)),
+			Range(Time(8, 50), Time(9, 25)),
+			Range(Time(9, 30), Time(10, 05)),
+			Range(Time(10, 05), Time(10, 20)),
+			Range(Time(10, 20), Time(10, 55)),
+			Range(Time(11, 00), Time(11, 35)),
+			Range(Time(11, 40), Time(12, 15)),
+			Range(Time(12, 20), Time(12, 55)),
+			Range(Time(13, 00), Time(13, 35)),
+			Range(Time(13, 40), Time(14, 15)),
+			Range(Time(14, 15), Time(14, 35)),
+			Range(Time(14, 35), Time(15, 10)),
+			Range(Time(15, 15), Time(15, 50)),
 		],
 		homeroom: 3,
 		mincha: 10
 	);
 
+	/// A day where the schedule is not known.
 	static const Special modified = Special (
 		"Modified", 
 		null,

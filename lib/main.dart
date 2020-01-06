@@ -13,8 +13,6 @@ import "package:ramaz/services.dart";
 import "package:ramaz/services_collection.dart";
 import "package:ramaz/widgets.dart";
 
-/// Completely refresh the user's schedule 
-/// Basically simulate the login sequence
 Future<void> main({bool restart = false}) async {
 	// This shows a splash screen but secretly 
 	// determines the desired `platformBrightness`

@@ -72,13 +72,16 @@ class Reader {
 	}
 
 	/// The JSON representation of the calendar. 
-	Map<String, dynamic> get calendarData => jsonDecode(
-		calendarFile.readAsStringSync()
-	);
+	List<List<Map<String, dynamic>>> get calendarData => [
+		for (final List entry in jsonDecode(calendarFile.readAsStringSync())) [
+			for (final entry2 in entry) 
+				Map<String, dynamic>.from(entry2)
+		]
+	];
 
-	set calendarData (Map<String, dynamic> data) => calendarFile.writeAsStringSync(
-		jsonEncode(data)
-	);
+	set calendarData(
+		List<List<Map<String, dynamic>>> data
+	) => calendarFile.writeAsStringSync(jsonEncode(data));
 
 	/// The JSON representation of the user's reminders.
 	/// 

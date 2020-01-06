@@ -31,8 +31,8 @@ class SchedulePage extends StatelessWidget {
 				],
 			),
 			bottomNavigationBar: Footer(),
-			floatingActionButton: Builder (
-				builder: (BuildContext context) => FloatingActionButton (
+			floatingActionButton: Builder(
+				builder: (BuildContext context) => FloatingActionButton(
 					onPressed: () => viewDay (model, context),
 					child: const Icon (Icons.calendar_today),
 				)
@@ -60,10 +60,15 @@ class SchedulePage extends StatelessWidget {
 							value: model.day.special,
 							onChanged: (Special special) => model.update(newSpecial: special),
 							items: [
-								for (final Special special in specials)
+								for (final Special special in Special.specials)
 									DropdownMenuItem(
 										value: special,
 										child: Text (special.name),
+									),
+								if (!Special.specials.contains(model.day.special))
+									DropdownMenuItem(
+										value: model.day.special,
+										child: Text(model.day.special.name)
 									)
 							]
 						)

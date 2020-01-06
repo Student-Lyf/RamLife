@@ -208,7 +208,7 @@ class PeriodData {
 class Period {
 	/// The time this period takes place. 
 	/// 
-	/// If the time is not known (ie, the schedule is [modified]), 
+	/// If the time is not known (ie, the schedule is [Special.modified]), 
 	/// then this will be null. 
 	final Range time;
 
@@ -236,10 +236,15 @@ class Period {
 	/// must both be null, or both must be non-null. See [PeriodData()] for more.
 	final String id;
 
+	/// The activity for this period. 
+	/// 
+	/// This is set in [Special.activities].
+	final Activity activity;
+
 	/// Unpacks a [PeriodData] object and returns a Period. 
 	Period(
 		PeriodData data,
-		{@required this.time, @required this.period}
+		{@required this.time, @required this.period, @required this.activity}
 	) : 
 		room = data.room,
 		id = data.id;
@@ -247,7 +252,7 @@ class Period {
 	/// Returns a period that represents time for Mincha. 
 	/// 
 	/// Use this constructor to keep a consistent definition of "Mincha".
-	const Period.mincha(this.time) :
+	const Period.mincha(this.time, {this.activity}) :
 		room = null,
 		id = null,
 		period = "Mincha";
@@ -323,28 +328,20 @@ class Day {
 		Letters.F: Special.getWinterFriday(),
 	};
 
-	/// Parses the calendar from a JSON map.
+	/// Gets the calendar for the whole year.
 	/// 
-	/// The key is the date (defaulting to today's month), 
-	/// and the value is a JSON representation of a [Day].
-	/// 
-	/// See [Day.fromJson] for details on how a [Day] looks in JSON
-	static Map<DateTime, Day> getCalendar(Map<String, dynamic> data) {
-		final DateTime now = DateTime.now();
-		final int month = now.month;
-		final int year = now.year;
-		final Map<DateTime, Day> result = {};
-		for (final MapEntry<String, dynamic> entry in data.entries) {
-			final int day = int.parse (entry.key);
-			final DateTime date = DateTime.utc(
-				year, 
-				month, 
-				day
-			);
-			result [date] = Day.fromJson(entry.value);
-		}
-		return result;
-	}
+	/// Each element of [data]'s months should be a JSON representation of a [Day].
+	/// See [Day.fromJson] for how to represent a Day in JSON. 
+	static List<List<Day>> getCalendar(List<List<Map<String, dynamic>>> data) => [
+		for (int month = 0; month < 12; month++) <Day>[
+			for (final Map<String, dynamic> json in data [month])
+				Day.fromJson(json)
+		]
+	];
+
+	/// Gets the Day for [date] in the [calendar].
+	static Day getDate(List<List<Day>> calendar, DateTime date) => 
+		calendar [date.month - 1] [date.day - 1];
 
 	/// The letter of this day. 
 	/// 
@@ -377,7 +374,7 @@ class Day {
 	/// 
 	/// This factory is not a constructor so it can dynamically check 
 	/// for a valid [letter] while keeping the field final.
-	factory Day.fromJson(Map<dynamic, dynamic> json) {
+	factory Day.fromJson(Map<String, dynamic> json) {
 		if (!json.containsKey("letter")) {
 			throw JsonUnsupportedObjectError(json);
 		}
@@ -453,7 +450,8 @@ class Day {
 	/// Whether there is school on this day.
 	bool get school => letter != null;
 
-	bool get isModified => special == modified;
+	/// Whether the times for this day are known.
+	bool get isModified => special == Special.modified;
 
 	/// The period right now. 
 	/// 
@@ -462,7 +460,6 @@ class Day {
 	/// 
 	/// See [Time] and [Range] for implementation details.
 	int get period {
-		// if 
 		final Time time = Time.fromDateTime (DateTime.now());
 		for (int index = 0; index < (special.periods?.length ?? 0); index++) {
 			final Range range = special.periods [index];

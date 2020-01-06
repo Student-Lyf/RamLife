@@ -8,11 +8,13 @@ class ClassPanel extends StatelessWidget {
 	final String title;
 	final List<String> children;
 	final List<int> reminders;
+	final Activity activity;
 
 	const ClassPanel ({
 		@required this.title,
 		@required this.children,
 		@required this.reminders,
+		@required this.activity,
 	});
 
 	@override Widget build (BuildContext context) => ExpansionTile (
@@ -22,7 +24,8 @@ class ClassPanel extends StatelessWidget {
 				child: ListTile (
 					title: Text (title),
 					contentPadding: EdgeInsets.zero,
-					trailing: reminders.isEmpty ? null : Icon(Icons.note)
+					trailing: reminders.isEmpty ? null : Icon(Icons.note),
+					leading: activity == null ? null : Icon(Icons.error),
 				)
 			)
 		),
@@ -39,6 +42,8 @@ class ClassPanel extends StatelessWidget {
 									padding: const EdgeInsets.symmetric(vertical: 5),
 									child: Text (label)
 								),
+							if (activity != null)
+								ActivityTile(activity),
 							for (final int index in reminders)
 								ReminderTile (
 									index: index,
@@ -112,6 +117,7 @@ class ClassList extends StatelessWidget {
 				letter: day.letter,
 				subject: subject?.name,
 			),
+			activity: period?.activity,
 		);
 	}
 }

@@ -5,16 +5,16 @@ Future<DateTime> pickDate({
 	@required DateTime initialDate
 }) async {
 	final DateTime now = DateTime.now();
-	final DateTime beginningOfMonth = DateTime(
-		now.year, now.month, 1
+	final DateTime beginningOfYear = DateTime(
+		now.month > 6 ? now.year : now.year - 1, 1, 1
 	);
-	final DateTime endOfMonth = DateTime (
-		now.year, now.month + 1, 0
+	final DateTime endOfYear = DateTime (
+		now.month > 6 ? now.year + 1 : now.year, 12, 1
 	);
 	return showDatePicker(
 		context: context,
 		initialDate: initialDate,
-		firstDate: beginningOfMonth,
-		lastDate: endOfMonth,
+		firstDate: beginningOfYear,
+		lastDate: endOfYear,
 	);
 }
