@@ -92,11 +92,18 @@ class Firestore {
 		]
 	];
 
-	static Future<void> saveCalendar(int month, Map<String, dynamic> json) => 
-		_calendar.document(month.toString()).setData(json);
+	/// Uploads the given month to the Firestore calendar collection. 
+	static Future<void> saveCalendar(int month, List<Map<String, dynamic>> json) =>
+		_calendar.document(month.toString()).setData({"calendar": json});
 
-	static Stream<fb.DocumentSnapshot> getCalendarSnapshots(int month) => 
-		_calendar.document(month.toString()).snapshots();
+	/// Listens to a month for changes in the calendar. 
+	static Stream<List<Map<String, dynamic>>> getCalendarStream(int month) => 
+		_calendar.document(month.toString()).snapshots().map(
+			(fb.DocumentSnapshot snapshot) => [
+				for (final dynamic entry in snapshot.data ["calendar"])
+					Map<String, dynamic>.from(entry)
+				]
+		);
 
 	/// Downloads the reminders for the user. 
 	/// 

@@ -1,131 +1,84 @@
-import "dart:async";
-import "package:flutter/foundation.dart" show required, ChangeNotifier;
-import "package:flutter/widgets.dart" show AsyncSnapshot;
-
-import "package:cloud_firestore/cloud_firestore.dart" as fb;
+import "package:flutter/foundation.dart" show ChangeNotifier;
 
 import "package:ramaz/data.dart";
 import "package:ramaz/services.dart";
 
+/// A data model to manage the calendar. 
+/// 
+/// This model listens to the calendar and can modify it in the database. 
 // ignore: prefer_mixin
 class CalendarModel with ChangeNotifier {
+	/// How many days there are in every month.
 	static const int daysInMonth = 7 * 5;
-	static final int currentMonth = DateTime.now().month;
+
+	/// The current date.
+	static final DateTime now = DateTime.now();
+
+	/// The current year.
+	static final int currentYear = now.year;
+
+	/// The current month.
+	static final int currentMonth = now.month;
 
 
-	static List<T> mapToList<T> (Map<int, T> map) {
-		final List<T> result = List.filled(map.length, null);
-		for (final MapEntry<int, T> entry in map.entries) {
-			result [entry.key] = entry.value;
+	/// The raw JSON-filled calendar.
+	final List<List<Map<String, dynamic>>> data = List.filled(12, null);
+
+	/// The calendar filled with [Day]s.
+	final List<List<Day>> calendar = List.filled(12, null);
+
+	/// The year of each month.
+	/// 
+	/// Because the school year goes from September to June, determining the year 
+	/// of any given month is not trivial. The year is computed from the current 
+	/// month and the month in question. 
+	final List<int> years = [
+		for (int month = 0; month < 12; month++) 
+			currentMonth > 7
+				? month > 7 ? currentYear : currentYear + 1
+				: month > 7 ? currentYear - 1 : currentYear
+	];
+
+	/// Creates a data model to hold the calendar.
+	/// 
+	/// Initializing a [CalendarModel] automatically listens to the calendar in 
+	/// Firebase. See [Firestore.getCalendarStream] for details. 
+	CalendarModel() {
+		for (int month = 0; month < 12; month++) {
+			Firestore.getCalendarStream(month).listen(
+				(List<Map<String, dynamic>> cal) {
+					calendar [month] = Day.getMonth(cal);
+					notifyListeners();
+				}
+			);
 		}
-		return result;
 	}
 
-	final List<Stream<fb.DocumentSnapshot>> streams = List.filled(12, null);
-	final List<AsyncSnapshot<fb.DocumentSnapshot>> snapshots = 
-		List.filled(12, null);
-	final List<List<MapEntry<int, Day>>> data = List.filled(12, null);
-	final List<int> years = List.filled(12, null);
-
-	Iterable<MapEntry<int, Day>> getCalendar(
-		int month, 
-		AsyncSnapshot<fb.DocumentSnapshot> snapshot
-	) {
-		if (snapshots [month] == snapshot) {
-			return data [month];
-		}
-
-		snapshots [month] = snapshot;
-		final List<MapEntry<int, Day>> newData = getData(month);
-		data [month] = newData;
-		return newData;
-	}
-
-	Stream<fb.DocumentSnapshot> getStream(int index) {
-		if (streams [index] != null) {
-			return streams [index];
-		}
-
-		final Stream<fb.DocumentSnapshot> stream = Firestore.getCalendar(index + 1);
-		streams [index] = stream;
-		return stream;
-	}
-
-	int _currentYear = DateTime.now().year;
-	int get currentYear => _currentYear;
-	set currentYear (int year) {
-		_currentYear = year;
-		for (int index = 0; index < 12; index++) {
-			data [index] = getData(index);
-			years [index] = getYear(index, force: true);
-		}
-		notifyListeners();
-	}
-
-	void setDay({
-		@required int month,
-		@required int date,
-		@required Day day,
-	}) {
-		if (day == null) {
-			return;
-		}
-		final List<MapEntry<int, Day>> entries = data [month];
-		final Map<int, Day> calendarAsMap = Map.fromEntries(
-			entries.where(
-				(MapEntry<int, Day> entry) => entry != null
-			)
-		);
-		final List<Day> calendar = mapToList(calendarAsMap);
-		calendar [date] = day;
-		Firestore.saveCalendar(
-			month + 1, 
-			calendar.where(
-				(Day day) => day != null
-			).toList().asMap().map(
-				(int index, Day day) => MapEntry<String, dynamic>(
-					(index + 1).toString(),
-					day.toJson(),
-				)
-			)
-		);
-	}
-
-	int getYearData(int month) => currentMonth < 7 
-		? (month < 7 ? currentYear - 1 : currentYear)
-		: (month < 7 ? currentYear + 1 : currentYear);
-
-	int getYear(int month, {bool force = false}) {
-		if (years [month] != null && !force) {
-			return years [month];
-		}
-
-		final int result = getYearData(month);
-		years [month] = result;
-		return result;
-	}
-
-	List<MapEntry<int, Day>> getData(int month) {
-		// final List<MapEntry<int, Day>> result = [];
-		final List<Day> days = Day.getCalendar(snapshots [month].data.data);
-		final int selectedYear = getYear(month);
-		final DateTime firstOfMonth = DateTime(selectedYear, month + 1, 1);
-		final int firstDayOfWeek = firstOfMonth.weekday;
-		final int weekday = firstDayOfWeek == 7
-			? 0 : firstDayOfWeek - 1;
-		final List<MapEntry<int, Day>> result = [
+	/// Fits the calendar to a 5-day week layout. 
+	/// 
+	/// Adjusts the calendar so that it begins on the correct day of the week 
+	/// (starting on Sunday) instead of defaulting to the first open cell on 
+	/// the calendar grid. This function pads the calendar with the correct 
+	/// amount of empty days before and after the month. 
+	List<Day> layoutMonth(int month) {
+		final List<Day> cal = calendar [month];
+		final int firstDayOfWeek = DateTime(years [month], month + 1, 1).weekday;
+		final int weekday = firstDayOfWeek == 7 ? 0 : firstDayOfWeek - 1;
+		return [
 			for (int day = 0; day < weekday; day++)
-				// result.add(null);
 				null,
-			// result.addAll(days.asMap().entries);
-			...days.asMap().entries,
-			for (int day = weekday + days.length; day < daysInMonth; day++)
-				// result.add(null);
+			...cal,
+			for (int day = weekday + cal.length; day < daysInMonth; day++)
 				null
-
 		];
-		// }
-		// }
-		return result;
+	}
+
+	/// Updates the calendar. 
+	Future<void> updateDay(DateTime date, Day day) async {
+		calendar [date.month - 1] [date.day - 1] = day;
+		await Firestore.saveCalendar(
+			date.month - 1, 
+			Day.monthToJson(calendar [date.month - 1])
+		);
 	}
 }
