@@ -19,6 +19,7 @@ class NextClassTester {
 			id: "123-45",
 			room: "U507"
 		), 
+		activity: null,
 		time: Range.nums (8, 00, 8, 50),
 		period: "7",
 	);
@@ -26,8 +27,18 @@ class NextClassTester {
 		name: "Math",
 		teacher: "Ms. Shine"
 	);
-	static final NextClass current = NextClass (period: period, subject: subject);
-	static final NextClass next = NextClass (period: period, subject: subject);
+	static final NextClass current = NextClass (
+		period: period, 
+		subject: subject, 
+		reminders: const [], 
+		modified: false
+	);
+	static final NextClass next = NextClass (
+		period: period, 
+		subject: subject,
+		modified: false,
+		reminders: const [],
+	);
 
 	static Future<void> infoTest (test.WidgetTester tester) async {
 		await tester.pumpWidget (

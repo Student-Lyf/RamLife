@@ -19,7 +19,7 @@ class ThemeChanger extends StatefulWidget {
 	@override ThemeChangerState createState() => ThemeChangerState();
 
 	static ThemeChangerState of (BuildContext context) => 
-		context.ancestorStateOfType(const TypeMatcher<ThemeChangerState>());
+		context.findAncestorStateOfType<ThemeChangerState>();
 }
 
 class ThemeChangerState extends State<ThemeChanger> {

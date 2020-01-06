@@ -15,7 +15,6 @@ void main() => testSuite (
 			"Equality Test": StudentTester.equalityTest,
 			"Factory Test": StudentTester.factoryTest,
 			"Periods Test": StudentTester.periodsTest,
-			"Homeroom Test": StudentTester.homeroomTest,
 		}
 	}
 );
@@ -45,7 +44,7 @@ class StudentTester {
 
 	static final Student student = Student (
 		homeroomLocation: homeroomLocation,
-		homeroom: homeroom,
+		homeroomId: homeroom,
 		schedule: schedule
 	);
 
@@ -79,7 +78,7 @@ class StudentTester {
 			Student (
 				homeroomLocation: homeroomLocation, 
 				schedule: schedule, 
-				homeroom: homeroom
+				homeroomId: homeroom
 			),
 			student, 
 		);
@@ -116,20 +115,6 @@ class StudentTester {
 		compare<List<Period>> (
 			student.getPeriods(noSchool),
 			[]
-		);
-	}
-
-	static void homeroomTest() {
-		compare<PeriodData> (
-			student.getHomeroom(day), 
-			const PeriodData (
-				room: homeroomLocation,
-				id: homeroom
-			),
-		);
-		compare<PeriodData> (
-			student.getHomeroom(noSchool),
-			empty
 		);
 	}
 }

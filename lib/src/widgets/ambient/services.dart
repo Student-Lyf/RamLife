@@ -7,7 +7,7 @@ import "package:ramaz/services_collection.dart";
 class Services extends InheritedWidget {
 	static Services of(
 		BuildContext context, 
-	) => context.inheritFromWidgetOfExactType(Services);
+	) => context.dependOnInheritedWidgetOfExactType<Services>();
 
 	final ServicesCollection services;
 	final Reader reader;
