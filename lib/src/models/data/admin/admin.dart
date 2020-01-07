@@ -22,6 +22,7 @@ class AdminUserModel with ChangeNotifier {
 			return;
 		}
 		admin.specials.add(special);
+		Firestore.saveAdmin(admin.toJson());
 		notifyListeners();
 		save();
 	}

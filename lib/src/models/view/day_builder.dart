@@ -2,7 +2,6 @@ import "package:flutter/foundation.dart" show ChangeNotifier;
 
 import "package:ramaz/data.dart";
 import "package:ramaz/models.dart";
-import "package:ramaz/services.dart";
 
 // ignore: prefer_mixin
 class DayBuilderModel with ChangeNotifier {
@@ -39,15 +38,10 @@ class DayBuilderModel with ChangeNotifier {
 				(Special preset) => preset.name == value.name
 			)
 		) {
-			saveSpecial(value);
+			admin.addSpecial(value);
 		}
 
 		notifyListeners();
-	}
-
-	void saveSpecial(Special value) {
-		userSpecials.add(value);
-		Firestore.saveAdmin(admin.admin.toJson());
 	}
 	
 	Day get day => Day (letter: letter, special: special);
