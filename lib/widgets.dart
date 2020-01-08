@@ -1,3 +1,13 @@
+/// A collection of widgets to use. 
+/// 
+/// There are three types of widgets in this library: 
+/// 1. Generic widgets: miscellaneous widgets for use all around tha app.
+/// 
+/// 2. Atomic widgets: widgets that represent a single piece of data, (something
+/// from the `data` library) with a canonic form all around the app. 
+/// 
+/// 3. Ambient widgets: Inherited widgets that can be accessed anywhere 
+/// in the app using `BuildContext`s. 
 library widgets;
 
 // Ambient widgets can be accessed using `BuildContext`s
