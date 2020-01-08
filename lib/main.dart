@@ -90,25 +90,29 @@ Future<void> main({bool restart = false}) async {
 	);
 }
 
-class RamazApp extends StatefulWidget {
+/// The main app widget. 
+class RamazApp extends StatelessWidget {
+	/// The brightness to default to. 
 	final Brightness brightness;
+
+	/// The services to use. 
 	final ServicesCollection services;
+
+	/// Whether the user is ready to go straight to the app or must first log int. 
 	final bool ready;
+
+	/// Creates the main app widget.
 	const RamazApp ({
 		@required this.brightness,
 		@required this.ready,
 		@required this.services,
 	});
 
-	@override MainAppState createState() => MainAppState();
-}
-
-class MainAppState extends State<RamazApp> {
 	@override 
 	Widget build (BuildContext context) => Services (
-		services: widget.services,
+		services: services,
 		child: ThemeChanger (
-			defaultBrightness: widget.brightness,
+			defaultBrightness: brightness,
 			light: ThemeData (
 				brightness: Brightness.light,
 				primarySwatch: Colors.blue,
@@ -132,7 +136,6 @@ class MainAppState extends State<RamazApp> {
 				primarySwatch: Colors.blue,
 				primaryColorBrightness: Brightness.dark,
 				primaryColorLight: RamazColors.blueLight,
-				// primaryColor: RamazColors.blue,
 				primaryColorDark: RamazColors.blueDark,
 				accentColor: RamazColors.goldDark,
 				accentColorBrightness: Brightness.light,
@@ -156,7 +159,7 @@ class MainAppState extends State<RamazApp> {
 				),
 			),
 			builder: (BuildContext context, ThemeData theme) => MaterialApp (
-				home: widget.ready
+				home: ready
 					? HomePage()
 					: Login(),
 				title: "Student Life",
@@ -173,28 +176,3 @@ class MainAppState extends State<RamazApp> {
 		)
 	);
 }
-	
-// Placeholder
-// class PlaceholderPage extends StatelessWidget {
-// 	final String title;
-// 	PlaceholderPage (this.title);
-
-// 	@override Widget build (BuildContext context) => Scaffold (
-// 		drawer: NavigationDrawer(),
-// 		appBar: AppBar (
-// 			title: Text (title),
-// 			actions: [
-// 				IconButton (
-// 					icon: Icon (Icons.home),
-// 					onPressed: () => Navigator.of(context).pushReplacementNamed(HOME_PAGE)
-// 				)
-// 			]
-// 		),
-// 		body: Center (
-// 			child: Text ("This page is coming soon!", textScaleFactor: 2)
-// 		)
-// 	);
-// }
-
-// Widget Function(BuildContext) placeholder(String text) => 
-// 	(BuildContext context) => PlaceholderPage (text);
