@@ -2,23 +2,29 @@ import "package:flutter/material.dart";
 
 import "package:ramaz/data.dart";
 
+/// A widget that represents an [Activity]. 
+/// 
+/// If the activity needs to show more details (ie, [Activity.type] is in 
+/// [detailedActivities]), tapping on the tile will open a popup with 
+/// more details. 
 class ActivityTile extends StatelessWidget {
+	/// Types of activities that will show more details when tapped. 
 	static const Set<ActivityType> detailedActivities = {
 		ActivityType.grade,
 		ActivityType.misc,
 	};
 
+	/// The activity being represented by this tile.
 	final Activity activity;
-	final double height;
-
+	
+	/// Creates an ActivityTile widget. 
 	const ActivityTile(
 		this.activity,
-		{this.height = 65}
 	);
 
 	@override
 	Widget build(BuildContext context) => SizedBox(
-		height: height,
+		height: 65,
 		child: Center(
 			child: ListTile(
 				title: Text(

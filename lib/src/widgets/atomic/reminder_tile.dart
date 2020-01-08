@@ -6,13 +6,16 @@ import "package:ramaz/models.dart";
 import "../ambient/services.dart";
 import "../generic/reminder_builder.dart";
 
+/// A widget to represent a [Reminder].
+/// 
+/// From the widget, the user will be able to delete or modify the reminder. 
 class ReminderTile extends StatelessWidget {
+	/// The index of this reminder in [Reminders.reminders].
 	final int index;
-	final double height;
 
+	/// Creates a reminder tile.
 	const ReminderTile({
 		@required this.index,
-		this.height = 65,
 	});
 
 	@override 
@@ -21,7 +24,7 @@ class ReminderTile extends StatelessWidget {
 		final Reminder reminder = reminders.reminders [index];
 		
 		return SizedBox (
-			height: height, 
+			height: 65, 
 			child: Center (
 				child: ListTile(
 					title: Text (reminder.message),

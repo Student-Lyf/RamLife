@@ -4,7 +4,8 @@
 /// 1. Generic widgets: miscellaneous widgets for use all around tha app.
 /// 
 /// 2. Atomic widgets: widgets that represent a single piece of data, (something
-/// from the `data` library) with a canonic form all around the app. 
+/// from the `data` library) with a canonic form all around the app. These 
+/// widgets usually have `InfoTile` (defined here) as a base. 
 /// 
 /// 3. Ambient widgets: Inherited widgets that can be accessed anywhere 
 /// in the app using `BuildContext`s. 

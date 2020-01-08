@@ -7,15 +7,17 @@ import "package:ramaz/widgets.dart";
 import "info_card.dart";
 import "reminder_tile.dart";
 
+/// A decorative border around a special addition to [NextClass]. 
 class SpecialTile extends StatelessWidget {
-	static const double padding = 10;
-
+	/// The widget to go inside the border. 
 	final Widget child;
+
+	/// Creates a decorative border. 
 	const SpecialTile({this.child});
 
 	@override
 	Widget build (BuildContext context) => Padding (
-		padding: const EdgeInsets.symmetric(horizontal: padding),
+		padding: const EdgeInsets.symmetric(horizontal: 10),
 		child: Container (
 			foregroundDecoration: ShapeDecoration(
 				shape: RoundedRectangleBorder(
@@ -28,12 +30,30 @@ class SpecialTile extends StatelessWidget {
 	);
 }
 
+/// A widget to represent the next class. 
 class NextClass extends StatelessWidget {
-	final bool modified, next;
+	/// Whether today has a modified schedule. 
+	/// 
+	/// This determines whether the times should be shown.
+	final bool modified; 
+
+	/// Whether this is the next period or not.
+	/// 
+	/// This changes the text from "Right now" to "Up next". 
+	final bool next;
+
+	/// The period to represent. 
 	final Period period;
+
+	/// The subject associated with [period]. 
 	final Subject subject;
+
+	/// The reminders that apply for this period. 
+	/// 
+	/// These are indices in the reminders data model.
 	final List<int> reminders;
 
+	/// Creates an info tile to represent a period. 
 	const NextClass({
 		@required this.period,
 		@required this.subject,
@@ -53,16 +73,14 @@ class NextClass extends StatelessWidget {
 				page: Routes.schedule,
 				title: modified ? "Times unavailable" : 
 					period == null
-					? "School is over"
-					: "${next ? 'Next' : 'Current'} period: " 
-						"${subject?.name ?? period.period}",
+						? "School is over"
+						: "${next ? 'Next' : 'Current'} period: " 
+							"${subject?.name ?? period.period}",
 			),
 			if (period?.activity != null) 
 				SpecialTile(child: ActivityTile(period.activity)),
 			for (final int index in reminders) 
-				SpecialTile(
-					child: ReminderTile(index: index),
-				)
+				SpecialTile(child: ReminderTile(index: index))
 		]
 	);
 }
