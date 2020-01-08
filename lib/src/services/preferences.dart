@@ -32,6 +32,9 @@ class Preferences {
 	}
 
 	/// The user's brightness preference. 
+	/// 
+	/// `true` means light mode, `false` means dark mode, and `null` gets the 
+	/// system preferences (if not supported -- light mode).
 	bool get brightness => _prefs.getBool(lightMode);
 
 	set brightness (bool value) => _prefs.setBool(lightMode, value); 

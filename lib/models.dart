@@ -22,7 +22,6 @@
 /// 	The point of a view model is to map fields to static UI elements and
 /// 	methods to interactive ones. Every button and label that depends on 
 /// 	state should depend on their corresponding view model.
-/// 
 library models;
 
 // data models
