@@ -27,6 +27,7 @@ class Reader {
 	/// The file containing the user's reminders. 
 	final File remindersFile;
 
+	/// The file containing the admin profile. 
 	final File adminFile;
 
 	/// Initializes the files based on the path ([dir]) provided to it. 
@@ -95,6 +96,7 @@ class Reader {
 	set remindersData(Map<String, dynamic> data) => 
 		remindersFile.writeAsStringSync(jsonEncode(data ?? {}));
 
+	/// The JSON representation of the admin profile. 
 	Map<String, dynamic> get adminData => jsonDecode(
 		adminFile.readAsStringSync()
 	);

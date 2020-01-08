@@ -12,6 +12,7 @@ class Firestore {
 	/// The name for the student schedule collection
 	static const String students = "students";
 
+	/// The name for the admins collection. 
 	static const String admins = "admin";
 
 	/// The name of the classes collection
@@ -134,9 +135,16 @@ class Firestore {
 		.document(await Auth.email)
 		.setData({"reminders": remindersList});
 
+	/// Retrieves the admin data from the cloud.
+	/// 
+	/// Admins have their own collection. However, this collection is not what 
+	/// provides users with administrative privileges. That is handled by Firebase
+	/// Authentication custom tokens. The document here simply provides helpful
+	/// data for the user, such as their custom-made specials. 
 	static Future<Map<String, dynamic>> get admin async => 
 		(await _admin.document(await Auth.email).get()).data;
 
+	/// Saves the admin profile to the cloud. 
 	static Future<void> saveAdmin (Map<String, dynamic> data) async => 
 		_admin.document(await Auth.email).setData(data);
 }
