@@ -13,9 +13,13 @@ class ReminderTile extends StatelessWidget {
 	/// The index of this reminder in [Reminders.reminders].
 	final int index;
 
+	/// The height of this tile. 
+	final double height;
+
 	/// Creates a reminder tile.
 	const ReminderTile({
 		@required this.index,
+		this.height = 65,
 	});
 
 	@override 
@@ -24,7 +28,7 @@ class ReminderTile extends StatelessWidget {
 		final Reminder reminder = reminders.reminders [index];
 		
 		return SizedBox (
-			height: 65, 
+			height: height, 
 			child: Center (
 				child: ListTile(
 					title: Text (reminder.message),
