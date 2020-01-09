@@ -4,22 +4,35 @@ import "package:ramaz/data.dart";
 import "package:ramaz/models.dart";
 import "package:ramaz/widgets.dart";
 
-// Must be stateful to keep [TextEditingController.text] intact
+/// A widget to help the user create a [Reminder]. 
+/// 
+/// This widget must be a [StatefulWidget] in order to avoid recreating a 
+/// [TextEditingController] every time the widget tree is rebuilt. 
 class ReminderBuilder extends StatefulWidget {	
-	static void noop(){}
-	static final Color disabledColor = const RaisedButton(onPressed: noop)
+	static void _noop(){}
+	static final Color _disabledColor = const RaisedButton(onPressed: _noop)
 		.disabledTextColor;
 
+	/// Trims a string down to a certain length.
+	/// 
+	/// This function is needed since calling [String.substring] with an `end` 
+	/// argument graeter than the length of the string will throw an error.
 	static String trimString (String text, int length) => text.length > length
 		? text.substring(0, length) : text;
 
+	/// Gets the text color for a [MaterialButton].
+	/// 
+	/// Due to a bug in Flutter v1.9, [RaisedButton]s in [ButtonBar]s in 
+	/// [AlertDialog]s do not respect [MaterialApp.theme.buttonTheme.textTheme]. 
+	/// This function creates a new [RaisedButton] (outside of an [AlertDialog])
+	/// and returns its text color. 
 	static Color getButtonTextColor(
 		BuildContext context, 
 		Brightness brightness,
 		{bool enabled}
 	) {
 		if (!enabled) {
-			return disabledColor;
+			return _disabledColor;
 		}
 		switch (Theme.of(context).buttonTheme.textTheme) {
 			case ButtonTextTheme.normal: return brightness == Brightness.dark
@@ -32,6 +45,7 @@ class ReminderBuilder extends StatefulWidget {
 		}
 	}
 
+	/// Opens a [ReminderBuilder] popup to create or modify a [Reminder]. 
 	static Future<Reminder> buildReminder(
 		BuildContext context, [Reminder reminder]
 	) => showDialog<Reminder>(
@@ -39,8 +53,13 @@ class ReminderBuilder extends StatefulWidget {
 		builder: (_) => ReminderBuilder(reminder: reminder),
 	);
 
+	/// A reminder to modify. 
+	/// 
+	/// A [ReminderBuilder] can either create a new [Reminder] from scratch or 
+	/// modify an existing reminder (autofill its properties). 
 	final Reminder reminder;
 
+	/// Creates a widget to create or modify a [Reminder].
 	const ReminderBuilder({
 		this.reminder
 	}); 
@@ -49,8 +68,12 @@ class ReminderBuilder extends StatefulWidget {
 	ReminderBuilderState createState() => ReminderBuilderState();
 }
 
-// Exists solely to instantiate a TextEditingController
+/// A state for a [ReminderBuilder].
+/// 
+/// [State.initState] is needed to instantiate a [TextEditingController]
+/// exactly once. 
 class ReminderBuilderState extends State<ReminderBuilder> {
+	/// The text controller to hold the message of the [Reminder]. 
 	final TextEditingController controller = TextEditingController();
 
 	@override 

@@ -4,11 +4,16 @@ import "package:ramaz/constants.dart";
 import "package:ramaz/models.dart";
 import "package:ramaz/widgets.dart";
 
+/// A footer to display all around the app. 
+/// 
+/// The footer displays the next period, and alerts the user if there is a 
+/// reminder or activity. 
+/// 
+/// The footer should be displayed on every page where the current schedule is 
+/// not being shown. 
 class Footer extends StatelessWidget {
+	/// A scale factor for the footer text. 
 	static const double textScale = 1.25;
-
-	// ignore: prefer_const_constructors_in_immutables
-	Footer();
 
 	@override Widget build (BuildContext context) => ModelListener<Schedule>(
 		model: () => Services.of(context).schedule,
