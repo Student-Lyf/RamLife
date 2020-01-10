@@ -5,11 +5,8 @@ import "package:ramaz/models.dart";
 import "package:ramaz/pages.dart";
 import "package:ramaz/widgets.dart";
 
+/// A page to display the user's reminders. 
 class RemindersPage extends StatelessWidget {
-	// ignore_for_file: prefer_const_constructors_in_immutables
-
-	RemindersPage();
-
 	@override 
 	Widget build(BuildContext context) => ModelListener<Reminders>(
 		model: () => Services.of(context).reminders,

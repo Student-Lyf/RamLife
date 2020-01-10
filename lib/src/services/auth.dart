@@ -40,7 +40,7 @@ class Auth {
 		.email.endsWith("@ramaz.org");
 
 	/// Signs in the user with Google as the provider. 
-	static Future<void> signInWithGoogle(void Function() ifInvalid) async {
+	static Future<void> signInWithGoogle() async {
 		final GoogleSignInAccount account = await _google.signIn();
 		if (account == null) {
 			return;

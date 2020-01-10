@@ -6,13 +6,22 @@ import "package:ramaz/models.dart";
 import "package:ramaz/pages.dart";
 import "package:ramaz/widgets.dart";
 
+/// The homepage of the app. 
+/// 
+/// It's stateful because when refreshing the schedule a loading bar is shown,
+/// and needs to be dismissed. However, it can be rewritten to use a 
+/// [ValueNotifier] instead.
 class HomePage extends StatefulWidget {
 	@override
 	HomePageState createState() => HomePageState();
 }
 
+/// A state for the home page, to keep track of when the page loads. 
 class HomePageState extends State<HomePage> {
+	/// A key to access the [Scaffold]s state. 
 	final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
+
+	/// Whether the page is loading. 
 	bool loading = false;
 
 	@override 

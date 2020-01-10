@@ -48,10 +48,9 @@ class ServicesCollection {
 
 	/// Initializes the collection.
 	/// 
-	/// This function is a safety!
-	/// In the event a file is unavailable, the try-catch 
-	/// in main will throw an error. After the files are verifiably available, 
-	/// this function is called. 
+	/// This function is a safety! In the event a file is unavailable, the 
+	/// try-catch in `main` will throw an error. After the files are verifiably
+	/// available, this function is called. 
 	///
 	/// Use this function to initialize anything that requires a file.
 	void init() {

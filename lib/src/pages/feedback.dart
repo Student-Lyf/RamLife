@@ -1,10 +1,11 @@
+// ignore_for_file: prefer_const_constructors_in_immutables
 import "package:flutter/material.dart";
 
 import "package:ramaz/widgets.dart";
 import "package:ramaz/models.dart";
 
+/// A page to submit feedback. 
 class FeedbackPage extends StatelessWidget {
-	// ignore_for_file: prefer_const_constructors_in_immutables
 
 	@override 
 	Widget build (BuildContext context) => Scaffold (

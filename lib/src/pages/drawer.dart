@@ -1,15 +1,16 @@
+// ignore_for_file: prefer_const_constructors_in_immutables
+// ignore_for_file: prefer_const_constructors
 import "package:flutter/material.dart";
 
 import "package:ramaz/widgets.dart";
 
 import "package:ramaz/constants.dart";  // for route names
 
+/// A drawer to show throughout the app.
 class NavigationDrawer extends StatelessWidget {
+	/// Uses the navigator to launch a page by name.
 	static Future<void> Function() pushRoute(BuildContext context, String name) => 
 		() => Navigator.of(context).pushReplacementNamed(name);
-
-	// ignore_for_file: prefer_const_constructors_in_immutables
-	NavigationDrawer({Key key}) : super(key: key);
 
 	@override Widget build (BuildContext context) => Drawer (
 		child: LayoutBuilder(
@@ -97,7 +98,7 @@ class NavigationDrawer extends StatelessWidget {
 											SingleChildScrollView (
 												scrollDirection: Axis.horizontal,
 												child: Row (
-													children: [
+													children: const [
 														Logos.ramazIcon,
 														Logos.outlook,
 														Logos.schoology,

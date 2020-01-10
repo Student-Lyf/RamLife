@@ -1,3 +1,4 @@
+// ignore_for_file: prefer_const_constructors_in_immutables
 import "package:flutter/material.dart";
 import "package:flutter/services.dart" show PlatformException;
 
@@ -8,29 +9,39 @@ import "package:ramaz/widgets.dart";
 import "package:ramaz/services_collection.dart";
 import "package:ramaz/services.dart";
 
+/// The login page. 
+/// 
 /// This widget is only stateful so it doesn't get disposed when 
-/// the theme changes, and then we can keep using the BuildContext
+/// the theme changes, and then we can keep using the [BuildContext].
+/// Otherwise, if the theme is changed, the [Scaffold] cannot be accessed. 
+/// 
+/// This page is the only page where errors from the backend are expected. 
+/// As such, more helpful measures than simply closing the app are needed.
+/// This page holds methods that can safely clean the errors away before
+/// prompting the user to try again. 
 class Login extends StatefulWidget {
-	// ignore_for_file: prefer_const_constructors_in_immutables
+	/// The servces needed to log the user in. 
+	final ServicesCollection services;
+
+	/// Creates the login page. 
+	const Login(this.services);
 
 	@override LoginState createState() => LoginState();
 }
 
+/// A state for the login page.
+/// 
+/// This state keeps a reference to the [BuildContext].
 class LoginState extends State<Login> {
+	/// Rebuilds the widget tree when the loading bar dis/appears.
 	final ValueNotifier<bool> loadingNotifier = ValueNotifier(false);
-	ServicesCollection services;
 
 	@override void initState() {
 		super.initState();
-		// Log out first
+		// "To log in, one must first log out"
+		// -- Levi Lesches, class of '21, creator of this app, 2019
 		Auth.signOut();
-	}
-
-	@override 
-	void didChangeDependencies() {
-		super.didChangeDependencies();
-		services = Services.of(context).services;
-		services.reader.deleteAll();
+		widget.services.reader.deleteAll();
 	}
 
 	@override
@@ -69,7 +80,7 @@ class LoginState extends State<Login> {
 			appBar: AppBar (
 				title: const Text ("Login"),
 				actions: [
-					BrightnessChanger.iconButton(prefs: services.prefs),
+					BrightnessChanger.iconButton(prefs: widget.services.prefs),
 				],
 			),
 			body: ListView (
@@ -81,6 +92,12 @@ class LoginState extends State<Login> {
 		)
 	);
 
+	/// A function that runs whenever there is an error.
+	/// 
+	/// Unlike other screens, this screen can expect an error to be thrown by the 
+	/// backend, so special care must be taken to present these errors in a 
+	/// user-friendly way, while at the same time making sure they don't prevent 
+	/// the user from logging in.
 	Future<void> onError(dynamic error, StackTrace stack) async {
 		loadingNotifier.value = false;
 		await Crashlytics.instance.setUserEmail(await Auth.email);
@@ -112,6 +129,11 @@ class LoginState extends State<Login> {
 		);
 	}
 
+	/// Safely execute a function.
+	/// 
+	/// This function holds all the try-catch logic needed to properly debug
+	/// errors. If a network error occurs, a simple [SnackBar] is shown. 
+	/// Otherwise, the error popup is shown (see [onError]).
 	Future<void> safely({
 		@required Future<void> Function() function, 
 		@required void Function() onSuccess,
@@ -137,27 +159,31 @@ class LoginState extends State<Login> {
 		onSuccess();
 	}
 
+	/// Downloads the user data and initializes the app.
+	/// 
+	/// See [ServicesCollection.initOnLogin]. 
 	Future<void> downloadData(
 		String username, 
 		BuildContext scaffoldContext
 	) => safely(
-		function: () => services.initOnLogin(username),
+		function: () => widget.services.initOnLogin(username),
 		onSuccess: () => Navigator.of(context).pushReplacementNamed("home"),
 		scaffoldContext: scaffoldContext,
 	);
 	
-	/// This function needs two contexts. The first one can locate the ambient 
-	/// Scaffold. But since that will rebuild (because of loading = true), 
+	/// Signs the user into their Google account.  	
+	/// 
+	/// If the user cancels the operation, cancel the loading animation. 
+	/// Otherwise, download the user's data and start the main app. 
+	/// See [downloadData].
+	/// 
+	/// This function needs two contexts. The first one can locate the
+	/// [Scaffold]. But since that will rebuild (because of the loading bar), 
 	/// we need another context that is higher up the tree than that.
-	/// For that we use the implicit `BuildContext` with `StatefulWidget`
-	Future<void> googleLogin(BuildContext scaffoldContext) async => safely(
-		function: () async => Auth.signInWithGoogle(  // async so it is Future
-			() => Scaffold.of(scaffoldContext).showSnackBar(
-				const SnackBar (
-					content: Text ("You need to sign in with your Ramaz email")
-				)
-			)
-		),
+	/// The tighter context is passed in as [scaffoldContext], and the higher
+	/// context is [State.context]. 
+		Future<void> googleLogin(BuildContext scaffoldContext) async => safely(
+		function: Auth.signInWithGoogle,
 		onSuccess: () async {
 			loadingNotifier.value = true;
 			final String email = await Auth.email;

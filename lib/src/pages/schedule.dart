@@ -1,3 +1,4 @@
+// ignore_for_file: prefer_const_constructors_in_immutables
 import "package:flutter/material.dart";
 
 import "package:ramaz/constants.dart";
@@ -6,10 +7,8 @@ import "package:ramaz/models.dart";
 import "package:ramaz/pages.dart";
 import "package:ramaz/widgets.dart";
 
+/// A page to allow the user to explore their schedule. 
 class SchedulePage extends StatelessWidget {
-	// ignore_for_file: prefer_const_constructors_in_immutables
-	SchedulePage();
-
 	@override
 	Widget build (BuildContext context) => ModelListener<ScheduleModel>(
 		model: () => ScheduleModel(services: Services.of(context).services),
@@ -82,6 +81,9 @@ class SchedulePage extends StatelessWidget {
 		)
 	);
 
+	/// Allows the user to select a day in the calendar to view. 
+	/// 
+	/// If there is no school on that day, a [SnackBar] will be shown. 
 	Future<void> viewDay(ScheduleModel model, BuildContext context) async {
 		final DateTime selected = await pickDate (
 			context: context,

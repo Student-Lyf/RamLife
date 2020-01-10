@@ -161,12 +161,12 @@ class RamazApp extends StatelessWidget {
 			builder: (BuildContext context, ThemeData theme) => MaterialApp (
 				home: ready
 					? HomePage()
-					: Login(),
+					: Login(services),
 				title: "Student Life",
 				color: RamazColors.blue,
 				theme: theme,
 				routes: {
-					Routes.login: (_) => Login(),
+					Routes.login: (_) => Login(services),
 					Routes.home: (_) => HomePage(),
 					Routes.schedule: (_) => SchedulePage(),
 					Routes.reminders: (_) => RemindersPage(),
