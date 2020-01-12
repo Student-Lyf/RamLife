@@ -28,3 +28,7 @@ export "src/widgets/generic/footer.dart";
 export "src/widgets/generic/icons.dart";
 export "src/widgets/generic/model_listener.dart";
 export "src/widgets/generic/reminder_builder.dart";
+
+// Widgets that help represent images. 
+export "src/widgets/images/link_icon.dart";
+export "src/widgets/images/loading_image.dart";

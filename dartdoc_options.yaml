@@ -1,3 +1,5 @@
+# dartdoc --show-progress --output docs --auto-include-dependencies
+
 dartdoc: 
   linkToSource: 
     root: lib
