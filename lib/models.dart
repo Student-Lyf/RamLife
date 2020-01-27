@@ -30,6 +30,8 @@ export "src/models/data/reminders.dart";
 export "src/models/data/schedule.dart";
 
 // view models
+export "src/models/view/day_builder.dart";
 export "src/models/view/feedback.dart";
 export "src/models/view/reminder_builder.dart";
 export "src/models/view/schedule.dart";
+export "src/models/view/special_builder.dart";

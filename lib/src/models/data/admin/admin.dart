@@ -19,6 +19,10 @@ class AdminUserModel with ChangeNotifier {
 	AdminUserModel(this.reader) :
 		admin = Admin.fromJson(reader.adminData);
 
+	/// The list of this admin's custom [Special]s. 
+	List<Special> get specials => admin.specials;
+
+
 	/// Saves the admin's data both to the device and the cloud. 
 	Future<void> save() async {
 		reader.adminData = admin.toJson();
