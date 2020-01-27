@@ -7,7 +7,7 @@
 /// from the `data` library) with a canonic form all around the app. These 
 /// widgets usually have `InfoTile` (defined here) as a base. 
 /// 
-/// 3. Ambient widgets: Inherited widgets that can be accessed anywhere 
+/// 4. Ambient widgets: Inherited widgets that can be accessed anywhere 
 /// in the app using `BuildContext`s. 
 library widgets;
 
@@ -18,6 +18,8 @@ export "src/widgets/ambient/theme_changer.dart";
 
 // Atomic widgets represent a single data object.
 export "src/widgets/atomic/activity_tile.dart";
+export "src/widgets/atomic/admin/calendar_tile.dart";
+export "src/widgets/atomic/admin/period_tile.dart";
 export "src/widgets/atomic/next_class.dart";
 export "src/widgets/atomic/reminder_tile.dart";
 
@@ -27,7 +29,6 @@ export "src/widgets/generic/date_picker.dart";
 export "src/widgets/generic/footer.dart";
 export "src/widgets/generic/icons.dart";
 export "src/widgets/generic/model_listener.dart";
-export "src/widgets/generic/reminder_builder.dart";
 
 // Widgets that help represent images. 
 export "src/widgets/images/link_icon.dart";
