@@ -26,6 +26,11 @@ class Auth {
 	/// Determines whether the user is currently logged
 	static Future<bool> get ready async => await currentUser != null;
 
+	/// Whether the user is an admin or not. 
+	static Future<Map> get claims async => (
+		await (await currentUser).getIdToken()
+	).claims;
+
 	/// Signs out the currently logged in user.
 	static Future<void> signOut() async {
 		await _firebase.signOut();

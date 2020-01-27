@@ -53,6 +53,7 @@ Future<void> main({bool restart = false}) async {
 		ready = services.reader.ready && await Auth.ready;
 		if (ready) {
 			services.init();
+			await services.setAdminModel();
 		}
 	// We want to at least try again on ANY error. 
 	// ignore: avoid_catches_without_on_clauses

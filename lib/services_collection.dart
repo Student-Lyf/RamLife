@@ -18,6 +18,9 @@ class ServicesCollection {
 	/// A [Schedule] data model.
 	Schedule schedule;
 
+	/// The admin data model for this admin. 
+	AdminModel admin;
+
 	/// Creates a new services collection. 
 	/// 
 	/// Generally, there should only be one of these, 
@@ -26,6 +29,15 @@ class ServicesCollection {
 		@required this.reader,
 		@required this.prefs,
 	});
+
+	/// Sets the admin data model for the user.
+	/// 
+	/// If the user is not an admin (as dictated by FirebaseAuth's custom claims), 
+	/// then null is returned. 
+	Future<void> setAdminModel() async {
+		admin = (await Auth.claims) ["admin"] 
+			? AdminModel(this) : null;
+	}
 
 	/// Completely refresh the user's schedule, simulating the login sequence.
 	Future<void> refresh() async {
