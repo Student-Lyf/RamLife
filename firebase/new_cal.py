@@ -35,7 +35,7 @@ def get_calendar(month):
 			if not date.strip(): continue
 			letter = letter.strip()
 			if letter.endswith(" Day"):
-				letter = letter [:letter.find(" Day")]
+				letter = letter [:letter.find(" Day")].strip()
 			year = CURRENT_YEAR if month > 7 else CURRENT_YEAR + 1
 			date = datetime(year, month, int (date))
 			if index not in SCHOOL_DAYS or not letter or letter not in LETTERS: 
