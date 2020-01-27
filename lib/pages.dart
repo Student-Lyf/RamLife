@@ -1,5 +1,9 @@
 library pages;
 
+export "src/pages/builders/day_builder.dart";
+export "src/pages/builders/reminder_builder.dart";
+export "src/pages/builders/special_builder.dart";
+
 export "src/pages/drawer.dart";
 export "src/pages/feedback.dart";
 export "src/pages/home.dart";

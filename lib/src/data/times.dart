@@ -358,9 +358,9 @@ class Special {
 			);
 		} else {
 			throw ArgumentError.value (
-				value, // invalid value
-				"Special.fromJson: value", // arg name
-				"$value is not a valid special", // message
+				value,  // invalid value
+				"Special.fromJson: value",  // arg name
+				"$value is not a valid special",  // message
 			);
 		}
 	}
