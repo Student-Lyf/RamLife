@@ -30,15 +30,6 @@ class ServicesCollection {
 		@required this.prefs,
 	});
 
-	/// Sets the admin data model for the user.
-	/// 
-	/// If the user is not an admin (as dictated by FirebaseAuth's custom claims), 
-	/// then null is returned. 
-	Future<void> setAdminModel() async {
-		admin = (await Auth.claims) ["admin"] 
-			? AdminModel(this) : null;
-	}
-
 	/// Completely refresh the user's schedule, simulating the login sequence.
 	Future<void> refresh() async {
 		final String email = await Auth.email;
@@ -65,9 +56,14 @@ class ServicesCollection {
 	/// available, this function is called. 
 	///
 	/// Use this function to initialize anything that requires a file.
-	void init() {
+	/// 
+	/// Also sets the admin data model for the user. If the user is not an admin 
+	/// (as dictated by FirebaseAuth's custom claims), then [admin] becomes null. 
+	Future<void> init() async {
 		reminders = Reminders(reader);
 		schedule = Schedule(reader, reminders: reminders);
+		admin = (await Auth.claims) ["admin"] 
+			? AdminModel(this) : null;
 		verify();
 		// Register for FCM notifications. 
 		// We don't care when this happens
@@ -121,7 +117,7 @@ class ServicesCollection {
 			};
 
 		if (first) {
-			init();
+			await init();
 		}
 	}
 }

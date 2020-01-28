@@ -52,8 +52,7 @@ Future<void> main({bool restart = false}) async {
 		// To download, and login or go to main
 		ready = services.reader.ready && await Auth.ready;
 		if (ready) {
-			services.init();
-			await services.setAdminModel();
+			await services.init();
 		}
 	// We want to at least try again on ANY error. 
 	// ignore: avoid_catches_without_on_clauses
