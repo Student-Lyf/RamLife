@@ -50,6 +50,9 @@ class Routes {
 
 	/// The route name for the specials manager page. 
 	static const String specials = "specials";
+
+	/// The route name for the admin home page. 
+	static const String admin = "admin";
 }
 
 /// A collection of URLs used throughout the app

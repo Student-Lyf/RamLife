@@ -174,6 +174,7 @@ class RamazApp extends StatelessWidget {
 					Routes.feedback: (_) => FeedbackPage(),
 					Routes.calendar: (_) => CalendarPage(),
 					Routes.specials: (_) => SpecialPage(),
+					Routes.admin: (_) => AdminHomePage(),
 				}
 			)
 		)

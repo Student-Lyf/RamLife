@@ -113,7 +113,7 @@ class DayBuilder extends StatelessWidget {
 				RaisedButton(
 					onPressed: !model.ready ? null : () => 
 						Navigator.of(context).pop(model.day),
-					child: Text("Save", style: TextStyle(color: Colors.white)),
+					child: const Text("Save", style: TextStyle(color: Colors.white)),
 				)
 			]
 		),
