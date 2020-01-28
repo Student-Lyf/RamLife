@@ -44,6 +44,12 @@ class Routes {
 
 	/// The route name for the feedback page.
 	static const String feedback = "feedback";
+
+	/// The route name for the calendar page. 
+	static const String calendar = "calendar";
+
+	/// The route name for the specials manager page. 
+	static const String specials = "specials";
 }
 
 /// A collection of URLs used throughout the app

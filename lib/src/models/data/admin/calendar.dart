@@ -20,9 +20,8 @@ class CalendarModel with ChangeNotifier {
 	/// The current month.
 	static final int currentMonth = now.month;
 
-
-	/// The raw JSON-filled calendar.
-	final List<List<Map<String, dynamic>>> data = List.filled(12, null);
+	// The raw JSON-filled calendar.
+	// final List<List<Map<String, dynamic>>> data = List.filled(12, null);
 
 	/// The calendar filled with [Day]s.
 	final List<List<Day>> calendar = List.filled(12, null);

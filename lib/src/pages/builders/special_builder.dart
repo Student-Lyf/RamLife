@@ -58,10 +58,10 @@ class SpecialBuilderState extends State<SpecialBuilder> {
 								context: context,
 								builder: (BuildContext context) => ListView(
 									children: [
-										SizedBox(
+										const SizedBox(
 											width: double.infinity,
 											height: 60,
-											child: const Center(
+											child: Center(
 												child: Text("Use a preset", textScaleFactor: 1.5),
 											),
 										),
