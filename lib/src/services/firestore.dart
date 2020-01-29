@@ -112,12 +112,26 @@ class Firestore {
 	/// the student profile data. This choice was made since reminders are 
 	/// updated frequently and this saves the system from processing the
 	/// student's schedule every time this happens. 
-	static Future<List<Map<String, dynamic>>> get reminders async => [
-		for (final entry in (await _reminders.document(
-			await Auth.email).get()
-		).data ["reminders"])
-			Map<String, dynamic>.from(entry)
-	];
+	static Future<List<Map<String, dynamic>>> get reminders async {
+		// If the user never made a reminder yet, the document will not exist. 
+		// So the map of data needs to be fetched first, and if it's null,
+		// return null. If the document does exist, check the `reminders` field. 
+		// 
+		// Get the document as a json. This may be null. 
+		final Map<String, dynamic> json = (await _reminders.document(
+			await Auth.email
+		).get())?.data;
+
+		// If the document doesn't exist, `json` will be null.
+		// If it is, set this to null. 
+		// Otherwise, set it to the `reminders` field. 
+		final List<Map> listOfReminders = json == null 
+			? null : (json ["reminders"] ?? []);
+		return [
+			for (final entry in listOfReminders)
+				Map<String, dynamic>.from(entry)
+		];
+	} 
 
 	/// Uploads the user's reminders to the database. 
 	/// 
