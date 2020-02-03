@@ -65,7 +65,7 @@ class NextClass extends StatelessWidget {
 	@override 
 	Widget build (BuildContext context) => Column(
 		children: [
-			InfoCard (
+			InfoCard(
 				icon: next ? Icons.restore : Icons.school,
 				children: modified 
 					? const ["See side panel or click for schedule"] 
@@ -74,8 +74,7 @@ class NextClass extends StatelessWidget {
 				title: modified ? "Times unavailable" : 
 					period == null
 						? "School is over"
-						: "${next ? 'Next' : 'Current'} period: " 
-							"${subject?.name ?? period.period}",
+						: "${next ? 'Right now' : 'Next'}: ${subject?.name ?? period.period}",
 			),
 			if (period?.activity != null) 
 				SpecialTile(child: ActivityTile(period.activity)),
