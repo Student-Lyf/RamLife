@@ -125,9 +125,9 @@ class Firestore {
 		// If the document doesn't exist, `json` will be null.
 		// If it is, set this to null. 
 		// Otherwise, set it to the `reminders` field. 
-		final List<Map> listOfReminders = json == null 
-			? null : (json ["reminders"] ?? []);
-		return [
+		final List listOfReminders = json == null 
+			? [] : (json ["reminders"] ?? []);
+		return <Map<String, dynamic>>[
 			for (final entry in listOfReminders)
 				Map<String, dynamic>.from(entry)
 		];
