@@ -51,7 +51,7 @@ class NextClassTester {
 			)
 		);
 
-		test.findOne (test.findText ("Current period: Math"));
+		test.findOne (test.findText ("Next: Math"));
 		test.findOne(test.findText ("Teacher: Ms. Shine"));
 		test.findNone (test.findText ("School is over"));
 	}
