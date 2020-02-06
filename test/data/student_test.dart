@@ -1,21 +1,20 @@
-import "../unit.dart";
-
 import "dart:convert" show JsonUnsupportedObjectError;
 
 import "package:ramaz/data.dart";
+
+import "../unit.dart";
 
 const Map<String, dynamic> invalidJson = {
 	"this": "is",
 	"totally": false
 };
 
-void main() => test_suite (
+void main() => testSuite (
 	const {
 		"Student": {
 			"Equality Test": StudentTester.equalityTest,
 			"Factory Test": StudentTester.factoryTest,
 			"Periods Test": StudentTester.periodsTest,
-			"Homeroom Test": StudentTester.homeroomTest,
 		}
 	}
 );
@@ -45,7 +44,7 @@ class StudentTester {
 
 	static final Student student = Student (
 		homeroomLocation: homeroomLocation,
-		homeroom: homeroom,
+		homeroomId: homeroom,
 		schedule: schedule
 	);
 
@@ -79,7 +78,7 @@ class StudentTester {
 			Student (
 				homeroomLocation: homeroomLocation, 
 				schedule: schedule, 
-				homeroom: homeroom
+				homeroomId: homeroom
 			),
 			student, 
 		);
@@ -108,26 +107,14 @@ class StudentTester {
 		final List<Period> periods = student.getPeriods(day);
 		compare<int> (periods.length, 13);
 		for (final Period period in periods) {
-			if (int.tryParse (period.period) == null) continue;
+			if (int.tryParse (period.period) == null) {
+				continue;
+			}
 			compare<String> (period.id, StudentTester.period.id);
 		}
 		compare<List<Period>> (
 			student.getPeriods(noSchool),
 			[]
-		);
-	}
-
-	static void homeroomTest() {
-		compare<PeriodData> (
-			student.getHomeroom(day), 
-			PeriodData (
-				room: homeroomLocation,
-				id: homeroom
-			),
-		);
-		compare<PeriodData> (
-			student.getHomeroom(noSchool),
-			empty
 		);
 	}
 }

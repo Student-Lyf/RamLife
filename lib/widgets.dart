@@ -1,15 +1,35 @@
+/// A collection of widgets to use. 
+/// 
+/// There are three types of widgets in this library: 
+/// 1. Generic widgets: miscellaneous widgets for use all around tha app.
+/// 
+/// 2. Atomic widgets: widgets that represent a single piece of data, (something
+/// from the `data` library) with a canonic form all around the app. These 
+/// widgets usually have `InfoTile` (defined here) as a base. 
+/// 
+/// 3. Ambient widgets: Inherited widgets that can be accessed anywhere 
+/// in the app using `BuildContext`s. 
 library widgets;
 
-export "src/widgets/brightness_changer.dart";
-export "src/widgets/model_listener.dart";
-export "src/widgets/class_list.dart";
-export "src/widgets/date_picker.dart";
-export "src/widgets/footer.dart";
-export "src/widgets/icons.dart";
-export "src/widgets/info_card.dart";
-export "src/widgets/next_class.dart";
-export "src/widgets/note_tile.dart";
-export "src/widgets/notes_builder.dart";
-export "src/widgets/services.dart";
-export "src/widgets/sports_tile.dart";
-export "src/widgets/theme_changer.dart";
+// Ambient widgets can be accessed using `BuildContext`s
+export "src/widgets/ambient/brightness_changer.dart";
+export "src/widgets/ambient/services.dart";
+export "src/widgets/ambient/theme_changer.dart";
+
+// Atomic widgets represent a single data object.
+export "src/widgets/atomic/activity_tile.dart";
+export "src/widgets/atomic/next_class.dart";
+export "src/widgets/atomic/reminder_tile.dart";
+export "src/widgets/atomic/sports_tile.dart";
+
+// Generic widgets are used in all sorts of situations.
+export "src/widgets/generic/class_list.dart";
+export "src/widgets/generic/date_picker.dart";
+export "src/widgets/generic/footer.dart";
+export "src/widgets/generic/icons.dart";
+export "src/widgets/generic/model_listener.dart";
+export "src/widgets/generic/reminder_builder.dart";
+
+// Widgets that help represent images. 
+export "src/widgets/images/link_icon.dart";
+export "src/widgets/images/loading_image.dart";

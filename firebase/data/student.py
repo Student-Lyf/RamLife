@@ -77,8 +77,8 @@ class Student:
 		"F": self.F,
 		"M": self.M,
 		"R": self.R,
-		"first": self.first,
-		"last": self.last,
+		# "first": self.first,
+		# "last": self.last,
 		# "mincha rooms": self.mincha_rooms,
 		"homeroom meeting room": self.homeroom_location,
 		"homeroom": self.homeroom

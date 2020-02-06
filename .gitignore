@@ -57,10 +57,13 @@
 .svn/
 *.txt.yaml
 /data
-doc
+# doc
 android/key.properties
 firebase/admin.json
 firebase/rules_test/node_modules/
+firebase/temp.py
+firebase/rules_test/firestore.rules
+docs/
 
 
 # android
@@ -79,7 +82,7 @@ firebase/rules_test/node_modules/
 .vscode/
 
 # Flutter/Dart/Pub related
-**/doc/api/
+# **/doc/api/
 .dart_tool/
 .flutter-plugins
 .packages
@@ -87,7 +90,6 @@ firebase/rules_test/node_modules/
 .pub
 /build/
 # test
-pubspec.lock
 
 # Android related
 **/android/**/gradle-wrapper.jar
@@ -115,6 +117,7 @@ pubspec.lock
 **/ios/**/profile
 **/ios/**/xcuserdata
 **/ios/.generated/
+**/ios/Flutter/flutter_export_environment.sh
 **/ios/Flutter/App.framework
 **/ios/Flutter/Flutter.framework
 **/ios/Flutter/Generated.xcconfig

@@ -1,8 +1,7 @@
-/// {@category Data}
-library student;
+library student_dataclasses;
 
-import "package:flutter/foundation.dart";
 import "dart:convert" show JsonUnsupportedObjectError;
+import "package:flutter/foundation.dart";
 
 import "schedule.dart";
 import "times.dart";
@@ -12,8 +11,6 @@ import "times.dart";
 /// This object holds their schedule, and is a convenience class for getting 
 /// their schedule, as well as some other noteable data, such as when and where
 /// to meet for homeroom. 
-/// 
-/// This class uses data from the `students` collection in the database.
 @immutable
 class Student {
 	/// This student's schedule.
@@ -22,32 +19,30 @@ class Student {
 	/// See [Letters] and [PeriodData] for more information.
 	final Map <Letters, List<PeriodData>> schedule;
 
-	/// The rooom for this students homeroom. 
-	/// 
-	/// This is not stored with other [PeriodData]s in the database, 
-	/// so it is more convenient to extract it and keep here. 
-	final String homeroomLocation;
+	/// The section ID for this student's homeroom; 
+	final String homeroomId;
 
-	/// The id of this student's advisory group. 
-	/// 
-	/// This can be used to get the student's advisor. 
-	final String homeroom;
+	/// The room location for this student's homeroom;
+	final String homeroomLocation;
 
 	/// `const` constructor for a student.
 	const Student ({
 		@required this.schedule,
+		@required this.homeroomId,
 		@required this.homeroomLocation,
-		@required this.homeroom,
 	});
 
-	@override String toString() => schedule.toString();
-	@override operator == (other) => (
-		other is Student && 
-		other.schedule == schedule && 
-		other.homeroomLocation == homeroomLocation
-	);
+	@override 
+	String toString() => schedule.toString();
 
-	/// Returns a [Student] from a JSON object.
+	@override
+	int get hashCode => schedule.hashCode;
+
+	@override 
+	bool operator == (dynamic other) => other is Student && 
+		other.schedule == schedule;
+
+	/// Creates a student from a JSON object.
 	/// 
 	/// Needs to be a factory so there can be proper error checking.
 	factory Student.fromJson (Map<String, dynamic> json) {
@@ -56,34 +51,34 @@ class Student {
 
 		// Check for null homeroom
 		const String homeroomLocationKey = "homeroom meeting room";
-		if (!json.containsKey(homeroomLocationKey)) 
+		if (!json.containsKey(homeroomLocationKey)) {
 			throw JsonUnsupportedObjectError(
 				json, cause: "No homeroom location present"
 			);
+		}
 		final String homeroomLocation = json [homeroomLocationKey];
-		if (homeroomLocation == null) 
-			throw ArgumentError.notNull(homeroomLocationKey);
 
 		const String homeroomKey = "homeroom";
-		if (!json.containsKey (homeroomKey)) 
+		if (!json.containsKey (homeroomKey)) {
 			throw JsonUnsupportedObjectError(json, cause: "No homeroom present");
-		final String homeroom = json [homeroomKey];
-		if (homeroom == null) throw ArgumentError.notNull(homeroomKey);
+		}
+		final String homeroomId = json [homeroomKey];
 
 		// Check for null schedules
 		const List<String> letters = ["A", "B", "C", "E", "F", "M", "R"];
 		for (final String letter in letters) {
-			if (!json.containsKey (letter)) throw JsonUnsupportedObjectError(
-				json, cause: "Cannot find letter $letter"
-			);
-			if (json [letter] == null) 
+			if (!json.containsKey (letter)) {
+				throw JsonUnsupportedObjectError(
+					json, cause: "Cannot find letter $letter"
+				);
+			}
+			if (json [letter] == null) {
 				throw ArgumentError.notNull ("$letter has no schedule");
+			}
 		}
 
 		// Real code starts here
 		return Student (
-			homeroomLocation: homeroomLocation,
-			homeroom: homeroom,
 			schedule: {
 				Letters.A: PeriodData.getList (json ["A"]),
 				Letters.B: PeriodData.getList (json ["B"]),
@@ -93,58 +88,74 @@ class Student {
 				Letters.M: PeriodData.getList (json ["M"]),
 				Letters.R: PeriodData.getList (json ["R"]),
 			},
+			homeroomId: homeroomId, 
+			homeroomLocation: homeroomLocation,
 		);
 	}
 
 	/// Returns the schedule for this student on a given day. 
 	/// 
-	/// Iterates over the entry for [Day.letter] in [schedule], and converts the
+	/// Iterates over the schedule for [day] in [schedule], and converts the
 	/// [PeriodData]s to [Period] objects using the [Range]s in [Day.special]. 
+	/// 
+	/// If `day.special` is [Special.modified], every [Period] will have their 
+	/// [Period.time] property set to null. 
 	List <Period> getPeriods (Day day) {
-		final List <Period> result = [];
-		if (!day.school) return result;
-		final List <PeriodData> periods = schedule [day.letter];
-		final Special special = day.special;
+		if (!day.school) {
+			return [];
+		} 
+
+		// Get indices for `schedule [day.letter]`, keeping skipped periods in mind
 		int periodIndex = 0;
+		final List<int> periodIndices = [];
+		final Map<String, Activity> activities = day.special.activities ?? {};
+		final Special special = day.isModified 
+			? Day.specials [day.letter] 
+			: day.special;
 
 		for (int index = 0; index < special.periods.length; index++) {
-			final Range range = special.periods [index];
-			while ((special?.skip ?? const []).contains(periodIndex + 1))
-				periodIndex++; 
-			if (special.homeroom == index) result.add (
-				Period (
-					getHomeroom(day),
-					time: range,
-					period: "Homeroom",
-				)
-			); else if (special.mincha == index) result.add (
-				Period.mincha(range)
-			); else {
-				final PeriodData period = periods [periodIndex]; 
-				if (period == null) result.add (
-					Period (
-						PeriodData (
-							room: null,
-							id: null
-						),
-						period: (periodIndex + 1).toString(),
-						time: range,
-					) 
-				); else result.add (
-					Period (
-						period,
-						time: range,
-						period: (periodIndex + 1).toString()
-					) 
-				);
+			while (special?.skip?.contains(periodIndex + 1) ?? false) {
 				periodIndex++;
 			}
+			periodIndices.add(
+				special.homeroom == index || special.mincha == index 
+					? null
+					: periodIndex++
+			);
 		}
-		return result;
+
+		// Loop over all the periods and assign each one a Period.
+		return [
+			for (int index = 0; index < special.periods.length; index++)
+				if (special.homeroom == index)
+					Period(
+						PeriodData.free,
+						time: day.isModified ? null : special.periods [index],
+						period: "Homeroom",
+						activity: activities ["Homeroom"]
+					)
+				else if (special.mincha == index)
+					Period.mincha(
+						day.isModified ? null : special.periods [index],
+						activity: activities ["Mincha"],
+					)
+				else Period(
+					schedule [day.letter] [periodIndices [index]] ?? PeriodData.free,
+					time: day.isModified ? null : special.periods [index],
+					period: (periodIndices [index] + 1).toString(),
+					activity: activities [(periodIndices [index] + 1).toString()]
+				)
+		];
 	}
 
-	/// Returns a [PeriodData] for this student's homeroom period on a given day.
-	PeriodData getHomeroom(Day day) => day.letter == Letters.B 
-		? PeriodData (room: homeroomLocation, id: homeroom) 
-		: PeriodData.free;
+	/// Gets the section ids for this student. 
+	/// 
+	/// This includes every course in every day of the student's schedule,
+	/// without taking duplicates. 
+	Set<String> getIds() => {
+		for (final List<PeriodData> schedule in schedule.values)
+			for (final PeriodData period in schedule)
+				if (period != null && period != PeriodData.free)  // skip free periods
+					period.id
+	};
 }

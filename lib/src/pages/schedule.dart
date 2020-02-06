@@ -1,84 +1,101 @@
+// ignore_for_file: prefer_const_constructors_in_immutables
 import "package:flutter/material.dart";
 
+import "package:ramaz/constants.dart";
 import "package:ramaz/data.dart";
 import "package:ramaz/models.dart";
 import "package:ramaz/pages.dart";
 import "package:ramaz/widgets.dart";
 
+/// A page to allow the user to explore their schedule. 
 class SchedulePage extends StatelessWidget {
-	const SchedulePage();
-
 	@override
 	Widget build (BuildContext context) => ModelListener<ScheduleModel>(
 		model: () => ScheduleModel(services: Services.of(context).services),
-		child: Footer(), 
-		builder: (BuildContext context, ScheduleModel model, Widget footer) => Scaffold(
+		// ignore: sort_child_properties_last
+		builder: (
+			BuildContext context, 
+			ScheduleModel model, 
+			Widget _
+		) => Scaffold(
 			appBar: AppBar (
-				title: Text ("Schedule"),
+				title: const Text ("Schedule"),
 				actions: [
 					if (ModalRoute.of(context).isFirst)
 						IconButton (
 							icon: Icon (Icons.home),
 							onPressed: () => Navigator.of(context)
-								.pushReplacementNamed("home")
+								.pushReplacementNamed(Routes.home)
 						)
 				],
 			),
-			bottomNavigationBar: footer,
-			floatingActionButton: Builder (
-				builder: (BuildContext context) => FloatingActionButton (
-					child: Icon (Icons.calendar_today),
-					onPressed: () => viewDay (model, context)
+			bottomNavigationBar: Footer(),
+			floatingActionButton: Builder(
+				builder: (BuildContext context) => FloatingActionButton(
+					onPressed: () => viewDay (model, context),
+					child: const Icon (Icons.calendar_today),
 				)
 			),
 			drawer: ModalRoute.of(context).isFirst ? NavigationDrawer() : null,
 			body: Column (
 				children: [
 					ListTile (
-						title: Text ("Choose a letter"),
+						title: const Text ("Choose a letter"),
 						trailing: DropdownButton<Letters> (
 							value: model.day.letter, 
 							onChanged: (Letters letter) => model.update(newLetter: letter),
-							items: Letters.values.map<DropdownMenuItem<Letters>> (
-								(Letters letter) => DropdownMenuItem<Letters> (
-									child: Text (letter.toString().split(".").last),
-									value: letter
-								)
-							).toList()
+							items: [
+								for (final Letters letter in Letters.values)
+									DropdownMenuItem(
+										value: letter,
+										child: Text(lettersToString [letter]),
+									)
+							]
 						)
 					),
 					ListTile (
-						title: Text ("Choose a schedule"),
+						title: const Text ("Choose a schedule"),
 						trailing: DropdownButton<Special> (
 							value: model.day.special,
 							onChanged: (Special special) => model.update(newSpecial: special),
-							items: specials.map<DropdownMenuItem<Special>> (
-								(Special special) => DropdownMenuItem<Special> (
-									child: Text (special.name),
-									value: special
-								)
-							).toList()
+							items: [
+								for (final Special special in Special.specials)
+									DropdownMenuItem(
+										value: special,
+										child: Text (special.name),
+									),
+								if (!Special.specials.contains(model.day.special))
+									DropdownMenuItem(
+										value: model.day.special,
+										child: Text(model.day.special.name)
+									)
+							]
 						)
 					),
-					SizedBox (height: 20),
-					Divider(),
-					SizedBox (height: 20),
+					const SizedBox (height: 20),
+					const Divider(),
+					const SizedBox (height: 20),
 					Expanded (child: ClassList(day: model.day)),
 				]
 			)
 		)
 	);
 
-	void viewDay(ScheduleModel model, BuildContext context) async {
+	/// Allows the user to select a day in the calendar to view. 
+	/// 
+	/// If there is no school on that day, a [SnackBar] will be shown. 
+	Future<void> viewDay(ScheduleModel model, BuildContext context) async {
 		final DateTime selected = await pickDate (
 			context: context,
-			initialDate: model.selectedDay
+			initialDate: model.date,
 		);
-		if (selected == null) return;
+		if (selected == null) {
+			return;
+		}
 		try {model.date = selected;}
-		on ArgumentError {
+		on Exception {
 			Scaffold.of(context).showSnackBar(
-				SnackBar (
+				const SnackBar (
 					content: Text ("There is no school on this day")
 				)
 			);

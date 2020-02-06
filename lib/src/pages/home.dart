@@ -1,70 +1,116 @@
+// ignore_for_file: prefer_const_constructors_in_immutables
 import "package:flutter/material.dart";
+import "package:flutter/services.dart";
 
 import "package:ramaz/data.dart";
 import "package:ramaz/models.dart";
 import "package:ramaz/pages.dart";
 import "package:ramaz/widgets.dart";
 
-class HomePage extends StatelessWidget {
-	const HomePage();
+/// The homepage of the app. 
+/// 
+/// It's stateful because when refreshing the schedule a loading bar is shown,
+/// and needs to be dismissed. However, it can be rewritten to use a 
+/// [ValueNotifier] instead.
+class HomePage extends StatefulWidget {
+	@override
+	HomePageState createState() => HomePageState();
+}
+
+/// A state for the home page, to keep track of when the page loads. 
+class HomePageState extends State<HomePage> {
+	/// A key to access the [Scaffold]s state. 
+	final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
+
+	/// Whether the page is loading. 
+	bool loading = false;
 
 	@override 
-	Widget build (BuildContext context) => ModelListener<HomeModel>(
-		model: () => HomeModel(Services.of(context).services),
-		builder: (BuildContext context, HomeModel model, _) => Scaffold (
+	Widget build (BuildContext context) => ModelListener<Schedule>(
+		model: () => Services.of(context).schedule,
+		dispose: false,
+		builder: (BuildContext context, Schedule schedule, _) => Scaffold (
+			key: scaffoldKey,
 			appBar: AppBar (
-				title: Text ("Home"),
+				title: const Text ("Home"),
 				actions: [
-					if (model.schedule.hasSchool) Builder (
+					if (schedule.hasSchool) Builder (
 						builder: (BuildContext context) => FlatButton(
-							child: Text ("Swipe left for schedule"),
 							textColor: Colors.white,
-							onPressed: () => Scaffold.of(context).openEndDrawer()
+							onPressed: () => Scaffold.of(context).openEndDrawer(),
+							child: const Text ("Tap for schedule"),
 						)
 					)
 				],
 			),
 			drawer: NavigationDrawer(),
-			endDrawer: !model.schedule.hasSchool ? null : Drawer (
+			endDrawer: !schedule.hasSchool ? null : Drawer (
 				child: ClassList(
-					day: model.schedule.today,
-					periods: model.schedule.nextPeriod == null 
-						? model.schedule.periods
-						: model.schedule.periods.getRange (
-							(model.schedule.periodIndex ?? -1) + 1, 
-							model.schedule.periods.length
+					day: schedule.today,
+					periods: schedule.nextPeriod == null 
+						? schedule.periods
+						: schedule.periods.getRange (
+							(schedule.periodIndex ?? -1) + 1, 
+							schedule.periods.length
 						),
-					headerText: model.schedule.period == null 
+					headerText: schedule.period == null 
 						? "Today's Schedule" 
 						: "Upcoming Classes"
 				)
 			),
 			body: RefreshIndicator (  // so you can refresh the period
-				onRefresh: () async => model.schedule.onNewPeriod(),
+				onRefresh: () {
+					Future<void> downloadCalendar() async {
+						try {
+							await Services.of(context).services.updateCalendar();
+						} on PlatformException catch(error) {
+							if (error.code == "Error performing get") {
+								scaffoldKey.currentState.showSnackBar(
+									SnackBar(
+										content: const Text("No internet"), 
+										action: SnackBarAction(
+											label: "RETRY", 
+											onPressed: () async {
+												setState(() => loading = true);
+												await downloadCalendar();
+												setState(() => loading = false);
+											}
+										),
+									)
+								);
+							}
+							schedule.onNewPeriod();
+						}
+					}
+					return downloadCalendar;
+				}(),
 				child: ListView (
 					children: [
-						RamazLogos.ram_rectangle,
-						Divider(),
+						if (loading) const LinearProgressIndicator(),
+						RamazLogos.ramRectangle,
+						const Divider(),
 						Text (
-							model.schedule.hasSchool
-								? "Today is a${model.schedule.today.n} "
-									"${model.schedule.today.name}"
+							schedule.hasSchool
+								? "Today is a${schedule.today.n} "
+									"${schedule.today.name}"
 								: "There is no school today",
 							textScaleFactor: 2,
 							textAlign: TextAlign.center
 						),
-						SizedBox (height: 20),
-						if (model.schedule.hasSchool) NextClass(
-							notes: model.schedule.notes.currentNotes,
-							period: model.schedule.period,
-							subject: model.schedule.subjects [model.schedule.period?.id]
+						const SizedBox (height: 20),
+						if (schedule.hasSchool) NextClass(
+							reminders: schedule.reminders.currentReminders,
+							period: schedule.period,
+							subject: schedule.subjects [schedule.period?.id],
+							modified: schedule.today.isModified,
 						),
 						// if school won't be over, show the next class
-						if (model.schedule.nextPeriod != null) NextClass (
+						if (schedule.nextPeriod != null && !schedule.today.isModified) NextClass (
 							next: true,
-							notes: model.schedule.notes.nextNotes,
-							period: model.schedule.nextPeriod,
-							subject: model.schedule.subjects [model.schedule.nextPeriod?.id]
+							reminders: schedule.reminders.nextReminders,
+							period: schedule.nextPeriod,
+							subject: schedule.subjects [schedule.nextPeriod?.id],
+							modified: schedule.today.isModified,
 						),
 						if (model.sports.todayGames.isNotEmpty) Padding (
 							padding: EdgeInsets.symmetric(vertical: 10),

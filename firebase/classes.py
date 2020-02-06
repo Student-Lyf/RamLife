@@ -19,6 +19,7 @@ def get_teachers(codes = False) -> {"section_id": "teacher"}:
 		section_id = entry ["SECTION_ID"]
 		teacher = entry ["FACULTY_FULL_NAME"] if not codes else entry ["FACULTY_ID"]
 		if not teacher: 
+			continue
 			if not last: 
 				raise ValueError (f"Cannot infer teacher of {section_id}")
 			teacher = last
@@ -35,7 +36,7 @@ def get_subjects(names, teachers):
 		if "-" in course_id: course_id = course_id [:course_id.find ("-")]
 		try: course_id = str (int (course_id))
 		except ValueError: pass
-		try: name = class_names [course_id]
+		try: name = names [course_id]
 		except KeyError: 
 			error.add (course_id)
 			continue
@@ -62,4 +63,4 @@ if __name__ == '__main__':
 		print (errors)
 
 	print ("Uploading to Firebase...")
-	batch_upload (subjects)
+	# batch_upload (subjects)
