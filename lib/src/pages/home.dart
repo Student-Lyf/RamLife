@@ -26,15 +26,14 @@ class HomePageState extends State<HomePage> {
 	bool loading = false;
 
 	@override 
-	Widget build (BuildContext context) => ModelListener<Schedule>(
-		model: () => Services.of(context).schedule,
-		dispose: false,
-		builder: (BuildContext context, Schedule schedule, _) => Scaffold (
+	Widget build (BuildContext context) => ModelListener<HomeModel>(
+		model: () => HomeModel(Services.of(context).services),
+		builder: (BuildContext context, HomeModel model, _) => Scaffold (
 			key: scaffoldKey,
 			appBar: AppBar (
 				title: const Text ("Home"),
 				actions: [
-					if (schedule.hasSchool) Builder (
+					if (model.schedule.hasSchool) Builder (
 						builder: (BuildContext context) => FlatButton(
 							textColor: Colors.white,
 							onPressed: () => Scaffold.of(context).openEndDrawer(),
@@ -44,16 +43,16 @@ class HomePageState extends State<HomePage> {
 				],
 			),
 			drawer: NavigationDrawer(),
-			endDrawer: !schedule.hasSchool ? null : Drawer (
+			endDrawer: !model.schedule.hasSchool ? null : Drawer (
 				child: ClassList(
-					day: schedule.today,
-					periods: schedule.nextPeriod == null 
-						? schedule.periods
-						: schedule.periods.getRange (
-							(schedule.periodIndex ?? -1) + 1, 
-							schedule.periods.length
+					day: model.schedule.today,
+					periods: model.schedule.nextPeriod == null 
+						? model.schedule.periods
+						: model.schedule.periods.getRange (
+							(model.schedule.periodIndex ?? -1) + 1, 
+							model.schedule.periods.length
 						),
-					headerText: schedule.period == null 
+					headerText: model.schedule.period == null 
 						? "Today's Schedule" 
 						: "Upcoming Classes"
 				)
@@ -79,7 +78,7 @@ class HomePageState extends State<HomePage> {
 									)
 								);
 							}
-							schedule.onNewPeriod();
+							model.schedule.onNewPeriod();
 						}
 					}
 					return downloadCalendar;
@@ -90,30 +89,33 @@ class HomePageState extends State<HomePage> {
 						RamazLogos.ramRectangle,
 						const Divider(),
 						Text (
-							schedule.hasSchool
-								? "Today is a${schedule.today.n} "
-									"${schedule.today.name}"
+							model.schedule.hasSchool
+								? "Today is a${model.schedule.today.n} "
+									"${model.schedule.today.name}"
 								: "There is no school today",
 							textScaleFactor: 2,
 							textAlign: TextAlign.center
 						),
 						const SizedBox (height: 20),
-						if (schedule.hasSchool) NextClass(
-							reminders: schedule.reminders.currentReminders,
-							period: schedule.period,
-							subject: schedule.subjects [schedule.period?.id],
-							modified: schedule.today.isModified,
+						if (model.schedule.hasSchool) NextClass(
+							reminders: model.schedule.reminders.currentReminders,
+							period: model.schedule.period,
+							subject: model.schedule.subjects [model.schedule.period?.id],
+							modified: model.schedule.today.isModified,
 						),
 						// if school won't be over, show the next class
-						if (schedule.nextPeriod != null && !schedule.today.isModified) NextClass (
+						if (
+							model.schedule.nextPeriod != null && 
+							!model.schedule.today.isModified
+						) NextClass (
 							next: true,
-							reminders: schedule.reminders.nextReminders,
-							period: schedule.nextPeriod,
-							subject: schedule.subjects [schedule.nextPeriod?.id],
-							modified: schedule.today.isModified,
+							reminders: model.schedule.reminders.nextReminders,
+							period: model.schedule.nextPeriod,
+							subject: model.schedule.subjects [model.schedule.nextPeriod?.id],
+							modified: model.schedule.today.isModified,
 						),
 						if (model.sports.todayGames.isNotEmpty) Padding (
-							padding: EdgeInsets.symmetric(vertical: 10),
+							padding: const EdgeInsets.symmetric(vertical: 10),
 							child: Align (
 								alignment: Alignment.center,
 								child: Text (

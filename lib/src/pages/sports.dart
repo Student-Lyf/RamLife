@@ -15,27 +15,27 @@ class SportsPage extends StatelessWidget {
 	@override Widget build(BuildContext context) => DefaultTabController (
 		length: 2,
 		initialIndex: 1,
-		child: Scaffold (
-			appBar: AppBar (
-				title: Text ("Sports"),
-				bottom: TabBar (tabs: tabs),
+		child: Scaffold(
+			appBar: AppBar(
+				title: const Text("Sports"),
+				bottom: const TabBar(tabs: tabs),
 				actions: [
 					IconButton(
 						icon: Icon (Icons.home),
 						onPressed: () => 
-							Navigator.of(context).pushReplacementNamed(Routes.HOME)
+							Navigator.of(context).pushReplacementNamed(Routes.home)
 					)
 				]
 			),
 			drawer: NavigationDrawer(),
-			body: ModelListener(
-				model: () => Services.of(context).sports,
+			body: ModelListener<Sports>(
+				model: () => Sports(Services.of(context).reader),
 				dispose: false,
 				builder: (BuildContext context, Sports model, Widget _) => TabBarView(
 					children: [
 						for (List<SportsGame> gameList in [model.recents, model.upcoming])
 							ListView (
-								padding: EdgeInsets.only(top: 10),
+								padding: const EdgeInsets.only(top: 10),
 								children: [
 									for (final SportsGame game in gameList)
 										SportsTile(game)

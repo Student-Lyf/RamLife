@@ -1,9 +1,11 @@
-import "package:flutter/foundation.dart";
 import "dart:async";
+
+import "package:flutter/foundation.dart";
 
 import "package:ramaz/data.dart";
 import "package:ramaz/services.dart";
 
+// ignore: prefer_mixin
 class Sports with ChangeNotifier {
 	static const Duration updateInterval = Duration (hours: 1);
 
@@ -36,9 +38,11 @@ class Sports with ChangeNotifier {
 				game.time.start.year == now.year &&
 				game.time.start.month == now.month &&
 				game.time.start.day == now.day
-			) todayGames.add(game);
-			if (game.time < now) recents.add(game);
-			else upcoming.add(game);
+			) {
+				todayGames.add(game);
+			} else {
+				(game.time < now ? recents : upcoming).add(game);
+			}
 		}
 		notifyListeners();
 	}

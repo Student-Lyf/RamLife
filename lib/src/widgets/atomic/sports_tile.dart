@@ -1,8 +1,7 @@
 import "package:flutter/material.dart";
 
-import "icons.dart";
-
 import "package:ramaz/data.dart";
+import "package:ramaz/widgets.dart";
 
 class SportsTile extends StatelessWidget {
 	final SportsGame game;

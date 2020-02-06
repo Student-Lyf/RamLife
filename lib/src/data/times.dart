@@ -133,8 +133,8 @@ class SchoolEvent {
 		start = DateTime.fromMicrosecondsSinceEpoch(json ["start"]),
 		end = DateTime.fromMicrosecondsSinceEpoch(json ["end"]);
 
-	operator < (DateTime other) => end.isBefore(other);
-	operator > (DateTime other) => end.isAfter(other);
+	bool operator < (DateTime other) => end.isBefore(other);
+	bool operator > (DateTime other) => end.isAfter(other);
 }
 
 

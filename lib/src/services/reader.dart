@@ -1,6 +1,7 @@
-import "package:cloud_firestore/cloud_firestore.dart" show Timestamp;
 import "dart:convert" show jsonDecode, jsonEncode;
 import "dart:io" show File;
+
+import "package:cloud_firestore/cloud_firestore.dart" show Timestamp;
 
 /// An abstraction around the file system.
 /// 
@@ -120,7 +121,10 @@ class Reader {
 				// cloud_firestore uses Timestamps instead of DateTimes. 
 				// See https://github.com/FirebaseExtended/flutterfire/issues/46
 				// By yours truly. 
-				toEncodable: (obj) => (obj as Timestamp).microsecondsSinceEpoch,
+				toEncodable: (obj) {
+					final Timestamp time = obj;
+					return time.microsecondsSinceEpoch;
+				}
 			)
 		);
 

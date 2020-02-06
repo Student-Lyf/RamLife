@@ -44,6 +44,8 @@ class Routes {
 
 	/// The route name for the feedback page.
 	static const String feedback = "feedback";
+
+	static const String sports = "sports";
 }
 
 /// A collection of URLs used throughout the app

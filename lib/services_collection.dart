@@ -113,3 +113,4 @@ class ServicesCollection {
 			init();
 		}
 	}
+}

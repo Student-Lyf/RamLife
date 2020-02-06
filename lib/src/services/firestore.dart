@@ -27,6 +27,8 @@ class Firestore {
 	/// The name of the reminders collection
 	static const String remindersKey = "reminders";
 
+	static const String sportsKey = "sports";
+
 	static final fb.Firestore _firestore = fb.Firestore.instance;
 
 	static final fb.CollectionReference _students = 
@@ -46,6 +48,9 @@ class Firestore {
 	
 	static final fb.CollectionReference _reminders = 
 		_firestore.collection (remindersKey);
+
+	static final fb.CollectionReference _sports = 
+		_firestore.collection(sportsKey);
 
 	/// Downloads the student's document in the student collection.
 	static Future<Map<String, dynamic>> get student async => 
@@ -162,9 +167,9 @@ class Firestore {
 	static Future<void> saveAdmin (Map<String, dynamic> data) async => 
 		_admin.document(await Auth.email).setData(data);
 
-	static Future<List<Map<String, dynamic>>> getSports() async => 
+	static Future<List<Map<String, dynamic>>> get sports async => 
 		List<Map<String, dynamic>>.from (
-			(await sports.document("sports").get()).data ["games"].map (
+			(await _sports.document("sports").get()).data ["games"].map (
 				(json) => Map<String, dynamic>.from(json)
 			).toList()
 		);
