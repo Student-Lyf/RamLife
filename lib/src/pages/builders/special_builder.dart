@@ -156,10 +156,20 @@ class SpecialBuilderState extends State<SpecialBuilder> {
 							range: model.times [index],
 							index: index,
 						),
-					FlatButton.icon(
-						icon: Icon (Icons.add),
-						label: const Text("Add period"),
-						onPressed: () => model.numPeriods++,
+					Row(
+						children: [
+							FlatButton.icon(
+								icon: Icon (Icons.add),
+								label: const Text("Add"),
+								onPressed: () => model.numPeriods++,
+							),
+							if (model.numPeriods > 0) 
+								FlatButton.icon(
+									icon: Icon(Icons.remove),
+									label: const Text("Remove"),
+									onPressed: () => model.numPeriods--
+								),
+						]
 					),
 					if (model.numPeriods == 0) 
 						const Text(

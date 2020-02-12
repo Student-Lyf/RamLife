@@ -44,8 +44,12 @@ class PeriodTile extends StatelessWidget {
 				ListTile(
 					subtitle: Text(model.periods [index]),
 					leading: IconButton(
-						icon: Icon(Icons.remove_circle_outline),
-						onPressed: () => model.numPeriods--,
+						icon: Icon(
+							model.skips.contains(index) 
+								? Icons.add_circle_outline 
+								: Icons.remove_circle_outline
+						),
+						onPressed: () => model.toggleSkip(index),
 					),
 					title: Text.rich(
 						TextSpan(
@@ -89,10 +93,6 @@ class PeriodTile extends StatelessWidget {
 								),
 							]
 						)
-					),
-					trailing: FlatButton(
-						onPressed: () => model.toggleSkip(index),
-						child: Text (model.skips.contains(index) ? "UNSKIP" : "SKIP"),
 					),
 				)
 			]

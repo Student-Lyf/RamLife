@@ -397,11 +397,10 @@ class Special {
 	/// 
 	/// This function is used to compare the [periods] property of two Specials. 
 	static bool deepEquals<E>(List<E> a, List<E> b) => 
-		(a == null) == (b == null) ||
-		(a == null && b == null) &&
-		a.length == b.length &&
+		(a == null) == (b == null) && 
+		a?.length == b?.length &&
 		<int>[
-			for (int index = 0; index < 10; index++) 
+			for (int index = 0; index < a.length; index++) 
 				index
 		].every(
 			(int index) => a [index] == b [index]
@@ -417,7 +416,7 @@ class Special {
 	bool operator == (dynamic other) => other is Special && 
 		other.name == name &&
 		deepEquals<Range>(other.periods, periods) &&
-		deepEquals<int>(other.skip, skip) &&
+		deepEquals<int>(other.skip ?? const [], skip ?? const []) &&
 		other.mincha == mincha &&
 		other.homeroom == homeroom;
 

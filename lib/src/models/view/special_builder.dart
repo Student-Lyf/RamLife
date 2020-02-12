@@ -23,7 +23,7 @@ class SpecialBuilderModel with ChangeNotifier {
 	/// See [Special.periods]
 	List<Range> get times => _times;
 	set times (List<Range> value) {
-		_times = value;
+		_times = List<Range>.of(value);
 		notifyListeners();
 	}
 
@@ -53,8 +53,19 @@ class SpecialBuilderModel with ChangeNotifier {
 	/// This is essentially `special.periods.length`. 
 	int get numPeriods => _numPeriods;
 	set numPeriods (int value) {
+		if (value == 0) {
+			times.clear();
+			homeroom = null;
+			mincha = null;
+		}
 		if (value < numPeriods) {
 			times.removeRange(value, times.length);
+			if (homeroom == value) {
+				homeroom = null;
+			}
+			if (mincha == value) {
+				mincha = null;
+			}
 		} else {
 			if (_numPeriods == 0) {
 				times.add(
@@ -132,7 +143,7 @@ class SpecialBuilderModel with ChangeNotifier {
 			return;
 		}
 		preset = special;
-		_times = special.periods;
+		_times = List.of(special.periods);
 		_skips = special.skip ?? [];
 		_name = special.name;
 		_numPeriods = special.periods.length;
