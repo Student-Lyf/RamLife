@@ -120,9 +120,9 @@ class LoginState extends State<Login> {
 						child: const Text ("Cancel"),
 					),
 					RaisedButton (
-						onPressed: () => launch ("mailto:levilesches@gmail.com"),
+						onPressed: () => launch ("mailto:leschesl@ramaz.org"),
 						color: Theme.of(dialogContext).primaryColorLight,
-						child: const Text ("levilesches@gmail.com"),
+						child: const Text ("leschesl@ramaz.org"),
 					)
 				]
 			)
