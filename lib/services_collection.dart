@@ -62,8 +62,10 @@ class ServicesCollection {
 	Future<void> init() async {
 		reminders = Reminders(reader);
 		schedule = Schedule(reader, reminders: reminders);
-		admin = (await Auth.claims) ["admin"] 
-			? AdminModel(this) : null;
+		if (await Auth.isAdmin) {
+			reader.adminData = await Firestore.admin ?? {};
+			admin = AdminModel(this, await Auth.adminScopes);
+		}
 		verify();
 		// Register for FCM notifications. 
 		// We don't care when this happens
@@ -108,6 +110,7 @@ class ServicesCollection {
 
 		// save the data
 		reader
+			..adminData = null
 			..studentData = studentData
 			..subjectData = await Firestore.getClasses(student.getIds())
 			..calendarData =  await Firestore.getCalendar()
