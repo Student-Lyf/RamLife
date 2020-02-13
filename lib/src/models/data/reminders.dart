@@ -114,7 +114,7 @@ class Reminders with ChangeNotifier {
 				}
 			}
 			if (toRemove != null) {
-				remindersList.removeAt(toRemove);
+				remindersList.remove(toRemove);
 			}
 		}
 	}
