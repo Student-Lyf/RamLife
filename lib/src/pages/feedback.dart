@@ -25,12 +25,12 @@ class FeedbackPage extends StatelessWidget {
 						),
 						const SizedBox(height: 20),
 						CheckboxListTile(
-							value: model.responseConsent, 
-							onChanged: (bool value) => model.responseConsent = value,
+							value: model.anonymous, 
+							onChanged: (bool value) => model.anonymous = value,
 							title: const Text("Make anonymous"),
 							subtitle: const Text(
 								"We won't be able to see your name or email. "
-								"To share them with us, uncheck this box."
+								"To share them with us, keep this unchecked."
 							)
 						),
 						const SizedBox(height: 50),

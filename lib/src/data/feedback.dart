@@ -12,25 +12,25 @@ class Feedback {
 	/// The user's name
 	final String name;
 
-	/// Whether the user consented to a follow up with the developers. 
-	final bool responseConsent;
+	/// If the feedback should be anonymized. 
+	final bool anonymous;
 	
 	/// When the feedback was submitted.
 	final DateTime timestamp;
 
 	/// A const constructor for making a [Feedback].
 	/// 
-	/// If [responseConsent] is null, [email] and [name] must be null. 
+	/// If [anonymous] is true, [email] and [name] must be null. 
 	/// This is for privacy reasons. 
 	const Feedback({
 		@required this.message, 
 		@required this.email,
 		@required this.name, 
-		@required this.responseConsent,
+		@required this.anonymous,
 		@required this.timestamp
 	}) :
 		assert(
-			responseConsent || (name == null && email == null),
+			anonymous || (name == null && email == null),
 			"If the user does not consent to a follow up response, "
 			"their name and email must not be submitted."
 		);
@@ -40,7 +40,7 @@ class Feedback {
 		"message": message,
 		"email": email,
 		"name": name,
-		"responseConsent": responseConsent,
+		"anonymous": anonymous,
 		"timestamp": timestamp
 	};
 }
