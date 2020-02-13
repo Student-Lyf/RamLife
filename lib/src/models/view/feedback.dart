@@ -7,7 +7,7 @@ import "package:ramaz/services.dart";
 // ignore: prefer_mixin
 class FeedbackModel with ChangeNotifier {
 	String _message;
-	bool _responseConsent = false;
+	bool _anonymous = true;
 
 	/// Whether the user is ready to submit
 	/// 
@@ -22,22 +22,22 @@ class FeedbackModel with ChangeNotifier {
 	}
 
 	/// Whether the user consents to receiving a follow-up response. 
-	bool get responseConsent => _responseConsent;
-	set responseConsent(bool value) {
-		_responseConsent = value;
+	bool get anonymous => _anonymous;
+	set anonymous(bool value) {
+		_anonymous = value;
 		notifyListeners();
 	}
 
 	/// Sends the feedback to Cloud Firestore. 
 	/// 
-	/// The feedback is anonymized unless [responseConsent] is true.
+	/// The feedback is anonymized if [anonymous] is true.
 	Future<void> send() async => Firestore.sendFeedback(
 		Feedback (
 			message: message,
 			timestamp: DateTime.now(),
-			responseConsent: responseConsent,
-			name: responseConsent ? await Auth.name : null,
-			email: responseConsent ? await Auth.email : null,
+			anonymous: anonymous,
+			name: anonymous ? await Auth.name : null,
+			email: anonymous ? await Auth.email : null,
 		).toJson()
 	);
 }
