@@ -27,7 +27,7 @@ class CalendarPage extends StatelessWidget {
 	Widget build(BuildContext context) => Scaffold(
 		appBar: AppBar(title: const Text("Calendar")),
 		drawer: NavigationDrawer(),
-		body: Padding (
+		body: SingleChildScrollView(
 			padding: const EdgeInsets.symmetric(horizontal: 5),
 			child: ModelListener<CalendarModel>(
 				model: () => CalendarModel(),
@@ -52,11 +52,13 @@ class CalendarPage extends StatelessWidget {
 											children: [
 												for (final String weekday in weekdays) 
 													Center(child: Text (weekday)),
+												for (int _ = 0; _ < (model.paddings [month] ?? [0]) [0]; _++)
+													CalendarTile(date: null, day: null),
 												for (
 													final MapEntry<int, Day> entry in 
 													model.calendar [month].asMap().entries
 												) GestureDetector(
-													onTap: entry == null ? null : () async => model.updateDay(
+													onTap: entry.value == null ? null : () async => model.updateDay(
 														DateTime(model.years [month], month + 1, entry.key + 1),
 														await DayBuilder.getDay(
 															context: context, 
@@ -64,7 +66,7 @@ class CalendarPage extends StatelessWidget {
 														)
 													),
 													child: CalendarTile(
-														date: entry?.key,
+														date: entry?.key ?? 0 - model.paddings [month] [0],
 														day: entry?.value,
 													),
 												)

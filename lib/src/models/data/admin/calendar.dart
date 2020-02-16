@@ -1,3 +1,5 @@
+import "dart:async";
+
 import "package:flutter/foundation.dart" show ChangeNotifier;
 
 import "package:ramaz/data.dart";
@@ -26,6 +28,12 @@ class CalendarModel with ChangeNotifier {
 	/// The calendar filled with [Day]s.
 	final List<List<Day>> calendar = List.filled(12, null);
 
+	/// A list of callbacks on the Firebase streams.
+	/// 
+	/// This list is needed so that the model can cancel the listeners
+	/// when the user leaves the page. 
+	final List<StreamSubscription> subscriptions = [];
+
 	/// The year of each month.
 	/// 
 	/// Because the school year goes from September to June, determining the year 
@@ -38,19 +46,33 @@ class CalendarModel with ChangeNotifier {
 				: month > 7 ? currentYear - 1 : currentYear
 	];
 
+	final List<List<int>> paddings = List.filled(12, null);
+
 	/// Creates a data model to hold the calendar.
 	/// 
 	/// Initializing a [CalendarModel] automatically listens to the calendar in 
 	/// Firebase. See [Firestore.getCalendarStream] for details. 
 	CalendarModel() {
 		for (int month = 0; month < 12; month++) {
-			Firestore.getCalendarStream(month).listen(
-				(List<Map<String, dynamic>> cal) {
-					calendar [month] = Day.getMonth(cal);
-					notifyListeners();
-				}
+			subscriptions.add(
+				Firestore.getCalendarStream(month + 1).listen(
+					(List<Map<String, dynamic>> cal) {
+						calendar [month] = Day.getMonth(cal);
+						calendar [month] = layoutMonth(month);
+						notifyListeners();
+						print("Updated calendar for $month");
+					}
+				)
 			);
 		}
+	}
+
+	@override
+	void dispose() {
+		for (final StreamSubscription subscription in subscriptions) {
+			subscription.cancel();
+		}
+		super.dispose();
 	}
 
 	/// Fits the calendar to a 5-day week layout. 
@@ -63,13 +85,26 @@ class CalendarModel with ChangeNotifier {
 		final List<Day> cal = calendar [month];
 		final int firstDayOfWeek = DateTime(years [month], month + 1, 1).weekday;
 		final int weekday = firstDayOfWeek == 7 ? 0 : firstDayOfWeek - 1;
-		return [
-			for (int day = 0; day < weekday; day++)
-				null,
+		if (month == 1) {
+			print("Starts on $firstDayOfWeek which is $weekday");
+		}
+		paddings [month] = [weekday + 1, daysInMonth - (weekday + cal.length)];
+		final result = [
+			// for (int day = 0; day < weekday + 1; day++)
+			// 	null,
 			...cal,
-			for (int day = weekday + cal.length; day < daysInMonth; day++)
-				null
+			// for (int day = weekday + cal.length; day < daysInMonth; day++)
+			// 	null
 		];
+		print([
+			for (final Day day in result)
+				if (day == null) 
+					"X"
+				else 
+					day.toString()
+		]);
+		// return cal;
+		return result;
 	}
 
 	/// Updates the calendar. 

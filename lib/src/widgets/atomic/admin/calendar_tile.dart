@@ -24,12 +24,12 @@ class CalendarTile extends StatelessWidget{
 		decoration: BoxDecoration(border: Border.all()),
 		child: Stack (
 			children: [
-				if (date != null) ...[ 
+				if (day != null) ...[ 
 					Align (
 						alignment: Alignment.topLeft,
 						child: Text ((date + 1).toString()),
 					),
-					if (day.letter != null)
+					if (day?.letter != null)
 						Center (
 							child: Text (
 								lettersToString [day.letter], 
