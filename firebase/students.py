@@ -117,40 +117,17 @@ def get_period_meetings():
 		result [entry ["SECTION_ID"]].append(MeetingPeriod.from_entry(entry))
 	return result
 
-def get_conflicting_classes(
-	student_classes: {"student_id": ["section_id"]},
-	schedule: {"section_id": [Period]},
-): 
-	result = {}
-	for student, classes in student_classes.items(): 
-		for section_id_a, section_id_b in combinations(classes, 2):
-			# if section_id_a == "104010-10" or section_id_b == "104010-10": 
-			# 	print("Found it")
-
-			schedule_a = schedule[section_id_a]
-			schedule_b = schedule[section_id_b]
-			conflicting = False
-			for period_a in schedule_a: 
-				for period_b in schedule_b: 
-					if period_a == period_b: 
-						conflicting = True
-						result [section_id_a] = section_id_a.endswith("0")
-						result [section_id_b] = section_id_b.endswith("0")
-						break
-				if conflicting:
-					break
-
-			if not conflicting: 
-				if section_id_a not in result: 
-					result [section_id_a] = None
-				if section_id_b not in result: 
-					result [section_id_b] = None
-	return result
+def get_terms(): return {
+	entry ["SECTION_ID"]: [
+		entry ["TERM1"] == "Y", entry ["TERM2"] == "Y", 
+	]
+	for entry in CSVReader(data_dir / "section.csv")
+}
 
 def get_schedule(
 	students:    {"student-id": Student     },
 	periods:     {"class_id"  : [Period]    },
-	conflicts:   {"section_id": bool("conflict")},
+	terms:  {"section_id": [bool("term1"), bool("term2")]},	
 	# homerooms:   {"section_id": "room"      },
 ) -> ({Student: {"letter": ["json"]}}, {Student: "homeroom location"}): 
 	homerooms = {}
@@ -165,9 +142,7 @@ def get_schedule(
 			homerooms [student] = section_id
 			continue
 		
-		# if section_id.endswith("5") and not section_id.endswith("-5"): continue
-		if conflicts [section_id] == False: continue
-		# if section_id.startswith("11") or section_id.startswith("12"): JUNIORS.add(student)
+		if not terms [section_id] [1]: continue
 		if section_id.startswith("12"): JUNIORS.add(student)
 		broken = False  # workaround for classes not in section_schedule.csv
 		try: times = periods [section_id]
@@ -266,17 +241,11 @@ if __name__ == '__main__':
 
 	student_classes = get_student_classes()
 	period_meetings = get_period_meetings()
-	conflicts = get_conflicting_classes(student_classes, period_meetings)
-	print (
-		f"{len([conflict for conflict in conflicts.values() if conflict == True])}"
-		" classes that meet only 1 semester")
 	students = get_students()
-	# print(students)
 	levi = students ["721604"]
 	periods, homeroom_locations = get_periods()
-	schedules, homerooms = get_schedule (students, periods, conflicts)
-	# print (schedules [levi])
-	# print(conflicts)
+	terms = get_terms()
+	schedules, homerooms = get_schedule (students, periods, terms)
 	if MISSING_ROOMS:
 		print ("Missing room #'s for courses:")
 		print (MISSING_ROOMS)
