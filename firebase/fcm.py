@@ -1,17 +1,16 @@
 from main import init
 init()
 
-from firebase_admin import messaging 
+from firebase_admin import messaging as FCM
 
-message = messaging.Message(
+def get_message(command, topic): return FCM.Message(
 	data = {
-		"command": "updateCalendar",
-		"click_action": "FLUTTER_NOTIFICATION_CLICK",
-		"collapseKey": "calendar",
+		"command": command,
+		"collapseKey": topic,
+		"click_action": "FLUTTER_NOTIFICATION_CLICK", 
 	},
-	topic = "calendar"
+	topic = topic
 )
 
-response = messaging.send(message)
-
-print(f"Message sent: {response}")
+def send_message(message): 
+	return FCM.send(message)

@@ -63,4 +63,4 @@ if __name__ == '__main__':
 		print (errors)
 
 	print ("Uploading to Firebase...")
-	# batch_upload (subjects)
+	batch_upload (subjects)
