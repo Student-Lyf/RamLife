@@ -1,6 +1,3 @@
-// TODO: girls/boys
-// TODO: get score/finished
-
 import "package:flutter/foundation.dart";
 
 import "package:ramaz/data.dart";
@@ -17,34 +14,63 @@ const Map<String, Sport> stringToSports = {
 };
 
 @immutable
+class Scores {
+  final int ramazScore, otherScore;
+  final bool isHome;
+  const Scores(this.ramazScore, this.otherScore, {@required this.isHome});
+
+  Scores.fromJson(Map<String, dynamic> json) : 
+  	isHome = json ["isHome"],
+  	ramazScore = json ["ramaz"],
+  	otherScore = json ["other"];
+  
+  @override
+  String toString() => "Ramaz: $ramazScore, Other: $otherScore";
+
+  bool get didDraw => ramazScore == otherScore;
+  bool get didWin => ramazScore > otherScore;
+
+  int getScore({bool home}) => home == isHome 
+	  ? ramazScore : otherScore;
+}
+
+@immutable
 class SportsGame {
 	static List<SportsGame> fromList(List<Map<String, dynamic>> listJson) => [
 		for (final Map<String, dynamic> json in listJson) 
 			SportsGame.fromJson(json)
 	];
 
-	final SchoolEvent time;
 	final Sport sport;
+	final DateTime date;
+	final Range times;
 
+	final String team, opponent;
 	final bool home;
-	final String opponent;
+	final Scores scores;
 
 	const SportsGame({
 		@required this.sport,
-		@required this.home,
+		@required this.date,
+		@required this.times,
+		@required this.team,
 		@required this.opponent,
-		@required this.time
-	}) : 
-		assert (sport != null, "Sport must not be null"),
-		assert (home != null, "Home must not be null"),
-		assert (opponent != null, "Opponent must not be null"),
-		assert (time != null, "Time must not be null");
+		@required this.home,
+		this.scores,
+	});
 
 	SportsGame.fromJson(Map<String, dynamic> json) :
 		sport = stringToSports [json ["sport"]],
+		date = DateTime.parse(json ["date"]),
+		times = Range.fromJson(json ["times"]),
+		team = json ["team"],
 		home = json ["home"],
 		opponent = json ["opponent"],
-		time = SchoolEvent.fromJson (json ["time"]);
+		scores = Scores.fromJson(
+			Map<String, dynamic>.from(json ["scores"])
+		);
 
-	String get info => home ? "$opponent @ Ramaz" : "Ramaz @ $opponent";
+	String get homeTeam => home ? "Ramaz" : opponent;
+	String get awayTeam => home ? opponent : "Ramaz";
+	String get description => "$awayTeam @ $homeTeam";
 }

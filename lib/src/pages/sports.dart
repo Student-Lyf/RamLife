@@ -1,39 +1,53 @@
 import "package:flutter/material.dart";
 
-import "package:ramaz/constants.dart";
 import "package:ramaz/data.dart";
 import "package:ramaz/models.dart";
 import "package:ramaz/pages.dart";
 import "package:ramaz/widgets.dart";
 
-class SportsPage extends StatelessWidget {
-	static const List<Tab> tabs = [
-		Tab(text: "Recent"),
-		Tab(text: "Upcoming")
-	];
+enum SortingOption {chronological, sport}
 
+class SportsPage extends StatelessWidget {
 	@override Widget build(BuildContext context) => DefaultTabController (
 		length: 2,
-		initialIndex: 1,
 		child: Scaffold(
 			appBar: AppBar(
 				title: const Text("Sports"),
-				bottom: const TabBar(tabs: tabs),
+				bottom: const TabBar(
+					tabs: [
+						Tab(text: "Upcoming"),
+						Tab(text: "Recent"),
+					]
+				),
 				actions: [
-					IconButton(
-						icon: Icon (Icons.home),
-						onPressed: () => 
-							Navigator.of(context).pushReplacementNamed(Routes.home)
-					)
+          PopupMenuButton(
+            icon: Icon(Icons.sort),
+            itemBuilder: (_) => [
+              const PopupMenuItem(
+                value: SortingOption.chronological,
+                child: Text("By date"),
+              ),
+              const PopupMenuItem(
+                value: SortingOption.sport,
+                child: Text("By sport"),
+              )
+            ]
+          )
 				]
 			),
 			drawer: NavigationDrawer(),
+			floatingActionButton: FloatingActionButton.extended(
+        label: const Text("Watch livestream"),
+        icon: Icon(Icons.open_in_new),
+        onPressed: () {}
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
 			body: ModelListener<Sports>(
 				model: () => Sports(Services.of(context).reader),
 				dispose: false,
 				builder: (BuildContext context, Sports model, Widget _) => TabBarView(
 					children: [
-						for (List<SportsGame> gameList in [model.recents, model.upcoming])
+						for (List<SportsGame> gameList in [model.upcoming, model.recents])
 							ListView (
 								padding: const EdgeInsets.only(top: 10),
 								children: [

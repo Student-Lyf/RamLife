@@ -121,23 +121,6 @@ class Range {
 	);
 }
 
-@immutable
-class SchoolEvent {
-	final DateTime start, end;
-	const SchoolEvent ({
-		@required this.start,
-		@required this.end,
-	});
-
-	SchoolEvent.fromJson(Map<String, dynamic> json) :
-		start = DateTime.fromMicrosecondsSinceEpoch(json ["start"]),
-		end = DateTime.fromMicrosecondsSinceEpoch(json ["end"]);
-
-	bool operator < (DateTime other) => end.isBefore(other);
-	bool operator > (DateTime other) => end.isAfter(other);
-}
-
-
 /// An activity for each grade. 
 @immutable
 class GradeActivity {
