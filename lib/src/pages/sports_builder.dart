@@ -31,7 +31,7 @@ class FormRow extends StatelessWidget {
   );
 }
 
-class EditableField<T> extends StatelessWidget {
+class EditableField extends StatelessWidget {
   final String label;
   final String value;
   final IconData whenNull;
