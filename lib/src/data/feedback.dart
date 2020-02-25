@@ -30,7 +30,7 @@ class Feedback {
 		@required this.timestamp
 	}) :
 		assert(
-			anonymous || (name == null && email == null),
+			!anonymous || (name == null && email == null),
 			"If the user does not consent to a follow up response, "
 			"their name and email must not be submitted."
 		);

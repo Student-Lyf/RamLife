@@ -36,8 +36,8 @@ class FeedbackModel with ChangeNotifier {
 			message: message,
 			timestamp: DateTime.now(),
 			anonymous: anonymous,
-			name: anonymous ? await Auth.name : null,
-			email: anonymous ? await Auth.email : null,
+			name: anonymous ? null : await Auth.name,
+			email: anonymous ? null : await Auth.email,
 		).toJson()
 	);
 }
