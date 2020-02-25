@@ -35,13 +35,13 @@ class Sports with ChangeNotifier {
 		todayGames = [];
 		for (final SportsGame game in games) {
 			if (
-				game.time.start.year == now.year &&
-				game.time.start.month == now.month &&
-				game.time.start.day == now.day
+				game.date.year == now.year &&
+				game.date.month == now.month &&
+				game.date.day == now.day
 			) {
 				todayGames.add(game);
 			} else {
-				(game.time < now ? recents : upcoming).add(game);
+				(game.date.isAfter(now) ? recents : upcoming).add(game);
 			}
 		}
 		notifyListeners();
