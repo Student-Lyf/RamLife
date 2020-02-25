@@ -4,7 +4,7 @@ import "package:ramaz/data.dart";
 
 enum Sport {baseball, basketball, hockey, tennis, volleyball, soccer}
 
-const Map<String, Sport> stringToSports = {
+const Map<String, Sport> stringToSport = {
 	"baseball": Sport.baseball,
 	"basketball": Sport.basketball,
 	"hockey": Sport.hockey,
@@ -12,6 +12,12 @@ const Map<String, Sport> stringToSports = {
 	"volleyball": Sport.volleyball,
 	"soccer": Sport.soccer,
 };
+
+final Map<Sport, String> sportToString = Map.fromEntries(
+	stringToSport.entries.map(
+		(MapEntry<String, Sport> entry) => MapEntry(entry.value, entry.key)
+	)
+);
 
 @immutable
 class Scores {
@@ -60,7 +66,7 @@ class SportsGame {
 	});
 
 	SportsGame.fromJson(Map<String, dynamic> json) :
-		sport = stringToSports [json ["sport"]],
+		sport = stringToSport [json ["sport"]],
 		date = DateTime.parse(json ["date"]),
 		times = Range.fromJson(json ["times"]),
 		team = json ["team"],

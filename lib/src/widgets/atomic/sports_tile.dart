@@ -5,7 +5,7 @@ import "package:ramaz/widgets.dart";
 
 class SportsStats extends StatelessWidget {
   final String team, dateTime;
-  final int score;  
+  final int score;
   
   const SportsStats({
     @required this.team,
@@ -29,7 +29,7 @@ class SportsStats extends StatelessWidget {
 
 class SportsScoreUpdater extends StatefulWidget {
   static Future<Scores> updateGame(
-  	BuildContext context, 
+  	BuildContext context,
   	SportsGame game
 	) => showDialog<Scores>(
     context: context,
@@ -47,12 +47,12 @@ class ScoreUpdaterState extends State<SportsScoreUpdater> {
   TextEditingController ramazController, otherController;
   
   Scores get scores => Scores(
-  	int.parse(ramazController.text), 
+  	int.parse(ramazController.text),
   	int.parse(otherController.text),
   	isHome: widget.game.home,
 	);
 
-  bool get ready => ramazController.text.isNotEmpty && 
+  bool get ready => ramazController.text.isNotEmpty &&
 	  otherController.text.isNotEmpty;
   
   @override
@@ -81,7 +81,7 @@ class ScoreUpdaterState extends State<SportsScoreUpdater> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             SizedBox(
-              width: 20, 
+              width: 20,
               child: TextField(
                 controller: ramazController,
                 onChanged: (_) => setState(() {}),
@@ -89,7 +89,7 @@ class ScoreUpdaterState extends State<SportsScoreUpdater> {
             ),
             const SizedBox(width: 50),
             SizedBox(
-              width: 20, 
+              width: 20,
               child: TextField(
                 controller: otherController,
                 onChanged: (_) => setState(() {}),
@@ -131,11 +131,11 @@ class SportsTile extends StatelessWidget {
   
   Color get cardColor => game.scores != null
 	  ? (game.scores.didDraw
-			? Colors.blueGrey 
+			? Colors.blueGrey
 			: (game.scores.didWin ? Colors.lightGreen : Colors.red [400])
 		) : null;
    
-  String formatDate(DateTime date) => 
+  String formatDate(DateTime date) =>
     "${date.month}-${date.day}-${date.year}";
 
   int get padLength => game.opponent.length > "Ramaz".length
@@ -157,8 +157,8 @@ class SportsTile extends StatelessWidget {
               ListTile(
                 leading: icon,
                 title: Text(game?.team ?? ""),
-                subtitle: Text(game.home 
-                	? "${game.opponent} @ Ramaz" 
+                subtitle: Text(game.home
+                	? "${game.opponent} @ Ramaz"
                 	: "Ramaz @ ${game.opponent}"
               	),
               ),
