@@ -53,23 +53,26 @@ class CalendarPage extends StatelessWidget {
 												for (final String weekday in weekdays) 
 													Center(child: Text (weekday)),
 												for (int _ = 0; _ < (model.paddings [month] ?? [0]) [0]; _++)
-													CalendarTile(date: null, day: null),
+													CalendarTile.blank,
 												for (
 													final MapEntry<int, Day> entry in 
 													model.calendar [month].asMap().entries
 												) GestureDetector(
-													onTap: entry.value == null ? null : () async => model.updateDay(
-														DateTime(model.years [month], month + 1, entry.key + 1),
-														await DayBuilder.getDay(
-															context: context, 
-															date: DateTime(model.years [month], month + 1, entry.key + 1),
-														)
-													),
+													onTap: (entry.value?.school ?? false) 
+														? () async => model.updateDay(
+															DateTime(model.years [month], month + 1, entry.key + 1),
+															await DayBuilder.getDay(
+																context: context, 
+																date: DateTime(model.years [month], month + 1, entry.key + 1),
+															)
+														) : null,
 													child: CalendarTile(
-														date: entry?.key ?? 0 - model.paddings [month] [0],
+														date: entry?.key,
 														day: entry?.value,
-													),
-												)
+													)
+												),
+												for (int _ = 0; _ < (model.paddings [month] ?? [0]) [1]; _++)
+													CalendarTile.blank,
 											]
 										)
 									)

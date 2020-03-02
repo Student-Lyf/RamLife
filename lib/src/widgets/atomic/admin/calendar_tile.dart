@@ -7,6 +7,11 @@ import "package:ramaz/data.dart";
 /// This widget is to be used in the admin view of the calendar. Tapping it 
 /// will allow the admin to change the day in the database. 
 class CalendarTile extends StatelessWidget{
+	/// A blank calendar tile. 
+	/// 
+	/// This should not be wrapped in a [GestureDetector]. 
+	static const CalendarTile blank = CalendarTile(date: null, day: null);
+
 	/// The date for this tile. 
 	final int date;
 	
@@ -24,7 +29,7 @@ class CalendarTile extends StatelessWidget{
 		decoration: BoxDecoration(border: Border.all()),
 		child: Stack (
 			children: [
-				if (day != null) ...[ 
+				if (date != null) ...[ 
 					Align (
 						alignment: Alignment.topLeft,
 						child: Text ((date + 1).toString()),

@@ -46,6 +46,11 @@ class CalendarModel with ChangeNotifier {
 				: month > 7 ? currentYear - 1 : currentYear
 	];
 
+	/// A list of calendar paddings for each month. 
+	/// 
+	/// Every entry is a list of two numbers. The first one is the amount of days
+	/// from Sunday before the month starts, and the second one is the amount of 
+	/// days after the month until Saturday. They will be represented by blanks. 
 	final List<List<int>> paddings = List.filled(12, null);
 
 	/// Creates a data model to hold the calendar.
@@ -60,7 +65,6 @@ class CalendarModel with ChangeNotifier {
 						calendar [month] = Day.getMonth(cal);
 						calendar [month] = layoutMonth(month);
 						notifyListeners();
-						print("Updated calendar for $month");
 					}
 				)
 			);
@@ -84,27 +88,9 @@ class CalendarModel with ChangeNotifier {
 	List<Day> layoutMonth(int month) {
 		final List<Day> cal = calendar [month];
 		final int firstDayOfWeek = DateTime(years [month], month + 1, 1).weekday;
-		final int weekday = firstDayOfWeek == 7 ? 0 : firstDayOfWeek - 1;
-		if (month == 1) {
-			print("Starts on $firstDayOfWeek which is $weekday");
-		}
+		final int weekday = firstDayOfWeek == 7 ? -1 : firstDayOfWeek - 1;
 		paddings [month] = [weekday + 1, daysInMonth - (weekday + cal.length)];
-		final result = [
-			// for (int day = 0; day < weekday + 1; day++)
-			// 	null,
-			...cal,
-			// for (int day = weekday + cal.length; day < daysInMonth; day++)
-			// 	null
-		];
-		print([
-			for (final Day day in result)
-				if (day == null) 
-					"X"
-				else 
-					day.toString()
-		]);
-		// return cal;
-		return result;
+		return cal;
 	}
 
 	/// Updates the calendar. 
