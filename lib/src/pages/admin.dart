@@ -78,7 +78,7 @@ class AdminMenuItem extends StatelessWidget {
     child: Column(
       children: [
         const SizedBox(height: 10),
-        Text(label, textScaleFactor: 1.5),
+        Text(label, textScaleFactor: 1.25),
         const SizedBox(height: 25),
         Icon(icon, size: 100),
       ]
@@ -97,21 +97,25 @@ class AdminHomePage extends StatelessWidget {
         const SizedBox(height: 10),
         const Text("Select an option", textScaleFactor: 2),
         const SizedBox(height: 25),
-        GridView.count(
-          shrinkWrap: true,
-          crossAxisCount: 2,
-          children: const [
-            AdminMenuItem(
-            	icon: Icons.schedule,
-            	label: "Manage schedules",
-            	routeName: Routes.specials, 
-          	),
-            AdminMenuItem(
-            	icon: Icons.today,
-            	label: "Edit calendar",
-            	routeName: Routes.calendar,
-          	),
-          ]
+        Expanded(
+          child: GridView.count(
+            childAspectRatio: 0.9,
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            shrinkWrap: true,
+            crossAxisCount: 2,
+            children: const [
+              AdminMenuItem(
+              	icon: Icons.schedule,
+              	label: "Manage schedules",
+              	routeName: Routes.specials, 
+            	),
+              AdminMenuItem(
+              	icon: Icons.today,
+              	label: "Edit calendar",
+              	routeName: Routes.calendar,
+            	),
+            ]
+          )
         )
       ]
 		),
