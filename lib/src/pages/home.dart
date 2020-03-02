@@ -114,19 +114,19 @@ class HomePageState extends State<HomePage> {
 							subject: model.schedule.subjects [model.schedule.nextPeriod?.id],
 							modified: model.schedule.today.isModified,
 						),
-						if (model.sports.todayGames.isNotEmpty) Padding (
-							padding: const EdgeInsets.symmetric(vertical: 10),
-							child: Align (
-								alignment: Alignment.center,
-								child: Text (
+						if (model.sports.todayGames.isNotEmpty) ...[
+							const SizedBox(height: 10),
+							Center(
+								child: Text(
 									"Sports games",
 									textScaleFactor: 1.5,
-									style: TextStyle(fontWeight: FontWeight.w300),
+									style: TextStyle(fontWeight: FontWeight.w300)
 								)
-							)
-						),
-						for (final SportsGame game in model.sports.todayGames)
-							SportsTile (game),
+							),
+							const SizedBox(height: 10),
+							for (final SportsGame game in model.sports.todayGames)
+								SportsTile(game)
+						]
 					]
 				)
 			)
