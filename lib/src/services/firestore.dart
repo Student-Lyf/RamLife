@@ -9,24 +9,27 @@ import "auth.dart";
 /// Do not attempt to use dataclasses here, as that will create a dependency
 /// between this library and the data library. 
 class Firestore {
-	/// The name for the student schedule collection
+	static final DateTime _now = DateTime.now();
+
+	/// The name for the student schedule collection.
 	static const String students = "students";
 
 	/// The name for the admins collection. 
 	static const String admins = "admin";
 
-	/// The name of the classes collection
+	/// The name of the classes collection.
 	static const String classes = "classes";
 
-	/// The name of the calendar collection
+	/// The name of the calendar collection.
 	static const String calendarKey = "calendar";
 	
-	/// The name of the feedback collection
+	/// The name of the feedback collection.
 	static const String feedback = "feedback";
 
-	/// The name of the reminders collection
+	/// The name of the reminders collection.
 	static const String remindersKey = "reminders";
 
+	/// The name of the sports collection.
 	static const String sportsKey = "sports";
 
 	static final fb.Firestore _firestore = fb.Firestore.instance;
@@ -167,11 +170,17 @@ class Firestore {
 	static Future<void> saveAdmin (Map<String, dynamic> data) async => 
 		_admin.document(await Auth.email).setData(data);
 
-	static Future<List<Map<String, dynamic>>> get sports async => 
-		List<Map<String, dynamic>>.from (
-			(await _sports.document("sports").get()).data ["games"].map (
-				(json) => Map<String, dynamic>.from(json)
-			).toList()
-		);
-
+	/// Downloads the sports data from the database. 
+	/// 
+	/// The sports games are split into documents by school year. Each document
+	/// has a `games` field for a list of JSON entries. 
+	static Future<List<Map<String, dynamic>>> get sports async => (
+		await _sports.document(
+			_now.month > 7 
+				? "${_now.year}-${_now.year + 1}"
+				: "${_now.year - 1}-${_now.year}" 
+		).get()
+	).data ["games"].map(
+		(json) => Map<String, dynamic>.from(json)
+	).toList();
 }
