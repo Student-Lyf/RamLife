@@ -400,7 +400,7 @@ class Special {
 		(a == null) == (b == null) && 
 		a?.length == b?.length &&
 		<int>[
-			for (int index = 0; index < a.length; index++) 
+			for (int index = 0; index < (a?.length ?? 0); index++) 
 				index
 		].every(
 			(int index) => a [index] == b [index]
