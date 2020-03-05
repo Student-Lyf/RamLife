@@ -88,8 +88,8 @@ class CalendarModel with ChangeNotifier {
 	List<Day> layoutMonth(int month) {
 		final List<Day> cal = calendar [month];
 		final int firstDayOfWeek = DateTime(years [month], month + 1, 1).weekday;
-		final int weekday = firstDayOfWeek == 7 ? -1 : firstDayOfWeek - 1;
-		paddings [month] = [weekday + 1, daysInMonth - (weekday + cal.length)];
+		final int weekday = firstDayOfWeek == 7 ? 0 : firstDayOfWeek - 1;
+		paddings [month] = [weekday, daysInMonth - (weekday + cal.length)];
 		return cal;
 	}
 

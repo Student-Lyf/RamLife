@@ -44,7 +44,7 @@ class CalendarPage extends StatelessWidget {
 								body: model.calendar [month] == null
 									? const CircularProgressIndicator()
 									: SizedBox(
-										height: 300,
+										height: 350,
 										child: GridView.count(
 											physics: const NeverScrollableScrollPhysics(),
 											shrinkWrap: true,
