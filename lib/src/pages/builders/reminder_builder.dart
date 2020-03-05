@@ -134,7 +134,6 @@ class ReminderBuilderState extends State<ReminderBuilder> {
 								controller: controller,
 								onChanged: model.onMessageChanged,
 								textCapitalization: TextCapitalization.sentences,
-								autofocus: true,
 							),
 							const SizedBox (height: 20),
 							Wrap(

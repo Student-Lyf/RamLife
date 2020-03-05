@@ -1,9 +1,8 @@
 // ignore_for_file: prefer_const_constructors
 import "package:flutter/material.dart";
 
-import "package:ramaz/widgets.dart";
-
 import "package:ramaz/constants.dart";  // for route names
+import "package:ramaz/widgets.dart";
 
 /// A drawer to show throughout the app.
 class NavigationDrawer extends StatelessWidget {
@@ -45,6 +44,12 @@ class NavigationDrawer extends StatelessWidget {
 									leading: Icon (Icons.directions_run),
 									onTap: pushRoute(context, Routes.sports),
 								),
+								if (Services.of(context).admin != null)
+									ListTile(
+										title: const Text("Admin console"),
+										leading: Icon(Icons.verified_user),
+										onTap: pushRoute(context, Routes.admin),
+									),
 								BrightnessChanger.dropdown(prefs: Services.of(context).prefs),
 								// ListTile (
 								// 	title: Text ("Newspapers (coming soon)"),

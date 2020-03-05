@@ -26,6 +26,24 @@ class Auth {
 	/// Determines whether the user is currently logged
 	static Future<bool> get ready async => await currentUser != null;
 
+	/// Whether the user is an admin or not. 
+	static Future<Map> get claims async => (
+		await (await currentUser).getIdToken()
+	).claims;
+
+	/// Whether the user is an admin. 
+	static Future<bool> get isAdmin async => (await claims) ["admin"] ?? false;
+
+	/// The scopes of an admin. 
+	/// 
+	/// No null-checks are necessary here, because the `scopes` field should be 
+	/// present if the user is an admin, and this property will not be accessed 
+	/// unless [isAdmin] returns true. 
+	static Future<List<String>> get adminScopes async => [
+		for (final scope in (await claims) ["scopes"])
+			scope.toString()
+	];
+
 	/// Signs out the currently logged in user.
 	static Future<void> signOut() async {
 		await _firebase.signOut();

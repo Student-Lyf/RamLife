@@ -436,7 +436,7 @@ class Day {
 	/// Otherwise, returns [letter] and [special].
 	/// If [special] was left as the default, will only return the [letter].
 	String get name => letter == null
-		? null
+		? "No School"
 		: "${lettersToString [letter]} day${
 			special == Special.regular || special == Special.rotate 
 				? '' : ' ${special.name}'

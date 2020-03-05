@@ -52,7 +52,7 @@ Future<void> main({bool restart = false}) async {
 		// To download, and login or go to main
 		ready = services.reader.ready && await Auth.ready;
 		if (ready) {
-			services.init();
+			await services.init();
 		}
 	// We want to at least try again on ANY error. 
 	// ignore: avoid_catches_without_on_clauses
@@ -171,6 +171,9 @@ class RamazApp extends StatelessWidget {
 					Routes.schedule: (_) => SchedulePage(),
 					Routes.reminders: (_) => RemindersPage(),
 					Routes.feedback: (_) => FeedbackPage(),
+					Routes.calendar: (_) => CalendarPage(),
+					Routes.specials: (_) => SpecialPage(),
+					Routes.admin: (_) => AdminHomePage(),
 					Routes.sports: (_) => SportsPage(),
 				}
 			)

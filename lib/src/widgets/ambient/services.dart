@@ -51,6 +51,11 @@ class Services extends InheritedWidget {
 	/// This is taken from [ServicesCollection.schedule].
 	Schedule get schedule => services.schedule;
 
+	/// The admin data model for this user.
+	/// 
+	/// This will be null if the user is not an admin. 
+	AdminModel get admin => services.admin;
+
 	/// This instance will never be rebuilt with new data
 	@override
 	bool updateShouldNotify(_) => false;

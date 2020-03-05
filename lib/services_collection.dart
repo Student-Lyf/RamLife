@@ -17,7 +17,10 @@ class ServicesCollection {
 
 	/// A [Schedule] data model.
 	Schedule schedule;
-	
+
+	/// The admin data model for this admin. 
+	AdminModel admin;
+
 	/// Creates a new services collection. 
 	/// 
 	/// Generally, there should only be one of these, 
@@ -53,9 +56,16 @@ class ServicesCollection {
 	/// available, this function is called. 
 	///
 	/// Use this function to initialize anything that requires a file.
-	void init() {
+	/// 
+	/// Also sets the admin data model for the user. If the user is not an admin 
+	/// (as dictated by FirebaseAuth's custom claims), then [admin] becomes null. 
+	Future<void> init() async {
 		reminders = Reminders(reader);
 		schedule = Schedule(reader, reminders: reminders);
+		if (await Auth.isAdmin) {
+			reader.adminData = await Firestore.admin ?? {};
+			admin = AdminModel(this, await Auth.adminScopes);
+		}
 		verify();
 		// Register for FCM notifications. 
 		// We don't care when this happens
@@ -100,6 +110,7 @@ class ServicesCollection {
 
 		// save the data
 		reader
+			..adminData = null
 			..studentData = studentData
 			..subjectData = await Firestore.getClasses(student.getIds())
 			..calendarData =  await Firestore.getCalendar()
@@ -110,7 +121,7 @@ class ServicesCollection {
 			};
 
 		if (first) {
-			init();
+			await init();
 		}
 	}
 }

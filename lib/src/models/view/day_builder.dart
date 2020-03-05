@@ -13,10 +13,14 @@ class DayBuilderModel with ChangeNotifier {
 
 	Letters _letter;
 	Special _special;
+	bool _hasSchool;
 
 	/// Creates a view model for modifying a [Day].
-	DayBuilderModel(AdminModel adminModel) : admin = adminModel.user {
+	DayBuilderModel(AdminModel adminModel, Day day) : admin = adminModel.user {
 		admin.addListener(notifyListeners);
+		_letter = day?.letter;
+		_special = day?.special;
+		_hasSchool = day?.school;
 	}
 
 	@override 
@@ -51,11 +55,23 @@ class DayBuilderModel with ChangeNotifier {
 
 		notifyListeners();
 	}
+
+	/// If this day has school. 
+	/// 
+	/// This is different than [Day.school] beacuse it doesn't belong to [day],
+	/// it dictates whether [letter] and [special] is used in [day].
+	bool get hasSchool => _hasSchool;
+	set hasSchool(bool value) {
+		_hasSchool = value;
+		notifyListeners();
+	}
 	
 	/// The day being created (in present state). 
 	/// 
 	/// The model uses [letter] and [special]. 
-	Day get day => Day (letter: letter, special: special);
+	Day get day => hasSchool
+		? Day(letter: letter, special: special)
+		: Day(letter: null, special: null);
 
 	/// The built-in specials.  
 	List<Special> get presetSpecials => Special.specials;

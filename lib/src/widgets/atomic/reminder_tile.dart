@@ -2,9 +2,8 @@ import "package:flutter/material.dart";
 
 import "package:ramaz/data.dart";
 import "package:ramaz/models.dart";
-
-import "../ambient/services.dart";
-import "../generic/reminder_builder.dart";
+import "package:ramaz/pages.dart";
+import "package:ramaz/widgets.dart";
 
 /// A widget to represent a [Reminder].
 /// 

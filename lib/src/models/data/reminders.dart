@@ -50,6 +50,9 @@ class Reminders with ChangeNotifier {
 
 	/// Whether any reminder applies to the current period.
 	bool get hasReminder => currentReminders.isNotEmpty;
+
+	/// Whether any reminder applies to the next period.
+	bool get hasNextReminder => nextReminders.isNotEmpty;
 		
 	/// Marks a reminder as "shown".
 	/// 

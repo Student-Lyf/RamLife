@@ -11,7 +11,7 @@ class SpecialBuilderModel with ChangeNotifier {
 	/// Numbers for the periods.
 	/// 
 	/// Regular periods have numbers, others (eg, homeroom and mincha) are null.
-	List<int> indices = [];
+	List<String> periods = [];
 
 	List<Range> _times = [];
 	List<int> _skips = [];
@@ -23,7 +23,7 @@ class SpecialBuilderModel with ChangeNotifier {
 	/// See [Special.periods]
 	List<Range> get times => _times;
 	set times (List<Range> value) {
-		_times = value;
+		_times = List<Range>.of(value);
 		notifyListeners();
 	}
 
@@ -48,13 +48,24 @@ class SpecialBuilderModel with ChangeNotifier {
 	/// The amount of periods. 
 	/// 
 	/// If a period is added, a [Range] is added to [times]. 
-	/// In any case, [indices] is recalculated.
+	/// In any case, [periods] is recalculated.
 	/// 
 	/// This is essentially `special.periods.length`. 
 	int get numPeriods => _numPeriods;
 	set numPeriods (int value) {
+		if (value == 0) {
+			times.clear();
+			homeroom = null;
+			mincha = null;
+		}
 		if (value < numPeriods) {
 			times.removeRange(value, times.length);
+			if (homeroom == value) {
+				homeroom = null;
+			}
+			if (mincha == value) {
+				mincha = null;
+			}
 		} else {
 			if (_numPeriods == 0) {
 				times.add(
@@ -71,7 +82,7 @@ class SpecialBuilderModel with ChangeNotifier {
 			}
 		}
 		_numPeriods = value;
-		indices = getIndices();
+		periods = getIndices();
 		notifyListeners();
 	}
 
@@ -81,7 +92,7 @@ class SpecialBuilderModel with ChangeNotifier {
 	int get mincha => _mincha;
 	set mincha (int value) {
 		_mincha = value;
-		indices = getIndices();
+		periods = getIndices();
 		notifyListeners();
 	}
 
@@ -91,7 +102,7 @@ class SpecialBuilderModel with ChangeNotifier {
 	int get homeroom => _homeroom;
 	set homeroom (int value) {
 		_homeroom = value;
-		indices = getIndices();
+		periods = getIndices();
 		notifyListeners();
 	}
 
@@ -99,7 +110,8 @@ class SpecialBuilderModel with ChangeNotifier {
 	bool get ready => numPeriods != null && 
 		numPeriods > 0 && 
 		times.isNotEmpty &&
-		name != null && name.isNotEmpty &&
+		name != null && name.isNotEmpty && 
+		!Special.specials.any((Special special) => special.name == name) &&
 		(preset == null || special != preset);
 
 	/// The special being built. 
@@ -132,25 +144,29 @@ class SpecialBuilderModel with ChangeNotifier {
 			return;
 		}
 		preset = special;
-		_times = special.periods;
+		_times = List.of(special.periods);
 		_skips = special.skip ?? [];
 		_name = special.name;
 		_numPeriods = special.periods.length;
 		_mincha = special.mincha;
 		_homeroom = special.homeroom;
-		indices = getIndices();
+		periods = getIndices();
 		notifyListeners();
 	}
 
 	/// Gets the period numbers for all periods. 
 	/// 
 	/// Any non-normal periods (eg, homeroom) are represented by `null`
-	List<int> getIndices() {
-		final List<int> result = [];
+	List<String> getIndices() {
 		int counter = 1;
-		for (int index = 0; index < _times.length; index++) {
-			result.add(homeroom == index || mincha == index ? null : counter++);
-		}
-		return result;
+		return [
+			for (int index = 0; index < _times.length; index++)
+				if (index == homeroom)
+					"homeroom"
+				else if (index == mincha)
+					"Mincha"
+				else
+					(counter++).toString()
+		];
 	}
 }

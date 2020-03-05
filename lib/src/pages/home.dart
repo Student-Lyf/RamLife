@@ -25,6 +25,29 @@ class HomePageState extends State<HomePage> {
 	/// Whether the page is loading. 
 	bool loading = false;
 
+	/// Downloads the calendar again and calls [Schedule.onNewPeriod].
+	Future<void> downloadCalendar() async {
+		try {
+			await Services.of(context).services.updateCalendar();
+		} on PlatformException catch(error) {
+			if (error.code == "Error performing get") {
+				scaffoldKey.currentState.showSnackBar(
+					SnackBar(
+						content: const Text("No internet"), 
+						action: SnackBarAction(
+							label: "RETRY", 
+							onPressed: () async {
+								setState(() => loading = true);
+								await downloadCalendar();
+								setState(() => loading = false);
+							}
+						),
+					)
+				);
+			}
+		}
+	}
+
 	@override 
 	Widget build (BuildContext context) => ModelListener<HomeModel>(
 		model: () => HomeModel(Services.of(context).services),
@@ -58,31 +81,7 @@ class HomePageState extends State<HomePage> {
 				)
 			),
 			body: RefreshIndicator (  // so you can refresh the period
-				onRefresh: () {
-					Future<void> downloadCalendar() async {
-						try {
-							await Services.of(context).services.updateCalendar();
-						} on PlatformException catch(error) {
-							if (error.code == "Error performing get") {
-								scaffoldKey.currentState.showSnackBar(
-									SnackBar(
-										content: const Text("No internet"), 
-										action: SnackBarAction(
-											label: "RETRY", 
-											onPressed: () async {
-												setState(() => loading = true);
-												await downloadCalendar();
-												setState(() => loading = false);
-											}
-										),
-									)
-								);
-							}
-							model.schedule.onNewPeriod();
-						}
-					}
-					return downloadCalendar;
-				}(),
+				onRefresh: downloadCalendar,
 				child: ListView (
 					children: [
 						if (loading) const LinearProgressIndicator(),

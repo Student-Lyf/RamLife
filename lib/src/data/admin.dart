@@ -47,22 +47,18 @@ class Admin {
 	});
 
 	/// Creates an admin from a JSON entry. 
-	Admin.fromJson(Map<String, dynamic> json) :
+	Admin.fromJson(Map<String, dynamic> json, List<String> _scopes) :
 		scopes = [
-			for (dynamic scope in json ["scopes"])
+			for (String scope in _scopes)
 				stringToScope [scope]
 		],
 		specials = [
-			for (dynamic special in json ["specials"])
+			for (dynamic special in json ["specials"] ?? [])
 				Special.fromJson (Map<String, dynamic>.from(special))
 		];
 
 	/// Converts an admin to JSON form. 
 	Map<String, dynamic> toJson() => {
-		"scopes": [
-			for (final Scope scope in scopes)
-				scopeToString [scope]
-		],
 		"specials": [
 			for (final Special special in specials)
 				special.toJson(),
