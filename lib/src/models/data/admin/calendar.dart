@@ -88,13 +88,16 @@ class CalendarModel with ChangeNotifier {
 	List<Day> layoutMonth(int month) {
 		final List<Day> cal = calendar [month];
 		final int firstDayOfWeek = DateTime(years [month], month + 1, 1).weekday;
-		final int weekday = firstDayOfWeek == 7 ? 0 : firstDayOfWeek - 1;
+		final int weekday = firstDayOfWeek == 7 ? 0 : firstDayOfWeek;
 		paddings [month] = [weekday, daysInMonth - (weekday + cal.length)];
 		return cal;
 	}
 
 	/// Updates the calendar. 
 	Future<void> updateDay(DateTime date, Day day) async {
+		if (day == null) {
+			return;
+		}
 		calendar [date.month - 1] [date.day - 1] = day;
 		await Firestore.saveCalendar(
 			date.month - 1, 

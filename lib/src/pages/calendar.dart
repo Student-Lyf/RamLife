@@ -44,7 +44,7 @@ class CalendarPage extends StatelessWidget {
 								body: model.calendar [month] == null
 									? const CircularProgressIndicator()
 									: SizedBox(
-										height: 350,
+										height: 400,
 										child: GridView.count(
 											physics: const NeverScrollableScrollPhysics(),
 											shrinkWrap: true,
@@ -58,14 +58,14 @@ class CalendarPage extends StatelessWidget {
 													final MapEntry<int, Day> entry in 
 													model.calendar [month].asMap().entries
 												) GestureDetector(
-													onTap: (entry.value?.school ?? false) 
-														? () async => model.updateDay(
-															DateTime(model.years [month], month + 1, entry.key + 1),
-															await DayBuilder.getDay(
-																context: context, 
-																date: DateTime(model.years [month], month + 1, entry.key + 1),
-															)
-														) : null,
+													onTap: () async => model.updateDay(
+														DateTime(model.years [month], month + 1, entry.key + 1),
+														await DayBuilder.getDay(
+															context: context, 
+															date: DateTime(model.years [month], month + 1, entry.key + 1),
+															day: entry.value,
+														)
+													),
 													child: CalendarTile(
 														date: entry?.key,
 														day: entry?.value,
