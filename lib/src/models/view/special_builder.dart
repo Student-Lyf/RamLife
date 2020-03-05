@@ -110,7 +110,8 @@ class SpecialBuilderModel with ChangeNotifier {
 	bool get ready => numPeriods != null && 
 		numPeriods > 0 && 
 		times.isNotEmpty &&
-		name != null && name.isNotEmpty &&
+		name != null && name.isNotEmpty && 
+		!Special.specials.any((Special special) => special.name == name) &&
 		(preset == null || special != preset);
 
 	/// The special being built. 

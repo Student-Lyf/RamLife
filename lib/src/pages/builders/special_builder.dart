@@ -37,6 +37,13 @@ class SpecialBuilderState extends State<SpecialBuilder> {
 	/// This will be preset with the name of [SpecialBuilder.preset].
 	final TextEditingController controller = TextEditingController();
 
+	/// If the name of the schedule conflicts with another one.
+	/// 
+	/// Names of custom schedules cannot conflict with the default schedules, since
+	/// users will be confused when the app displays a familiar schedule name, but 
+	/// updates at unusual times.
+	bool conflicting = false;
+
 	@override
 	void initState() {
 		super.initState();
@@ -103,12 +110,20 @@ class SpecialBuilderState extends State<SpecialBuilder> {
 						padding: const EdgeInsets.symmetric(horizontal: 10),
 						child: TextField(
 							controller: controller,
-							onChanged: (String value) => model.name = value,
+							onChanged: (String value) {
+								conflicting = Special.specials.any(
+									(Special special) => special.name == value
+								);
+								model.name = value;
+							},
 							textInputAction: TextInputAction.done,
 							textCapitalization: TextCapitalization.sentences,
-							decoration: const InputDecoration(
+							decoration: InputDecoration(
 								labelText: "Name",
 								hintText: "Name of the schedule",
+								errorText: conflicting 
+									? "Name cannot match an existing schedule's name" 
+									: null,
 							),
 						),
 					),
