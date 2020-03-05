@@ -128,9 +128,6 @@ class Schedule with ChangeNotifier {
 			return setToday();
 		}
 
-		// first => schedule notifications.
-		updateReminders(scheduleNotifications: first);  
-
 		// no school today.
 		if (!today.school) {  
 			period = nextPeriod = periods = null;
@@ -159,6 +156,9 @@ class Schedule with ChangeNotifier {
 		nextPeriod = periodIndex < periods.length - 1 
 			? periods [periodIndex + 1] 
 			: null;
+
+		// first => schedule notifications.
+		updateReminders(scheduleNotifications: first);  
 	}
 
 	/// Updates the reminders given the current period.
