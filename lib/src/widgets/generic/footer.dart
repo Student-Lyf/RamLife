@@ -25,7 +25,7 @@ class Footer extends StatelessWidget {
 				enableDrag: false,
 				onClosing: () {},
 				builder: (BuildContext context) => GestureDetector(
-					onTap: !schedule.reminders.hasReminder ? null : 
+					onTap: !schedule.reminders.hasNextReminder ? null : 
 						() {
 							final NavigatorState nav = Navigator.of(context);
 							if (nav.canPop()) {
@@ -57,7 +57,7 @@ class Footer extends StatelessWidget {
 									),
 									if (schedule.nextPeriod?.activity != null) 
 										const Text("There is an activity"),
-									if (schedule.reminders.hasReminder) 
+									if (schedule.reminders.hasNextReminder) 
 										const Text ("Click to see reminder"),
 								]
 							)
