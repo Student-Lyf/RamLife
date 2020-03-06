@@ -105,7 +105,8 @@ class LoginState extends State<Login> {
 		await Crashlytics.instance.recordError(error, stack);
 
 		await Auth.signOut();
-		await showDialog (
+		// ignore: unawaited_futures
+		showDialog (
 			context: context,
 			builder: (dialogContext) => AlertDialog (
 				title: const Text ("Cannot connect"),
