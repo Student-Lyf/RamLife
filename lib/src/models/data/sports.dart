@@ -93,7 +93,7 @@ class Sports with ChangeNotifier {
 	/// Creates a sports view model.
 	Sports(this.reader) {
 		timer = Timer.periodic(_minute, refresh);
-		setup();
+		setup(fromDevice: true);
 	}
 
 	@override
@@ -141,12 +141,14 @@ class Sports with ChangeNotifier {
 
 	/// Sorts the games by past and future. 
 	void sortByRecentAndUpcoming() {
+		recents = [];
+		upcoming = [];
 		final DateTime now = DateTime.now();
 		for (final SportsGame game in games) {
 			(game.date.isAfter(now) ? recents : upcoming).add(game);
 		}
-		recents.sort(sortByDate);
-		upcoming.sort(sortByDate);
+		recents?.sort(sortByDate);
+		upcoming?.sort(sortByDate);
 	}
 
 	/// Sorts the games based on [sortOption]. 
