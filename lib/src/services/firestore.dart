@@ -174,13 +174,13 @@ class Firestore {
 	/// 
 	/// The sports games are split into documents by school year. Each document
 	/// has a `games` field for a list of JSON entries. 
-	static Future<List<Map<String, dynamic>>> get sports async => (
-		await _sports.document(
+	static Future<List<Map<String, dynamic>>> get sports async => [
+		for (final dynamic entry in (await _sports.document(
 			_now.month > 7 
 				? "${_now.year}-${_now.year + 1}"
 				: "${_now.year - 1}-${_now.year}" 
-		).get()
-	).data ["games"].map(
-		(json) => Map<String, dynamic>.from(json)
-	).toList();
+			).get()).data ["games"]
+		) 
+			Map<String, dynamic>.from(entry)
+	];
 }
