@@ -18,6 +18,9 @@ class ServicesCollection {
 	/// A [Schedule] data model.
 	Schedule schedule;
 
+	/// A [Sports] data model.
+	Sports sports;
+
 	/// The admin data model for this admin. 
 	AdminModel admin;
 
@@ -41,6 +44,7 @@ class ServicesCollection {
 		await initOnLogin(email, first: false);
 		reminders.setup();
 		schedule.setup(reader);
+		sports.setup(fromDevice: true);
 	}
 
 	/// Downloads the calendar and calls appropriate methods. 
@@ -62,6 +66,7 @@ class ServicesCollection {
 	Future<void> init() async {
 		reminders = Reminders(reader);
 		schedule = Schedule(reader, reminders: reminders);
+		sports = Sports(reader);
 		if (await Auth.isAdmin) {
 			reader.adminData = await Firestore.admin ?? {};
 			admin = AdminModel(this, await Auth.adminScopes);
