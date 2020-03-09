@@ -100,7 +100,7 @@ class CalendarModel with ChangeNotifier {
 		}
 		calendar [date.month - 1] [date.day - 1] = day;
 		await Firestore.saveCalendar(
-			date.month - 1, 
+			date.month, 
 			Day.monthToJson(calendar [date.month - 1])
 		);
 	}
