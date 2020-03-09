@@ -9,16 +9,19 @@ import "package:flutter/material.dart";
 /// it's not already known, there is a two-step process:
 /// 
 /// Setup:
-/// 	- install devtools: `flutter packages pub global activate devtools`
-/// 	- start devtools: `flutter packages pub global run devtools`
-/// 	- start app: `flutter run --track-widget-creation`
-/// 	- open the url devtools gives with the url from flutter 
+/// 
+/// 1. Install devtools: `flutter packages pub global activate devtools`
+/// 2. Start devtools: `flutter packages pub global run devtools`
+/// 3. Start app: `flutter run --track-widget-creation`
+/// 4. Open the url devtools gives with the url from flutter 
+/// 
 /// Usage: 
-/// 	- replace `Image.asset` with `LoadingImage(String path)`
-/// 	- in devTools: 
-/// 		1. go to the corresponding LoadingImage widget
-/// 		2. expand Image.semantics.renderObject.size
-/// 	- Enter the aspect ratio as parameters to [LoadingImage()] constructor
+/// 
+/// 1. Replace `Image.asset` with `LoadingImage(String path)`
+/// 2. In devTools: 
+/// 	1. Go to the corresponding LoadingImage widget
+/// 	2. Expand Image.semantics.renderObject.size
+/// 3. Enter the aspect ratio as parameters to [LoadingImage()] constructor
 class LoadingImage extends StatefulWidget {
 	/// The aspect ratio of the image. 
 	/// 
