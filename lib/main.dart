@@ -175,6 +175,7 @@ class RamazApp extends StatelessWidget {
 					Routes.specials: (_) => SpecialPage(),
 					Routes.admin: (_) => AdminHomePage(),
 					Routes.sports: (_) => SportsPage(),
+					Routes.addSportsGame: (_) => SportsBuilder(),
 				}
 			)
 		)

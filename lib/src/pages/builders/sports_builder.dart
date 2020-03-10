@@ -22,7 +22,7 @@ class FormRow extends StatelessWidget {
 				children: [
 					a, 
 					const Spacer(), 
-					if (spaced) SizedBox(width: 300, child: b)
+					if (spaced) SizedBox(width: 200, child: b)
 					else b
 				]
 			),
@@ -62,18 +62,22 @@ class EditableField extends StatelessWidget {
 	);
 }
 
-class SportBuilder extends StatefulWidget {
+class SportsBuilder extends StatefulWidget {
 	@override
 	SportBuilderState createState() => SportBuilderState();
 }
 
-class SportBuilderState extends State<SportBuilder> {
+class SportBuilderState extends State<SportsBuilder> {
+	final TextEditingController opponentController = TextEditingController();
+
+	Scores scores;
 	Sport sport;
-	String team;
-	bool away = false;
+	
 	DateTime date;
 	TimeOfDay start, end;
-	final TextEditingController opponentController = TextEditingController();
+
+	String team;
+	bool away = false;
 	
 	Time getTime(TimeOfDay time) => time == null 
 		? null : Time(time.hour, time.minute);
@@ -93,6 +97,7 @@ class SportBuilderState extends State<SportBuilder> {
 		team: team ?? "",
 		opponent: opponentController.text,
 		sport: sport,
+		scores: scores,
 	);
 	
 	Future<void> setDate() async {
@@ -207,7 +212,10 @@ class SportBuilderState extends State<SportBuilder> {
 						},
 					),
 					const SizedBox(height: 30),
-					SportsTile(game),
+					SportsTile(
+						game, 
+						updateScores: (Scores value) => setState(() => scores = value)
+					),
 					const SizedBox(height: 20),
 					Row(
 						mainAxisAlignment: MainAxisAlignment.end,

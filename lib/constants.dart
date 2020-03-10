@@ -55,6 +55,8 @@ class Routes {
 	static const String admin = "admin";
 
 	static const String sports = "sports";
+
+	static const String addSportsGame = "addGame";
 }
 
 /// A collection of URLs used throughout the app
