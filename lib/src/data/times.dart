@@ -304,7 +304,6 @@ class Special {
 	/// 	- a "periods" field, which should be a list of [Range] JSON objects. 
 	/// 	- a "homeroom" field, which should be an integer. See [homeroom].
 	/// 	- a "skip" field, which should be a list of integers. See [skip].
-	/// 
 	factory Special.fromJson(dynamic value) {
 		if (value == null) {
 			return null;
