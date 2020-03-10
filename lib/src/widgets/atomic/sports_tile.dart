@@ -1,7 +1,6 @@
 import "package:flutter/material.dart";
 
 import "package:ramaz/data.dart";
-import "package:ramaz/widgets.dart";
 
 class SportsStats extends StatelessWidget {
   final String team, dateTime;
@@ -85,6 +84,7 @@ class ScoreUpdaterState extends State<SportsScoreUpdater> {
               child: TextField(
                 controller: ramazController,
                 onChanged: (_) => setState(() {}),
+                keyboardType: TextInputType.number,
               )
             ),
             const SizedBox(width: 50),
@@ -93,6 +93,7 @@ class ScoreUpdaterState extends State<SportsScoreUpdater> {
               child: TextField(
                 controller: otherController,
                 onChanged: (_) => setState(() {}),
+                keyboardType: TextInputType.number,
               )
             ),
           ]
@@ -115,19 +116,31 @@ class ScoreUpdaterState extends State<SportsScoreUpdater> {
 class SportsTile extends StatelessWidget {
   final SportsGame game;
   final void Function(Scores) updateScores;
-  const SportsTile(this.game, [this.updateScores]);
+  const SportsTile(this.game, {this.updateScores});
 
-	Icon get icon {
-		switch (game.sport) {
-			case Sport.baseball: return SportsIcons.baseball;
-			case Sport.basketball: return SportsIcons.basketball;
-			case Sport.soccer: return SportsIcons.soccer;
-			case Sport.hockey: return SportsIcons.hockey;
-			case Sport.tennis: return SportsIcons.tennis;
-			case Sport.volleyball: return SportsIcons.volleyball;
-		}
-		return null;  // no default to keep static analysis
-	}
+	// Widget get icon {
+	// 	switch (game.sport) {
+	// 		case Sport.baseball: return SportsIcons.baseball;
+	// 		case Sport.basketball: return SportsIcons.basketball;
+	// 		case Sport.soccer: return SportsIcons.soccer;
+	// 		case Sport.hockey: return SportsIcons.hockey;
+	// 		case Sport.tennis: return SportsIcons.tennis;
+	// 		case Sport.volleyball: return SportsIcons.volleyball;
+	// 	}
+	// 	return null;  // no default to keep static analysis
+	// }
+
+  String get sportLetter {
+    switch(game.sport) {
+      case Sport.baseball: return "B";
+      case Sport.basketball: return "B";
+      case Sport.volleyball: return "V";
+      case Sport.tennis: return "T";
+      case Sport.hockey: return "H";
+      case Sport.soccer: return "S";
+      default: return "X";
+    }
+  }
   
   Color get cardColor => game.scores != null
 	  ? (game.scores.didDraw
@@ -135,8 +148,8 @@ class SportsTile extends StatelessWidget {
 			: (game.scores.didWin ? Colors.lightGreen : Colors.red [400])
 		) : null;
    
-  String formatDate(DateTime date) =>
-    "${date.month}-${date.day}-${date.year}";
+  String formatDate(DateTime date) => 
+    "${date?.month ?? ' '}-${date?.day ?? ' '}-${date?.year ?? ' '}";
 
   int get padLength => game.opponent.length > "Ramaz".length
     ? game.opponent.length : "Ramaz".length;
@@ -155,7 +168,7 @@ class SportsTile extends StatelessWidget {
           child: Column(
             children: [
               ListTile(
-                leading: icon,
+                leading: CircleAvatar(child: Text(sportLetter)),
                 title: Text(game?.team ?? ""),
                 subtitle: Text(game.home
                 	? "${game.opponent} @ Ramaz"
@@ -165,14 +178,14 @@ class SportsTile extends StatelessWidget {
               const SizedBox(height: 20),
               SportsStats(
                 team: game.awayTeam.padRight(padLength),
-                score: game.scores.getScore(home: false),
+                score: game.scores?.getScore(home: false),
                 dateTime: formatDate(game.date),
               ),
               const SizedBox(height: 10),
               SportsStats(
                 team: game.homeTeam.padRight(padLength),
-                score: game.scores.getScore(home: true),
-                dateTime: game.times.toString(),
+                score: game.scores?.getScore(home: true),
+                dateTime: (game.times).toString(),
               ),
             ]
           )

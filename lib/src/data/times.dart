@@ -104,7 +104,7 @@ class Range {
 	/// Returns whether [other] is in this range. 
 	bool contains (Time other) => start <= other && other <= end;
 
-	@override String toString() => "$start-$end";
+	@override String toString() => "${start ?? ''}-${end ?? ''}";
 
 	/// Returns whether this range is before another range.
 	bool operator < (Time other) => end.hour < other.hour ||
