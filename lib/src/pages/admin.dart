@@ -2,6 +2,7 @@ import "package:flutter/material.dart";
 
 import "package:ramaz/constants.dart";
 import "package:ramaz/pages.dart";
+import "package:ramaz/services.dart";
 
 /// A widget to represent a calendar icon.
 /// 
@@ -87,7 +88,26 @@ class AdminMenuItem extends StatelessWidget {
 }
 
 /// The home page for the admin console. 
-class AdminHomePage extends StatelessWidget {
+class AdminHomePage extends StatefulWidget {
+  @override
+  AdminHomePageState createState() => AdminHomePageState();
+}
+
+class AdminHomePageState extends State<AdminHomePage> {
+  bool finishedLoading = false;
+  bool _isCalendarAdmin, _isSportsAdmin;
+
+  @override
+  void initState() {
+    super.initState();
+    Auth.isCalendarAdmin.then(
+      (bool value) => setState(() => _isCalendarAdmin = value)
+    );
+    Auth.isSportsAdmin.then(
+      (bool value) => setState(() => _isSportsAdmin = value)
+    );
+  }
+
 	@override
 	Widget build(BuildContext context) => Scaffold(
 		drawer: NavigationDrawer(),
@@ -103,17 +123,22 @@ class AdminHomePage extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 20),
             shrinkWrap: true,
             crossAxisCount: 2,
-            children: const [
-              AdminMenuItem(
+            children: [
+              if (_isCalendarAdmin ?? false) AdminMenuItem(
               	icon: Icons.schedule,
               	label: "Manage schedules",
               	routeName: Routes.specials, 
             	),
-              AdminMenuItem(
+              if (_isCalendarAdmin ?? false) AdminMenuItem(
               	icon: Icons.today,
               	label: "Edit calendar",
               	routeName: Routes.calendar,
             	),
+              if (_isSportsAdmin ?? false) AdminMenuItem(
+                icon: Icons.directions_run,
+                label: "Add game",
+                routeName: Routes.addSportsGame,
+              )
             ]
           )
         )

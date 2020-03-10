@@ -4,9 +4,10 @@ from firebase_admin import auth as Firebase
 
 CALENDAR = "calendar"
 PUBLICATIONS = "publications"
+SPORTS = "sports"
 
 ADMINS = {
-	"leschesl@ramaz.org": [CALENDAR, PUBLICATIONS],
+	"leschesl@ramaz.org": [CALENDAR, PUBLICATIONS, SPORTS],
 }
 
 for email, scopes in ADMINS.items():
