@@ -10,6 +10,16 @@ class Auth {
 	static final FirebaseAuth _firebase = FirebaseAuth.instance;
 	static final GoogleSignIn _google = GoogleSignIn();
 
+	/// The scope for the calendar.
+	/// 
+	/// This string should be found in the users Firebase custom claims. 
+	static const String calendarScope = "calendar";
+
+	/// The scope for sports games. 
+	/// 
+	/// This string should be found in the users Firebase custom claims. 
+	static const String sportsScope = "sports";
+
 	/// The currently logged in user.
 	/// 
 	/// This getter returns a [FirebaseUser], which should not be used 
@@ -43,6 +53,14 @@ class Auth {
 		for (final scope in (await claims) ["scopes"])
 			scope.toString()
 	];
+
+	/// Whether the user is an admin for the calendar. 
+	static Future<bool> get isCalendarAdmin async => 
+		(await adminScopes).contains(calendarScope);
+
+	/// Whether the user is an admin for sports games. 
+	static Future<bool> get isSportsAdmin async => 
+		(await adminScopes).contains(sportsScope);		
 
 	/// Signs out the currently logged in user.
 	static Future<void> signOut() async {
