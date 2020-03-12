@@ -88,13 +88,21 @@ class AdminMenuItem extends StatelessWidget {
 }
 
 /// The home page for the admin console. 
+/// 
+/// This page shows all the options that the user has the scopes to access.
+/// It does this using [Auth.claims] and its helper functions.
+/// 
+/// This widget needs to be stateful because the admin scopes are Futures.
 class AdminHomePage extends StatefulWidget {
   @override
   AdminHomePageState createState() => AdminHomePageState();
 }
 
+/// State for [AdminHomePage]. 
+/// 
+/// This state takes care of loading [Auth.isCalendarAdmin] and 
+/// [Auth.isSportsAdmin] and then displaying the appropriate [AdminMenuItem]s.
 class AdminHomePageState extends State<AdminHomePage> {
-  bool finishedLoading = false;
   bool _isCalendarAdmin, _isSportsAdmin;
 
   @override
