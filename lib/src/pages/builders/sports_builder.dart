@@ -1,87 +1,136 @@
 import "package:flutter/material.dart";
 
 import "package:ramaz/data.dart";
+import "package:ramaz/pages.dart";
 import "package:ramaz/widgets.dart";
 
+/// A list of team names to pick from.
+// TODO: move these into a central location. 
 const List<String> teams = [
 	"Boys Varsity basketball", 
 	"Girls Varsity volleyball", 
 	"(other teams)"
 ];
 
+/// A row in a form. 
+/// 
+/// Displays a title or header on the left, and a picker on the right.
 class FormRow extends StatelessWidget {
-	final Widget a, b;
-	final bool spaced;
-	const FormRow(this.a, this.b, {this.spaced = false});
-	
+	/// The title to show. 
+	final String title;
+
+	/// The picker for user input. 
+	final Widget picker;
+
+	/// Whether to constrict [picker]'s size. 
+	final bool sized;
+
+	final bool moreSpace;
+
+	/// Creates a row in a form.
+	const FormRow(this.title, this.picker, {this.sized = false}) : 
+		moreSpace = false;
+
+	/// A [FormRow] where the right side is represented by an [Icon]  
+	/// 
+	/// When [value] is null, [whenNull] is displayed. Otherwise, [value] is 
+	/// displayed in a [Text] widget. Both widgets, when tapped, call 
+	/// [setNewValue].
+	FormRow.editable({
+		@required this.title,
+		@required String value,
+		@required VoidCallback setNewValue,
+		@required IconData whenNull,
+	}) : 
+		sized = false,
+		moreSpace = true,
+		picker = value == null
+			? IconButton(
+				icon: Icon(whenNull),
+				onPressed: setNewValue
+			)
+			: InkWell(
+				onTap: setNewValue,
+				child: Text(
+					value,
+					style: TextStyle(color: Colors.blue),
+				),
+			);
+
 	@override
 	Widget build(BuildContext context) => Column(
 		children: [
 			Row(
 				mainAxisAlignment: MainAxisAlignment.spaceEvenly,
 				children: [
-					a, 
+					Text(title), 
 					const Spacer(), 
-					if (spaced) SizedBox(width: 200, child: b)
-					else b
+					if (sized) Container(
+						constraints: const BoxConstraints(
+							maxWidth: 200, 
+							maxHeight: 75,
+						),
+						child: picker,
+					)
+					else picker
 				]
 			),
-			const SizedBox(height: 20),
+			SizedBox(height: moreSpace ? 25 : 15),
 		]
 	);
 }
 
-class EditableField extends StatelessWidget {
-	final String label;
-	final String value;
-	final IconData whenNull;
-	final void Function() setNewValue;
-	
-	const EditableField({
-		@required this.label,
-		@required this.value,
-		@required this.whenNull,
-		@required this.setNewValue
-	});
-	
-	@override
-	Widget build(BuildContext context) => FormRow(
-		Text(label),
-		value == null
-			? IconButton(
-				icon: Icon(whenNull),
-				onPressed: setNewValue
-			)
-		: InkWell(
-			onTap: setNewValue,
-			child: Text(
-				value,
-				style: TextStyle(color: Colors.blue),
-			),
-		)
-	);
-}
-
+/// A page to create a Sports game. 
 class SportsBuilder extends StatefulWidget {
 	@override
 	SportBuilderState createState() => SportBuilderState();
 }
 
+/// The state for a [SportsBuilder].
+/// 
+/// Needed to keep [opponentController] intact.
+/// TODO: convert this into a ViewModel.
 class SportBuilderState extends State<SportsBuilder> {
+	/// The controller for the [TextField] for the opponent's team name. 
 	final TextEditingController opponentController = TextEditingController();
 
+	/// The scores for this game. 
+	/// TODO: Make this editable
 	Scores scores;
-	Sport sport;
-	
-	DateTime date;
-	TimeOfDay start, end;
 
+	/// The type of sport being played. 
+	Sport sport;
+
+	/// The date this game is being played. 
+	DateTime date;
+
+	/// The time the game starts. 
+	/// 
+	/// This needs to be a [TimeOfDay] since [showTimePicker] works with those. 
+	/// See [getTime] for converting a [TimeOfDay] into a [Time].
+
+	TimeOfDay start;
+
+	/// The time the day ends. 
+	/// 
+	/// This needs to be a [TimeOfDay] since [showTimePicker] works with those. 
+	/// See [getTime] for converting a [TimeOfDay] into a [Time].
+	TimeOfDay end;
+
+	/// The Ramaz team playing. 
 	String team;
+
+	/// Whether this game is being played at home or away. 
 	bool away = false;
 	
+	/// Converts a [TimeOfDay] into a [Time]. 
+	/// 
+	/// This is useful for converting the output of [showTimePicker] into a 
+	/// [Range] for [SportsGame.times].
 	Time getTime(TimeOfDay time) => time == null 
 		? null : Time(time.hour, time.minute);
 	
+	/// Whether this game is ready to submit. 
 	bool get ready => sport != null &&
 		team != null &&
 		away != null &&
@@ -90,6 +139,7 @@ class SportBuilderState extends State<SportsBuilder> {
 		end != null &&
 		opponentController.text.isNotEmpty;
 	
+	/// The game being created. 
 	SportsGame get game => SportsGame(
 		date: date,
 		home: !away,
@@ -100,6 +150,9 @@ class SportBuilderState extends State<SportsBuilder> {
 		scores: scores,
 	);
 	
+	/// Sets [date] to a date selected by the user. 
+	/// 
+	/// This needs to be written this way to avoid async problems with `setState`.
 	Future<void> setDate() async {
 		final DateTime selected = await showDatePicker(
 			firstDate: DateTime(2019, 09, 01),
@@ -112,15 +165,14 @@ class SportBuilderState extends State<SportsBuilder> {
 	
 	@override
 	Widget build(BuildContext context) => Scaffold(
-		appBar: AppBar(
-			title: const Text("Add game"),
-		),
+		appBar: AppBar(title: const Text("Add game")),
+		drawer: NavigationDrawer(),
 		body: Form(
 			child: ListView(
 				padding: const EdgeInsets.all(20),
 				children: [
 					FormRow(
-						const Text("Sport"),
+						"Sport",
 						DropdownButtonFormField<Sport>(
 							hint: const Text("Choose a sport"),
 							value: sport,
@@ -133,11 +185,10 @@ class SportBuilderState extends State<SportsBuilder> {
 									)
 							],
 						),
-						spaced: true,
+						sized: true,
 					),
-					const SizedBox(height: 10), 
 					FormRow(
-						const Text("Team"),
+						"Team",
 						DropdownButtonFormField<String>(
 							itemHeight: 70,
 							hint: const Text("Choose a Team"),
@@ -153,42 +204,42 @@ class SportBuilderState extends State<SportsBuilder> {
 										width: 150, 
 										child: Row(
 											mainAxisSize: MainAxisSize.min,
-											children: [
+											children: const [
 												Icon(Icons.add),
-												const SizedBox(width: 10),
-												const Text("Add team"),
+												SizedBox(width: 10),
+												Text("Add team"),
 											]
 										)
 									)
 								)
 							]
 						),
-						spaced: true,
+						sized: true,
 					),
 					FormRow(
-						const Text("Opponent"),
+						"Opponent",
 						TextField(
 							controller: opponentController,
 							onChanged: (_) => setState(() {}),
 						),
-						spaced: true,
+						sized: true,
 					),
 					FormRow(
-						const Text("Away game"),
+						"Away game",
 						Checkbox(
 							onChanged: (bool value) => setState(() => away = value),
 							value: away,
 						),
 					),
-					EditableField(
-						label: "Date",
+					FormRow.editable(
+						title: "Date",
 						value: date == null ? null 
 							: "${date.month}-${date.day}-${date.year}",
 						whenNull: Icons.date_range,
 						setNewValue: setDate,
 					),
-					EditableField(
-						label: "Start time",
+					FormRow.editable(
+						title: "Start time",
 						value: start?.format(context),
 						whenNull: Icons.access_time,
 						setNewValue: () async {
@@ -199,8 +250,8 @@ class SportBuilderState extends State<SportsBuilder> {
 							setState(() => start = newTime);
 						},
 					),
-					EditableField(
-						label: "End time",
+					FormRow.editable(
+						title: "End time",
 						value: end?.format(context),
 						whenNull: Icons.access_time,
 						setNewValue: () async {
@@ -211,14 +262,16 @@ class SportBuilderState extends State<SportsBuilder> {
 							setState(() => end = newTime);
 						},
 					),
-					const SizedBox(height: 30),
+					const SizedBox(height: 10),
+					const Text("Tap on the card to change the scores", textScaleFactor: 0.9),
+					const SizedBox(height: 20),
 					SportsTile(
 						game, 
-						updateScores: (Scores value) => setState(() => scores = value)
+						updateScores: (Scores value) => setState(
+							() => scores = value ?? game.scores
+						)
 					),
-					const SizedBox(height: 20),
-					Row(
-						mainAxisAlignment: MainAxisAlignment.end,
+					ButtonBar(
 						children: [
 							FlatButton(
 								onPressed: () => Navigator.of(context).pop(),

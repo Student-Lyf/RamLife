@@ -7,43 +7,26 @@ import "../images/loading_image.dart";
 
 /// A collection of icons for sports. 
 /// 
-/// These can be used for sports games. 
+/// These icons are Strings so that the background color of the icon can be 
+/// determined in the `build` method.
 class SportsIcons {
 	/// A baseball icon.
-	static const Widget baseball = CircleAvatar (
-		backgroundImage: AssetImage ("images/icons/baseball.png"),
-		backgroundColor: Colors.white
-	);
+	static const ImageProvider baseball = AssetImage("images/icons/baseball.png");
 
 	/// A basketball icon.
-	static const Widget basketball = CircleAvatar (
-		backgroundImage: AssetImage ("images/icons/basketball.png"),
-		backgroundColor: Colors.white
-	);
+	static const ImageProvider basketball = AssetImage("images/icons/basketball.png");	
 
 	/// A hockey icon. 
-	static const Widget hockey = CircleAvatar (
-		backgroundImage: AssetImage ("images/icons/hockey.png"),
-		backgroundColor: Colors.white
-	);
+	static const ImageProvider hockey = AssetImage("images/icons/hockey.png");	
 
 	/// A soccer icon. 
-	static const Widget soccer = CircleAvatar (
-		backgroundImage: AssetImage ("images/icons/soccer.png"),
-		backgroundColor: Colors.white
-	);
+	static const ImageProvider soccer = AssetImage("images/icons/soccer.png");	
 
 	/// A tennis icon. 
-	static final Widget tennis = CircleAvatar (
-		backgroundColor: Colors.white,
-		child: Image.asset ("images/icons/tennis.png"),
-	);
+	static const ImageProvider tennis = AssetImage("images/icons/tennis.png");	
 
 	/// A volleyball icon. 
-	static const Widget volleyball = CircleAvatar (
-		backgroundImage: AssetImage ("images/icons/volleyball.png"),
-		backgroundColor: Colors.white
-	);
+	static const ImageProvider volleyball = AssetImage("images/icons/volleyball.png");	
 }
 
 /// Brand logos used throughout the app. 
