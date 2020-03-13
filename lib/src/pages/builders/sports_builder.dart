@@ -153,7 +153,19 @@ class SportsBuilder extends StatelessWidget {
 						),
 					),
 					const SizedBox(height: 10),
-					const Text("Tap on the card to change the scores", textScaleFactor: 0.9),
+					Row(
+						mainAxisAlignment: MainAxisAlignment.spaceBetween,
+						children: [
+							const Text(
+								"Tap on the card to change the scores", 
+								textScaleFactor: 0.9
+							),
+							FlatButton(
+								onPressed: () => model.scores = null,
+								child: const Text("Clear"),
+							)
+						]
+					),
 					const SizedBox(height: 20),
 					SportsTile(
 						model.game,
