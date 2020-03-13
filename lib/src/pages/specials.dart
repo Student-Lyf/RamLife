@@ -11,7 +11,6 @@ class SpecialPage extends StatelessWidget {
 		model: () => Services.of(context).admin.user,
 		dispose: false,
 		builder: (_, AdminUserModel model, __) => Scaffold(
-			drawer: NavigationDrawer(),
 			appBar: AppBar(
 				title: const Text("Custom schedules"),
 			),

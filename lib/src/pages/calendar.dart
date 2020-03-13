@@ -26,7 +26,6 @@ class CalendarPage extends StatelessWidget {
 	@override
 	Widget build(BuildContext context) => Scaffold(
 		appBar: AppBar(title: const Text("Calendar")),
-		drawer: NavigationDrawer(),
 		body: SingleChildScrollView(
 			padding: const EdgeInsets.symmetric(horizontal: 5),
 			child: ModelListener<CalendarModel>(

@@ -75,7 +75,7 @@ class AdminMenuItem extends StatelessWidget {
   
   @override
   Widget build(BuildContext context) => InkWell(
-    onTap: () => Navigator.of(context).pushReplacementNamed(routeName),
+    onTap: () => Navigator.of(context).pushNamed(routeName),
     child: Column(
       children: [
         const SizedBox(height: 10),
