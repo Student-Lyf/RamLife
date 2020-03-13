@@ -173,7 +173,7 @@ class SportsTile extends StatelessWidget {
     noNull && date == null ? null : 
       "${date?.month ?? ' '}-${date?.day ?? ' '}-${date?.year ?? ' '}";
 
-  // TODO: Decide on widget or letter.
+  // TODO(All): Decide on widget or letter, #1 (see note)
   /// The game for this widget to represent. 
   final SportsGame game;
 
