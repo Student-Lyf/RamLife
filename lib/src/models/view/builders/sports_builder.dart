@@ -43,13 +43,8 @@ class SportsBuilderModel with ChangeNotifier {
 
 	/// Saves the game to the database. 
 	/// 
-	/// Also triggers the loading animation. See [loading]. See 
-	/// [Firestore.saveGame] for how the game is saved. 
-	Future<void> saveGame() async {
-		loading = true;
-		await Firestore.saveGame(game.toJson());
-		loading = false;
-	}
+	/// See [Firestore.saveGame] for how the game is saved. 
+	Future<void> saveGame() => Firestore.saveGame(game.toJson());
 
 	/// The scores for this game.
 	/// 
@@ -125,9 +120,7 @@ class SportsBuilderModel with ChangeNotifier {
 		notifyListeners();
 	}
 
-	/// Whether the page should display as loading. 
-	/// 
-	/// The only time this should be changed is on [saveGame].
+	/// Whether the page is loading. 
 	bool get loading => _loading;
 	set loading(bool value) {
 		_loading = value;

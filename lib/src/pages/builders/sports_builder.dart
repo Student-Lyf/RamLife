@@ -80,12 +80,24 @@ class FormRow extends StatelessWidget {
 
 /// A page to create a Sports game. 
 class SportsBuilder extends StatelessWidget {
+	/// Capitalizes a word. 
+	static String capitalize(String word) => 
+		word [0].toUpperCase() + word.substring(1);
+
 	@override
-	Widget build(BuildContext context) => Scaffold(
-		appBar: AppBar(title: const Text("Add game")),
-		body: ModelListener<SportsBuilderModel>(
-			model: () => SportsBuilderModel(),
-			builder: (_, SportsBuilderModel model, __) => ListView(
+	Widget build(BuildContext context) => ModelListener<SportsBuilderModel>(
+		model: () => SportsBuilderModel(),
+		builder: (_, SportsBuilderModel model, __) => Scaffold(
+			appBar: AppBar(title: const Text("Add game")),
+			bottomSheet: !model.loading ? null : Container(
+				height: 60, 
+				padding: const EdgeInsets.all(10),
+				child: Row(
+					mainAxisAlignment: MainAxisAlignment.spaceBetween,
+					children: const [Text("Saving..."), CircularProgressIndicator()]
+				)
+			),
+			body: ListView(
 				padding: const EdgeInsets.all(20),
 				children: [
 					FormRow(
@@ -98,7 +110,7 @@ class SportsBuilder extends StatelessWidget {
 								for (final Sport sport in Sport.values) 
 									DropdownMenuItem<Sport>(
 										value: sport,
-										child: Text(sport.toString().split(".") [1])
+										child: Text(capitalize(sport.toString().split(".") [1]))
 									)
 							],
 						),
@@ -108,6 +120,7 @@ class SportsBuilder extends StatelessWidget {
 						"Team",
 						TextField(
 							onChanged: (String value) => model.team = value,
+							textCapitalization: TextCapitalization.words,
 						),
 						sized: true,
 					),
@@ -115,6 +128,7 @@ class SportsBuilder extends StatelessWidget {
 						"Opponent",
 						TextField(
 							onChanged: (String value) => model.opponent = value,
+							textCapitalization: TextCapitalization.words,
 						),
 						sized: true,
 					),
@@ -179,7 +193,12 @@ class SportsBuilder extends StatelessWidget {
 								child: const Text("Cancel"),
 							),
 							RaisedButton(
-								onPressed: model.ready ? model.saveGame : null,
+								onPressed: !model.ready ? null : () async {
+									model.loading = true;
+									await model.saveGame();
+									model.loading = false;
+									Navigator.of(context).pop();
+								},
 								child: const Text("Save"),
 							)
 						]
