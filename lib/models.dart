@@ -31,9 +31,10 @@ export "src/models/data/schedule.dart";
 export "src/models/data/sports.dart";
 
 // view models
-export "src/models/view/day_builder.dart";
+export "src/models/view/builders/day_builder.dart";
+export "src/models/view/builders/reminder_builder.dart";
+export "src/models/view/builders/special_builder.dart";
+export "src/models/view/builders/sports_builder.dart";
 export "src/models/view/feedback.dart";
 export "src/models/view/home.dart";
-export "src/models/view/reminder_builder.dart";
 export "src/models/view/schedule.dart";
-export "src/models/view/special_builder.dart";

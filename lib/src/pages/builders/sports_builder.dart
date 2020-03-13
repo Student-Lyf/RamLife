@@ -1,16 +1,9 @@
 import "package:flutter/material.dart";
 
 import "package:ramaz/data.dart";
+import "package:ramaz/models.dart";
 import "package:ramaz/pages.dart";
 import "package:ramaz/widgets.dart";
-
-/// A list of team names to pick from.
-// TODO: move these into a central location. 
-const List<String> teams = [
-	"Boys Varsity basketball", 
-	"Girls Varsity volleyball", 
-	"(other teams)"
-];
 
 /// A row in a form. 
 /// 
@@ -25,6 +18,12 @@ class FormRow extends StatelessWidget {
 	/// Whether to constrict [picker]'s size. 
 	final bool sized;
 
+	/// Whether this widget needs more space on the bottom. 
+	/// 
+	/// Widgets that use [sized] don't need this, since their [picker] is big
+	/// enough to provide padding on the bottom as well. Hence, this is only 
+	/// set to true for widgets created with [FormRow.editable()], since those
+	/// never use a big [picker].
 	final bool moreSpace;
 
 	/// Creates a row in a form.
@@ -81,102 +80,22 @@ class FormRow extends StatelessWidget {
 }
 
 /// A page to create a Sports game. 
-class SportsBuilder extends StatefulWidget {
-	@override
-	SportBuilderState createState() => SportBuilderState();
-}
-
-/// The state for a [SportsBuilder].
-/// 
-/// Needed to keep [opponentController] intact.
-/// TODO: convert this into a ViewModel.
-class SportBuilderState extends State<SportsBuilder> {
-	/// The controller for the [TextField] for the opponent's team name. 
-	final TextEditingController opponentController = TextEditingController();
-
-	/// The scores for this game. 
-	/// TODO: Make this editable
-	Scores scores;
-
-	/// The type of sport being played. 
-	Sport sport;
-
-	/// The date this game is being played. 
-	DateTime date;
-
-	/// The time the game starts. 
-	/// 
-	/// This needs to be a [TimeOfDay] since [showTimePicker] works with those. 
-	/// See [getTime] for converting a [TimeOfDay] into a [Time].
-
-	TimeOfDay start;
-
-	/// The time the day ends. 
-	/// 
-	/// This needs to be a [TimeOfDay] since [showTimePicker] works with those. 
-	/// See [getTime] for converting a [TimeOfDay] into a [Time].
-	TimeOfDay end;
-
-	/// The Ramaz team playing. 
-	String team;
-
-	/// Whether this game is being played at home or away. 
-	bool away = false;
-	
-	/// Converts a [TimeOfDay] into a [Time]. 
-	/// 
-	/// This is useful for converting the output of [showTimePicker] into a 
-	/// [Range] for [SportsGame.times].
-	Time getTime(TimeOfDay time) => time == null 
-		? null : Time(time.hour, time.minute);
-	
-	/// Whether this game is ready to submit. 
-	bool get ready => sport != null &&
-		team != null &&
-		away != null &&
-		date != null &&
-		start != null &&
-		end != null &&
-		opponentController.text.isNotEmpty;
-	
-	/// The game being created. 
-	SportsGame get game => SportsGame(
-		date: date,
-		home: !away,
-		times: Range(getTime(start), getTime(end)),
-		team: team ?? "",
-		opponent: opponentController.text,
-		sport: sport,
-		scores: scores,
-	);
-	
-	/// Sets [date] to a date selected by the user. 
-	/// 
-	/// This needs to be written this way to avoid async problems with `setState`.
-	Future<void> setDate() async {
-		final DateTime selected = await showDatePicker(
-			firstDate: DateTime(2019, 09, 01),
-			lastDate: DateTime(2020, 06, 30),
-			initialDate: DateTime.now(),
-			context: context
-		);
-		setState(() => date = selected);
-	}
-	
+class SportsBuilder extends StatelessWidget {
 	@override
 	Widget build(BuildContext context) => Scaffold(
 		appBar: AppBar(title: const Text("Add game")),
-		drawer: NavigationDrawer(),
-		body: Form(
-			child: ListView(
+		// drawer: NavigationDrawer(),
+		body: ModelListener<SportsBuilderModel>(
+			model: () => SportsBuilderModel(),
+			builder: (_, SportsBuilderModel model, __) => ListView(
 				padding: const EdgeInsets.all(20),
 				children: [
 					FormRow(
 						"Sport",
 						DropdownButtonFormField<Sport>(
 							hint: const Text("Choose a sport"),
-							value: sport,
-							onChanged: (Sport value) => setState(() => sport = value),
+							value: model.sport,
+							onChanged: (Sport value) => model.sport = value,
 							items: [
 								for (final Sport sport in Sport.values) 
 									DropdownMenuItem<Sport>(
@@ -189,87 +108,59 @@ class SportBuilderState extends State<SportsBuilder> {
 					),
 					FormRow(
 						"Team",
-						DropdownButtonFormField<String>(
-							itemHeight: 70,
-							hint: const Text("Choose a Team"),
-							value: team,
-							onChanged: (String value) => setState(() => team = value),
-							items: [
-								for (final String team in teams)
-									DropdownMenuItem<String>(value: team, child: Text(team)),
-
-								DropdownMenuItem<String>(
-									value: "", 
-									child: SizedBox(
-										width: 150, 
-										child: Row(
-											mainAxisSize: MainAxisSize.min,
-											children: const [
-												Icon(Icons.add),
-												SizedBox(width: 10),
-												Text("Add team"),
-											]
-										)
-									)
-								)
-							]
+						TextField(
+							onChanged: (String value) => model.team = value,
 						),
 						sized: true,
 					),
 					FormRow(
 						"Opponent",
 						TextField(
-							controller: opponentController,
-							onChanged: (_) => setState(() {}),
+							onChanged: (String value) => model.opponent = value,
 						),
 						sized: true,
 					),
 					FormRow(
 						"Away game",
 						Checkbox(
-							onChanged: (bool value) => setState(() => away = value),
-							value: away,
+							value: model.away,
+							onChanged: (bool value) => model.away = value,
 						),
 					),
 					FormRow.editable(
 						title: "Date",
-						value: date == null ? null 
-							: "${date.month}-${date.day}-${date.year}",
+						value: SportsTile.formatDate(model.date, noNull: true),
 						whenNull: Icons.date_range,
-						setNewValue: setDate,
+						setNewValue: () async => model.date = await pickDate(
+							initialDate: DateTime.now(),
+							context: context
+						),
 					),
 					FormRow.editable(
 						title: "Start time",
-						value: start?.format(context),
+						value: model.start?.format(context),
 						whenNull: Icons.access_time,
-						setNewValue: () async {
-							final TimeOfDay newTime = await showTimePicker(
-								context: context,
-								initialTime: start ?? TimeOfDay.now(),
-							);
-							setState(() => start = newTime);
-						},
+						setNewValue: () async => model.start = await showTimePicker(
+							context: context,
+							initialTime: model.start ?? TimeOfDay.now(),
+						),
 					),
 					FormRow.editable(
 						title: "End time",
-						value: end?.format(context),
+						value: model.end?.format(context),
 						whenNull: Icons.access_time,
-						setNewValue: () async {
-							final TimeOfDay newTime = await showTimePicker(
-								context: context,
-								initialTime: end ?? TimeOfDay.now(),
-							);
-							setState(() => end = newTime);
-						},
+						setNewValue: () async => model.end = await showTimePicker(
+							context: context,
+							initialTime: model.end ?? TimeOfDay.now(),
+						),
 					),
 					const SizedBox(height: 10),
 					const Text("Tap on the card to change the scores", textScaleFactor: 0.9),
 					const SizedBox(height: 20),
 					SportsTile(
-						game, 
-						updateScores: (Scores value) => setState(
-							() => scores = value ?? game.scores
-						)
+						model.game,
+						updateScores: (Scores value) => 
+							model.scores = value ?? model.scores
 					),
 					ButtonBar(
 						children: [
@@ -278,7 +169,7 @@ class SportBuilderState extends State<SportsBuilder> {
 								child: const Text("Cancel"),
 							),
 							RaisedButton(
-								onPressed: ready ? () => Navigator.of(context).pop(game) : null,
+								onPressed: model.ready ? model.saveGame : null,
 								child: const Text("Save"),
 							)
 						]
