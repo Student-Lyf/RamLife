@@ -80,10 +80,6 @@ class FormRow extends StatelessWidget {
 
 /// A page to create a Sports game. 
 class SportsBuilder extends StatelessWidget {
-	/// Capitalizes a word. 
-	static String capitalize(String word) => 
-		word [0].toUpperCase() + word.substring(1);
-
 	@override
 	Widget build(BuildContext context) => ModelListener<SportsBuilderModel>(
 		model: () => SportsBuilderModel(),
@@ -110,7 +106,7 @@ class SportsBuilder extends StatelessWidget {
 								for (final Sport sport in Sport.values) 
 									DropdownMenuItem<Sport>(
 										value: sport,
-										child: Text(capitalize(sport.toString().split(".") [1]))
+										child: Text(SportsGame.capitalize(sport))
 									)
 							],
 						),
@@ -183,8 +179,8 @@ class SportsBuilder extends StatelessWidget {
 					const SizedBox(height: 20),
 					SportsTile(
 						model.game,
-						updateScores: (Scores value) => 
-							model.scores = value ?? model.scores
+						onTap: () => model.scores = 
+							SportsScoreUpdater.updateScores(context, model.game) ?? model.scores
 					),
 					ButtonBar(
 						children: [
@@ -193,12 +189,8 @@ class SportsBuilder extends StatelessWidget {
 								child: const Text("Cancel"),
 							),
 							RaisedButton(
-								onPressed: !model.ready ? null : () async {
-									model.loading = true;
-									await Services.of(context).sports.addGame(model.game);
-									model.loading = false;
-									Navigator.of(context).pop();
-								},
+								onPressed: !model.ready ? null : 
+									() => Navigator.of(context).pop(model.game),
 								child: const Text("Save"),
 							)
 						]

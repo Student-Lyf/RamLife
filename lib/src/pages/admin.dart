@@ -144,8 +144,8 @@ class AdminHomePageState extends State<AdminHomePage> {
             	),
               if (_isSportsAdmin ?? false) AdminMenuItem(
                 icon: Icons.directions_run,
-                label: "Add game",
-                routeName: Routes.addSportsGame,
+                label: "Manage games",
+                routeName: Routes.sports,
               )
             ]
           )

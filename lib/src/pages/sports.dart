@@ -24,7 +24,7 @@ class GenericSportsView<T> extends StatelessWidget {
 	/// 
 	/// This can be any type as long as it can be used in [builder] to build 
 	/// [SportsTile]s. 
-	final List<T> recents;
+	final Iterable<T> recents;
 
 	/// Builds a list of [SportsTile]s using [upcoming] and [recents]. 
 	final Widget Function(T) builder;
@@ -32,12 +32,16 @@ class GenericSportsView<T> extends StatelessWidget {
 	/// The function to call when the user refreshes the page. 
 	final Future<void> Function() onRefresh;
 
+	/// Whether to show a loading indicator. 
+	final bool loading;
+
 	/// Creates a list of [SportsTile]s. 
 	const GenericSportsView({
 		@required this.upcoming,
 		@required this.recents, 
 		@required this.builder,
 		@required this.onRefresh,
+		@required this.loading,
 	});
 
 	@override
@@ -48,6 +52,8 @@ class GenericSportsView<T> extends StatelessWidget {
 					onRefresh: onRefresh,
 					child: ListView(
 						children: [
+							if (loading)
+								const LinearProgressIndicator(),
 							for (final T game in gamesList)
 								builder(game)
 						]
@@ -75,6 +81,18 @@ class SportsPage extends StatelessWidget {
 						]
 					),
 					actions: [
+						if (model.isAdmin) 
+							IconButton(
+								icon: Icon(Icons.add),
+								tooltip: "Add a game",
+								onPressed: () async {
+									final game = await Navigator.of(context)
+										.pushNamed(Routes.addSportsGame) as SportsGame;
+									model.loading = true;
+									await model.addGame(game);
+									model.loading = false;
+								}
+							),
 	          PopupMenuButton(
 	            icon: Icon(Icons.sort),
 	            onSelected: (SortOption option) => model.sortOption = option,
@@ -98,31 +116,40 @@ class SportsPage extends StatelessWidget {
 	        icon: Icon(Icons.open_in_new),
 	        onPressed: () => launch(Urls.sportsLivestream),
 	      ),
-				body: getLayout(model),
+				body: getLayout(context, model),
 			),
 		)
 	);
 
 	/// Creates a [GenericSportsView] based on the sorting option.
-	Widget getLayout(Sports model) {
+	Widget getLayout(BuildContext context, Sports model) {
 		switch(model.sortOption) {
 			case SortOption.chronological: 
 				return GenericSportsView<SportsGame>(
+					loading: model.loading,
 					onRefresh: model.refresh,
 					recents: model.recents,
 					upcoming: model.upcoming,
-					builder: (SportsGame game) => SportsTile(game),
+					builder: (SportsGame game) => SportsTile(
+						game, 
+						onTap: !model.isAdmin ? null : () => openMenu(context, game)
+					),
 				);
 			case SortOption.sport: 
 				return GenericSportsView<MapEntry<Sport, List<SportsGame>>>(
+					loading: model.loading,
 					onRefresh: model.refresh,
-					recents: model.recentBySport.entries,
-					upcoming: model.upcomingBySport.entries,
+					recents: model.recentBySport.entries.toList(),
+					upcoming: model.upcomingBySport.entries.toList(),
 					builder: (MapEntry<Sport, List<SportsGame>> entry) => Column(
 						children: [
-							Text(sportToString [entry.key]),
+							const SizedBox(height: 15),
+							Text(SportsGame.capitalize(entry.key)),
 							for (final SportsGame game in entry.value) 
-								SportsTile(game),
+								SportsTile(
+									game, 
+									onTap: !model.isAdmin ? null : () => openMenu(context, game)
+								),
 							const SizedBox(height: 20),
 						]
 					)
@@ -130,4 +157,30 @@ class SportsPage extends StatelessWidget {
 		}
 		return null;
 	}
+
+	/// Opens a menu with options for [game]. 
+	/// 
+	/// This menu can only be accessed by administrators. 
+	void openMenu(BuildContext context, SportsGame game) => showDialog(
+		context: context,
+		builder: (BuildContext context) => SimpleDialog(
+			title: Text(game.description),
+			children: [
+				SimpleDialogOption(
+				  onPressed: () => Navigator.of(context).pop(),
+				  child: const Text("Edit scores", textScaleFactor: 1.2),
+				),
+				const SizedBox(height: 10),
+				SimpleDialogOption(
+				  onPressed: () => Navigator.of(context).pop(),
+				  child: const Text("Edit game", textScaleFactor: 1.2),
+				),
+				const SizedBox(height: 10),
+				SimpleDialogOption(
+				  onPressed: () => Navigator.of(context).pop(),
+				  child: const Text("Remove game", textScaleFactor: 1.2),
+				),
+			]
+		)
+	);
 }

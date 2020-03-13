@@ -160,13 +160,12 @@ class ScoreUpdaterState extends State<SportsScoreUpdater> {
 
 /// A widget to represent a [SportsGame].
 /// 
-/// If [updateScores] is not null, tapping on the card will allow the user to 
+/// If [onTap] is not null, tapping on the card will allow the user to 
 /// input new scores. To keep layers modular, and to be more flexible, 
-/// the logic for actually updating the scores in the data source, as well as 
-/// determining if the user has permission to update the scores, is kept 
-/// separate from this widget. Instead, a function taking the new scores is to 
-/// be passed as [SportsTile()] and will be used with the new scores from 
-/// calling [SportsScoreUpdater.updateScores].  
+/// the logic for what to do with [game], as well as determining if the user 
+/// has the right permissions, is kept separate from this widget. 
+/// 
+/// Instead, a pass [onTap] to [SportsTile()].  
 class SportsTile extends StatelessWidget {
   /// Formats [date] into month-day-year form.
   static String formatDate(DateTime date, {bool noNull = false}) => 
@@ -177,14 +176,17 @@ class SportsTile extends StatelessWidget {
   /// The game for this widget to represent. 
   final SportsGame game;
 
-  /// What to do with the scores when they are updated. 
+  /// What to do when the user taps this tile. 
   /// 
-  /// If this function is null, tapping on this widget will not show a 
-  /// [SportsScoreUpdater].
-  final void Function(Scores) updateScores;
+  /// Only administrators should be allowed to do anything, so this function
+  /// should be null if the user is not an admin. However, what to do with
+  /// [game] depends on the context, so is left to the parent widget. 
+  /// 
+  /// If this is non-null, an edit icon will be shown on this widget. 
+  final VoidCallback onTap;
 
   /// Creates a widget to display a [SportsGame].
-  const SportsTile(this.game, {this.updateScores});
+  const SportsTile(this.game, {this.onTap});
 
   /// Retrieves the icon for `game.sport`.
   /// 
@@ -228,9 +230,7 @@ class SportsTile extends StatelessWidget {
     child: Card(
       color: cardColor,
       child: InkWell(
-      	onTap: updateScores == null ? null : () async => updateScores(
-      	  await SportsScoreUpdater.updateScores(context, game)
-      	),
+        onTap: onTap,
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
           child: Column(
@@ -245,6 +245,7 @@ class SportsTile extends StatelessWidget {
                 	? "${game.opponent} @ Ramaz"
                 	: "Ramaz @ ${game.opponent}"
               	),
+                trailing: onTap == null ? null : Icon(Icons.edit),
               ),
               const SizedBox(height: 20),
               SportsStats(

@@ -93,9 +93,21 @@ class Sports with ChangeNotifier {
 
 	SortOption _sortOption = SortOption.chronological;
 
+	bool _loading = false;
+
+	/// If the user is an admin. 
+	/// 
+	/// This will allow widgets to give the user options to change some entries.
+	bool isAdmin = false;
+
 	/// Creates a sports view model.
 	Sports(this.reader, this.refresh) {
 		timer = Timer.periodic(_minute, (_) => setup);
+		Auth.isSportsAdmin.then(
+			(bool value) {
+				isAdmin = value;
+				notifyListeners();
+		});
 		setup(fromDevice: true);
 	}
 
@@ -161,6 +173,9 @@ class Sports with ChangeNotifier {
 
 	/// Replaces a game's scores with and saves it to the database. 
 	Future<void> updateGame(SportsGame game, Scores scores) async {
+		if (scores == null) {
+			return;
+		}
 		games
 			..removeWhere((SportsGame otherGame) => otherGame == game)
 			..add(game.replaceScores(scores));
@@ -168,7 +183,21 @@ class Sports with ChangeNotifier {
 	}
 
 	/// Adds a game to the database. 
-	Future<void> addGame(SportsGame game) => Firestore.saveGames(
-		SportsGame.getJsonList(games + [game])
-	);
+	Future<void> addGame(SportsGame game) async {
+		if (game == null) {
+			return;
+		} else {
+			games.add(game);
+			return Firestore.saveGames(
+				SportsGame.getJsonList(games)
+			);
+		}
+	}
+
+	/// Whether the page is loading. 
+	bool get loading => _loading;
+	set loading(bool value) {
+		_loading = value;
+		notifyListeners();
+	}
 }
