@@ -170,17 +170,31 @@ class Firestore {
 	static Future<void> saveAdmin (Map<String, dynamic> data) async => 
 		_admin.document(await Auth.email).setData(data);
 
+	/// The document name for this school year's sports games.
+	///  
+	/// Each document is titled `"$firstYear-$secondYear" and has a 
+	/// `games` field for a list of JSON entries. 
+	static String get sportsDocument => _now.month > 7 
+		? "${_now.year}-${_now.year + 1}"
+		: "${_now.year - 1}-${_now.year}";
+
 	/// Downloads the sports data from the database. 
 	/// 
 	/// The sports games are split into documents by school year. Each document
 	/// has a `games` field for a list of JSON entries. 
 	static Future<List<Map<String, dynamic>>> get sports async => [
-		for (final dynamic entry in (await _sports.document(
-			_now.month > 7 
-				? "${_now.year}-${_now.year + 1}"
-				: "${_now.year - 1}-${_now.year}" 
-			).get()).data ["games"]
-		) 
+		for (final dynamic entry in (
+			await _sports.document(sportsDocument).get()
+		).data ["games"]) 
 			Map<String, dynamic>.from(entry)
 	];
+
+	/// Saves a sports game to the database. 
+	/// 
+	/// Updates the document to be all the existing games, plus the new one 
+	/// at the end. 
+	static Future<void> saveGame(Map<String, dynamic> game) async => 
+		_sports.document(sportsDocument).setData({
+			"games": await sports + [game]
+		});
 }

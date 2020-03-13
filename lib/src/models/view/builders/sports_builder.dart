@@ -12,7 +12,7 @@ class SportsBuilderModel with ChangeNotifier {
 	TimeOfDay _start, _end;
 
 	String _opponent, _team; 
-	bool _away = false;
+	bool _away = false, _loading = false;
 
 	/// Converts a [TimeOfDay] into a [Time]. 
 	/// 
@@ -41,14 +41,21 @@ class SportsBuilderModel with ChangeNotifier {
 		scores: scores,
 	);
 
-	Future<void> saveGame() {}
+	/// Saves the game to the database. 
+	/// 
+	/// Also triggers the loading animation. See [loading]. See 
+	/// [Firestore.saveGame] for how the game is saved. 
+	Future<void> saveGame() async {
+		loading = true;
+		await Firestore.saveGame(game.toJson());
+		loading = false;
+	}
 
 	/// The scores for this game.
 	/// 
 	/// This only applies if the game has already been finished.
 	/// 
-	/// chagning this will update the page.  
-	// TODO: Have option to remove scores.
+	/// Changing this will update the page.  
 	Scores get scores => _scores;
 	set scores(Scores value) {
 		_scores = value;
@@ -57,7 +64,7 @@ class SportsBuilderModel with ChangeNotifier {
 
 	/// The sport being played. 
 	/// 
-	/// chagning this will update the page. 
+	/// Changing this will update the page. 
 	Sport get sport => _sport;
 	set sport(Sport value) {
 		_sport = value;
@@ -66,7 +73,7 @@ class SportsBuilderModel with ChangeNotifier {
 
 	/// The date this game takes place. 
 	/// 
-	/// chagning this will update the page. 
+	/// Changing this will update the page. 
 	DateTime get date => _date;
 	set date(DateTime value) {
 		_date = value;
@@ -75,7 +82,7 @@ class SportsBuilderModel with ChangeNotifier {
 
 	/// The time this game starts. 
 	/// 
-	/// chagning this will update the page. 
+	/// Changing this will update the page. 
 	TimeOfDay get start => _start;
 	set start(TimeOfDay value) {
 		_start = value;
@@ -84,7 +91,7 @@ class SportsBuilderModel with ChangeNotifier {
 
 	/// The time this game ends. 
 	/// 
-	/// chagning this will update the page. 
+	/// Changing this will update the page. 
 	TimeOfDay get end => _end;
 	set end(TimeOfDay value) {
 		_end = value;
@@ -93,7 +100,7 @@ class SportsBuilderModel with ChangeNotifier {
 
 	/// The (home) team playing this game. 
 	/// 
-	/// chagning this will update the page. 
+	/// Changing this will update the page. 
 	String get team => _team;
 	set team(String value) {
 		_team = value;
@@ -102,7 +109,7 @@ class SportsBuilderModel with ChangeNotifier {
 
 	/// The name of the opponent school.
 	/// 
-	/// chagning this will update the page. 
+	/// Changing this will update the page. 
 	String get opponent => _opponent;
 	set opponent(String value) {
 		_opponent = value;
@@ -111,10 +118,19 @@ class SportsBuilderModel with ChangeNotifier {
 
 	/// Whether this game is being played away. 
 	/// 
-	/// chagning this will update the page. 
+	/// Changing this will update the page. 
 	bool get away => _away;
 	set away(bool value) {
 		_away = value;
+		notifyListeners();
+	}
+
+	/// Whether the page should display as loading. 
+	/// 
+	/// The only time this should be changed is on [saveGame].
+	bool get loading => _loading;
+	set loading(bool value) {
+		_loading = value;
 		notifyListeners();
 	}
 }

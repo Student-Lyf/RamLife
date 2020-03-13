@@ -76,6 +76,16 @@ class Scores {
   	isHome = json ["isHome"],
   	ramazScore = json ["ramaz"],
   	otherScore = json ["other"];
+
+	/// Converts this object to JSON. 
+	/// 
+	/// Passing the result of this function to [Scores.fromJson()] should
+	/// return an equivalent object. 
+  Map<String, dynamic> toJson() => {
+  	"isHome": isHome,
+  	"ramaz": ramazScore,
+  	"other": otherScore,
+  };
   
   @override
   String toString() => "Ramaz: $ramazScore, Other: $otherScore";
@@ -167,6 +177,20 @@ class SportsGame {
 		scores = Scores.fromJson(
 			Map<String, dynamic>.from(json ["scores"])
 		);
+
+	/// Converts this game to JSON.
+	/// 
+	/// Passing the result of this function to [SportsGame.fromJson()] should
+	/// return an equivalent object. 
+	Map<String, dynamic> toJson() => {
+		"sport": sportToString [sport],
+		"date": "${date.year}-${date.month}-${date.day}",
+		"times": times.toJson(),
+		"team": team, 
+		"home": home, 
+		"opponent": opponent,
+		"scores": scores.toJson(),
+	};
 
 	/// The name of the home team.
 	String get homeTeam => home ? "Ramaz" : opponent;
