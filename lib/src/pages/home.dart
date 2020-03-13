@@ -2,7 +2,6 @@
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 
-import "package:ramaz/data.dart";
 import "package:ramaz/models.dart";
 import "package:ramaz/pages.dart";
 import "package:ramaz/widgets.dart";
@@ -124,8 +123,8 @@ class HomePageState extends State<HomePage> {
 								)
 							),
 							const SizedBox(height: 10),
-							for (final SportsGame game in model.sports.todayGames)
-								SportsTile(game)
+							for (final int index in model.sports.todayGames)
+								SportsTile(model.sports.games [index])
 						]
 					]
 				)

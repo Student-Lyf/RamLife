@@ -83,7 +83,7 @@ class SportsPage extends StatelessWidget {
 					actions: [
 						if (model.isAdmin) 
 							IconButton(
-								icon: Icon(Icons.add),
+								icon: const Icon(Icons.add),
 								tooltip: "Add a game",
 								onPressed: () async {
 									final game = await Navigator.of(context)
@@ -125,30 +125,38 @@ class SportsPage extends StatelessWidget {
 	Widget getLayout(BuildContext context, Sports model) {
 		switch(model.sortOption) {
 			case SortOption.chronological: 
-				return GenericSportsView<SportsGame>(
+				return GenericSportsView<int>(
 					loading: model.loading,
 					onRefresh: model.refresh,
 					recents: model.recents,
 					upcoming: model.upcoming,
-					builder: (SportsGame game) => SportsTile(
-						game, 
-						onTap: !model.isAdmin ? null : () => openMenu(context, game)
+					builder: (int index) => SportsTile(
+						model.games [index], 
+						onTap: !model.isAdmin ? null : () => openMenu(
+							context: context,
+							index: index,
+							model: model,
+						)
 					),
 				);
 			case SortOption.sport: 
-				return GenericSportsView<MapEntry<Sport, List<SportsGame>>>(
+				return GenericSportsView<MapEntry<Sport, List<int>>>(
 					loading: model.loading,
 					onRefresh: model.refresh,
 					recents: model.recentBySport.entries.toList(),
 					upcoming: model.upcomingBySport.entries.toList(),
-					builder: (MapEntry<Sport, List<SportsGame>> entry) => Column(
+					builder: (MapEntry<Sport, List<int>> entry) => Column(
 						children: [
 							const SizedBox(height: 15),
 							Text(SportsGame.capitalize(entry.key)),
-							for (final SportsGame game in entry.value) 
+							for (final int index in entry.value) 
 								SportsTile(
-									game, 
-									onTap: !model.isAdmin ? null : () => openMenu(context, game)
+									model.games [index], 
+									onTap: !model.isAdmin ? null : () => openMenu(
+										context: context, 
+										index: index,
+										model: model
+									)
 								),
 							const SizedBox(height: 20),
 						]
@@ -158,25 +166,32 @@ class SportsPage extends StatelessWidget {
 		return null;
 	}
 
-	/// Opens a menu with options for [game]. 
+	/// Opens a menu with options for the selected game. 
 	/// 
 	/// This menu can only be accessed by administrators. 
-	void openMenu(BuildContext context, SportsGame game) => showDialog(
+	static void openMenu({
+		@required BuildContext context, 
+		@required int index, 
+		@required Sports model
+	}) => showDialog(
 		context: context,
 		builder: (BuildContext context) => SimpleDialog(
-			title: Text(game.description),
+			title: Text(model.games [index].description),
 			children: [
 				SimpleDialogOption(
-				  onPressed: () async => Services.of(context).sports.updateGame(
-				  	game, 
-				  	await SportsScoreUpdater.updateScores(context, game)
+				  onPressed: () async => Services.of(context).sports.replace(
+				  	index, 
+				  	model.games [index].replaceScores(
+				  		await SportsScoreUpdater.updateScores(context, model.games [index])
+			  		)
 			  	),
 				  child: const Text("Edit scores", textScaleFactor: 1.2),
 				),
 				const SizedBox(height: 10),
 				SimpleDialogOption(
 				  onPressed: () async => Services.of(context).sports.replace(
-				  	game, 
+				  	index, 
+				  	// TODO: Let this fill in properties of [game].
 				  	await Navigator.of(context).pushNamed(Routes.addSportsGame)
 			  	),
 				  child: const Text("Edit game", textScaleFactor: 1.2),
@@ -203,7 +218,7 @@ class SportsPage extends StatelessWidget {
 			  			)
 			  		);
 			  		if (confirm) {
-					  	await Services.of(context).sports.delete(game);
+					  	await Services.of(context).sports.delete(index);
 					  }
 				  },
 				  child: const Text("Remove game", textScaleFactor: 1.2),
