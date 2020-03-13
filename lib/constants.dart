@@ -77,6 +77,9 @@ class Urls {
 
 	/// The URL for Outlook mail.
 	static const String seniorSystems = "https://my.ramaz.org/SeniorApps/facelets/home/home.xhtml";
+
+	/// The URL for Ramaz livestreaming. 
+	static const String sportsLivestream = "https://ramaz.org/streaming";
 }
 
 /// Some date constants.

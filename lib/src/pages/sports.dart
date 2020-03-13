@@ -1,9 +1,12 @@
 import "package:flutter/material.dart";
 
+import "package:ramaz/constants.dart";
 import "package:ramaz/data.dart";
 import "package:ramaz/models.dart";
 import "package:ramaz/pages.dart";
 import "package:ramaz/widgets.dart";
+
+import "package:url_launcher/url_launcher.dart";
 
 /// A Swipe to Refresh list of [SportsGame]s. 
 /// 
@@ -61,7 +64,7 @@ class SportsPage extends StatelessWidget {
 		length: 2,
 		child: ModelListener<Sports>(
 			dispose: false,  // used in home page
-			model: () => Sports(Services.of(context).reader),
+			model: () => Services.of(context).sports,
 			builder: (BuildContext context, Sports model, Widget _) => Scaffold(
 				appBar: AppBar(
 					title: const Text("Sports"),
@@ -93,7 +96,7 @@ class SportsPage extends StatelessWidget {
 				floatingActionButton: FloatingActionButton.extended(
 	        label: const Text("Watch livestream"),
 	        icon: Icon(Icons.open_in_new),
-	        onPressed: () {}
+	        onPressed: () => launch(Urls.sportsLivestream),
 	      ),
 				body: getLayout(model),
 			),
