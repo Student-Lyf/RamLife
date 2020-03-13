@@ -104,6 +104,12 @@ class Scores {
 /// A sports game. 
 @immutable
 class SportsGame {
+	/// Capitalizes a word. 
+	/// 
+	/// Useful for the [Sport] enum. 
+	static String capitalize(Sport sport) => 
+		sportToString [sport] [0].toUpperCase() + sportToString [sport].substring(1);
+
 	/// Converts a list of JSON entries into a list of [SportsGame]s. 
 	/// 
 	/// This method is needed since it casts each `dynamic` entry to a
@@ -180,7 +186,7 @@ class SportsGame {
 		team = json ["team"],
 		home = json ["home"],
 		opponent = json ["opponent"],
-		scores = Scores.fromJson(
+		scores = json ["scores"] == null ? null : Scores.fromJson(
 			Map<String, dynamic>.from(json ["scores"])
 		);
 
@@ -211,7 +217,7 @@ class SportsGame {
 		"team": team, 
 		"home": home, 
 		"opponent": opponent,
-		"scores": scores.toJson(),
+		"scores": scores?.toJson(),
 	};
 
 	/// The end of the match. 
