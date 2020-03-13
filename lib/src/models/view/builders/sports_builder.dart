@@ -3,6 +3,7 @@ import "package:flutter/material.dart" show ChangeNotifier, TimeOfDay, showTimeP
 import "package:ramaz/data.dart";
 import "package:ramaz/services.dart";
 
+/// A ViewModel for the Sports game builder. 
 // ignore: prefer_mixin
 class SportsBuilderModel with ChangeNotifier {
 	Scores _scores;
@@ -10,9 +11,7 @@ class SportsBuilderModel with ChangeNotifier {
 	DateTime _date;
 	TimeOfDay _start, _end;
 
-	String _opponent;
-
-	String _team; 
+	String _opponent, _team; 
 	bool _away = false;
 
 	/// Converts a [TimeOfDay] into a [Time]. 
@@ -44,48 +43,75 @@ class SportsBuilderModel with ChangeNotifier {
 
 	Future<void> saveGame() {}
 
+	/// The scores for this game.
+	/// 
+	/// This only applies if the game has already been finished.
+	/// 
+	/// chagning this will update the page.  
+	// TODO: Have option to remove scores.
 	Scores get scores => _scores;
 	set scores(Scores value) {
 		_scores = value;
 		notifyListeners();
 	}
 
+	/// The sport being played. 
+	/// 
+	/// chagning this will update the page. 
 	Sport get sport => _sport;
 	set sport(Sport value) {
 		_sport = value;
 		notifyListeners();
 	}
 
+	/// The date this game takes place. 
+	/// 
+	/// chagning this will update the page. 
 	DateTime get date => _date;
 	set date(DateTime value) {
 		_date = value;
 		notifyListeners();
 	}
 
+	/// The time this game starts. 
+	/// 
+	/// chagning this will update the page. 
 	TimeOfDay get start => _start;
 	set start(TimeOfDay value) {
 		_start = value;
 		notifyListeners();
 	}
 
+	/// The time this game ends. 
+	/// 
+	/// chagning this will update the page. 
 	TimeOfDay get end => _end;
 	set end(TimeOfDay value) {
 		_end = value;
 		notifyListeners();
 	}
 
+	/// The (home) team playing this game. 
+	/// 
+	/// chagning this will update the page. 
 	String get team => _team;
 	set team(String value) {
 		_team = value;
 		notifyListeners();
 	}
 
+	/// The name of the opponent school.
+	/// 
+	/// chagning this will update the page. 
 	String get opponent => _opponent;
 	set opponent(String value) {
 		_opponent = value;
 		notifyListeners();
 	}
 
+	/// Whether this game is being played away. 
+	/// 
+	/// chagning this will update the page. 
 	bool get away => _away;
 	set away(bool value) {
 		_away = value;

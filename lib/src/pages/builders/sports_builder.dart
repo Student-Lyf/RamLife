@@ -2,7 +2,6 @@ import "package:flutter/material.dart";
 
 import "package:ramaz/data.dart";
 import "package:ramaz/models.dart";
-import "package:ramaz/pages.dart";
 import "package:ramaz/widgets.dart";
 
 /// A row in a form. 
@@ -84,7 +83,6 @@ class SportsBuilder extends StatelessWidget {
 	@override
 	Widget build(BuildContext context) => Scaffold(
 		appBar: AppBar(title: const Text("Add game")),
-		// drawer: NavigationDrawer(),
 		body: ModelListener<SportsBuilderModel>(
 			model: () => SportsBuilderModel(),
 			builder: (_, SportsBuilderModel model, __) => ListView(
