@@ -168,6 +168,11 @@ class ScoreUpdaterState extends State<SportsScoreUpdater> {
 /// be passed as [SportsTile()] and will be used with the new scores from 
 /// calling [SportsScoreUpdater.updateScores].  
 class SportsTile extends StatelessWidget {
+  /// Formats [date] into month-day-year form.
+  static String formatDate(DateTime date, {bool noNull = false}) => 
+    noNull && date == null ? null : 
+      "${date?.month ?? ' '}-${date?.day ?? ' '}-${date?.year ?? ' '}";
+
   // TODO: Decide on widget or letter.
   /// The game for this widget to represent. 
   final SportsGame game;
@@ -199,18 +204,6 @@ class SportsTile extends StatelessWidget {
 		}
 		return null;
 	}
-
-  // String get sportLetter {
-  //   switch(game.sport) {
-  //     case Sport.baseball: return "B";
-  //     case Sport.basketball: return "B";
-  //     case Sport.volleyball: return "V";
-  //     case Sport.tennis: return "T";
-  //     case Sport.hockey: return "H";
-  //     case Sport.soccer: return "S";
-  //     default: return "X";
-  //   }
-  // }
   
   /// The color of this widget. 
   /// 
@@ -224,11 +217,6 @@ class SportsTile extends StatelessWidget {
 			? Colors.blueGrey
 			: (game.scores.didWin ? Colors.lightGreen : Colors.red [400])
 		) : null;
-   
-  /// Formats [date] into month-day-year form.
-  String formatDate(DateTime date) => 
-    "${date?.month ?? ' '}-${date?.day ?? ' '}-${date?.year ?? ' '}";
-
 
   /// Determines how long to pad the team names so they align.
   int get padLength => game.opponent.length > "Ramaz".length
@@ -250,7 +238,7 @@ class SportsTile extends StatelessWidget {
               ListTile(
                 leading: CircleAvatar (
                   backgroundImage: icon,
-                  backgroundColor: Theme.of(context).cardColor
+                  backgroundColor: cardColor ?? Theme.of(context).cardColor,
                 ),
                 title: Text(game?.team ?? ""),
                 subtitle: Text(game.home
