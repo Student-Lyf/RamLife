@@ -32,6 +32,7 @@ class Reader {
 	/// The file containing the admin profile. 
 	final File adminFile;
 
+	/// The file containing the sports games. 
 	final File sportsFile;
 
 	/// Initializes the files based on the path ([dir]) provided to it. 
@@ -110,6 +111,7 @@ class Reader {
 		jsonEncode(data)
 	);
 
+	/// A list of all the sports games for this school year in JSON format. 
 	List<Map<String, dynamic>> get sportsData => List<Map<String, dynamic>>.from(
 		jsonDecode(sportsFile.readAsStringSync()) ?? {}
 	);
