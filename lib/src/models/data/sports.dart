@@ -51,7 +51,7 @@ class Sports with ChangeNotifier {
 
 	static const _minute = Duration(minutes: 1);
 
-	static final DateTime _now = DateTime.now();	
+	static DateTime _now = DateTime.now();	
 
 	/// Provides access to the file system.
 	/// 
@@ -95,7 +95,7 @@ class Sports with ChangeNotifier {
 
 	/// Creates a sports view model.
 	Sports(this.reader, this.refresh) {
-		timer = Timer.periodic(_minute, (_) => refresh);
+		timer = Timer.periodic(_minute, (_) => setup);
 		setup(fromDevice: true);
 	}
 
@@ -119,6 +119,7 @@ class Sports with ChangeNotifier {
 			games = SportsGame.fromList(reader.sportsData);
 		}
 		sortByRecentAndUpcoming();
+		_now = DateTime.now();
 		todayGames = getTodayGames();
 		sort();
 		notifyListeners();
