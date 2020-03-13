@@ -20,7 +20,7 @@ class HomeModel with ChangeNotifier {
 	/// Creates a ViewModel for the homescreen. 
 	HomeModel(ServicesCollection services) : 
 		schedule = services.schedule,
-		sports = Sports(services.reader)
+		sports = services.sports
 	{
 		schedule.addListener(notifyListeners);
 		sports.addListener(notifyListeners);

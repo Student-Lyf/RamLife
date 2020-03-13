@@ -58,6 +58,9 @@ class Sports with ChangeNotifier {
 	/// A list of sports games is available in [Reader.sportsData].
 	final Reader reader;
 
+	/// A function to refresh the list of sports games. 
+	final Future<void> Function() refresh;
+
 	/// A timer to refresh the games lists. 
 	/// 
 	/// This is used to reset the day to the current day. 
@@ -91,8 +94,8 @@ class Sports with ChangeNotifier {
 	SortOption _sortOption = SortOption.chronological;
 
 	/// Creates a sports view model.
-	Sports(this.reader) {
-		timer = Timer.periodic(_minute, refresh);
+	Sports(this.reader, this.refresh) {
+		timer = Timer.periodic(_minute, (_) => refresh);
 		setup(fromDevice: true);
 	}
 
@@ -118,6 +121,7 @@ class Sports with ChangeNotifier {
 		sortByRecentAndUpcoming();
 		todayGames = getTodayGames();
 		sort();
+		notifyListeners();
 	}
 
 	/// Returns games from [games] if the game is today.
@@ -132,20 +136,13 @@ class Sports with ChangeNotifier {
 			) game
 	];
 
-	/// Downloads the games from the database and saves them to the device. 
-	Future<void> refresh([_]) async {
-		// services.updateSports();
-		setup();
-		notifyListeners();
-	}
-
 	/// Sorts the games by past and future. 
 	void sortByRecentAndUpcoming() {
 		recents = [];
 		upcoming = [];
 		final DateTime now = DateTime.now();
 		for (final SportsGame game in games) {
-			(game.date.isAfter(now) ? recents : upcoming).add(game);
+			(game.dateTime.isAfter(now) ? upcoming : recents).add(game);
 		}
 		recents?.sort(sortByDate);
 		upcoming?.sort(sortByDate);

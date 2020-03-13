@@ -56,6 +56,11 @@ class Services extends InheritedWidget {
 	/// This will be null if the user is not an admin. 
 	AdminModel get admin => services.admin;
 
+	/// The sports data model. 
+	/// 
+	/// This is taken from [ServicesCollection.sports].
+	Sports get sports => services.sports;
+
 	/// This instance will never be rebuilt with new data
 	@override
 	bool updateShouldNotify(_) => false;

@@ -26,9 +26,10 @@ class HomePageState extends State<HomePage> {
 	bool loading = false;
 
 	/// Downloads the calendar again and calls [Schedule.onNewPeriod].
-	Future<void> downloadCalendar() async {
+	Future<void> refresh() async {
 		try {
 			await Services.of(context).services.updateCalendar();
+			await Services.of(context).services.updateSports();
 		} on PlatformException catch(error) {
 			if (error.code == "Error performing get") {
 				scaffoldKey.currentState.showSnackBar(
@@ -38,7 +39,7 @@ class HomePageState extends State<HomePage> {
 							label: "RETRY", 
 							onPressed: () async {
 								setState(() => loading = true);
-								await downloadCalendar();
+								await refresh();
 								setState(() => loading = false);
 							}
 						),
@@ -81,7 +82,7 @@ class HomePageState extends State<HomePage> {
 				)
 			),
 			body: RefreshIndicator (  // so you can refresh the period
-				onRefresh: downloadCalendar,
+				onRefresh: refresh,
 				child: ListView (
 					children: [
 						if (loading) const LinearProgressIndicator(),

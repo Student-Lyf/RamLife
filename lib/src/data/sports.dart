@@ -169,7 +169,7 @@ class SportsGame {
 	/// - a "scores" field. See [Scores.fromJson] for format.
 	SportsGame.fromJson(Map<String, dynamic> json) :
 		sport = stringToSport [json ["sport"]],
-		date = DateTime.parse(json ["date"]),
+		date = DateTime.fromMicrosecondsSinceEpoch(json ["date"]),
 		times = Range.fromJson(json ["times"]),
 		team = json ["team"],
 		home = json ["home"],
@@ -184,13 +184,24 @@ class SportsGame {
 	/// return an equivalent object. 
 	Map<String, dynamic> toJson() => {
 		"sport": sportToString [sport],
-		"date": "${date.year}-${date.month}-${date.day}",
+		"date": date,
 		"times": times.toJson(),
 		"team": team, 
 		"home": home, 
 		"opponent": opponent,
 		"scores": scores.toJson(),
 	};
+
+	/// The end of the match. 
+	/// 
+	/// This is convenient for checking if the game already passed. 
+	DateTime get dateTime => DateTime(
+		date.year, 
+		date.month, 
+		date.day,
+		times.end.hour, 
+		times.end.minutes,
+	);
 
 	/// The name of the home team.
 	String get homeTeam => home ? "Ramaz" : opponent;

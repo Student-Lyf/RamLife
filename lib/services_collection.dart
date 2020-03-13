@@ -53,6 +53,12 @@ class ServicesCollection {
 		schedule.setup(reader);
 	}
 
+	/// Refreshes the list of sports games. 
+	Future<void> updateSports() async {
+		reader.sportsData = await Firestore.sports;
+		sports.setup(fromDevice: true);
+	}
+
 	/// Initializes the collection.
 	/// 
 	/// This function is a safety! In the event a file is unavailable, the 
@@ -66,12 +72,11 @@ class ServicesCollection {
 	Future<void> init() async {
 		reminders = Reminders(reader);
 		schedule = Schedule(reader, reminders: reminders);
-		sports = Sports(reader);
+		sports = Sports(reader, updateSports);
 		if (await Auth.isAdmin) {
 			reader.adminData = await Firestore.admin ?? {};
 			admin = AdminModel(this, await Auth.adminScopes);
 		}
-		verify();
 		// Register for FCM notifications. 
 		// We don't care when this happens
 		// ignore: unawaited_futures 
@@ -81,26 +86,12 @@ class ServicesCollection {
 					{
 						"refresh": refresh,
 						"updateCalendar": updateCalendar,
+						"sports": updateSports,
 					}
 				);
-				await FCM.subscribeToCalendar();
+				await FCM.subscribeToTopics();
 			}
 		);
-	}
-
-	/// Verifies any properties that needed to be manually initialized are. 
-	/// 
-	/// Since calling [init] cannot be enforced, this function does null checks.
-	/// Put any variables that aren't final in here. 
-	void verify() {
-		final List properties = [reminders, schedule];
-
-		for (final property in properties) {
-			assert (
-				property != null,
-				"ServicesCollection.init was not called"
-			);
-		}
 	}
 
 	/// The login protocol. 
