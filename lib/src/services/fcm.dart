@@ -25,6 +25,11 @@ typedef VoidCallback = Future<void> Function();
 class FCM {
 	static final FirebaseMessaging _firebase = FirebaseMessaging();
 
+	/// A list of topics to subscribe to. 
+	/// 
+	/// Notifications sent with these topics will be received by the app. 
+	static const List<String> topics = ["calendar", "sports"];
+
 	/// Returns the device's FCM token
 	static Future<String> get token => _firebase.getToken();
 
@@ -62,7 +67,7 @@ class FCM {
 				);
 			}
 
-			// final VoidCallback function = commands [command];
+			// Same warning about types applies here. 
 			final function = commands [command];
 			if (function == null) {
 				throw ArgumentError.value(
@@ -84,12 +89,10 @@ class FCM {
 		);
 	}
 
-	/// Subscribe to the calendar. 
-	/// 
-	/// Calling this function will result in being notified when the calendar 
-	/// changes. This allows the device to only update the calendar and not 
-	/// all of the student data. Notifications are still handled by 
-	/// [registerNotifications].
-	static Future<void> subscribeToCalendar() async => 
-		_firebase.subscribeToTopic("calendar");
+	/// Subscribes to all the topics in [topics].
+	static Future<void> subscribeToTopics() async {
+		for (final String topic in topics) {
+			await _firebase.subscribeToTopic(topic);
+		}
+	}
 }

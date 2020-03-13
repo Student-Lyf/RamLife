@@ -86,7 +86,7 @@ class ServicesCollection {
 					{
 						"refresh": refresh,
 						"updateCalendar": updateCalendar,
-						"sports": updateSports,
+						"updateSports": updateSports,
 					}
 				);
 				await FCM.subscribeToTopics();

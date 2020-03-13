@@ -7,17 +7,19 @@ export const calendarUpdated = functions
 	.document("/calendar/{month}")
 	.onUpdate(
 		async (snapshot, context) => {
-			const payload = {
-				data: {command: "updateCalendar"}
-			}
-
+			const payload = {data: {command: "updateCalendar"}}
 			console.log("Calendar updated")
+			await admin.messaging().sendToTopic("calendar", payload)
+		}
+	)
 
-			await admin
-				.messaging()
-				.sendToTopic(
-					"calendar", 
-					payload
-				)
+export const sportsUpdated = functions
+	.firestore
+	.document("/sports/{year}")
+	.onUpdate(
+		async (snapshot, context) => {
+			const payload = {data: {command: "updateSports"}}
+			console.log("Calendar updated")
+			await admin.messaging().sendToTopic("sports", payload)
 		}
 	)
