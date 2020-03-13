@@ -158,4 +158,17 @@ class Sports with ChangeNotifier {
 				upcomingBySport = sortBySport(upcoming);
 		}
 	}
+
+	/// Replaces a game's scores with and saves it to the database. 
+	Future<void> updateGame(SportsGame game, Scores scores) async {
+		games
+			..removeWhere((SportsGame otherGame) => otherGame == game)
+			..add(game.replaceScores(scores));
+		await Firestore.saveGames(SportsGame.getJsonList(games));
+	}
+
+	/// Adds a game to the database. 
+	Future<void> addGame(SportsGame game) => Firestore.saveGames(
+		SportsGame.getJsonList(games + [game])
+	);
 }

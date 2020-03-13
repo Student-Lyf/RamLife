@@ -189,12 +189,9 @@ class Firestore {
 			Map<String, dynamic>.from(entry)
 	];
 
-	/// Saves a sports game to the database. 
-	/// 
-	/// Updates the document to be all the existing games, plus the new one 
-	/// at the end. 
-	static Future<void> saveGame(Map<String, dynamic> game) async => 
+	/// Saves the list of sports games to the database. 
+	static Future<void> saveGames(List<Map<String, dynamic>> games) async => 
 		_sports.document(sportsDocument).setData({
-			"games": await sports + [game]
+			"games": games,
 		});
 }

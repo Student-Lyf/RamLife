@@ -1,7 +1,6 @@
 import "package:flutter/material.dart" show ChangeNotifier, TimeOfDay, showTimePicker;
 
 import "package:ramaz/data.dart";
-import "package:ramaz/services.dart";
 
 /// A ViewModel for the Sports game builder. 
 // ignore: prefer_mixin
@@ -40,11 +39,6 @@ class SportsBuilderModel with ChangeNotifier {
 		sport: sport,
 		scores: scores,
 	);
-
-	/// Saves the game to the database. 
-	/// 
-	/// See [Firestore.saveGame] for how the game is saved. 
-	Future<void> saveGame() => Firestore.saveGame(game.toJson());
 
 	/// The scores for this game.
 	/// 

@@ -106,6 +106,11 @@ class Range {
 
 	@override String toString() => "${start ?? ''}-${end ?? ''}";
 
+	@override bool operator == (dynamic other) => other is Range && 
+		other.start == start && other.end == end;
+
+	@override int get hashCode => toString().hashCode;
+
 	/// Returns whether this range is before another range.
 	bool operator < (Time other) => end.hour < other.hour ||
 	(

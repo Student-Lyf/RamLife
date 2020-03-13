@@ -114,6 +114,12 @@ class SportsGame {
 			SportsGame.fromJson(json)
 	];
 
+	/// Converts a list of [SportsGame]s into a list of JSON entries. 
+	static List<Map<String, dynamic>> getJsonList(List<SportsGame> games) => [
+		for (final SportsGame game in games) 
+			game.toJson()
+	];
+
 	/// The type of sport being played.
 	final Sport sport;
 
@@ -163,7 +169,7 @@ class SportsGame {
 	/// - a "sport" field (String)
 	/// - a "date" field (String acceptable to [DateTime.parse]. Eg, "2012-02-27")
 	/// - a "times" field. See [Range.fromJson] for format. 
-	/// - a "teach" field (String)
+	/// - a "team" field (String)
 	/// - a "home" field (bool)
 	/// - an "opponent" field (String)
 	/// - a "scores" field. See [Scores.fromJson] for format.
@@ -177,6 +183,22 @@ class SportsGame {
 		scores = Scores.fromJson(
 			Map<String, dynamic>.from(json ["scores"])
 		);
+
+	// Specifically not including scores, since this can be used 
+	// to replace scores. 
+	@override
+	bool operator == (dynamic other) => other is SportsGame && 
+		other.sport == sport && 
+		other.opponent == opponent && 
+		other.home == home && 
+		other.team == team && 
+		other.date.year == date.year && 
+		other.date.month == date.month && 
+		other.date.day == date.day && 
+		other.times == times;
+
+	@override 
+	int get hashCode => "$home-$opponent-$sport-$team-$date-$times".hashCode;
 
 	/// Converts this game to JSON.
 	/// 
@@ -201,6 +223,19 @@ class SportsGame {
 		date.day,
 		times.end.hour, 
 		times.end.minutes,
+	);
+
+	/// Returns a new [SportsGame] with the scores switched out. 
+	/// 
+	/// This method allows [SportsGame]s to stay immutable. 
+	SportsGame replaceScores(Scores newScores) => SportsGame(
+		sport: sport,
+		team: team,
+		home: home,
+		date: date, 
+		opponent: opponent,
+		times: times, 
+		scores: newScores,
 	);
 
 	/// The name of the home team.

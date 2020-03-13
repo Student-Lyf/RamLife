@@ -195,7 +195,7 @@ class SportsBuilder extends StatelessWidget {
 							RaisedButton(
 								onPressed: !model.ready ? null : () async {
 									model.loading = true;
-									await model.saveGame();
+									await Services.of(context).sports.addGame(model.game);
 									model.loading = false;
 									Navigator.of(context).pop();
 								},
