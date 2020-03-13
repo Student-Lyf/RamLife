@@ -171,27 +171,70 @@ class Sports with ChangeNotifier {
 		}
 	}
 
-	/// Replaces a game's scores with and saves it to the database. 
-	Future<void> updateGame(SportsGame game, Scores scores) async {
-		if (scores == null) {
-			return;
-		}
-		games
-			..removeWhere((SportsGame otherGame) => otherGame == game)
-			..add(game.replaceScores(scores));
-		await Firestore.saveGames(SportsGame.getJsonList(games));
-	}
+	/// Removes [game] from [games].
+	/// 
+	/// Right now, the widget only keeps a reference to the game, and not the
+	/// index. This function searches through [games], finds [game], and removes 
+	/// it from the list. This method can be improved by keeping a reference
+	/// to the index and popping at that index instead. 
+	// TODO: replace with index reference. 
+	void removeFromList(SportsGame game) => games
+		.removeWhere((SportsGame otherGame) => otherGame == game);
 
 	/// Adds a game to the database. 
 	Future<void> addGame(SportsGame game) async {
 		if (game == null) {
 			return;
 		} else {
+			loading = true;
 			games.add(game);
-			return Firestore.saveGames(
-				SportsGame.getJsonList(games)
-			);
+			return saveGames();  // returns a future
 		}
+	}
+
+	/// Replaces a game's scores with and saves it to the database. 
+	/// 
+	/// See [removeFromList] for a discussion on how this is done.
+	Future<void> updateGame(SportsGame game, Scores scores) async {
+		if (scores == null) {
+			return;
+		}
+		loading = true;
+		removeFromList(game);
+		games.add(game.replaceScores(scores));
+		return saveGames();  // returns a future
+	}
+
+	/// Replaces a game with another and saves it to the database.
+	/// 
+	/// Since [SportsGame]s are immutable, they cannot be changed in place. 
+	/// Instead, they are removed and replaced. 
+	/// 
+	/// See [removeFromList] for a discussion on how this is done.
+	Future<void> replace(SportsGame old, SportsGame newGame) async {
+		if (newGame == null) {
+			return;
+		}
+		loading = true;
+		removeFromList(old);
+		return addGame(newGame);
+	}
+
+	/// Deletes a game from the database.
+	/// 
+	/// See [removeFromList] for a discussion on how this is done.
+	Future<void> delete(SportsGame game) {
+		loading = true;
+		removeFromList(game);
+		return saveGames();
+	}
+
+	/// Saves the games to the database. 
+	/// 
+	/// Also cancels the loading indicator.
+	Future<void> saveGames() async {
+		await Firestore.saveGames(SportsGame.getJsonList(games));
+		loading = false;
 	}
 
 	/// Whether the page is loading. 

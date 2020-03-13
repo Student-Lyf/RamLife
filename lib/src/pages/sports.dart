@@ -167,17 +167,45 @@ class SportsPage extends StatelessWidget {
 			title: Text(game.description),
 			children: [
 				SimpleDialogOption(
-				  onPressed: () => Navigator.of(context).pop(),
+				  onPressed: () async => Services.of(context).sports.updateGame(
+				  	game, 
+				  	await SportsScoreUpdater.updateScores(context, game)
+			  	),
 				  child: const Text("Edit scores", textScaleFactor: 1.2),
 				),
 				const SizedBox(height: 10),
 				SimpleDialogOption(
-				  onPressed: () => Navigator.of(context).pop(),
+				  onPressed: () async => Services.of(context).sports.replace(
+				  	game, 
+				  	await Navigator.of(context).pushNamed(Routes.addSportsGame)
+			  	),
 				  child: const Text("Edit game", textScaleFactor: 1.2),
 				),
 				const SizedBox(height: 10),
 				SimpleDialogOption(
-				  onPressed: () => Navigator.of(context).pop(),
+				  onPressed: () async {
+				  	Navigator.of(context).pop();
+				  	final bool confirm = await showDialog<bool>(
+				  		context: context,
+				  		builder: (BuildContext context) => AlertDialog(
+				  			title: const Text("Confirm"),
+				  			content: const Text("Are you sure you want to delete this game?"),
+				  			actions: [
+				  				FlatButton(
+				  					onPressed: () => Navigator.of(context).pop(false),
+				  					child: const Text("Cancel"),
+			  					),
+			  					RaisedButton(
+			  						onPressed: () => Navigator.of(context).pop(true),
+			  						child: const Text("Confirm"),
+		  						)
+				  			]
+			  			)
+			  		);
+			  		if (confirm) {
+					  	await Services.of(context).sports.delete(game);
+					  }
+				  },
 				  child: const Text("Remove game", textScaleFactor: 1.2),
 				),
 			]
