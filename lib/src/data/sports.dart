@@ -1,5 +1,6 @@
 import "package:flutter/foundation.dart";
 
+import "package:ramaz/constants.dart" show DayComparison;
 import "package:ramaz/data.dart";
 
 /// All the different sports that can be played. 
@@ -198,9 +199,7 @@ class SportsGame {
 		other.opponent == opponent && 
 		other.home == home && 
 		other.team == team && 
-		other.date.year == date.year && 
-		other.date.month == date.month && 
-		other.date.day == date.day && 
+		other.date.isSameDay(date) && 
 		other.times == times;
 
 	@override 

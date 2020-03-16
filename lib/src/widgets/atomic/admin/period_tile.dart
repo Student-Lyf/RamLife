@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 
+import "package:ramaz/constants.dart";
 import "package:ramaz/data.dart";
 import "package:ramaz/models.dart";
 
@@ -27,8 +28,8 @@ class PeriodTile extends StatelessWidget {
 		@required this.index,
 	}) : 
 		skipped = model.skips.contains(index),
-		start = TimeOfDay(hour: range.start.hour, minute: range.start.minutes),
-		end = TimeOfDay(hour: range.end.hour, minute: range.end.minutes);
+		start = range.start.asTimeOfDay,
+		end = range.end.asTimeOfDay;
 
 	@override
 	Widget build(BuildContext context) => SizedBox(
@@ -103,7 +104,7 @@ class PeriodTile extends StatelessWidget {
 	/// 
 	/// [start] determines if the range starts with [time] or not.
 	Range getRange(TimeOfDay time, {bool start}) => Range(
-		start ? Time(time.hour, time.minute) : range.start,
-		start ? range.end : Time(time.hour, time.minute),
+		start ? time.asTime : range.start,
+		start ? range.end : time.asTime,
 	);
 }

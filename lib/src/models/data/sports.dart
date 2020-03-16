@@ -2,6 +2,7 @@ import "dart:async";
 
 import "package:flutter/foundation.dart";
 
+import "package:ramaz/constants.dart" show DayComparison;
 import "package:ramaz/data.dart";
 import "package:ramaz/services.dart";
 
@@ -143,11 +144,8 @@ class Sports with ChangeNotifier {
 	/// This is used to populate [todayGames].
 	List<int> getTodayGames() => [
 		for (final MapEntry<int, SportsGame> entry in games.asMap().entries) 
-			if (
-				entry.value.date.year == _now.year && 
-				entry.value.date.month == _now.month && 
-				entry.value.date.day == _now.day
-			) entry.key
+			if (entry.value.date.isSameDay(_now))
+				entry.key
 	];
 
 	/// Sorts the games by past and future. 
