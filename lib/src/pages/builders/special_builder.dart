@@ -174,13 +174,13 @@ class SpecialBuilderState extends State<SpecialBuilder> {
 					Row(
 						children: [
 							FlatButton.icon(
-								icon: Icon (Icons.add),
+								icon: const Icon (Icons.add),
 								label: const Text("Add"),
 								onPressed: () => model.numPeriods++,
 							),
 							if (model.numPeriods > 0) 
 								FlatButton.icon(
-									icon: Icon(Icons.remove),
+									icon: const Icon(Icons.remove),
 									label: const Text("Remove"),
 									onPressed: () => model.numPeriods--
 								),
