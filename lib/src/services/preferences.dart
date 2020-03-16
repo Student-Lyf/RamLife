@@ -16,14 +16,6 @@ class Preferences {
 	/// The key for the user brightness preference.
 	static const String lightMode = "lightMode";
 
-	/// Returns whether a [DateTime] is today.
-	static bool isToday(DateTime other) {
-		final DateTime now = DateTime.now();
-		return now.year == other.year &&
-			now.month == other.month &&
-			now.day == other.day;
-	}
-
 	/// Determines whether this is the first time opening the app.
 	bool get firstTime {
 		final bool result = _prefs.getBool(firstTimeKey) ?? true;
@@ -36,6 +28,5 @@ class Preferences {
 	/// `true` means light mode, `false` means dark mode, and `null` gets the 
 	/// system preferences (if not supported -- light mode).
 	bool get brightness => _prefs.getBool(lightMode);
-
 	set brightness (bool value) => _prefs.setBool(lightMode, value); 
 }
