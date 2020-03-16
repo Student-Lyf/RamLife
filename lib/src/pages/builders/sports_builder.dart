@@ -80,6 +80,25 @@ class FormRow extends StatelessWidget {
 
 /// A page to create a Sports game. 
 class SportsBuilder extends StatelessWidget {
+	/// Opens a form for the user to 
+	static Future<SportsGame> createGame(
+		BuildContext context, 
+		[SportsGame preset]
+	) => Navigator.of(context).push<SportsGame>(
+		MaterialPageRoute(
+			builder: (BuildContext context) => SportsBuilder(preset),
+		)
+	);
+
+	/// Fills all the properties on this page with the properties of this game.
+	final SportsGame parent;
+
+	/// Creates a page to build a [SportsGame].
+	/// 
+	/// Passing in [parent] will fill in the properties of the page with the 
+	/// properties of [parent].
+	const SportsBuilder([this.parent]);
+
 	@override
 	Widget build(BuildContext context) => ModelListener<SportsBuilderModel>(
 		model: () => SportsBuilderModel(),

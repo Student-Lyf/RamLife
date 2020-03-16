@@ -5,6 +5,20 @@ import "package:ramaz/data.dart";
 /// A ViewModel for the Sports game builder. 
 // ignore: prefer_mixin
 class SportsBuilderModel with ChangeNotifier {
+	/// Converts a [TimeOfDay] into a [Time]. 
+	/// 
+	/// This is useful for converting the output of [showTimePicker] into a 
+	/// [Range] for [SportsGame.times].
+	static Time getTime(TimeOfDay time) => time == null 
+		? null : Time(time.hour, time.minute);
+
+	/// Converts a [Time] into a [TimeOfDay].
+	/// 
+	/// This is useful for converting the output of [SportsGame.times] into a 
+	/// format useable for [start] and [end].
+	static TimeOfDay getTimeOfDay(Time time) => time == null ? null : 
+		TimeOfDay(hour: time.hour, minute: time.minutes);
+
 	Scores _scores;
 	Sport _sport;
 	DateTime _date;
@@ -13,12 +27,19 @@ class SportsBuilderModel with ChangeNotifier {
 	String _opponent, _team; 
 	bool _away = false, _loading = false;
 
-	/// Converts a [TimeOfDay] into a [Time]. 
+	/// Creates a ViewModel for the sports game builder page. 
 	/// 
-	/// This is useful for converting the output of [showTimePicker] into a 
-	/// [Range] for [SportsGame.times].
-	Time getTime(TimeOfDay time) => time == null 
-		? null : Time(time.hour, time.minute);
+	/// Passing in a [SportsGame] for [parent] will fill this page with all the 
+	/// relevant properties of [parent] before building. 
+	SportsBuilderModel([SportsGame parent]) : 
+		_scores = parent?.scores,
+		_sport = parent?.sport,
+		_date = parent?.date,
+		_start = getTimeOfDay(parent?.times?.start),
+		_end = getTimeOfDay(parent?.times?.end),
+		_opponent = parent?.opponent,
+		_team = parent?.team,
+		_away = !(parent?.home ?? true);
 
 	/// Whether this game is ready to submit. 
 	bool get ready => sport != null &&

@@ -86,8 +86,7 @@ class SportsPage extends StatelessWidget {
 								icon: const Icon(Icons.add),
 								tooltip: "Add a game",
 								onPressed: () async {
-									final game = await Navigator.of(context)
-										.pushNamed(Routes.addSportsGame) as SportsGame;
+									final SportsGame game = await SportsBuilder.createGame(context);
 									model.loading = true;
 									await model.addGame(game);
 									model.loading = false;
@@ -191,8 +190,7 @@ class SportsPage extends StatelessWidget {
 				SimpleDialogOption(
 				  onPressed: () async => Services.of(context).sports.replace(
 				  	index, 
-				  	// TODO: Let this fill in properties of [game].
-				  	await Navigator.of(context).pushNamed(Routes.addSportsGame)
+				  	await SportsBuilder.createGame(context, model.games [index])
 			  	),
 				  child: const Text("Edit game", textScaleFactor: 1.2),
 				),
