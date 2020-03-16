@@ -1,6 +1,8 @@
 library constants;
 
-import "package:flutter/material.dart" show Color;
+import "package:flutter/material.dart" show Color, TimeOfDay;
+
+import "package:ramaz/data.dart";
 
 /// A container for Ramaz-specific colors
 /// 
@@ -92,4 +94,27 @@ class Times {
 
 	/// The date that Winter Fridays end (assume the 1st).
 	static const int winterFridayDayEnd = 1;
+}
+
+/// Has a method for checking if a [DateTime] is the same day as another.
+extension DayComparison on DateTime {
+	/// Returns true if [other] is the same days as this date.
+	bool isSameDay(DateTime other) => other.year == year && 
+		other.month == month && 
+		other.day == day;
+}
+
+/// Extension class for converting [TimeOfDay] to a [Time].
+extension TimeConverter on TimeOfDay {
+	/// Converts this object to a [Time].
+	Time get asTime => Time(hour, minute);
+}
+
+/// Extension class for converting [Time] to a [TimeOfDay]. 
+/// 
+/// This cannot be defined in the `data` library, since it would establish 
+/// a dependency on the `material` library.
+extension TimeOfDayConverter on Time {
+	/// Converts this object to a [TimeOfDay].
+	TimeOfDay get asTimeOfDay => TimeOfDay(hour: hour, minute: minutes);
 }
