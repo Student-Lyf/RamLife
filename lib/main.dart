@@ -153,7 +153,7 @@ class RamazApp extends StatelessWidget {
 				),
 				toggleableActiveColor: RamazColors.blueLight,
 				buttonColor: RamazColors.blueDark,
-				buttonTheme: ButtonThemeData (
+				buttonTheme: const ButtonThemeData (
 					buttonColor: RamazColors.blueDark, 
 					textTheme: ButtonTextTheme.accent,
 				),
@@ -175,7 +175,6 @@ class RamazApp extends StatelessWidget {
 					Routes.specials: (_) => SpecialPage(),
 					Routes.admin: (_) => AdminHomePage(),
 					Routes.sports: (_) => SportsPage(),
-					Routes.addSportsGame: (_) => SportsBuilder(),
 				}
 			)
 		)

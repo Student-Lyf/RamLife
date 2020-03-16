@@ -56,9 +56,6 @@ class Routes {
 
 	/// The route name for the sports games page.
 	static const String sports = "sports";
-
-	/// The route name for the sports builder page. 
-	static const String addSportsGame = "addGame";
 }
 
 /// A collection of URLs used throughout the app
