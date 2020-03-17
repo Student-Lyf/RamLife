@@ -14,5 +14,5 @@ for email, scopes in ADMINS.items():
 	user = Firebase.get_user_by_email(email)
 	Firebase.set_custom_user_claims(
 		user.uid, 
-		{"admin": True, 'scopes': scopes, "club": "Rampage"}
+		{"isAdmin": True, 'scopes': scopes, "club": "Rampage"}
 	)

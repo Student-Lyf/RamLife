@@ -42,7 +42,7 @@ class Auth {
 	).claims;
 
 	/// Whether the user is an admin. 
-	static Future<bool> get isAdmin async => (await claims) ["admin"] ?? false;
+	static Future<bool> get isAdmin async => (await claims) ["isAdmin"] ?? false;
 
 	/// The scopes of an admin. 
 	/// 
@@ -56,11 +56,11 @@ class Auth {
 
 	/// Whether the user is an admin for the calendar. 
 	static Future<bool> get isCalendarAdmin async => 
-		(await adminScopes).contains(calendarScope);
+		(await isAdmin) && (await adminScopes).contains(calendarScope);
 
 	/// Whether the user is an admin for sports games. 
 	static Future<bool> get isSportsAdmin async => 
-		(await adminScopes).contains(sportsScope);		
+		(await isAdmin) && (await adminScopes).contains(sportsScope);		
 
 	/// Signs out the currently logged in user.
 	static Future<void> signOut() async {
