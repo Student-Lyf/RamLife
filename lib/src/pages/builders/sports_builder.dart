@@ -79,14 +79,18 @@ class FormRow extends StatelessWidget {
 }
 
 /// A page to create a Sports game. 
-class SportsBuilder extends StatelessWidget {
+/// 
+/// This widget is stateful to provide a [TextEditingController] that has its 
+/// text preset to [parent]'s properties (if applicable). All state is still 
+/// managed by the view model. 
+class SportsBuilder extends StatefulWidget {
 	/// Opens a form for the user to 
 	static Future<SportsGame> createGame(
 		BuildContext context, 
-		[SportsGame preset]
+		[SportsGame parent]
 	) => Navigator.of(context).push<SportsGame>(
 		MaterialPageRoute(
-			builder: (BuildContext context) => SportsBuilder(preset),
+			builder: (BuildContext context) => SportsBuilder(parent),
 		)
 	);
 
@@ -100,8 +104,29 @@ class SportsBuilder extends StatelessWidget {
 	const SportsBuilder([this.parent]);
 
 	@override
+	SportBuilderState createState() => SportBuilderState();
+}
+
+/// A state for [SportsBuilder].
+/// 
+/// This state keeps [TextEditingController]s intact. 
+class SportBuilderState extends State<SportsBuilder> {
+	/// A controller to hold [SportsBuilder.parent]'s team name.
+	final TextEditingController teamController = TextEditingController();
+
+	/// A controller to hold [SportsBuilder.parent]'s opponent.
+	final TextEditingController opponentController = TextEditingController();
+
+	@override
+	void initState() {
+		teamController.text = widget.parent.team;
+		opponentController.text = widget.parent.opponent;
+		super.initState();
+	}
+
+	@override
 	Widget build(BuildContext context) => ModelListener<SportsBuilderModel>(
-		model: () => SportsBuilderModel(),
+		model: () => SportsBuilderModel(widget.parent),
 		builder: (_, SportsBuilderModel model, __) => Scaffold(
 			appBar: AppBar(title: const Text("Add game")),
 			bottomSheet: !model.loading ? null : Container(
@@ -136,6 +161,7 @@ class SportsBuilder extends StatelessWidget {
 						TextField(
 							onChanged: (String value) => model.team = value,
 							textCapitalization: TextCapitalization.words,
+							controller: teamController,
 						),
 						sized: true,
 					),
@@ -144,6 +170,7 @@ class SportsBuilder extends StatelessWidget {
 						TextField(
 							onChanged: (String value) => model.opponent = value,
 							textCapitalization: TextCapitalization.words,
+							controller: opponentController,
 						),
 						sized: true,
 					),

@@ -44,7 +44,7 @@ class ServicesCollection {
 		await initOnLogin(email, first: false);
 		reminders.setup();
 		schedule.setup(reader);
-		sports.setup(fromDevice: true);
+		sports.setup(refresh: true);
 	}
 
 	/// Downloads the calendar and calls appropriate methods. 
@@ -56,7 +56,7 @@ class ServicesCollection {
 	/// Refreshes the list of sports games. 
 	Future<void> updateSports() async {
 		reader.sportsData = await Firestore.sports;
-		sports.setup(fromDevice: true);
+		sports.setup(refresh: true);
 	}
 
 	/// Initializes the collection.
@@ -72,7 +72,7 @@ class ServicesCollection {
 	Future<void> init() async {
 		reminders = Reminders(reader);
 		schedule = Schedule(reader, reminders: reminders);
-		sports = Sports(reader, updateSports);
+		sports = Sports(reader);
 		if (await Auth.isAdmin) {
 			reader.adminData = await Firestore.admin ?? {};
 			admin = AdminModel(this, await Auth.adminScopes);

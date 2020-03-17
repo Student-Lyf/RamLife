@@ -68,10 +68,9 @@ class SportsPage extends StatelessWidget {
 	@override 
 	Widget build(BuildContext context) => DefaultTabController(
 		length: 2,
-		child: ModelListener<Sports>(
-			dispose: false,  // used in home page
-			model: () => Services.of(context).sports,
-			builder: (BuildContext context, Sports model, Widget _) => Scaffold(
+		child: ModelListener<SportsModel>(
+			model: () => SportsModel(Services.of(context).sports),
+			builder: (BuildContext context, SportsModel model, Widget _) => Scaffold(
 				appBar: AppBar(
 					title: const Text("Sports"),
 					bottom: const TabBar(
@@ -85,16 +84,14 @@ class SportsPage extends StatelessWidget {
 							IconButton(
 								icon: const Icon(Icons.add),
 								tooltip: "Add a game",
-								onPressed: () async {
-									final SportsGame game = await SportsBuilder.createGame(context);
-									model.loading = true;
-									await model.addGame(game);
-									model.loading = false;
-								}
+								onPressed: model.adminFunc(() async => 
+									model.data.addGame(await SportsBuilder.createGame(context))
+								),
 							),
 	          PopupMenuButton(
 	            icon: Icon(Icons.sort),
 	            onSelected: (SortOption option) => model.sortOption = option,
+	            tooltip: "Sort games",
 	            itemBuilder: (_) => [
 	              const PopupMenuItem(
 	                value: SortOption.chronological,
@@ -121,16 +118,16 @@ class SportsPage extends StatelessWidget {
 	);
 
 	/// Creates a [GenericSportsView] based on the sorting option.
-	Widget getLayout(BuildContext context, Sports model) {
+	Widget getLayout(BuildContext context, SportsModel model) {
 		switch(model.sortOption) {
 			case SortOption.chronological: 
 				return GenericSportsView<int>(
 					loading: model.loading,
-					onRefresh: model.refresh,
+					onRefresh: model.adminFunc(Services.of(context).services.updateSports),
 					recents: model.recents,
 					upcoming: model.upcoming,
 					builder: (int index) => SportsTile(
-						model.games [index], 
+						model.data.games [index], 
 						onTap: !model.isAdmin ? null : () => openMenu(
 							context: context,
 							index: index,
@@ -141,7 +138,7 @@ class SportsPage extends StatelessWidget {
 			case SortOption.sport: 
 				return GenericSportsView<MapEntry<Sport, List<int>>>(
 					loading: model.loading,
-					onRefresh: model.refresh,
+					onRefresh: model.adminFunc(Services.of(context).services.updateSports),
 					recents: model.recentBySport.entries.toList(),
 					upcoming: model.upcomingBySport.entries.toList(),
 					builder: (MapEntry<Sport, List<int>> entry) => Column(
@@ -150,7 +147,7 @@ class SportsPage extends StatelessWidget {
 							Text(SportsGame.capitalize(entry.key)),
 							for (final int index in entry.value) 
 								SportsTile(
-									model.games [index], 
+									model.data.games [index], 
 									onTap: !model.isAdmin ? null : () => openMenu(
 										context: context, 
 										index: index,
@@ -171,33 +168,60 @@ class SportsPage extends StatelessWidget {
 	static void openMenu({
 		@required BuildContext context, 
 		@required int index, 
-		@required Sports model
+		@required SportsModel model
 	}) => showDialog(
 		context: context,
-		builder: (BuildContext context) => SimpleDialog(
-			title: Text(model.games [index].description),
+		builder: (BuildContext newContext) => SimpleDialog(
+			title: Text(model.data.games [index].description),
 			children: [
 				SimpleDialogOption(
-				  onPressed: () async => Services.of(context).sports.replace(
-				  	index, 
-				  	model.games [index].replaceScores(
-				  		await SportsScoreUpdater.updateScores(context, model.games [index])
-			  		)
-			  	),
+				  onPressed: () async {
+				  	Navigator.of(newContext).pop();
+				  	final Scores scores = await SportsScoreUpdater.updateScores(
+			  			context, model.data.games [index]
+		  			);
+				  	if (scores == null) {
+				  		return;
+				  	}
+				  	model.loading = true;
+				  	await Services.of(context).sports.replace(
+					  	index, 
+					  	model.data.games [index].replaceScores(scores)
+			  		);
+				  	model.loading = false;
+			  	},
 				  child: const Text("Edit scores", textScaleFactor: 1.2),
 				),
 				const SizedBox(height: 10),
 				SimpleDialogOption(
-				  onPressed: () async => Services.of(context).sports.replace(
-				  	index, 
-				  	await SportsBuilder.createGame(context, model.games [index])
-			  	),
+					onPressed: () async {
+				  	Navigator.of(newContext).pop();
+				  	model.loading = true;
+				  	await Services.of(context).sports.replace(
+					  	index, 
+					  	model.data.games [index].replaceScores(null)
+			  		);
+				  	model.loading = false;
+					},
+					child: const Text("Remove scores", textScaleFactor: 1.2),
+				),
+				const SizedBox(height: 10),
+				SimpleDialogOption(
+				  onPressed: () async {
+				  	Navigator.of(newContext).pop();
+				  	model.loading = true;
+				  	await Services.of(context).sports.replace(
+					  	index, 
+					  	await SportsBuilder.createGame(context, model.data.games [index])
+				  	);
+				  	model.loading = false;
+			  	},
 				  child: const Text("Edit game", textScaleFactor: 1.2),
 				),
 				const SizedBox(height: 10),
 				SimpleDialogOption(
 				  onPressed: () async {
-				  	Navigator.of(context).pop();
+				  	Navigator.of(newContext).pop();
 				  	final bool confirm = await showDialog<bool>(
 				  		context: context,
 				  		builder: (BuildContext context) => AlertDialog(
@@ -216,7 +240,9 @@ class SportsPage extends StatelessWidget {
 			  			)
 			  		);
 			  		if (confirm) {
+			  			model.loading = true;
 					  	await Services.of(context).sports.delete(index);
+			  			model.loading = false;
 					  }
 				  },
 				  child: const Text("Remove game", textScaleFactor: 1.2),
