@@ -1,12 +1,12 @@
 # TODO: integrate Student classes seamlessly
 # TODO: Log properly
 
-from main import init as initFirebase, get_path
+from main import init as initFirebase, cd
 initFirebase()
 import auth as FirebaseAuth
 from database.students import upload_students
 
-data_dir = get_path().parent / "data"
+data_dir = cd.parent / "data"
 from utils import CSVReader, DefaultDict  # uses key
 from data.student import Student as StudentRecord, Period as PeriodRecord
 from collections import defaultdict  # does not use key
