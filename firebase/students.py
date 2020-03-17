@@ -142,7 +142,7 @@ def get_schedule(
 			homerooms [student] = section_id
 			continue
 		
-		if not terms [section_id] [1]: continue
+		if terms and not terms [section_id] [1]: continue
 		if section_id.startswith("12"): JUNIORS.add(student)
 		broken = False  # workaround for classes not in section_schedule.csv
 		try: times = periods [section_id]
