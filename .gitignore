@@ -7,7 +7,7 @@
 # *.iml
 # .flutter-plugins
 # __pycache__
-# firebase/admin.json
+# firebase_py/admin.json
 # .gradle/
 # .dart_tool
 # todo.txt.yaml
@@ -59,10 +59,10 @@
 /data
 # doc
 android/key.properties
-firebase/admin.json
-firebase/rules_test/node_modules/
-firebase/temp.py
-firebase/rules_test/firestore.rules
+firebase_py/admin.json
+firebase_py/rules_test/node_modules/
+firebase_py/temp.py
+firebase_py/rules_test/firestore.rules
 docs/
 
 
