@@ -1,17 +1,3 @@
-# Misc flutter files:
-# .idea
-# build
-# # .metadata
-# .packages
-# # pubspec.lock
-# *.iml
-# .flutter-plugins
-# __pycache__
-# firebase/admin.json
-# .gradle/
-# .dart_tool
-# todo.txt.yaml
-
 # android files -- keep: 
 # 	- drawables
 # 	- AndroidManifest.xml
@@ -43,10 +29,38 @@
 # ios/runner/main.m
 
 
-# This seems to work:
+# Personal
+*.txt.yaml
+/data/
+docs/
+
+# Firebase folders:
+
+# firebase_py/admin.json
+# firebase_py/rules_test/node_modules/
+# firebase_py/rules_test/firestore.rules
+# firebase_py/temp.py
+firebase_py/
+firebase/cloud_functions/
+firebase/firestore/
+
+firebase/firestore/admin.json
+firebase/rules_test/firestore.rules
+firebase/rules_test/node_modules/
+
+# IDE
+*.iml
+*.ipr
+*.iws
+.idea/
+.classpath
+.project
+.settings/
+.vscode/
 
 # Miscellaneous
 *.class
+*.lock
 *.log
 *.pyc
 *.swp
@@ -55,50 +69,31 @@
 .buildlog/
 .history
 .svn/
-*.txt.yaml
-/data
-# doc
-android/key.properties
-firebase/admin.json
-firebase/rules_test/node_modules/
-firebase/temp.py
-firebase/rules_test/firestore.rules
-docs/
-
-
-# android
-# .metadata
-# ios
-# lib
-# test
-
-# IntelliJ related
-*.iml
-*.ipr
-*.iws
-.idea/
-
-# Visual Studio Code related
-.vscode/
+node_modules
 
 # Flutter/Dart/Pub related
-# **/doc/api/
 .dart_tool/
 .flutter-plugins
+.flutter-plugins-dependencies
 .packages
 .pub-cache/
 .pub
-/build/
-# test
+build/
+flutter_*.png
+linked_*.png
+unlinked.ds
+unlinked_spec.ds
 
 # Android related
+**/android/**/GeneratedPluginRegistrant.java
 **/android/**/gradle-wrapper.jar
 **/android/.gradle
 **/android/captures/
 **/android/gradlew
 **/android/gradlew.bat
+**/android/key.properties
 **/android/local.properties
-**/android/**/GeneratedPluginRegistrant.java
+*.jks
 
 # iOS/XCode related
 **/ios/**/*.mode1v3
