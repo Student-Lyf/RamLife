@@ -1,5 +1,5 @@
-from main import init, get_path
-data_dir = get_path().parent / "data"
+from main import init, cd
+data_dir = cd.parent / "data"
 from utils import CSVReader
 from data.subjects import Subject
 

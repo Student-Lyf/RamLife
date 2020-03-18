@@ -15,7 +15,7 @@ from itertools import combinations
 from my_stuff.misc import init
 
 # I think these are Atara, Daniella Symonds, and one other senior
-EXPELLED = ["721110", "721958", "719951", "5"]  # last should be a typo
+EXPELLED = ["721110", "721958", "719951", "721102", "721949", "5"]  # last should be a typo
 MISSING_ROOMS = set()
 # Periods in each day
 DAYS = {
@@ -167,6 +167,7 @@ def setup(
 ) -> [StudentRecord]: 
 	result = []
 	for student, schedule in schedules.items():
+		if student.id in EXPELLED: continue
 		result.append (
 			StudentRecord (
 				username = student.email.lower(),
