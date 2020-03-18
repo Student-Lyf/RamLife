@@ -17,20 +17,20 @@ DAYS = {
 MISSING_EMAIL = set()
 
 class Teacher:
-	def __init__(self, code: str, first, last, email: str): 
-		self.code = code
+	def __init__(self, id: str, first, last, email: str): 
+		self.id = id
 		self.first = first
 		self.last = last
 		self.email = email
 		self.homeroom = None
 		self.homeroom_location = None
-	def __str__(self): return self.code
+	def __str__(self): return self.id
 	def __repr__(self): return str(self)
-	def __hash__(self): return hash(self.code)
+	def __hash__(self): return hash(self.id)
 
 def get_teachers(path): return {
 	entry ["ID"]: Teacher (
-		code = entry ["E-mail"],
+		id = entry ["E-mail"],
 		first = entry ["First Name"],
 		last = entry ["Last Name"],
 		email = entry ["E-mail"].lower()
@@ -159,9 +159,9 @@ if __name__ == '__main__':
 	)
 	args = parser.parse_args()
 
-	from main import init, get_path
+	from main import init, cd
 	# init()
-	data_dir = get_path().parent / "data"
+	data_dir = cd.parent / "data"
 	teachers = get_teachers(data_dir)
 	classes: {"section_id": "teacher"} = get_faculty_classes(codes = True)
 	teachers = simplify_teachers(teachers, classes)
