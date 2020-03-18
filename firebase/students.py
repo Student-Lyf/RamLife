@@ -253,23 +253,4 @@ if __name__ == '__main__':
 	students = setup(schedules, homerooms, homeroom_locations)
 	print ("Setting up Firebase...")
 	main(students, upload = args.upload, auth = args.auth, create = args.create)
-
-	if False:
-		print("Testing")
-		from classes import *
-		class_names = get_class_names()
-		teachers = get_teachers()
-		subjects, errors = get_subjects(names = class_names, teachers = teachers)
-		for student in students: 
-			for schedule in [student.A, student.B, student.C, student.M ,student.R, student.E, student.F]:
-				for json in schedule: 
-					if json is None: continue
-					section_id = json ["id"]
-					# print(section_id)
-					assert section_id.split("-") [0].lstrip("0") in class_names.keys(), section_id
-					assert section_id in teachers.keys(), section_id
-					# break
-				# break
-			# break
-
 	print ("Finished!")
