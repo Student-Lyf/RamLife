@@ -1,5 +1,5 @@
 {
-  "name": "cloud-firestore-emulator-javascript-quickstart",
+  "name": "rules_test",
   "version": "1.0.2",
   "description": "Cloud Firestore emulator testing",
   "scripts": {
@@ -7,9 +7,12 @@
     "test": "mocha --timeout=10000"
   },
   "devDependencies": {
-    "@firebase/testing": "0.10.0",
+    "@firebase/testing": "^0.17.0",
     "filesystem": "1.0.1",
-    "mocha": "5.2.0",
-    "prettier": "1.15.2"
+    "mocha": "^7.1.0",
+    "prettier": "^1.19.1"
+  },
+  "dependencies": {
+    "grpc": "^1.24.2"
   }
 }
