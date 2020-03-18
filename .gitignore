@@ -63,6 +63,11 @@ firebase_py/admin.json
 firebase_py/rules_test/node_modules/
 firebase_py/temp.py
 firebase_py/rules_test/firestore.rules
+
+# firebase/admin.json
+firebase/rules_test/node_modules/
+firebase/rules_test/firestore.rules
+
 docs/
 
 
