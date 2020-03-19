@@ -1,6 +1,8 @@
 import "package:meta/meta.dart";
 
-import "package:firestore/serializable.dart";
+import "package:firestore/helpers.dart";
+
+import "letters.dart";
 
 @immutable
 class Subject extends Serializable {
@@ -22,8 +24,13 @@ class Subject extends Serializable {
 @immutable
 class Period extends Serializable {
 	final String room, id;
+	final Letter day;
 
-	const Period({@required this.room, @required this.id});
+	const Period({
+		@required this.room, 
+		@required this.id,
+		this.day
+	});
 
 	@override
 	Map<String, dynamic> get json => {

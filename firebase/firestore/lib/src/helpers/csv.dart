@@ -3,7 +3,7 @@ import "dart:collection/";
 import "dir.dart";
 
 // ignore: prefer_mixin
-class CSVReader with IterableMixin<Map<String, dynamic>> {
+class CSVReader with IterableMixin<Map<String, String>> {
 	static final Directory dataDir = 
 		Directory("${projectDir.parent.parent.path}data");
 
@@ -19,11 +19,11 @@ class CSVReader with IterableMixin<Map<String, dynamic>> {
 	CSVReader(this.filename);
 
 	@override
-	Iterator<Map<String, dynamic>> get iterator =>
+	Iterator<Map<String, String>> get iterator =>
 		CSVIterator(File("$dataDir/$filename"));
 }
 
-class CSVIterator extends Iterator<Map<String, dynamic>> {
+class CSVIterator extends Iterator<Map<String, String>> {
 	final File file;
 	final List<String> lines;
 
@@ -49,10 +49,10 @@ class CSVIterator extends Iterator<Map<String, dynamic>> {
 			headers = contents;
 			moveNext();
 		}
-		current = Map<String, dynamic>.fromIterables(headers, contents);
+		current = Map<String, String>.fromIterables(headers, contents);
 		return true;
 	}
 
 	@override 
-	Map<String, dynamic> current; 
+	Map<String, String> current; 
 }

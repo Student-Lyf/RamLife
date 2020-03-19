@@ -1,8 +1,8 @@
 import "package:meta/meta.dart";
 
-import "package:firestore/serializable.dart";
+import "package:firestore/helpers.dart";
 
-enum Letter {M, R, A, B, C, E, F}
+import "letters.dart";
 
 @immutable
 class Day extends Serializable {
