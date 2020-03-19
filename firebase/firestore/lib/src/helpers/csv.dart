@@ -4,23 +4,13 @@ import "dir.dart";
 
 // ignore: prefer_mixin
 class CSVReader with IterableMixin<Map<String, String>> {
-	static final Directory dataDir = 
-		Directory("${projectDir.parent.parent.path}data");
-
-	static const String courses = "courses.csv";
-	static const String faculty = "faculty.csv";
-	static const String schedule = "schedule.csv";
-	static const String section = "section.csv";
-	static const String sectionSchedule = "section_schedule.csv";
-	static const String students = "students.csv";
-
 	final String filename;
 
 	CSVReader(this.filename);
 
 	@override
 	Iterator<Map<String, String>> get iterator =>
-		CSVIterator(File("$dataDir/$filename"));
+		CSVIterator(File("${DataFiles.dataDir}/$filename"));
 }
 
 class CSVIterator extends Iterator<Map<String, String>> {
