@@ -1,12 +1,18 @@
 import "dart:collection";
 
+/// A Map with default values based on its keys.
+/// 
+/// Instead of a normal Map with default values, these values can be customized
+/// to depend on their values by passing in [builder].
 // ignore: prefer_mixin
-class DefaultDict<K, V> extends MapMixin<K, V> {
+class DefaultMap<K, V> extends MapMixin<K, V> {
 	final Map<K, V> _map = {};
 
+	/// A function that creates a value based on its key.
 	final V Function(K) builder;
 
-	DefaultDict(this.builder);
+	/// Creates a Map with default values based on its keys.
+	DefaultMap(this.builder);
 
 	@override
 	V operator [] (Object key) {
