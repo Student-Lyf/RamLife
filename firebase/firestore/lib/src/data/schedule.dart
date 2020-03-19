@@ -4,24 +4,24 @@ import "package:firestore/helpers.dart";
 
 import "letters.dart";
 
-/// A class section.
+/// A class course.
 /// 
 /// Classes are split into courses, which hold descriptive data about the 
 /// course itself. Courses are split into one or more sections, which hold
 /// data specific to that section, such as the teacher or roster list. 
 @immutable
-class Section extends Serializable {
-	/// The name of this section.
+class Course extends Serializable {
+	/// The name of this course.
 	final String name;
 
-	/// The section ID for this class
+	/// The course ID for this class
 	final String id;
 
-	/// The teacher for this section.
+	/// The teacher for this course.
 	final String teacher;
 
-	/// Creates a section. 
-	const Section({
+	/// Creates a course. 
+	const Course({
 		@required this.name, 
 		@required this.id, 
 		@required this.teacher,
