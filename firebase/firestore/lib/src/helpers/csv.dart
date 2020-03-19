@@ -1,48 +1,25 @@
-import "dart:collection/";
-
 import "dir.dart";
 
-// ignore: prefer_mixin
-class CSVReader with IterableMixin<Map<String, String>> {
-	final String filename;
-
-	CSVReader(this.filename);
-
-	@override
-	Iterator<Map<String, String>> get iterator =>
-		CSVIterator(File("${DataFiles.dataDir}/$filename"));
-}
-
-class CSVIterator extends Iterator<Map<String, String>> {
-	final File file;
-	final List<String> lines;
-
-	int index = -1;
+/// An iterator over a CSV file. 
+/// 
+/// Assuming the first row is the header row, every iteration returns a 
+/// `Map<String, String>`, where the keys are the headers and the values are 
+/// the values of the current row. 
+/// 
+/// Since this function uses the async file reading methods, it returns [Stream]
+/// instead of [Iterable]. To use it in a for loop, instead of using `for`, use
+/// `await for` (and make the function async).
+Stream<Map<String, String>> csvReader(String filename) async* {
+	final File file = File(filename);
+	final List<String> lines = await file.readAsLines();
 	List<String> headers;
-
-	CSVIterator(this.file) :
-		lines = file.readAsLinesSync() 
-	{
-		if (lines.isEmpty) {
-			throw RangeError("File is empty: ${file.path}");
-		}
-	}
-
-	@override
-	bool moveNext() {
-		index++;
-		if (index == lines.length) {
-			return false;
-		}
+	for (int index = 0; index < lines.length; index++) {
 		final List<String> contents = lines [index].split(",");
 		if (index == 0) {
 			headers = contents;
-			moveNext();
+			continue;
+		} else {
+			yield Map.fromIterables(headers, contents);
 		}
-		current = Map<String, String>.fromIterables(headers, contents);
-		return true;
 	}
-
-	@override 
-	Map<String, String> current; 
 }
