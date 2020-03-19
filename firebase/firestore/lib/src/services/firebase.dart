@@ -1,8 +1,6 @@
-import "dart:io";
-
 import "package:firebase_admin_interop/firebase_admin_interop.dart";
 
-final Directory projectDir = Directory.current.parent.parent.parent;
+import "package:firestore/helpers.dart";
 
 final File certificateFile = File("${projectDir.path}admin.json");
 
