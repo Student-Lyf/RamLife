@@ -89,7 +89,9 @@ class DayBuilder extends StatelessWidget {
 							children: [
 								const Text("Schedule"),
 								DropdownButton<Special>(
-									value: model.special,
+									value: 
+										(model.presetSpecials + model.userSpecials).contains(model.special)
+											? model.special : null,
 									hint: const Text("Schedule"),
 									onChanged: !model.hasSchool ? null : 
 										(Special special) async {
