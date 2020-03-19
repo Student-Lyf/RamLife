@@ -4,11 +4,24 @@ import "package:firestore/helpers.dart";
 
 import "letters.dart";
 
+/// A class section.
+/// 
+/// Classes are split into courses, which hold descriptive data about the 
+/// course itself. Courses are split into one or more sections, which hold
+/// data specific to that section, such as the teacher or roster list. 
 @immutable
-class Subject extends Serializable {
-	final String name, id, teacher;
+class Section extends Serializable {
+	/// The name of this section.
+	final String name;
 
-	const Subject({
+	/// The section ID for this class
+	final String id;
+
+	/// The teacher for this section.
+	final String teacher;
+
+	/// Creates a section. 
+	const Section({
 		@required this.name, 
 		@required this.id, 
 		@required this.teacher,
@@ -22,14 +35,22 @@ class Subject extends Serializable {
 }
 
 @immutable
+/// A period in the day. 
 class Period extends Serializable {
-	final String room, id;
+	/// THe room this period is located in.
+	final String room;
+
+	/// The section ID for this period.
+	final String id;
+
+	/// The day this period takes place.
 	final Letter day;
 
+	/// Creates a period.
 	const Period({
 		@required this.room, 
 		@required this.id,
-		this.day
+		@required this.day
 	});
 
 	@override
