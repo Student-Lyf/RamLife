@@ -1,1 +1,1 @@
-@pub run build_runner build --define="build_node_compilers|entrypoint=compiler=dart2js" --output=build/ && echo. && node build\node\main.dart.js
+@pub run build_runner build --define="build_node_compilers|entrypoint=compiler=dart2js" --output=build/ && echo. && node build\node\%1.dart.js

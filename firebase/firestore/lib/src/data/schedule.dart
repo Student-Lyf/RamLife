@@ -4,6 +4,16 @@ import "package:firestore/helpers.dart";
 
 import "letters.dart";
 
+@immutable
+class Semesters {
+	final bool semester1, semester2;
+
+	const Semesters({
+		@required this.semester1, 
+		@required this.semester2
+	});
+}
+
 /// A class course.
 /// 
 /// Classes are split into courses, which hold descriptive data about the 
@@ -46,11 +56,14 @@ class Period extends Serializable {
 	/// The day this period takes place.
 	final Letter day;
 
+	final int period;
+
 	/// Creates a period.
 	const Period({
 		@required this.room, 
 		@required this.id,
-		@required this.day
+		@required this.day,
+		@required this.period,
 	});
 
 	@override

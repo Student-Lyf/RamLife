@@ -240,8 +240,8 @@ if __name__ == '__main__':
 	)
 	args = parser.parse_args()
 
-	student_classes = get_student_classes()
-	period_meetings = get_period_meetings()
+	# student_classes = get_student_classes()
+	# period_meetings = get_period_meetings()
 	students = get_students()
 	periods, homeroom_locations = get_periods()
 	terms = get_terms()

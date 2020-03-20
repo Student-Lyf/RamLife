@@ -112,4 +112,7 @@ class Student extends Serializable {
 		"homeroom": homeroom,
 		"homeroom meeting room": homeroomLocation,
 	};
+
+	@override
+	String toString() => name;
 }
