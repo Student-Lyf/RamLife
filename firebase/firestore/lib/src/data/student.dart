@@ -71,7 +71,7 @@ class Student extends Serializable {
 			}
 		}
 		if (period == null) {
-			logger.w("WARNING: Could not find a period for $email.");
+			Logger.warning("WARNING: Could not find a period for $email.");
 		} else {
 			assert(period.json.containsKey("id"), "JSON does not have id: $period");
 			assert(period.json.containsKey("room"), "JSON does not have room: $period");

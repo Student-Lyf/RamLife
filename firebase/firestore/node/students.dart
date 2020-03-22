@@ -1,14 +1,19 @@
+import "package:node_interop/node.dart";  // provides args
+
 import "package:firestore/data.dart";
 import "package:firestore/helpers.dart";
 import "package:firestore/services.dart";
 import "package:firestore/students.dart";
 
-
-Future<void> main(List<String> args) async {
+Future<void> main() async {
+	final List args = process.argv.sublist(2);  // needed for Node.js
 	final bool upload = args.contains("--upload");	
-	logger
-		..d("Upload: $upload.")
-		..i("Indexing data...");
+	final bool verbose = {"--verbose", "-v"}.any(args.contains);
+	if (verbose) {
+		Logger.level = LogLevel.verbose;
+	}
+	Logger.debug("Upload: $upload.");
+	Logger.info("Indexing data...");
 
 	final Map<String, List<String>> studentClasses = 
 		await StudentReader.getStudentClasses();
@@ -38,13 +43,13 @@ Future<void> main(List<String> args) async {
 			homeroomLocations: homeroomLocations,
 		);
 
-	logger.i("Finished data indexing.");
+	Logger.info("Finished data indexing.");
 
 	if (upload) {
-		logger.i("Uploading data...");
+		Logger.info("Uploading data...");
 		await Firestore.upoadStudents(studentsWithSchedules);
-		logger.i("Upload complete");
+		Logger.info("Upload complete");
 	}
 
-	logger.i("Processed ${students.length} users.");
+	Logger.info("Processed ${students.length} users.");
 }
