@@ -23,7 +23,11 @@ class Day extends Serializable {
 		@required this.date, 
 		@required this.letter, 
 		this.special
-	});
+	}) : 
+		assert (
+			letter == null || special == null, 
+			"Cannot have a special without a letter: $date"
+		);
 
 	@override
 	String toString() => letter != null 

@@ -10,3 +10,4 @@ targets:
           compiler: dart2js # To compile with dart2js by default
           dart2js_args:
             - --no-minify
+            - --enable-asserts

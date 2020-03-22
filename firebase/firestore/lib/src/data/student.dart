@@ -46,10 +46,20 @@ class Student extends Serializable {
 		this.homeroom,
 		this.homeroomLocation,
 		this.schedule,
-	}) {
+	}) : 
+		assert(id != null, "Could not find ID for student"),
+		assert(
+			first != null && last != null && email != null,
+			"Could not find name for student: $id"
+		)
+	{
 		if (schedule == null) {
 			return;
 		}
+		assert(
+			homeroom != null && homeroomLocation != null,
+			"Could not find homeroom for student: ${toString()}"
+		);
 		for (final Letter letter in Letter.values) {
 			assert(
 				schedule.containsKey(letter), 
@@ -114,5 +124,5 @@ class Student extends Serializable {
 	};
 
 	@override
-	String toString() => name;
+	String toString() => "$name ($id)";
 }

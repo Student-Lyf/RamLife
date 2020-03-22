@@ -56,6 +56,7 @@ class StudentReader {
 			entry ["SECTION_ID"]: Semesters(
 				semester1: entry ["TERM1"] == "Y",
 				semester2: entry ["TERM2"] == "Y",
+				sectionID: entry ["SECTION_ID"]  // for debugging
 			)
 	};
 }

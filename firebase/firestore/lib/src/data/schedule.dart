@@ -10,8 +10,12 @@ class Semesters {
 
 	const Semesters({
 		@required this.semester1, 
-		@required this.semester2
-	});
+		@required this.semester2,
+		String sectionID
+	}) : assert (
+		semester1 != null && semester2 != null, 
+		"Could not read semester data for $sectionID"
+	);
 }
 
 /// A class course.
@@ -35,7 +39,11 @@ class Course extends Serializable {
 		@required this.name, 
 		@required this.id, 
 		@required this.teacher,
-	});
+	}) : 
+		assert(
+			name != null && id != null && teacher != null,
+			"Could not read course data for $id"
+		);
 
 	@override
 	Map<String, dynamic> get json => {
@@ -64,7 +72,15 @@ class Period extends Serializable {
 		@required this.id,
 		@required this.day,
 		@required this.period,
-	});
+	}) : 
+		assert(
+			day != null && period != null,
+			"Could not read period data for $id"
+		),
+		assert(
+			(id == null) == (room == null), 
+			"If ID is null, room must be (and vice versa). $day, $period, $id"
+		);
 
 	@override
 	Map<String, dynamic> get json => {
