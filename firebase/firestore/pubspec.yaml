@@ -8,10 +8,11 @@ environment:
 
 dependencies:
   meta: any
-  logger: any
   firebase_admin_interop: any
+  node_io: ^1.0.1+2
+  build_runner: any 
+  build_node_compilers: any
+  node_interop: any
 
-dev_dependencies:
-  build_runner: ^1.0.0
-  build_node_compilers: ^0.2.0
+# dev_dependencies:
 #  test: ^1.6.0

@@ -1,5 +1,5 @@
-import "dart:io";
-export "dart:io";
+import "package:node_io/node_io.dart";
+export "package:node_io/node_io.dart";
 
 /// The project directory.
 final Directory projectDir = Directory.current;
