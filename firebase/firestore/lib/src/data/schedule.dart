@@ -5,9 +5,15 @@ import "package:firestore/helpers.dart";
 import "letters.dart";
 
 @immutable
+/// Tracks if a section meets in a semester.
 class Semesters {
-	final bool semester1, semester2;
+	/// Whether this section meets in the first semester.
+	final bool semester1;
 
+	/// Whether this section meets in the second semester.	
+	final bool semester2;
+
+	/// Creates a container for semester data.
 	const Semesters({
 		@required this.semester1, 
 		@required this.semester2,
@@ -64,6 +70,7 @@ class Period extends Serializable {
 	/// The day this period takes place.
 	final Letter day;
 
+	/// The period number.
 	final int period;
 
 	/// Creates a period.
