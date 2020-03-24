@@ -29,7 +29,7 @@ Future<void> main() async {
 
 	if (upload) {
 		Logger.info("Uploading data...");
-		await Firestore.uploadCourses(sections);
+		await Firestore.uploadSections(sections);
 		Logger.info("Upload complete");
 	}
 

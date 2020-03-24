@@ -71,24 +71,24 @@ class StudentLogic {
 		);
 		for (final MapEntry<String, List<String>> entry in studentClasses.entries) {
 			final Student student = students [entry.key];
-			for (final String sectionID in entry.value) {
-				if (sectionID.contains("UADV")) {
-					homerooms [student] = sectionID;
+			for (final String sectionId in entry.value) {
+				if (sectionId.contains("UADV")) {
+					homerooms [student] = sectionId;
 					continue;
 				}
 
-				if (!semesters [sectionID].semester2) {
+				if (!semesters [sectionId].semester2) {
 					continue;
-				} else if (sectionID.startsWith("12")) {
+				} else if (sectionId.startsWith("12")) {
 					seniors.add(student);
 				}
 
 				assert(
-					periods [sectionID] != null, 
-					"Could not find $sectionID in the schedule."
+					periods [sectionId] != null, 
+					"Could not find $sectionId in the schedule."
 				);
 
-				for (final Period period in periods [sectionID]) {
+				for (final Period period in periods [sectionId]) {
 					result [student] [period.day] [period.period - 1] = period;
 				}
 			}

@@ -17,10 +17,10 @@ class Semesters {
 	const Semesters({
 		@required this.semester1, 
 		@required this.semester2,
-		String sectionID
+		String sectionId
 	}) : assert (
 		semester1 != null && semester2 != null, 
-		"Could not read semester data for $sectionID"
+		"Could not read semester data for $sectionId"
 	);
 }
 

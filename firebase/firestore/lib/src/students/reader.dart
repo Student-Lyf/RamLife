@@ -37,7 +37,7 @@ class StudentReader {
 				final Map<String, String> entry in 
 				csvReader(DataFiles.sectionSchedule)
 			) {
-				final String sectionID = entry ["SECTION_ID"];
+				final String sectionId = entry ["SECTION_ID"];
 				final String day = entry ["WEEKDAY_NAME"];
 				final Letter letter = stringToLetter [day];
 				final String periodString = entry ["BLOCK_NAME"];
@@ -45,17 +45,17 @@ class StudentReader {
 				final int periodNumber = int.tryParse(periodString);
 				if (periodNumber == null) {
 					if (periodString == "HOMEROOM") {
-						homeroomLocations [sectionID] = room;
+						homeroomLocations [sectionId] = room;
 					}
 					continue;
 				} 
 				final Period period = Period(
 					day: letter,
 					room: room,
-					id: sectionID,
+					id: sectionId,
 					period: periodNumber,
 				);
-				result [sectionID].add(period);
+				result [sectionId].add(period);
 			}
 		return result;
 	}
@@ -75,7 +75,7 @@ class StudentReader {
 			entry ["SECTION_ID"]: Semesters(
 				semester1: entry ["TERM1"] == "Y",
 				semester2: entry ["TERM2"] == "Y",
-				sectionID: entry ["SECTION_ID"]  // for debugging
+				sectionId: entry ["SECTION_ID"]  // for debugging
 			)
 	};
 }
