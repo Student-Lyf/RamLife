@@ -4,6 +4,7 @@ export "package:node_io/node_io.dart";
 /// The project directory.
 final Directory projectDir = Directory.current;
 
+/// A container class for all the database files.
 class DataFiles {
 	/// The data directory.
 	static final Directory dataDir = 
