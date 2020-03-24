@@ -66,16 +66,16 @@ class Firestore {
 	/// each batch can only contain a maximum of 500 documents, but there are more
 	/// sections than that. So this function splits it up into as many batches as 
 	/// it needs to upload successfully.
-	static Future<void> uploadCourses(List<Section> sections) async {
+	static Future<void> uploadSections(List<Section> sections) async {
 		final List<fb.WriteBatch> batches = [];
 		int count = 0;
-		for (final Section course in sections) {
+		for (final Section section in sections) {
 			if (count % 500 == 0) {
 				batches.add(firestore.batch());
 			}
 			batches [batches.length - 1].setData(
-				courseCollection.document(course.id),
-				fb.DocumentData.fromMap(course.json),
+				courseCollection.document(section.id),
+				fb.DocumentData.fromMap(section.json),
 			);
 			count++;
 		}
