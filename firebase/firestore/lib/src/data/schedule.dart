@@ -24,31 +24,31 @@ class Semesters {
 	);
 }
 
-/// A class course.
+/// A class section.
 /// 
 /// Classes are split into courses, which hold descriptive data about the 
 /// course itself. Courses are split into one or more sections, which hold
 /// data specific to that section, such as the teacher or roster list. 
 @immutable
-class Course extends Serializable {
-	/// The name of this course.
+class Section extends Serializable {
+	/// The name of this section.
 	final String name;
 
-	/// The course ID for this class
+	/// The section ID for this class
 	final String id;
 
-	/// The teacher for this course.
+	/// The teacher for this section.
 	final String teacher;
 
-	/// Creates a course. 
-	const Course({
+	/// Creates a section. 
+	const Section({
 		@required this.name, 
 		@required this.id, 
 		@required this.teacher,
 	}) : 
 		assert(
 			name != null && id != null && teacher != null,
-			"Could not read course data for $id"
+			"Could not read section data for $id"
 		);
 
 	@override

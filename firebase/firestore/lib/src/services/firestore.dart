@@ -60,16 +60,16 @@ class Firestore {
 		)
 	);
 
-	/// Uploads all the courses to the cloud.
+	/// Uploads all the sections to the cloud.
 	/// 
 	/// This function uses [fb.WriteBatch] to upload more efficiently. However, 
 	/// each batch can only contain a maximum of 500 documents, but there are more
-	/// courses than that. So this function splits it up into as many batches as 
+	/// sections than that. So this function splits it up into as many batches as 
 	/// it needs to upload successfully.
-	static Future<void> uploadCourses(List<Course> courses) async {
+	static Future<void> uploadCourses(List<Section> sections) async {
 		final List<fb.WriteBatch> batches = [];
 		int count = 0;
-		for (final Course course in courses) {
+		for (final Section course in sections) {
 			if (count % 500 == 0) {
 				batches.add(firestore.batch());
 			}
