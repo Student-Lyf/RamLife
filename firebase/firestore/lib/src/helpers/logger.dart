@@ -24,6 +24,7 @@ class AnsiColor {
       : fg = null,
         color = true;
 
+  @override
   String toString() {
     if (fg != null) {
       return "${ansiEsc}38;5;${fg}m";

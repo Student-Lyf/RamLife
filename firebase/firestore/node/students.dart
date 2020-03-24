@@ -22,7 +22,11 @@ Future<void> main() async {
 
 	final Map<String, List<Period>> periods = await StudentReader.getPeriods();
 
-	final Map<String, String> homeroomLocations = StudentReader.homeroomLocations;
+	// Early 2020 data did not contain homerooms...
+	// final Map<String, String> homeroomLocations = 
+		// StudentReader.homeroomLocations;
+	final Map<String, String> homeroomLocations = DefaultMap((_) => "Unavailable");
+	Logger.debug("Homeroom locations: $homeroomLocations");
 
 	final Map<String, Semesters> semesters = await StudentReader.getSemesters();
 
@@ -35,6 +39,7 @@ Future<void> main() async {
 		);
 
 	final Map<Student, String> homerooms = StudentLogic.homerooms;
+	Logger.debug("Homerooms: $homerooms");
 
 	final List<Student> studentsWithSchedules = 
 		StudentLogic.getStudentsWithSchedules(

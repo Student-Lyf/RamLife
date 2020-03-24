@@ -41,7 +41,10 @@ class StudentLogic {
 					seniors.add(student);
 				}
 
-				// TODO: Add error checking from students.get_schedule.try
+				assert(
+					periods [sectionID] != null, 
+					"Could not find $sectionID in the schedule."
+				);
 
 				for (final Period period in periods [sectionID]) {
 					result [student] [period.day] [period.period - 1] = period;
@@ -63,7 +66,9 @@ class StudentLogic {
 			if (!expelled.contains(entry.key.id))
 				entry.key.addSchedule(
 					schedule: entry.value, 
-					homeroom: homerooms [entry.key],
+					homeroom: seniors.contains(entry.key) 
+						? "SENIOR_HOMEROOM"
+						: homerooms [entry.key],
 					homeroomLocation: homeroomLocations [homerooms [entry.key]],
 				)
 	];

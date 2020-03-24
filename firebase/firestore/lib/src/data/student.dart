@@ -57,8 +57,12 @@ class Student extends Serializable {
 			return;
 		}
 		assert(
-			homeroom != null && homeroomLocation != null,
+			homeroom != null,
 			"Could not find homeroom for student: ${toString()}"
+		);
+		assert(
+			homeroomLocation != null,
+			"Could not find homeroom location for student: ${toString()}"
 		);
 		for (final Letter letter in Letter.values) {
 			assert(
