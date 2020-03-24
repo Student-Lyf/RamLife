@@ -31,7 +31,7 @@ Future<void> main() async {
 	final Map<String, Semesters> semesters = await StudentReader.getSemesters();
 
 	final Map<Student, Map<Letter, List<Period>>> schedules = 
-		StudentLogic.getSchedule(
+		StudentLogic.getSchedules(
 			students: students,
 			periods: periods,
 			studentClasses: studentClasses,

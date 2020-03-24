@@ -99,7 +99,8 @@ class Student extends Serializable {
 
 	/// Returns a new [Student] with added data. 
 	/// 
-	/// This is needed since [Student] objects are immutable.
+	/// This fills in [schedule], [homeroom], and [homeroomLocation], and is 
+	/// needed since [Student] objects are immutable.
 	Student addSchedule({
 		@required Map<Letter, List<Period>> schedule,
 		@required String homeroom,
