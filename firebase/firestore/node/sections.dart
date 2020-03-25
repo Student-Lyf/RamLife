@@ -7,6 +7,7 @@ import "package:firestore/services.dart";
 
 Future<void> main() async {
 	final List args = process.argv.sublist(2);  // needed for Node.js
+	AnsiColor.supportsColor = !args.contains("--no-color");
 	final bool upload = args.contains("--upload");	
 	final bool verbose = {"--verbose", "-v"}.any(args.contains);
 	final bool debug = {"--debug", "-d"}.any(args.contains);
@@ -15,31 +16,31 @@ Future<void> main() async {
 	} else if (verbose) {
 		Logger.level = LogLevel.verbose;
 	}
-	Logger.debug("Upload: $upload.");
+	Logger.debug("upload", upload);
 	Logger.info("Indexing data...");
 
-	Logger.debug("Getting course names");
-	final Map<String, String> courseNames = await SectionReader.courseNames;
-	Logger.verbose("Names: $courseNames.");
 
-	Logger.debug("Getting teachers for each section");
-	final Map<String, String> sectionTeachers = 
-		await SectionReader.getSectionTeachers();
-	Logger.verbose("Teachers: $sectionTeachers.");
-
-	Logger.debug("Building list of sections");
-	final List<Section> sections = SectionLogic.getSections(
-		courseNames: courseNames,
-		sectionTeachers: sectionTeachers,
+	final Map<String, String> courseNames = await Logger.logValue(
+		"course names", () async => SectionReader.courseNames
 	);
-	Logger.verbose("Sections: $sections");
+
+	final Map<String, String> sectionTeachers = await Logger.logValue(
+		"section teachers", SectionReader.getSectionTeachers
+	);
+
+	final List<Section> sections = await Logger.logValue(
+		"sections list", () => SectionLogic.getSections(
+			courseNames: courseNames,
+			sectionTeachers: sectionTeachers,
+		)
+	);
 
 	Logger.info("Finished data indexing.");
 
 	if (upload) {
-		Logger.info("Uploading data...");
-		await Firestore.uploadSections(sections);
-		Logger.info("Upload complete");
+		await Logger.logProgress(
+			"data upload", () => Firestore.uploadSections(sections)
+		);
 	}
 
 	Logger.info("Processed ${sections.length} sections.");

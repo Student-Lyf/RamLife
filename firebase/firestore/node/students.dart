@@ -7,53 +7,68 @@ import "package:firestore/students.dart";
 
 Future<void> main() async {
 	final List args = process.argv.sublist(2);  // needed for Node.js
+	AnsiColor.supportsColor = !args.contains("--no-color");
 	final bool upload = args.contains("--upload");	
 	final bool verbose = {"--verbose", "-v"}.any(args.contains);
-	if (verbose) {
+	final bool debug = {"--debug", "-d"}.any(args.contains);
+	if (debug) {
+		Logger.level = LogLevel.debug;
+	} else if (verbose) {
 		Logger.level = LogLevel.verbose;
 	}
-	Logger.debug("Upload: $upload.");
+	Logger.debug("upload", upload);
 	Logger.info("Indexing data...");
 
-	final Map<String, List<String>> studentClasses = 
-		await StudentReader.getStudentClasses();
 
-	final Map<String, Student> students = await StudentReader.getStudents();
+	final Map<String, List<String>> studentClasses = await Logger.logValue(
+		"student classes", StudentReader.getStudentClasses
+	);
 
-	final Map<String, List<Period>> periods = await StudentReader.getPeriods();
+	final Map<String, Student> students = await Logger.logValue(
+		"students", StudentReader.getStudents
+	);
+
+	final Map<String, List<Period>> periods = await Logger.logValue(
+		"section periods", StudentReader.getPeriods
+	);
 
 	// Early 2020 data did not contain homerooms...
 	// final Map<String, String> homeroomLocations = 
 		// StudentReader.homeroomLocations;
 	final Map<String, String> homeroomLocations = DefaultMap((_) => "Unavailable");
-	Logger.debug("Homeroom locations: $homeroomLocations");
+	Logger.debug("Homeroom locations", homeroomLocations);
 
-	final Map<String, Semesters> semesters = await StudentReader.getSemesters();
+	final Map<String, Semesters> semesters = await Logger.logValue(
+		"semesters", StudentReader.getSemesters
+	);
 
 	final Map<Student, Map<Letter, List<Period>>> schedules = 
-		StudentLogic.getSchedules(
-			students: students,
-			periods: periods,
-			studentClasses: studentClasses,
-			semesters: semesters,
+		await Logger.logValue(
+			"schedules", () => StudentLogic.getSchedules(
+				students: students,
+				periods: periods,
+				studentClasses: studentClasses,
+				semesters: semesters,
+			)
 		);
 
 	final Map<Student, String> homerooms = StudentLogic.homerooms;
-	Logger.debug("Homerooms: $homerooms");
+	Logger.debug("Homerooms", homerooms);
 
-	final List<Student> studentsWithSchedules = 
-		StudentLogic.getStudentsWithSchedules(
+	final List<Student> studentsWithSchedules = await Logger.logValue(
+		"student schedules", () => StudentLogic.getStudentsWithSchedules(
 			schedules: schedules,
 			homerooms: homerooms, 
 			homeroomLocations: homeroomLocations,
-		);
+		)
+	);
 
 	Logger.info("Finished data indexing.");
 
 	if (upload) {
-		Logger.info("Uploading data...");
-		await Firestore.upoadStudents(studentsWithSchedules);
-		Logger.info("Upload complete");
+		await Logger.logProgress(
+			"data upload", () => Firestore.upoadStudents(studentsWithSchedules)
+		);
 	}
 
 	Logger.info("Processed ${students.length} users.");

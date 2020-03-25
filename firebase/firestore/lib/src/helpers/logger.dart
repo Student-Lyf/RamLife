@@ -1,4 +1,5 @@
 // ignore_for_file: avoid_print
+import "dart:async";
 
 /// A container for ANSI color codes. 
 /// 
@@ -18,6 +19,12 @@
 /// Currently, only the background _or_ the foreground color can be changed, not
 /// both at the same time.
 class AnsiColor {
+  /// Whether the terminal supports color. 
+  /// 
+  /// To keep this layer modular, this property defaults to true and must 
+  /// be manually overriden if color is not desired.
+  static bool supportsColor = true;
+
   /// The ANSI Control Sequence Introducer.
   /// 
   /// The terminal interprets this code as the beginning of ANSI instructions. 
@@ -146,7 +153,9 @@ class LogLevel {
 	bool operator >= (LogLevel other) => value >= other.value;
 
   /// A prefix to insert before a message logged at this level.
-  String get prefix => color?.colorMessage("[$letter]") ?? "[$letter]";
+  String get prefix => AnsiColor.supportsColor && color != null
+    ? color?.colorMessage("[$letter]")
+    : "[$letter]";
 }
 
 /// A class that logs messages to the console.
@@ -182,15 +191,16 @@ class Logger {
 		}
 	}
 
+  /// Logs a message at the debug level. 
+  /// 
+  /// See [LogLevel.debug] for details.
+	static void debug(String label, Object value) => 
+    log(LogLevel.debug, "Value of $label: $value");
+
   /// Logs a message at the verbose level. 
   /// 
   /// See [LogLevel.verbose] for details.
   static void verbose(String message) => log(LogLevel.verbose, message);
-
-  /// Logs a message at the debug level. 
-  /// 
-  /// See [LogLevel.debug] for details.
-	static void debug(String message) => log(LogLevel.debug, message);
 
   /// Logs a message at the informative level. 
   /// 
@@ -206,4 +216,35 @@ class Logger {
   /// 
   /// See [LogLevel.error] for details.
 	static void error(String message) => log(LogLevel.error, message);
+
+  /// Emits logs before and after returning a value.
+  /// 
+  /// Emits a [verbose] log before calling [func], then a [debug] log with the 
+  /// result, and finally returns the result. 
+  /// 
+  /// The function passed to [func] may return either a `Future<T>` or `T`. 
+  /// Regardless, this function returns a `Future` and must be awaited.
+  /// 
+  /// The [label] should be all lower case, since it will appear in the middle
+  /// of the logged messages. 
+  static Future<T> logValue<T>(
+    String label, FutureOr<T> Function() func
+  ) async {
+    verbose("Getting $label");
+    final T value = await func();
+    debug(label, value);
+    return value;
+  }
+
+  /// Emits [info] logs before and after calling a function. 
+  /// 
+  /// The function passed to [func] may return either async or sync. Regardless,
+  /// this function returns a `Future` and must be awaited.
+  static Future<void> logProgress(
+    String label, FutureOr<void> Function() func
+  ) async {
+    info("Starting $label");
+    await func();
+    info("Finished $label");
+  }
 }
