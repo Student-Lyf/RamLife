@@ -74,15 +74,6 @@ class AnsiColor {
 /// 
 /// This class is used by [Logger.level] and [Logger.log].
 class LogLevel {
-  /// The verbose log level.
-  /// 
-  /// This level outputs descriptions of the progress of the code at a given 
-  /// point at a very low level, so that if something fails, the logs can show
-  /// exactly what led up to it.
-  /// 
-  /// This is the lowest level, since if everything works, this is not needed. 
-  static const LogLevel verbose = LogLevel(0, "V", AnsiColor.fg(244));
-
   /// The debug log level.
   /// 
   /// This level outputs important values, along with their names, so that if
@@ -90,7 +81,17 @@ class LogLevel {
   /// 
   /// This is lower than the default value, since if everything works, this is 
   /// not needed and can get distracting. 
-	static const LogLevel debug = LogLevel(1, "D", null); 
+	static const LogLevel debug = LogLevel(0, "D", AnsiColor.fg(15)); 
+
+  /// The verbose log level.
+  /// 
+  /// This level outputs descriptions of the progress of the code at a given 
+  /// point at a very low level, so that if something fails, the logs can show
+  /// exactly what led up to it.
+  /// 
+  /// This is lower than the default level, since if everything works, 
+  /// this is not needed and can get distracting. 
+  static const LogLevel verbose = LogLevel(1, "V", AnsiColor.fg(244));
 
   /// The informative log level. 
   /// 
@@ -99,7 +100,7 @@ class LogLevel {
   /// [LogLevel.verbose].
   /// 
   /// This is the default level.
-	static const LogLevel info = LogLevel(2, "I", AnsiColor.fg(12));
+	static const LogLevel info = LogLevel(2, "I", AnsiColor.fg(32));
 
   /// The warning log level.
   /// 
@@ -145,7 +146,7 @@ class LogLevel {
 	bool operator >= (LogLevel other) => value >= other.value;
 
   /// A prefix to insert before a message logged at this level.
-  String get prefix => color?.colorMessage("[$letter]") ?? "";
+  String get prefix => color?.colorMessage("[$letter]") ?? "[$letter]";
 }
 
 /// A class that logs messages to the console.
