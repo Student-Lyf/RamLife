@@ -58,7 +58,7 @@ class Section extends Serializable {
 	String toString() => "$name ($id)";
 
 	@override
-	Map<String, dynamic> get json => {
+	Map<String, String> get json => {
 		"name": name,
 		"teacher": teacher,
 	};
@@ -99,7 +99,7 @@ class Period extends Serializable {
 	String toString() => "${day}_$period($id)";
 
 	@override
-	Map<String, dynamic> get json => {
+	Map<String, String> get json => {
 		"room": room,
 		"id": id,
 	};

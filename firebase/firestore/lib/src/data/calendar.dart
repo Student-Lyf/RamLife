@@ -35,8 +35,8 @@ class Day extends Serializable {
 		: "$date: No School";
 
 	@override
-	Map<String, dynamic> get json => {
-		"letter": letter,
+	Map<String, String> get json => {
+		"letter": letterToString [letter],
 		"special": special,
 	};
 }

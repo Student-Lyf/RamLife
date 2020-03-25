@@ -11,6 +11,12 @@ import "package:firestore/data.dart";
 /// [Student] object with the added schedule data.
 @immutable
 class Student extends Serializable {
+	/// Converts a list of [Period] objects to JSON. 
+	static List<Map<String, dynamic>> scheduleToJson(List<Period> schedule) => [
+		for (final Period period in schedule) 
+			period.json
+	];
+
 	/// This student's email.
 	final String email;
 
@@ -117,13 +123,13 @@ class Student extends Serializable {
 
 	@override
 	Map<String, dynamic> get json => {
-		"M": schedule [Letter.M],
-		"R": schedule [Letter.R],
-		"A": schedule [Letter.A],
-		"B": schedule [Letter.B],
-		"C": schedule [Letter.C],
-		"E": schedule [Letter.E],
-		"F": schedule [Letter.F],
+		"M": scheduleToJson(schedule [Letter.M]),
+		"R": scheduleToJson(schedule [Letter.R]),
+		"A": scheduleToJson(schedule [Letter.A]),
+		"B": scheduleToJson(schedule [Letter.B]),
+		"C": scheduleToJson(schedule [Letter.C]),
+		"E": scheduleToJson(schedule [Letter.E]),
+		"F": scheduleToJson(schedule [Letter.F]),
 		"homeroom": homeroom,
 		"homeroom meeting room": homeroomLocation,
 	};

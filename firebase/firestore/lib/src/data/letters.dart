@@ -40,3 +40,14 @@ const Map<String, Letter> stringToLetter = {
 	"E": Letter.E,
 	"F": Letter.F
 };
+
+/// Converts [Letter]s to Strings so they can be used as JSON.
+const Map<Letter, String> letterToString = {
+	Letter.M: "M",
+	Letter.R: "R",
+	Letter.A: "A",
+	Letter.B: "B",
+	Letter.C: "C",
+	Letter.E: "E",
+	Letter.F: "F"
+};
