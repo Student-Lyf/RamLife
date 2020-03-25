@@ -14,12 +14,34 @@ Stream<Map<String, String>> csvReader(String filename) async* {
 	final List<String> lines = await file.readAsLines();
 	List<String> headers;
 	for (int index = 0; index < lines.length; index++) {
-		final List<String> contents = lines [index].split(",");
+		List<String> contents = lines [index].split(",");
 		if (index == 0) {
 			headers = contents;
 			continue;
-		} else {
-			yield Map.fromIterables(headers, contents);
 		}
+
+		// If a comma is inside quotes, join them together
+		int startIndex, endIndex;
+		for (int rowIndex = 0; rowIndex < contents.length; rowIndex++) {
+			if (contents [rowIndex].startsWith('"')) {
+				startIndex = rowIndex;
+			}
+			if (contents [rowIndex].endsWith('"')) {
+				endIndex = rowIndex + 1;
+				break;
+			}
+		}
+		assert(
+			(startIndex == null) == (endIndex == null), 
+			"Cannot parse CSV line $index in $filename: $contents"
+		);
+		if (startIndex != null && endIndex != null) {
+			contents = [
+				...contents.sublist(0, startIndex),
+				contents.sublist(startIndex, endIndex).join(" "),
+				...contents.sublist(endIndex)
+			];
+		}
+		yield Map.fromIterables(headers, contents);
 	}
 }
