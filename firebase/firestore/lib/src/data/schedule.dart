@@ -22,6 +22,9 @@ class Semesters {
 		semester1 != null && semester2 != null, 
 		"Could not read semester data for $sectionId"
 	);
+
+	@override
+	String toString() => "Semesters($semester1, $semester2)";
 }
 
 /// A class section.
@@ -50,6 +53,9 @@ class Section extends Serializable {
 			name != null && id != null && teacher != null,
 			"Could not read section data for $id"
 		);
+
+	@override 
+	String toString() => "$name ($id)";
 
 	@override
 	Map<String, dynamic> get json => {
@@ -88,6 +94,9 @@ class Period extends Serializable {
 			(id == null) == (room == null), 
 			"If ID is null, room must be (and vice versa). $day, $period, $id"
 		);
+
+	@override
+	String toString() => "${day}_$period($id)";
 
 	@override
 	Map<String, dynamic> get json => {
