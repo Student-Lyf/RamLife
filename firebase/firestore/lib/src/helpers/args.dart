@@ -31,7 +31,9 @@ class Args {
 	static final bool debug = inArgs({"-d", "--debug"});
 
 	/// Initializes the logger based on the static properties of this class.
-	static void initLogger() {
+	/// 
+	/// Logs [message] as a loading message afterwards.
+	static void initLogger([String message]) {
 		AnsiColor.supportsColor = color;
 		if (debug) {
 			Logger.level = LogLevel.debug;
@@ -39,5 +41,8 @@ class Args {
 			Logger.level = LogLevel.verbose;
 		}
 		Logger.debug("upload", upload);
+		if (message != null) {
+			Logger.info(message);
+		}
 	}
 }

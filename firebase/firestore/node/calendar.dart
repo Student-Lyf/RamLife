@@ -36,8 +36,7 @@ Future<List<Day>> getCalendar(int month) async {
 const Set<int> summerMonths = {7, 8};
 
 Future<void> main() async {
-	Args.initLogger();
-	Logger.info("Processing calendar");
+	Args.initLogger("Processing calendar...");
 	for (int month = 1; month <= 12; month++) {
 		if (summerMonths.contains(month)) {
 			Logger.verbose("Setting summer month $month.");

@@ -4,8 +4,7 @@ import "package:firestore/sections.dart";
 import "package:firestore/services.dart";
 
 Future<void> main() async {
-	Args.initLogger();
-	Logger.info("Indexing data...");
+	Args.initLogger("Indexing data...");
 
 	final Map<String, String> courseNames = await Logger.logValue(
 		"course names", () async => SectionReader.courseNames

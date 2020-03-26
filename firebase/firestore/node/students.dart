@@ -4,8 +4,7 @@ import "package:firestore/services.dart";
 import "package:firestore/students.dart";
 
 Future<void> main() async {
-	Args.initLogger();
-	Logger.info("Indexing data...");
+	Args.initLogger("Indexing data...");
 
 	final Map<String, List<String>> studentClasses = await Logger.logValue(
 		"student classes", StudentReader.getStudentClasses
