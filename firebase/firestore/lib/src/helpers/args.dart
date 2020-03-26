@@ -11,7 +11,7 @@ import "logger.dart";
 /// [initLogger] should be called to actually use the values of the arguments. 
 class Args {
 	/// The list of arguments passed to the program.
-	static final List<String> args = process.argv.sublist(2);
+	static final List args = process.argv.sublist(2);
 
 	/// Whether [args] contains any one of the following flags. 
 	static bool inArgs(Set<String> flags) => flags.any(args.contains);
