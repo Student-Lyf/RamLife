@@ -195,7 +195,7 @@ class Logger {
   /// 
   /// See [LogLevel.debug] for details.
 	static void debug(String label, Object value) => 
-    log(LogLevel.debug, "Value of $label: $value");
+    log(LogLevel.debug, "$label: $value");
 
   /// Logs a message at the verbose level. 
   /// 
@@ -232,7 +232,7 @@ class Logger {
   ) async {
     verbose("Getting $label");
     final T value = await func();
-    debug(label, value);
+    debug("Value of $label", value);
     return value;
   }
 
@@ -240,11 +240,14 @@ class Logger {
   /// 
   /// The function passed to [func] may return either async or sync. Regardless,
   /// this function returns a `Future` and must be awaited.
+  /// 
+  /// The [label] should be all lower case, since it will appear in the middle
+  /// of the logged messages. 
   static Future<void> logProgress(
     String label, FutureOr<void> Function() func
   ) async {
     info("Starting $label");
     await func();
-    info("Finished $label");
+    info("Finished, got $label");
   }
 }
