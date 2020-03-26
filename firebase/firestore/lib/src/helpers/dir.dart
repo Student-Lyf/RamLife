@@ -40,4 +40,10 @@ class DataFiles {
 	/// 
 	/// Contains the names, emails, and IDs of every student.
 	static final String students = "${dataDir.path}\\students.csv";
+
+	/// Returns the path for the calendar at a given month.
+	/// 
+	/// The month should follow 1-based indexing.
+	static String getMonth(int month) => 
+		"${dataDir.path}\\calendar\\${month.toString()}.csv";
 }
