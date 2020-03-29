@@ -40,7 +40,7 @@ class Args {
 		} else if (verbose) {
 			Logger.level = LogLevel.verbose;
 		}
-		Logger.debug("upload", upload);
+		Logger.debug("Upload", upload);
 		if (message != null) {
 			Logger.info(message);
 		}

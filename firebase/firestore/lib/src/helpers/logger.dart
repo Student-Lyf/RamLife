@@ -248,6 +248,6 @@ class Logger {
   ) async {
     info("Starting $label");
     await func();
-    info("Finished, got $label");
+    info("Finished $label");
   }
 }
