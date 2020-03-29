@@ -57,5 +57,6 @@ Future<void> main() async {
 			"Could not properly parse calendar for $month"
 		);
 	}
+	await app.delete();
 	Logger.info("Calendar processed");
 }

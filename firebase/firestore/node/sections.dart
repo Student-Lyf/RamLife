@@ -28,6 +28,6 @@ Future<void> main() async {
 			"data upload", () => Firestore.uploadSections(sections)
 		);
 	}
-
+	await app.delete();
 	Logger.info("Processed ${sections.length} sections.");
 }

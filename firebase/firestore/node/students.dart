@@ -56,6 +56,6 @@ Future<void> main() async {
 			"data upload", () => Firestore.upoadStudents(studentsWithSchedules)
 		);
 	}
-
+	await app.delete();
 	Logger.info("Processed ${students.length} users.");
 }
