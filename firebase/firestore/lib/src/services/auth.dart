@@ -12,6 +12,12 @@ class Scopes {
 
 	/// The scope name for sports admins.
 	static const String sports = "sports";
+
+	/// A list of all acceptable scopes. 
+	/// 
+	/// These scopes are the only ones recognized by the app. Since the data is 
+	/// pulled from a file, this safeguards against typos.
+	static const Set<String> scopes = {calendar, publications, sports};
 }
 
 /// A wrapper around FirebaseAuth.
@@ -25,6 +31,6 @@ class Auth {
 	static Future<void> setScopes(String email, List<String> scopes) async => 
 		auth.setCustomUserClaims(
 			(await auth.getUserByEmail(email)).uid, 
-			{"isAdmin": "true", "scopes": scopes.toString()}
+			{"isAdmin": true, "scopes": scopes}
 		);
 }

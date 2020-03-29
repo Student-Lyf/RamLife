@@ -6,19 +6,27 @@ Future<Map<String, List<String>>> getAdmins() async => {
 		row [0]: row.sublist(1)
 };
 
+Future<void> setClaims(Map<String, List<String>> admins) async {
+	for (final MapEntry<String, List<String>> entry in admins.entries) {
+		assert(
+			entry.value.every(Scopes.scopes.contains),
+			"Cannot parse scopes for: ${entry.key}. Got: ${entry.value}"
+		);
+		Logger.verbose("setting claims for ${entry.key}");
+		await Auth.setScopes(entry.key, entry.value);
+	}
+}
+
 Future<void> main() async {
 	Args.initLogger("Setting up admins...");
 
-	final Map<String, List<String>> admins = await Logger.logValue(
-		"admins", getAdmins
-	);
-
-	for (final MapEntry<String, List<String>> entry in admins.entries) {
+	if (Args.upload) {
 		await Logger.logProgress(
-			"setting claims for ${entry.key}",
-			() => Auth.setScopes(entry.key, entry.value)
+			"setting admin claims",
+			() async => setClaims(await Logger.logValue("admins", getAdmins))
 		);
 	}
+
 	await app.delete();
 	Logger.info("Finished setting up admins");
 }
