@@ -10,6 +10,9 @@ class DataFiles {
 	static final Directory dataDir = 
 		Directory("${projectDir.parent.parent.path}\\data");
 
+	/// The path to the admin certificate file. 
+	static final String certificate = "${projectDir.path}\\admin.json";
+
 	/// The courses database. 
 	/// 
 	/// Contains the names of every course, but requires a course ID, not 
@@ -40,6 +43,11 @@ class DataFiles {
 	/// 
 	/// Contains the names, emails, and IDs of every student.
 	static final String students = "${dataDir.path}\\students.csv";
+
+	/// The list of admins.
+	/// 
+	/// Each row should be the name of the admin, followed by a list of scopes.
+	static final String admins = "${dataDir.path}\\admins.csv";
 
 	/// Returns the path for the calendar at a given month.
 	/// 
