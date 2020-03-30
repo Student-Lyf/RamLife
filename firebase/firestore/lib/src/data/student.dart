@@ -76,42 +76,39 @@ class Student extends Serializable {
 				"$name does not have a schedule for $letter days,"
 			);
 		}
-		Period period;
-		for (final List<Period> day in schedule.values) {
-			for (final Period subject in day) {
-				if (subject == null) {
-					continue;
-				} else {
-					period = subject;
-					break;
-				}
-			}
-			if (period != null) {
-				break;
-			}
-		}
-		if (period == null) {
-			Logger.warning("WARNING: Could not find a period for $email.");
-		} else {
-			assert(period.json.containsKey("id"), "JSON does not have id: $period");
-			assert(period.json.containsKey("room"), "JSON does not have room: $period");
-			assert(period.json ["id"] is String, "Invalid id: ${period.json ['id']}");
-			assert(
-				period.json ["room"] is String, 
-				"Invalid room: ${period.json ['room']}"
-			);
-		}
 	}
+
+	/// If this user has no classes.
+	bool get hasNoClasses => schedule.values.every(
+		(List<Period> daySchedule) => daySchedule.every(
+			(Period period) => period == null
+		)
+	);
 
 	/// Returns a new [Student] with added data. 
 	/// 
-	/// This fills in [schedule], [homeroom], and [homeroomLocation], and is 
-	/// needed since [Student] objects are immutable.
-	Student addSchedule({
-		@required Map<Letter, List<Period>> schedule,
-		@required String homeroom,
+	/// This fills in [homeroom] and [homeroomLocation], and is needed since 
+	/// [Student] objects are [immutable].
+	Student addHomeroom({
+		@required String homeroom, 
 		@required String homeroomLocation,
 	}) => Student(
+		first: first,
+		last: last,
+		email: email,
+		id: id,
+		homeroom: homeroom,
+		homeroomLocation: homeroomLocation,
+	);
+
+	/// Returns a new [Student] with added data. 
+	/// 
+	/// This fills in [schedule], and is needed since [Student] objects 
+	/// are [immutable].
+	/// 
+	/// To fill in the homeroom as well, call this function on the return value
+	/// of [addHomeroom].
+	Student addSchedule(Map<Letter, List<Period>> schedule) => Student(
 		first: first, 
 		last: last,
 		email: email,
