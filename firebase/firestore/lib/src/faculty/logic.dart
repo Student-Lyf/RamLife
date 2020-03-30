@@ -147,18 +147,6 @@ class FacultyLogic {
 			result.add(entry.key.addSchedule(schedule));
 		}
 
-		// Warn for missing schedules.
-		// 
-		// TODO: also warn for students.
-		final Set<Student> missingSchedules = result.where(
-			(Student faculty) => faculty.hasNoClasses
-		).toSet();
-
-		if (missingSchedules.isNotEmpty) {
-			// Warning since it can be a sign of data corruption.
-			Logger.warning("Missing schedules for $missingSchedules");
-		}
-
 		return result;
 	}
 }

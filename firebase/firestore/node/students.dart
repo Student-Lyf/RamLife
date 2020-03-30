@@ -48,6 +48,8 @@ Future<void> main() async {
 			homeroomLocations: homeroomLocations,
 		)
 	);
+	
+	Student.verifySchedules(studentsWithSchedules);
 
 	Logger.info("Finished data indexing.");
 

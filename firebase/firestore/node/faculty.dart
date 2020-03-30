@@ -34,6 +34,8 @@ Future<void> main() async {
 		)
 	);
 
+	Student.verifySchedules(facultyWithSchedule);
+
 	Logger.info("Finished data indexing.");
 
 	if (Args.upload) {

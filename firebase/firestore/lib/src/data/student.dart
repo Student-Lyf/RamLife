@@ -11,6 +11,18 @@ import "package:firestore/data.dart";
 /// [Student] object with the added schedule data.
 @immutable
 class Student extends Serializable {
+	/// Warns for any students with no classes in their schedule.
+	static void verifySchedules(Iterable<Student> students) {
+		final Set<Student> missingSchedules = students.where(
+			(Student student) => student.hasNoClasses
+		).toSet();
+
+		if (missingSchedules.isNotEmpty) {
+			// Warning since it can be a sign of data corruption.
+			Logger.warning("Missing schedules for $missingSchedules");
+		}
+	}
+
 	/// Converts a list of [Period] objects to JSON. 
 	static List<Map<String, dynamic>> scheduleToJson(List<Period> schedule) => [
 		for (final Period period in schedule) 
