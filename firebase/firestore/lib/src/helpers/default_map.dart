@@ -18,7 +18,7 @@ class DefaultMap<K, V> extends MapMixin<K, V> {
 	V operator [] (Object key) {
 		if (!_map.containsKey(key)) {
 			final V value = builder(key);
-			_map [key] = value;
+			setDefault(key, value);
 			return value;
 		} else {
 			return _map [key];
@@ -38,4 +38,14 @@ class DefaultMap<K, V> extends MapMixin<K, V> {
 
 	@override
 	Iterable<K> get keys => _map.keys;
+
+	/// Sets the default value for a given key if not already set.
+	void setDefault(K key, [V value]) {
+		if (!_map.containsKey(key)) {
+			_map [key] = value ?? builder(key);
+		}
+	}
+
+	/// Sets the default value for a given set of keys if not already set.
+	void setDefaultForAll(Iterable<K> keys) => keys.forEach(setDefault);
 }
