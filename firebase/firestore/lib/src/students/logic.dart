@@ -19,7 +19,7 @@ class StudentLogic {
 	/// Maps students to their homeroom section IDs.
 	/// 
 	/// This map is populated by [getSchedules].
-	static Map<Student, String> homerooms;
+	static Map<User, String> homerooms;
 
 	/// A collection of all seniors. 
 	/// 
@@ -27,7 +27,7 @@ class StudentLogic {
 	/// their homerooms will be ignored. 
 	/// 
 	/// This set is populated by [getSchedules].
-	static Set<Student> seniors;
+	static Set<User> seniors;
 
 	/// Builds a student's schedule.
 	/// 
@@ -42,20 +42,20 @@ class StudentLogic {
 	/// in order to keep the data and logic layers separate. 
 	/// 
 	/// Additionally, this function populates [seniors] and [homerooms].
-	static Map<Student, Map<Letter, List<Period>>> getSchedules({
-		@required Map<String, Student> students,
+	static Map<User, Map<Letter, List<Period>>> getSchedules({
+		@required Map<String, User> students,
 		@required Map<String, List<Period>> periods,
 		@required Map<String, List<String>> studentClasses, 
 		@required Map<String, Semesters> semesters,
 	}) {
 		homerooms = {};
 		seniors = {};
-		final Map<Student, Map<Letter, List<Period>>> result = DefaultMap(
+		final Map<User, Map<Letter, List<Period>>> result = DefaultMap(
 			(_) => DefaultMap((Letter letter) => 
 				List.filled(Period.periodsInDay[letter], null))
 		);
 		for (final MapEntry<String, List<String>> entry in studentClasses.entries) {
-			final Student student = students [entry.key];
+			final User student = students [entry.key];
 			for (final String sectionId in entry.value) {
 				if (sectionId.contains("UADV")) {
 					homerooms [student] = sectionId;
@@ -81,10 +81,10 @@ class StudentLogic {
 		return result;
 	}
 
-	/// Returns complete [Student] objects.
+	/// Returns complete [User] objects.
 	/// 
-	/// This function returns [Student] objects with more properties than before.
-	/// See [Student.addSchedule] for which properties are added. 
+	/// This function returns [User] objects with more properties than before.
+	/// See [User.addSchedule] for which properties are added. 
 	/// 
 	/// This function works by taking several arguments: 
 	/// 
@@ -94,13 +94,13 @@ class StudentLogic {
 	/// 
 	/// These are kept as parameters instead of calling the functions by itself
 	/// in order to keep the data and logic layers separate. 
-	static List<Student> getStudentsWithSchedules({
-		@required Map<Student, Map<Letter, List<Period>>> schedules, 
-		@required Map<Student, String> homerooms,
+	static List<User> getStudentsWithSchedules({
+		@required Map<User, Map<Letter, List<Period>>> schedules, 
+		@required Map<User, String> homerooms,
 		@required Map<String, String> homeroomLocations,
 	}) => [
 		for (
-			final MapEntry<Student, Map<Letter, List<Period>>> entry in 
+			final MapEntry<User, Map<Letter, List<Period>>> entry in 
 			schedules.entries
 		)
 			if (!expelled.contains(entry.key.id))

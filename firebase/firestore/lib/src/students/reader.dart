@@ -10,10 +10,10 @@ import "package:firestore/helpers.dart";
 /// NOTE: [homeroomLocations] is filled by [getPeriods]. Until that function is
 /// called, its value is null and [Map.[]] cannot be used. 
 class StudentReader {
-	/// Maps student IDs to their respective [Student] objects.
-	static Future<Map<String, Student>> getStudents() async => {
+	/// Maps student IDs to their respective [User] objects.
+	static Future<Map<String, User>> getStudents() async => {
 		await for (final Map<String, String> entry in csvReader(DataFiles.students)) 
-			entry ["ID"]: Student(
+			entry ["ID"]: User(
 				first: entry ["First Name"],
 				last: entry ["Last Name"],
 				email: entry ["Student E-mail"],

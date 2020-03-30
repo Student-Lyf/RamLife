@@ -30,15 +30,15 @@ class Firestore {
 	static final fb.CollectionReference courseCollection =
 		firestore.collection(courseKey);
 
-	/// Uploads students to the cloud. 
+	/// Uploads users to the cloud. 
 	/// 
-	/// Puts all students in a batch and commits them all at once.
-	static Future<void> upoadStudents(List<Student> students) {
+	/// Puts all users in a batch and commits them all at once.
+	static Future<void> upoadStudents(List<User> users) {
 		final fb.WriteBatch batch = firestore.batch();
-		for (final Student student in students) {
+		for (final User user in users) {
 			batch.setData(
-				studentsCollection.document(student.email), 
-				fb.DocumentData.fromMap(student.json)
+				studentsCollection.document(user.email), 
+				fb.DocumentData.fromMap(user.json)
 			);
 		}
 		return batch.commit();

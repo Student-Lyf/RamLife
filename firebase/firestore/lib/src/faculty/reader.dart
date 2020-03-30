@@ -7,10 +7,10 @@ import "package:firestore/helpers.dart";
 /// it. This helps keep the program modular, by separating the data sources from
 /// the data indexing.
 class FacultyReader {
-	/// Maps faculty IDs to their respective [Student] objects.
-	static Future<Map<String, Student>> getFaculty() async => {
+	/// Maps faculty IDs to their respective [User] objects.
+	static Future<Map<String, User>> getFaculty() async => {
 		await for(final Map<String, dynamic> row in csvReader(DataFiles.faculty))
-			row ["ID"]: Student(
+			row ["ID"]: User(
 				id: row ["ID"],
 				email: row ["E-mail"],
 				first: row ["First Name"],

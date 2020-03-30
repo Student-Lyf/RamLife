@@ -10,7 +10,7 @@ Future<void> main() async {
 		"student classes", StudentReader.getStudentClasses
 	);
 
-	final Map<String, Student> students = await Logger.logValue(
+	final Map<String, User> students = await Logger.logValue(
 		"students", StudentReader.getStudents
 	);
 
@@ -28,7 +28,7 @@ Future<void> main() async {
 		"semesters", StudentReader.getSemesters
 	);
 
-	final Map<Student, Map<Letter, List<Period>>> schedules = 
+	final Map<User, Map<Letter, List<Period>>> schedules = 
 		await Logger.logValue(
 			"schedules", () => StudentLogic.getSchedules(
 				students: students,
@@ -38,10 +38,10 @@ Future<void> main() async {
 			)
 		);
 
-	final Map<Student, String> homerooms = StudentLogic.homerooms;
+	final Map<User, String> homerooms = StudentLogic.homerooms;
 	Logger.debug("Homerooms", homerooms);
 
-	final List<Student> studentsWithSchedules = await Logger.logValue(
+	final List<User> studentsWithSchedules = await Logger.logValue(
 		"student schedules", () => StudentLogic.getStudentsWithSchedules(
 			schedules: schedules,
 			homerooms: homerooms, 
@@ -49,7 +49,7 @@ Future<void> main() async {
 		)
 	);
 	
-	Student.verifySchedules(studentsWithSchedules);
+	User.verifySchedules(studentsWithSchedules);
 
 	Logger.info("Finished data indexing.");
 

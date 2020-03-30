@@ -16,16 +16,16 @@ class FacultyLogic {
 	/// 
 	/// This function works by taking several arguments: 
 	/// 
-	/// - teachers, from [FacultyReader.getFaculty] 
+	/// - faculty, from [FacultyReader.getFaculty] 
 	/// - sectionTeachers, from [SectionReader.getSectionTeachers] with `id: true`
 	/// 
 	/// These are kept as parameters instead of calling the functions by itself
 	/// in order to keep the data and logic layers separate. 
-	static Map<Student, Set<String>> getFacultySections({
-		@required Map<String, Student> teachers,
+	static Map<User, Set<String>> getFacultySections({
+		@required Map<String, User> faculty,
 		@required Map<String, String> sectionTeachers,
 	}) {
-		final Map<Student, Set<String>> result = DefaultMap((_) => {});
+		final Map<User, Set<String>> result = DefaultMap((_) => {});
 		final Set<String> missingEmails = {};
 
 		for (final MapEntry<String, String> entry in sectionTeachers.entries) {
@@ -33,12 +33,12 @@ class FacultyLogic {
 			final String facultyId = entry.value;
 
 			// Teaches a class, but doesn't have basic faculty data.
-			if (!teachers.containsKey(facultyId)) {
+			if (!faculty.containsKey(facultyId)) {
 				missingEmails.add(facultyId);
 				continue;
 			}
 
-			result [teachers [facultyId]].add(sectionId);
+			result [faculty [facultyId]].add(sectionId);
 		}
 
 		if (missingEmails.isNotEmpty) {
@@ -47,31 +47,31 @@ class FacultyLogic {
 		return result;
 	}
 
-	/// Returns complete [Student] objects.
+	/// Returns complete [User] objects.
 	/// 
-	/// This function returns [Student] objects with more properties than before.
-	/// See [Student.addSchedule] for which properties are added. 
+	/// This function returns [User] objects with more properties than before.
+	/// See [User.addSchedule] for which properties are added. 
 	/// 
 	/// This function works by taking several arguments: 
 	/// 
-	/// - teacherSections, from [getFacultySections] 
+	/// - facultySections, from [getFacultySections] 
 	/// - sectionPeriods, from [StudentReader.getPeriods]
 	/// 
 	/// These are kept as parameters instead of calling the functions by itself
 	/// in order to keep the data and logic layers separate. 
-	static List<Student> getFacultyWithSchedule({
-		@required Map<Student, Set<String>> teacherSections,
+	static List<User> getFacultyWithSchedule({
+		@required Map<User, Set<String>> facultySections,
 		@required Map<String, List<Period>> sectionPeriods,
 	}) {
 		// The schedule for each teacher.
-		final Map<Student, List<Period>> schedules = {};
+		final Map<User, List<Period>> schedules = {};
 
 		// Faculty with homerooms to set.
 		// 
 		// This cannot happen while looping over them, since it would modify the 
 		// iterable being looped over, causing several errors. Instead, they are 
 		// saved to this map and processed later.
-		final Map<Student, Student> replaceHomerooms = {};
+		final Map<User, User> replaceHomerooms = {};
 
 		// Section IDs which are taught but never meet.
 		final Set<String> missingPeriods = {};
@@ -79,16 +79,17 @@ class FacultyLogic {
 		// Faculty missing a homeroom.
 		// 
 		// This will be logged at the debug level.
-		final Set<Student> missingHomerooms = {};
+		final Set<User> missingHomerooms = {};
 
 		// Loop over teacher sections and get their periods.
-		for (final MapEntry<Student, Set<String>> entry in teacherSections.entries) {
+		for (final MapEntry<User, Set<String>> entry in facultySections.entries) {
 			final List<Period> periods = [];
 			for (final String sectionId in entry.value) {
 				if (sectionPeriods.containsKey(sectionId)) {
 					sectionPeriods[sectionId].forEach(periods.add);
 				} else if (sectionId.startsWith("UADV")) {
-					replaceHomerooms [entry.key] = entry.key.addHomeroom(  // will be overriden
+					// will be overwritten in another loop
+					replaceHomerooms [entry.key] = entry.key.addHomeroom(
 						homeroom: sectionId,
 						homeroomLocation: "Unavailable",
 					);
@@ -99,28 +100,28 @@ class FacultyLogic {
 			schedules [entry.key] = periods;
 		}
 
-		// Create and save teacher homerooms
+		// Create and save faculty homerooms
 		// 
 		// This cannot happen in the loop above since it would change the iterable 
-		// while looping over it, causing several errors. Instead, the old [Student] 
+		// while looping over it, causing several errors. Instead, the old [User] 
 		// object and the new one are saved to `replaceHomerooms`.
-		for (final Student teacher in schedules.keys.toList()) {
-			if (!replaceHomerooms.containsKey(teacher)) {
-				missingHomerooms.add(teacher);
+		for (final User faculty in schedules.keys.toList()) {
+			if (!replaceHomerooms.containsKey(faculty)) {
+				missingHomerooms.add(faculty);
 			}
 
-			final List<Period> schedule = schedules.remove(teacher);
+			final List<Period> schedule = schedules.remove(faculty);
 			assert(
 				schedule != null,
-				"Error adding homeroom to $teacher"
+				"Error adding homeroom to $faculty"
 			);
-			final Student newTeacher = replaceHomerooms.containsKey(teacher) 
-				? replaceHomerooms[teacher]
-				: teacher.addHomeroom(  // will be overriden
+			final User newFaculty = replaceHomerooms.containsKey(faculty) 
+				? replaceHomerooms[faculty]
+				: faculty.addHomeroom(  // will be overriden
 					homeroom: "TEST_HOMEROOM",
 					homeroomLocation: "Unavailable",
 				);
-			schedules [newTeacher] = schedule;
+			schedules [newFaculty] = schedule;
 		}
 
 		// Some logging
@@ -132,8 +133,8 @@ class FacultyLogic {
 		}
 
 		// Compiles a list of periods into a full schedule.
-		final List<Student> result = [];
-		for (final MapEntry<Student, List<Period>> entry in schedules.entries) {
+		final List<User> result = [];
+		for (final MapEntry<User, List<Period>> entry in schedules.entries) {
 			final DefaultMap<Letter, List<Period>> schedule = DefaultMap(
 				(Letter letter) => List.filled(Period.periodsInDay [letter], null)
 			);

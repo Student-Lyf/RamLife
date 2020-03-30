@@ -8,7 +8,7 @@ import "package:firestore/students.dart";
 Future<void> main() async {
 	Args.initLogger("Indexing data...");
 
-	final Map<String, Student> faculty = await Logger.logValue(
+	final Map<String, User> faculty = await Logger.logValue(
 		"faculty objects", FacultyReader.getFaculty,
 	);
 
@@ -16,9 +16,9 @@ Future<void> main() async {
 		"section teachers", () => SectionReader.getSectionTeachers(id: true)
 	);
 
-	final Map<Student, Set<String>> facultySections = await Logger.logValue(
+	final Map<User, Set<String>> facultySections = await Logger.logValue(
 		"faculty sections", () => FacultyLogic.getFacultySections(
-			teachers: faculty,
+			faculty: faculty,
 			sectionTeachers: sectionTeachers,
 		)
 	);
@@ -27,14 +27,14 @@ Future<void> main() async {
 		"periods", StudentReader.getPeriods,
 	);
 
-	final List<Student> facultyWithSchedule = await Logger.logValue(
+	final List<User> facultyWithSchedule = await Logger.logValue(
 		"faculty with schedule", () => FacultyLogic.getFacultyWithSchedule(
-			teacherSections: facultySections,
+			facultySections: facultySections,
 			sectionPeriods: periods,
 		)
 	);
 
-	Student.verifySchedules(facultyWithSchedule);
+	User.verifySchedules(facultyWithSchedule);
 
 	Logger.info("Finished data indexing.");
 
