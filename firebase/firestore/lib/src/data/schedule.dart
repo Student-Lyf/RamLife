@@ -67,6 +67,21 @@ class Section extends Serializable {
 @immutable
 /// A period in the day. 
 class Period extends Serializable {
+	/// Maps a [Letter] to the number of periods in that day.
+	/// 
+	/// Not all periods will be shown in the app. `Special.periods.length` will
+	/// dictate that, and `Special.periods.skips` dictates which periods will 
+	/// be skipped.
+	static Map<Letter, int> periodsInDay = {
+		Letter.A: 11, 
+		Letter.B: 11,
+		Letter.C: 11,
+		Letter.M: 11,
+		Letter.R: 11, 
+		Letter.E: 7,
+		Letter.F: 7,
+	};
+
 	/// THe room this period is located in.
 	final String room;
 

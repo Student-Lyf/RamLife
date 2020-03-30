@@ -16,21 +16,6 @@ class StudentLogic {
 	/// A list of expelled students. 
 	static const Set<String> expelled = {};
 
-	/// Maps a [Letter] to the number of periods in that day.
-	/// 
-	/// Not all periods will be shown in the app. `Special.periods.length` will
-	/// dictate that, and `Special.periods.skips` dictates which periods will 
-	/// be skipped.
-	static Map<Letter, int> periodsInDay = {
-		Letter.A: 11, 
-		Letter.B: 11,
-		Letter.C: 11,
-		Letter.M: 11,
-		Letter.R: 11, 
-		Letter.E: 7,
-		Letter.F: 7,
-	};
-
 	/// Maps students to their homeroom section IDs.
 	/// 
 	/// This map is populated by [getSchedules].
@@ -67,7 +52,7 @@ class StudentLogic {
 		seniors = {};
 		final Map<Student, Map<Letter, List<Period>>> result = DefaultMap(
 			(_) => DefaultMap((Letter letter) => 
-				List.filled(periodsInDay[letter], null))
+				List.filled(Period.periodsInDay[letter], null))
 		);
 		for (final MapEntry<String, List<String>> entry in studentClasses.entries) {
 			final Student student = students [entry.key];
@@ -119,12 +104,11 @@ class StudentLogic {
 			schedules.entries
 		)
 			if (!expelled.contains(entry.key.id))
-				entry.key.addSchedule(
-					schedule: entry.value, 
+				entry.key.addHomeroom(
 					homeroom: seniors.contains(entry.key) 
 						? "SENIOR_HOMEROOM"
 						: homerooms [entry.key],
 					homeroomLocation: homeroomLocations [homerooms [entry.key]],
-				)
+				).addSchedule(entry.value)
 	];
 }
