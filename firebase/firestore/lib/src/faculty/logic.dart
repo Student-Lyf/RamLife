@@ -132,8 +132,6 @@ class FacultyLogic {
 		}
 
 		// Compiles a list of periods into a full schedule.
-		// 
-		// TODO: unify this logic with student logic.
 		final List<Student> result = [];
 		for (final MapEntry<Student, List<Period>> entry in schedules.entries) {
 			final DefaultMap<Letter, List<Period>> schedule = DefaultMap(
