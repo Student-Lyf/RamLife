@@ -18,6 +18,9 @@ class Firestore {
 	/// The name of the course collection.
 	static const String courseKey = "classes";
 
+	/// The name of the feedback collection.
+	static const String feedbackKey = "feedback";
+
 	/// The students collection.
 	static final fb.CollectionReference studentsCollection = 
 		firestore.collection(studentsKey);
@@ -29,6 +32,22 @@ class Firestore {
 	/// The course collection.
 	static final fb.CollectionReference courseCollection =
 		firestore.collection(courseKey);
+
+	/// The feedback collection.
+	static final fb.CollectionReference feedbackCollection =
+		firestore.collection(feedbackKey);
+
+	/// Gets all the feedback sent from the app.
+	/// 
+	/// This data is stored in [feedbackCollection]. See [Feedback.fromJson] 
+	/// for the format of these documents.
+	static Future<List<Feedback>> getFeedback() async => [
+		for (
+			final fb.DocumentSnapshot document in 
+			(await feedbackCollection.get()).documents
+		)
+			Feedback.fromJson(document.data.toMap())
+	];
 
 	/// Uploads users to the cloud. 
 	/// 
