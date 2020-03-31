@@ -3,7 +3,20 @@ import "package:firestore/faculty.dart";
 import "package:firestore/helpers.dart";
 import "package:firestore/students.dart";
 
+import "reader.dart";
+
+/// A collection of functions to index Zoom school data. 
+/// 
+/// No function in this class reads data from the data files, just works logic
+/// on them. This helps keep the program modular, by separating the data sources
+/// from the data indexing. 
+/// 
+/// However, this class does call methods from other reader libraries, since it
+/// is simply an extension of them.
 class ZoomLogic {
+	/// Maps section IDs to when they meet during zoom school.
+	/// 
+	/// This function works by taking a schedule from [ZoomReader.getSchedule].
 	static Map<String, List<Period>> getPeriods(
 		Map<Letter, List<List<List<String>>>> schedule
 	) {
@@ -33,6 +46,12 @@ class ZoomLogic {
 		return result;
 	}
 
+	/// Verifies the Zoom schedule.
+	/// 
+	/// Since the schedule is hand-typed, passed around, and converted to many 
+	/// different file types, it is subject to human error. This function checks
+	/// that all sections in the schedule ([periods]) are in fact valid by 
+	/// asserting that they appear in the sections database ([sectionTeachers]).
 	static void verifySection({
 		@required Map<String, List<Period>> periods,
 		@required Map<String, String> sectionTeachers,	
@@ -54,6 +73,10 @@ class ZoomLogic {
 		}
 	}
 
+	/// Builds student Zoom school schedules.
+	/// 
+	/// This works by taking [periods] (from [getPeriods]) and using methods from 
+	/// the `students` library. 
 	static Future<List<User>> getStudents(
 		Map<String, List<Period>> periods
 	) async {
@@ -85,6 +108,10 @@ class ZoomLogic {
 		);
 	}
 
+	/// Builds faculty Zoom school schedules.
+	/// 
+	/// This works by taking [periods] (from [getPeriods]) and [sectionTeachers] 
+	/// (from the `sections` library) and using methods from the `faculty` library.
 	static Future<List<User>> getFaculty({
 		@required Map<String, List<Period>> periods,
 		@required Map<String, String> sectionTeachers,

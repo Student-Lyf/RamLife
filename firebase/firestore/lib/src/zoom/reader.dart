@@ -1,21 +1,39 @@
 import "package:firestore/data.dart";
 import "package:firestore/helpers.dart";
 
+/// A collection of functions to read Zoom school data.
+/// 
+/// No function in this class actually performs logic on said data, just returns
+/// it. This helps keep the program modular, by separating the data sources from
+/// the data indexing.
 class ZoomReader {
+	/// The periods in a day for Zoom school.
 	static const Map<Letter, int> periodsInLetter = {
 		Letter.M: 5,
 		Letter.R: 4,
 		Letter.A: 4,
 		Letter.B: 4,
-		Letter.C: 4,
-		Letter.E: 3,
-		Letter.F: 3,		
+		Letter.C: 0,
+		Letter.E: 0,
+		Letter.F: 3,
 	};
 
+	/// The letters used for Zoom school.
+	/// 
+	/// Zoom school runs off weekdays instead of letters. However, changing the 
+	/// app to work with weekdays would require an app update, which is
+	/// non-trivial. To circumvent this, weekdays are mapped to [Letter]s.
+	/// M and R are still Monday and Thursday, A and B are Tuesday and Wednesday, 
+	/// respectively, and F day is Friday.
 	static const List<Letter> zoomLetters = [
 		Letter.M, Letter.A, Letter.B, Letter.R, Letter.F
 	];
 
+	/// Maps letters to their Zoom schedules.
+	/// 
+	/// The values of this map are nested lists. The first layer represents a 
+	/// period, the second a grade, and the third is all the section IDs that meet
+	/// that period for that grade on that day.
 	static Future<Map<Letter, List<List<List<String>>>>> getSchedule() async {
 		// Sorry, sorry, I know it looks bad
 		// Don't worry, it gets better (after this function)
