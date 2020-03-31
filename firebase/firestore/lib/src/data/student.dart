@@ -82,12 +82,6 @@ class User extends Serializable {
 			homeroomLocation != null,
 			"Could not find homeroom location for user: ${toString()}"
 		);
-		for (final Letter letter in Letter.values) {
-			assert(
-				schedule.containsKey(letter), 
-				"$name does not have a schedule for $letter days,"
-			);
-		}
 	}
 
 	/// If this user has no classes.
