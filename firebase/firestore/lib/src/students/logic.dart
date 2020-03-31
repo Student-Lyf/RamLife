@@ -46,7 +46,7 @@ class StudentLogic {
 		@required Map<String, User> students,
 		@required Map<String, List<Period>> periods,
 		@required Map<String, List<String>> studentClasses, 
-		@required Map<String, Semesters> semesters,
+		Map<String, Semesters> semesters,
 	}) {
 		homerooms = {};
 		seniors = {};
@@ -62,7 +62,7 @@ class StudentLogic {
 					continue;
 				}
 
-				if (!semesters [sectionId].semester2) {
+				if (semesters != null && !semesters [sectionId].semester2) {
 					continue;
 				} else if (sectionId.startsWith("12")) {
 					seniors.add(student);
