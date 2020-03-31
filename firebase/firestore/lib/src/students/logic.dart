@@ -50,7 +50,7 @@ class StudentLogic {
 	}) {
 		homerooms = {};
 		seniors = {};
-		final Map<User, Map<Letter, List<Period>>> result = DefaultMap(
+		final Map<User, DefaultMap<Letter, List<Period>>> result = DefaultMap(
 			(_) => DefaultMap((Letter letter) => 
 				List.filled(Period.periodsInDay[letter], null))
 		);
@@ -77,6 +77,9 @@ class StudentLogic {
 					result [student] [period.day] [period.period - 1] = period;
 				}
 			}
+		}
+		for (final schedule in result.values) {
+			schedule.setDefaultForAll(Letter.values);
 		}
 		return result;
 	}
