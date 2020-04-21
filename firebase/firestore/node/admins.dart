@@ -8,22 +8,34 @@ Future<Map<String, List<String>>> getAdmins() async => {
 
 Future<void> setClaims(Map<String, List<String>> admins) async {
 	for (final MapEntry<String, List<String>> entry in admins.entries) {
+		final String email = entry.key;
+		final List<String> scopes = entry.value;
 		assert(
-			entry.value.every(Scopes.scopes.contains),
-			"Cannot parse scopes for: ${entry.key}. Got: ${entry.value}"
+			scopes.every(Scopes.scopes.contains),
+			"Cannot parse scopes for: $email. Got: $scopes"
 		);
-		Logger.verbose("setting claims for ${entry.key}");
-		await Auth.setScopes(entry.key, entry.value);
+		Logger.verbose("Setting claims for $email");
+		if (entry.value.isEmpty) {
+			Logger.warning("Removing admin privileges for $email");
+		}
+		await Logger.logValue<Map<String, dynamic>>(
+			"Previous claims for $email", () => Auth.getClaims(email)
+		);
+		await Auth.setScopes(email, scopes);
 	}
 }
 
 Future<void> main() async {
 	Args.initLogger("Setting up admins...");
 
+	// Log the value whether or not --upload is passed.
+	final Map<String, List<String>> admins = 
+		await Logger.logValue("admins", getAdmins);
+
 	if (Args.upload) {
 		await Logger.logProgress(
 			"setting admin claims",
-			() async => setClaims(await Logger.logValue("admins", getAdmins))
+			() async => setClaims(admins)
 		);
 	} else {
 		Logger.warning("Did not upload admin claims. Use the --upload flag.");

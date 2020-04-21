@@ -1,5 +1,7 @@
 import "package:firebase_admin_interop/firebase_admin_interop.dart" as fb;
 
+import "package:node_interop/util.dart" show dartify;
+
 import "firebase.dart";
 
 /// Holds the names for the admin scopes.
@@ -31,6 +33,10 @@ class Auth {
 	static Future<void> setScopes(String email, List<String> scopes) async => 
 		auth.setCustomUserClaims(
 			(await auth.getUserByEmail(email)).uid, 
-			{"isAdmin": true, "scopes": scopes}
+			{"isAdmin": scopes.isNotEmpty, "scopes": scopes}
 		);
+
+	static Future<Map<String, dynamic>> getClaims(String email) async => dartify(
+		(await auth.getUserByEmail(email)).customClaims
+	);
 }
