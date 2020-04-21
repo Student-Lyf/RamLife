@@ -9,13 +9,13 @@ import "package:firestore/helpers.dart";
 class ZoomReader {
 	/// The periods in a day for Zoom school.
 	static const Map<Letter, int> periodsInLetter = {
-		Letter.M: 5,
+		Letter.M: 4,
 		Letter.R: 4,
 		Letter.A: 4,
 		Letter.B: 4,
 		Letter.C: 0,
 		Letter.E: 0,
-		Letter.F: 3,
+		Letter.F: 4,
 	};
 
 	/// The letters used for Zoom school.

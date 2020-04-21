@@ -26,7 +26,7 @@ class User extends Serializable {
 	/// Converts a list of [Period] objects to JSON. 
 	static List<Map<String, dynamic>> scheduleToJson(List<Period> schedule) => [
 		for (final Period period in schedule) 
-			period.json
+			period?.json
 	];
 
 	/// This user's email.

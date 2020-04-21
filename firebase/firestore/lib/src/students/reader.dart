@@ -16,7 +16,7 @@ class StudentReader {
 			entry ["ID"]: User(
 				first: entry ["First Name"],
 				last: entry ["Last Name"],
-				email: entry ["Student E-mail"],
+				email: entry ["Student E-mail"].toLowerCase(),
 				id: entry ["ID"],
 			)
 	};
