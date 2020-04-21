@@ -21,6 +21,7 @@ class Firestore {
 	/// The name of the feedback collection.
 	static const String feedbackKey = "feedback";
 
+	/// The name of the reminders collection.
 	static const String remindersKey = "reminders";
 
 	/// The students collection.
@@ -39,9 +40,13 @@ class Firestore {
 	static final fb.CollectionReference feedbackCollection =
 		firestore.collection(feedbackKey);
 
+	/// The reminders collection.
 	static final fb.CollectionReference remindersCollection =
 		firestore.collection(remindersKey);
 
+	/// Deletes reminders froma given user that fit a predicate function.
+	/// 
+	/// If [transaction] is null, one will be created and passed to this function.
 	static Future<List<Map<String, dynamic>>> deleteRemindersFromUser(
 		String email,
 		bool Function(Map<String, dynamic>) predicate,
