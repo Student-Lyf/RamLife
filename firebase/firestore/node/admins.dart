@@ -25,6 +25,8 @@ Future<void> main() async {
 			"setting admin claims",
 			() async => setClaims(await Logger.logValue("admins", getAdmins))
 		);
+	} else {
+		Logger.warning("Did not upload admin claims. Use the --upload flag.");
 	}
 
 	await app.delete();

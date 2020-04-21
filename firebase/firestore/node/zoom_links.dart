@@ -49,7 +49,7 @@ Future<void> main(List<String> args) async {
 	if (Args.upload) {
 		await Logger.logProgress("zoom reminders search", printZoomReminders);
 	} else {
-		Logger.info("Use the --upload flag to read reminders");
+		Logger.info("Did not read reminders. Use the --upload flag.");
 	}
 	await app.delete();
 }

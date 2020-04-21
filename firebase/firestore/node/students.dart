@@ -57,6 +57,8 @@ Future<void> main() async {
 		await Logger.logProgress(
 			"data upload", () => Firestore.uploadUsers(studentsWithSchedules)
 		);
+	} else {
+		Logger.warning("Did not upload student data. Use the --upload flag.");
 	}
 	await app.delete();
 	Logger.info("Processed ${students.length} users.");

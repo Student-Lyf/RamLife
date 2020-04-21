@@ -57,6 +57,9 @@ Future<void> main() async {
 			"Could not properly parse calendar for $month"
 		);
 	}
+	if (!Args.upload) {
+		Logger.warning("Did not upload the calendar. Use the --upload flag.");
+	}
 	await app.delete();
 	Logger.info("Calendar processed");
 }

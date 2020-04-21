@@ -44,6 +44,8 @@ Future<void> main() async {
 		await Logger.logProgress(
 			"faculty schedule upload", () => Firestore.uploadUsers(faculty)
 		);
+	} else {
+		Logger.warning("Did not upload schedule data. Use the --upload flag.");
 	}
 
 	await app.delete();

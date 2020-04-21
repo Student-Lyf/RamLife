@@ -27,6 +27,8 @@ Future<void> main() async {
 		await Logger.logProgress(
 			"data upload", () => Firestore.uploadSections(sections)
 		);
+	} else {
+		Logger.warning("Did not upload section data. Use the --upload flag.");
 	}
 	await app.delete();
 	Logger.info("Processed ${sections.length} sections.");
