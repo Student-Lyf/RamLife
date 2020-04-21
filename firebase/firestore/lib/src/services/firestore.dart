@@ -21,6 +21,8 @@ class Firestore {
 	/// The name of the feedback collection.
 	static const String feedbackKey = "feedback";
 
+	static const String remindersKey = "reminders";
+
 	/// The students collection.
 	static final fb.CollectionReference studentsCollection = 
 		firestore.collection(studentsKey);
@@ -37,6 +39,41 @@ class Firestore {
 	static final fb.CollectionReference feedbackCollection =
 		firestore.collection(feedbackKey);
 
+	static final fb.CollectionReference remindersCollection =
+		firestore.collection(remindersKey);
+
+	static Future<List<Map<String, dynamic>>> deleteRemindersFromUser(
+		String email,
+		bool Function(Map<String, dynamic>) predicate,
+		[fb.Transaction transaction]
+	) async {
+		if (transaction == null) {
+			return firestore.runTransaction(
+				(fb.Transaction transaction) => 
+					deleteRemindersFromUser(email, predicate, transaction)
+			);
+		}
+
+		final fb.DocumentReference document = remindersCollection.document(email);
+		final fb.DocumentSnapshot snapshot = await transaction.get(document);
+
+		final Map<String, dynamic> data = snapshot.data.toMap();
+		final List<Map<String, dynamic>> reminders = [
+			for(final reminder in data ["reminders"])
+				Map<String, dynamic>.from(reminder)
+		];
+		final List<Map<String, dynamic>> filteredReminders = [
+			for(final Map<String, dynamic> reminder in reminders)
+				if (!predicate(reminder))
+					reminder
+		];
+		transaction.update(
+			document,
+			fb.UpdateData.fromMap({"reminders": filteredReminders})
+		);
+		return filteredReminders;
+	}
+
 	/// Gets all the feedback sent from the app.
 	/// 
 	/// This data is stored in [feedbackCollection]. See [Feedback.fromJson] 
@@ -52,7 +89,7 @@ class Firestore {
 	/// Uploads users to the cloud. 
 	/// 
 	/// Puts all users in a batch and commits them all at once.
-	static Future<void> upoadStudents(List<User> users) {
+	static Future<void> uploadUsers(List<User> users) {
 		final fb.WriteBatch batch = firestore.batch();
 		for (final User user in users) {
 			batch.setData(

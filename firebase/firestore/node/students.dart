@@ -55,7 +55,7 @@ Future<void> main() async {
 
 	if (Args.upload) {
 		await Logger.logProgress(
-			"data upload", () => Firestore.upoadStudents(studentsWithSchedules)
+			"data upload", () => Firestore.uploadUsers(studentsWithSchedules)
 		);
 	}
 	await app.delete();

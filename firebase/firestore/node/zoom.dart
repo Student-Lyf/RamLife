@@ -39,10 +39,10 @@ Future<void> main() async {
 
 	if (Args.upload) {
 		await Logger.logProgress(
-			"student schedule upload", () => Firestore.upoadStudents(students)
+			"student schedule upload", () => Firestore.uploadUsers(students)
 		);
 		await Logger.logProgress(
-			"faculty schedule upload", () => Firestore.upoadStudents(faculty)
+			"faculty schedule upload", () => Firestore.uploadUsers(faculty)
 		);
 	}
 
