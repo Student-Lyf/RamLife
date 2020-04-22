@@ -35,18 +35,10 @@
 docs/
 
 # Firebase folders:
-
-# firebase_py/admin.json
-# firebase_py/rules_test/node_modules/
-# firebase_py/rules_test/firestore.rules
-# firebase_py/temp.py
-firebase_py/
-firebase/cloud_functions/
-firebase/firestore/
-
+node_modules
 firebase/firestore/admin.json
 firebase/rules_test/firestore.rules
-firebase/rules_test/node_modules/
+
 
 # IDE
 *.iml
@@ -69,7 +61,6 @@ firebase/rules_test/node_modules/
 .buildlog/
 .history
 .svn/
-node_modules
 
 # Flutter/Dart/Pub related
 .dart_tool/

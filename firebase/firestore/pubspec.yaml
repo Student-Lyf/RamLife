@@ -1,0 +1,20 @@
+name: firestore
+description: A sample command-line application.
+# version: 1.0.0
+# homepage: https://www.example.com
+
+environment:
+  sdk: '>=2.7.0 <3.0.0'
+
+dependencies:
+  meta: any
+  # prior to 2.1.0, the values for custom claims had to be Strings
+  # (I changed that with my own PR -- be the change you want to see in the world) 
+  firebase_admin_interop: ^2.1.0
+  node_io: ^1.0.1+2
+  build_runner: any 
+  build_node_compilers: any
+  node_interop: any
+
+# dev_dependencies:
+#  test: ^1.6.0
