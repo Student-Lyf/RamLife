@@ -190,7 +190,7 @@ enum ActivityType {
 
 /// An activity during a period. 
 /// 
-/// Students can either be directed to their adivories or to a certain room. 
+/// Students can either be directed to their advisories or to a certain room. 
 /// See [ActivityType] for a description of different activities.
 /// 
 /// Activities can also be nested. 
@@ -261,7 +261,7 @@ class Activity {
 /// A description of the time allotment for a day. 
 /// 
 /// Some days require different time periods, or even periods that 
-/// are skipped altogether, as well as homeroom and mincha movements.
+/// are skipped altogether, as well as homeroom and Mincha movements.
 /// This class helps facilitate that. 
 @immutable
 class Special {
@@ -277,7 +277,7 @@ class Special {
 	/// So here, skip would be `[6, 7, 8]`, to skip 6th, 7th and 8th periods.
 	final List<int> skip;
 
-	/// The index in [periods] that represents mincha.
+	/// The index in [periods] that represents Mincha.
 	final int mincha;
 	
 	/// The index in [periods] that represents homeroom.
@@ -369,7 +369,6 @@ class Special {
 		} else if (month == Times.winterFridayMonthEnd) {
 			return day < Times.winterFridayDayEnd ? winterFriday : friday;
 		} else {
-			// print("Tasked to find winter friday for the summer, assuming regular");
 			return friday;
 		}
 	}

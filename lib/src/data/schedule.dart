@@ -1,4 +1,4 @@
-/// This library holds dataclasses for various schedule-related data.
+/// This library holds data classes for various schedule-related data.
 /// 
 /// Classes here are used to abstract the weird schedule details 
 /// to make the code a whole lot simpler. 
@@ -174,7 +174,7 @@ class PeriodData {
 	/// A free period.
 	/// 
 	/// Use this instead of manually constructing a [PeriodData] 
-	/// to keep consistency throughtout the code. 
+	/// to keep consistency throughout the code. 
 	static const free = PeriodData._free();
 
 	/// Returns a [PeriodData] from a JSON object.

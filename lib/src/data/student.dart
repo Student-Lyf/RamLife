@@ -9,7 +9,7 @@ import "times.dart";
 /// A representation of a student. 
 /// 
 /// This object holds their schedule, and is a convenience class for getting 
-/// their schedule, as well as some other noteable data, such as when and where
+/// their schedule, as well as some other notable data, such as when and where
 /// to meet for homeroom. 
 @immutable
 class Student {

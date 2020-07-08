@@ -133,7 +133,7 @@ class PeriodReminderTime extends ReminderTime {
 
 	/// Returns a new [PeriodReminderTime].
 	/// 
-	/// All paremeters must be non-null.
+	/// All parameters must be non-null.
 	const PeriodReminderTime({
 		@required this.letter,
 		@required this.period,
