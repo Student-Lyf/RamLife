@@ -1,0 +1,64 @@
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // These rules work off the assumption that anyone who is logged in 
+    // has the right to see "public" data (eg, calendar, classes, sports, etc.).
+    // 
+    // Any other sensitive data is locked by user.
+    // Since we are using Ramaz emails, and there is no UI option to create a new account,
+    // we assume that all logged-in users had their accounts created beforehand (and that
+    // they have data to load). 
+    //
+    // Theoretically, nothing in the API stops the user from creating their own account, 
+    // but such a breach would be minimal, as the only sensitive data the user would be 
+    // able to see would be their own (which would be nonexistent if they were not already in 
+    // the system). To prevent such a breach, there can be a locked collection that nobody can read or 
+    // write to, and the system would check for the user in that collection. That collection
+    // would be populated by an admin while populating user schedules. This way, only pre-
+    // processed users will be allowed in. Right now this is not done, since the first thing
+    // the app does is check for data in the /students collection, which will fail if the document
+    // does not exist, and other data will not be fetched.
+    match /students/{student} {
+    	// allow reads to individual doc if user is logged in with that email
+      // 	queries are not allowed
+      // allow updates (not create or delete) if user is "schedules" admin
+      allow get: if student == request.auth.token.email.lower();
+      allow update: if "schedules" in request.auth.token.scopes;
+    }
+    
+    match /classes/{id} {
+      // Generally considered "public" data -- anyone logged in can access
+    	allow get: if request.auth != null;
+      // only allow (full) write access if user is "subjects" admin
+      allow write: if "subjects" in request.auth.token.scopes;
+    }
+    
+    match /feedback/{id} {
+    	allow create;  // democracy!
+    }
+    
+    match /calendar/{month} {
+      // Also "public"
+    	allow get: if request.auth != null;
+      // Allow updates (not create or delete) if user is "calendar" admin
+      allow update: if request.auth.token.isAdmin && "calendar" in request.auth.token.scopes;
+    }
+    
+    match /reminders/{email} {  // Docs indexed by email
+      // Allow full access to own emails
+    	allow get, write: if request.auth.token.email == email
+    }
+    
+    match /sports/{year} {  // only the one document for now
+      // Allow read (not query) for any logged in user
+    	allow get: if request.auth != null
+      // Allow updates (not create or delete) if user is "sports" admin and sets valid data
+      allow update: if request.auth.token.isAdmin && 
+        "sports" in request.auth.token.scopes &&
+      	request.resource.data.games.size() >= 0;  // exists, is list and len >= 0
+    }
+    
+    match /admin/{email} {  // only read and write to own data
+    	allow get, write: if request.auth.token.email == email;
+    }
+  }
+}
