@@ -58,7 +58,7 @@ class DayBuilderModel with ChangeNotifier {
 
 	/// If this day has school. 
 	/// 
-	/// This is different than [Day.school] beacuse it doesn't belong to [day],
+	/// This is different than [Day.school] because it doesn't belong to [day],
 	/// it dictates whether [letter] and [special] is used in [day].
 	bool get hasSchool => _hasSchool;
 	set hasSchool(bool value) {

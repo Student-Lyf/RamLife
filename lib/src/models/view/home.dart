@@ -17,7 +17,7 @@ class HomeModel with ChangeNotifier {
 	/// The sports data model.
 	final Sports sports;
 
-	/// Creates a ViewModel for the homescreen. 
+	/// Creates a ViewModel for the home screen. 
 	HomeModel(ServicesCollection services) : 
 		schedule = services.schedule,
 		sports = services.sports

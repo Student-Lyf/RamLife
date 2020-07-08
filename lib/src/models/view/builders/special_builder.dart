@@ -12,6 +12,7 @@ class SpecialBuilderModel with ChangeNotifier {
 	/// 
 	/// Regular periods have numbers, others (eg, homeroom and mincha) are null.
 	List<String> periods = [];
+	final Map<String, Activity> activities = {};
 
 	List<Range> _times = [];
 	List<int> _skips = [];
@@ -86,7 +87,7 @@ class SpecialBuilderModel with ChangeNotifier {
 		notifyListeners();
 	}
 
-	/// The index of mincha in [times]. 
+	/// The index of Mincha in [times]. 
 	/// 
 	/// See [Special.mincha].
 	int get mincha => _mincha;

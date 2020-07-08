@@ -162,7 +162,7 @@ class Reminders with ChangeNotifier {
 
 	/// Deletes the reminder at a given index.
 	/// 
-	/// Use this insead of `reminders.removeAt` to ensure that 
+	/// Use this instead of `reminders.removeAt` to ensure that 
 	/// [updateReminders] is called.
 	void deleteReminder(int index) {
 		reminders.removeAt(index);
