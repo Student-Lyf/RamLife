@@ -17,7 +17,7 @@ typedef VoidCallback = Future<void> Function();
 /// - If the app is terminated, `onLaunch` will be called when the app is 
 /// 	opened.
 /// 
-/// In any case, noticication configuration is handled by 
+/// In any case, notification configuration is handled by 
 /// [registerNotifications], which assigns the same callback to all cases. 
 /// The callbacks can be registered by passing in a map to 
 /// [registerNotifications]. The value of the `command` field will be used as

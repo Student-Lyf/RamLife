@@ -56,11 +56,11 @@ class AndroidNotification {
 
 	/// The style of this notification.
 	/// 
-	/// This can be used to customize notfications about messages 
+	/// This can be used to customize notifications about messages 
 	/// and notifications that contain images. 
 	final StyleInformation styleInfo;
 
-	/// The color of this notfication.
+	/// The color of this notification.
 	/// 
 	/// Should relate to the app's branding colors. 
 	final Color color;
@@ -179,7 +179,7 @@ class IOSNotification {
 		playSound: true
 	);
 
-	/// Whether this notification should cause the device's homescreen
+	/// Whether this notification should cause the device's home screen
 	/// to show a badge on this notification's icon. 
 	final bool showBadge;
 	

@@ -116,7 +116,7 @@ class Firestore {
 
 	/// Downloads the reminders for the user. 
 	/// 
-	/// At least for now, these are stored in a spearate collection than
+	/// At least for now, these are stored in a separate collection than
 	/// the student profile data. This choice was made since reminders are 
 	/// updated frequently and this saves the system from processing the
 	/// student's schedule every time this happens. 
