@@ -33,7 +33,7 @@ class HomePageState extends State<HomePage> {
 			if (error.code == "Error performing get") {
 				scaffoldKey.currentState.showSnackBar(
 					SnackBar(
-						content: const Text("No internet"), 
+						content: const Text("No Internet"), 
 						action: SnackBarAction(
 							label: "RETRY", 
 							onPressed: () async {
@@ -115,7 +115,7 @@ class HomePageState extends State<HomePage> {
 						),
 						if (model.sports.todayGames.isNotEmpty) ...[
 							const SizedBox(height: 10),
-							Center(
+							const Center(
 								child: Text(
 									"Sports games",
 									textScaleFactor: 1.5,

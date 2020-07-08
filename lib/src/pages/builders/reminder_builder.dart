@@ -16,7 +16,7 @@ class ReminderBuilder extends StatefulWidget {
 	/// Trims a string down to a certain length.
 	/// 
 	/// This function is needed since calling [String.substring] with an `end` 
-	/// argument graeter than the length of the string will throw an error.
+	/// argument greater than the length of the string will throw an error.
 	static String trimString (String text, int length) => text.length > length
 		? text.substring(0, length) : text;
 
@@ -45,7 +45,7 @@ class ReminderBuilder extends StatefulWidget {
 		}
 	}
 
-	/// Opens a [ReminderBuilder] popup to create or modify a [Reminder]. 
+	/// Opens a [ReminderBuilder] pop-up to create or modify a [Reminder]. 
 	static Future<Reminder> buildReminder(
 		BuildContext context, [Reminder reminder]
 	) => showDialog<Reminder>(
@@ -56,7 +56,7 @@ class ReminderBuilder extends StatefulWidget {
 	/// A reminder to modify. 
 	/// 
 	/// A [ReminderBuilder] can either create a new [Reminder] from scratch or 
-	/// modify an existing reminder (autofill its properties). 
+	/// modify an existing reminder (auto-fill its properties). 
 	final Reminder reminder;
 
 	/// Creates a widget to create or modify a [Reminder].
@@ -209,7 +209,7 @@ class ReminderBuilderState extends State<ReminderBuilder> {
 								value: model.shouldRepeat,
 								onChanged: model.toggleRepeat,
 								title: const Text ("Repeat"),
-								secondary: Icon (Icons.repeat),
+								secondary: const Icon (Icons.repeat),
 							),
 						]
 					)

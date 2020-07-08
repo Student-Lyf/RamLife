@@ -20,7 +20,7 @@ import "package:ramaz/services.dart";
 /// This page holds methods that can safely clean the errors away before
 /// prompting the user to try again. 
 class Login extends StatefulWidget {
-	/// The servces needed to log the user in. 
+	/// The services needed to log the user in. 
 	final ServicesCollection services;
 
 	/// Creates the login page. 
@@ -134,7 +134,7 @@ class LoginState extends State<Login> {
 	/// 
 	/// This function holds all the try-catch logic needed to properly debug
 	/// errors. If a network error occurs, a simple [SnackBar] is shown. 
-	/// Otherwise, the error popup is shown (see [onError]).
+	/// Otherwise, the error pop-up is shown (see [onError]).
 	Future<void> safely({
 		@required Future<void> Function() function, 
 		@required void Function() onSuccess,
@@ -144,7 +144,7 @@ class LoginState extends State<Login> {
 		on PlatformException catch (error, stack) {
 			if (error.code == "ERROR_NETWORK_REQUEST_FAILED") {
 				Scaffold.of(scaffoldContext).showSnackBar (
-					const SnackBar (content: Text ("No internet")),
+					const SnackBar (content: Text ("No Internet")),
 				);
 				loadingNotifier.value = false;
 				return;

@@ -8,7 +8,7 @@ import "special_builder.dart";
 
 /// A widget to guide the admin in modifying a day in the calendar. 
 /// 
-/// Creates a popup that allows the admin to set the [Letters] and [Special]
+/// Creates a pop-up that allows the admin to set the [Letters] and [Special]
 /// for a given day in the calendar, even providing an option to create a custom
 /// [Special].
 /// 
@@ -112,8 +112,8 @@ class DayBuilder extends StatelessWidget {
 											value: const Special(null, null),
 											child: SizedBox(
 												child: Row(
-													children: [
-														const Text("Make new schedule"),
+													children: const [
+														Text("Make new schedule"),
 														Icon(Icons.add_circle_outline)
 													]
 												)
