@@ -5,7 +5,7 @@ import "package:ramaz/data.dart";
 /// A widget that represents an [Activity]. 
 /// 
 /// If the activity needs to show more details (ie, [Activity.type] is in 
-/// [detailedActivities]), tapping on the tile will open a popup with 
+/// [detailedActivities]), tapping on the tile will open a pop-up with 
 /// more details. 
 class ActivityTile extends StatelessWidget {
 	/// Types of activities that will show more details when tapped. 

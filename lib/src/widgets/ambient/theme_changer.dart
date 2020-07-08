@@ -35,7 +35,7 @@ class ThemeChanger extends StatefulWidget {
 	/// `ThemeChanger.of(context).brightness = newBrightness`. 
 	final ThemeData dark;
 
-	/// A collection of pre-defined themes. 
+	/// A collection of predefined themes. 
 	/// 
 	/// To switch between themes, change [ThemeChangerState.themeName] with
 	/// `ThemeChanger.of(context).themeName = key`. 
@@ -100,7 +100,7 @@ class ThemeChangerState extends State<ThemeChanger> {
 	/// [ThemeChanger.themes] with this key. 
 	/// 
 	/// When [brightness] or [theme] are changed, [theme] may not exist in 
-	/// [ThemeChanger.themes], in which case `themeName` will equall null. 
+	/// [ThemeChanger.themes], in which case `themeName` will equal null. 
 	String get themeName => _key; 
 	set themeName (String key) => setState(() {
 		_theme = (widget.themes ?? {}) [key];

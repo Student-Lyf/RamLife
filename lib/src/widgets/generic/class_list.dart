@@ -41,8 +41,8 @@ class ClassPanel extends StatelessWidget {
 				child: ListTile (
 					title: Text (title),
 					contentPadding: EdgeInsets.zero,
-					trailing: reminders.isEmpty ? null : Icon(Icons.note),
-					leading: activity == null ? null : Icon(Icons.error),
+					trailing: reminders.isEmpty ? null : const Icon(Icons.note),
+					leading: activity == null ? null : const Icon(Icons.announcement),
 				)
 			)
 		),

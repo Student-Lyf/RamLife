@@ -9,7 +9,7 @@ enum BrightnessChangerForm {
 	/// The widget should appear as a toggle button.
 	button, 
 
-	/// The widget should appear as a dropdown menu.
+	/// The widget should appear as a drop-down menu.
 	dropdown
 }
 
@@ -54,7 +54,7 @@ class BrightnessChanger extends StatelessWidget {
 	factory BrightnessChanger.iconButton({@required Preferences prefs}) => 
 		BrightnessChanger (prefs: prefs, form: BrightnessChangerForm.button);
 
-	/// Creates a [BrightnessChanger] as a dropdown menu. 
+	/// Creates a [BrightnessChanger] as a drop-down menu. 
 	factory BrightnessChanger.dropdown({@required Preferences prefs}) => 
 		BrightnessChanger (prefs: prefs, form: BrightnessChangerForm.dropdown);
 

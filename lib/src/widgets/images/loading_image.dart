@@ -13,7 +13,7 @@ import "package:flutter/material.dart";
 /// 1. Install devtools: `flutter packages pub global activate devtools`
 /// 2. Start devtools: `flutter packages pub global run devtools`
 /// 3. Start app: `flutter run --track-widget-creation`
-/// 4. Open the url devtools gives with the url from flutter 
+/// 4. Open the URL devtools gives with the URL from flutter 
 /// 
 /// Usage: 
 /// 

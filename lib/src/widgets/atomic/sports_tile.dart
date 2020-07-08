@@ -211,7 +211,7 @@ class SportsTile extends StatelessWidget {
   /// 
   /// If Ramaz won, it's green.
   /// If Ramaz lost, it's red.
-  /// If the game was tied, it's a light grey. 
+  /// If the game was tied, it's a light gray. 
   /// 
   /// This is a great example of why the helper class [Scores] exists.
   Color get cardColor => game.scores != null
@@ -245,7 +245,7 @@ class SportsTile extends StatelessWidget {
                 	? "${game.opponent} @ Ramaz"
                 	: "Ramaz @ ${game.opponent}"
               	),
-                trailing: onTap == null ? null : Icon(Icons.edit),
+                trailing: onTap == null ? null : const Icon(Icons.edit),
               ),
               const SizedBox(height: 20),
               SportsStats(

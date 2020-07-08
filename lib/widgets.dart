@@ -1,7 +1,7 @@
 /// A collection of widgets to use. 
 /// 
 /// There are three types of widgets in this library: 
-/// 1. Generic widgets: miscellaneous widgets for use all around tha app.
+/// 1. Generic widgets: miscellaneous widgets for use all around the app.
 /// 
 /// 2. Atomic widgets: widgets that represent a single piece of data, (something
 /// from the `data` library) with a canonic form all around the app. These 
