@@ -7,8 +7,11 @@ import "package:google_sign_in/google_sign_in.dart";
 /// This class handles all authentication operations via static methods.
 /// There is no need to create an instance of this class.
 class Auth {
-	static final FirebaseAuth _firebase = FirebaseAuth.instance;
-	static final GoogleSignIn _google = GoogleSignIn();
+	/// The [FirebaseAuth] service.
+	static final FirebaseAuth firebase = FirebaseAuth.instance;
+
+	/// The [GoogleSignIn] service.
+	static final GoogleSignIn google = GoogleSignIn();
 
 	/// The scope for the calendar.
 	/// 
@@ -22,23 +25,23 @@ class Auth {
 
 	/// The currently logged in user.
 	/// 
-	/// This getter returns a [FirebaseUser], which should not be used 
+	/// This getter returns a [User], which should not be used 
 	/// outside this library. This method should only be called by 
-	/// methods that provide higher level functionality, such as [ready].
-	static Future<FirebaseUser> get currentUser => _firebase.currentUser();
+	/// methods that provide higher level functionality, such as [isReady].
+	static User get currentUser => firebase.currentUser;
 
 	/// The user's email.
-	static Future<String> get email async => (await currentUser)?.email;
+	static String get email => currentUser?.email;
 
 	/// The user's full name.
-	static Future<String> get name async => (await currentUser)?.displayName;
+	static String get name => currentUser?.displayName;
 
 	/// Determines whether the user is currently logged
-	static Future<bool> get ready async => await currentUser != null;
+	static bool get isReady => currentUser != null;
 
 	/// Whether the user is an admin or not. 
 	static Future<Map> get claims async => (
-		await (await currentUser).getIdToken()
+		await currentUser.getIdTokenResult()
 	).claims;
 
 	/// Whether the user is an admin. 
@@ -64,8 +67,8 @@ class Auth {
 
 	/// Signs out the currently logged in user.
 	static Future<void> signOut() async {
-		await _firebase.signOut();
-		await _google.signOut();
+		await firebase.signOut();
+		await google.signOut();
 	}
 
 	/// Determines whether the provided email is a valid Ramaz account
@@ -76,16 +79,16 @@ class Auth {
 		.email.endsWith("@ramaz.org");
 
 	/// Signs in the user with Google as the provider. 
-	static Future<void> signInWithGoogle() async {
-		final GoogleSignInAccount account = await _google.signIn();
+	static Future<void> signIn() async {
+		final GoogleSignInAccount account = await google.signIn();
 		if (account == null) {
 			return;
 		}
 		final GoogleSignInAuthentication _auth = await account.authentication;
-		final AuthCredential credential = GoogleAuthProvider.getCredential (
+		final AuthCredential credential = GoogleAuthProvider.credential (
 			accessToken: _auth.accessToken,
 			idToken: _auth.idToken
 		);
-		await _firebase.signInWithCredential(credential);
+		await firebase.signInWithCredential(credential);
 	}
 }

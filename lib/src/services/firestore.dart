@@ -1,193 +1,234 @@
-import "package:cloud_firestore/cloud_firestore.dart" as fb;
+import "package:cloud_firestore/cloud_firestore.dart";
 
 import "auth.dart";
+import "model.dart";
 
-// ignore: avoid_classes_with_only_static_members
-/// An abstraction wrapper around Cloud Firestore. 
-/// 
-/// This class only handles raw data transfer to and from Cloud Firestore.
-/// Do not attempt to use dataclasses here, as that will create a dependency
-/// between this library and the data library. 
-class Firestore {
+/// A wrapper around Cloud Firestore. 
+class Database implements Service {
 	static final DateTime _now = DateTime.now();
 
-	/// The name for the student schedule collection.
-	static const String students = "students";
+	/// The [FirebaseFirestore service].
+	static final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
-	/// The name for the admins collection. 
-	static const String admins = "admin";
-
-	/// The name of the classes collection.
-	static const String classes = "classes";
-
-	/// The name of the calendar collection.
-	static const String calendarKey = "calendar";
-	
-	/// The name of the feedback collection.
-	static const String feedback = "feedback";
-
-	/// The name of the reminders collection.
+	/// The field in the reminders document that stores the reminders.
 	static const String remindersKey = "reminders";
 
-	/// The name of the sports collection.
-	static const String sportsKey = "sports";
+	/// The field in the calendar document that stores the calendar.
+	static const String calendarKey = "calendar";
 
-	static final fb.Firestore _firestore = fb.Firestore.instance;
+	/// The field in the sports document that stores the games. 
+	static const String sportsKey = "games";
 
-	static final fb.CollectionReference _students = 
-		_firestore.collection(students);
-
-	static final fb.CollectionReference _admin = 
-		_firestore.collection(admins);
-	
-	static final fb.CollectionReference _classes = 
-		_firestore.collection (classes);
-	
-	static final fb.CollectionReference _feedback = 
-		_firestore.collection (feedback);
-	
-	static final fb.CollectionReference _calendar = 
-		_firestore.collection(calendarKey);
-	
-	static final fb.CollectionReference _reminders = 
-		_firestore.collection (remindersKey);
-
-	static final fb.CollectionReference _sports = 
-		_firestore.collection(sportsKey);
-
-	/// Downloads the student's document in the student collection.
-	static Future<Map<String, dynamic>> get student async => 
-		(await _students.document(await Auth.email).get()).data;
-
-	/// Downloads the relevant document in the `classes` collection.
-	static Future<Map<String, dynamic>> getClass (String id) async => 
-		(await _classes.document(id).get()).data;
-
-	/// Gets all class documents for a students schedule
+	/// The user data collection.
 	/// 
-	/// This function goes over the student's schedule and keeps a record 
-	/// of the unique section IDs and queries the database for them afterwards 
-	/// using [getClass].
-	static Future<Map<String, Map<String, dynamic>>> getClasses(
-		Set<String> ids		
-	) async {
-		final Map<String, Map<String, dynamic>> result = {};
-		for (final String id in ids) {
-			result [id] = await getClass(id);
+	/// Note that even though this is named students, faculty are supported too.
+	/// Each user has their own document to store their data. 
+	/// 
+	/// To access a document in this collection, use [userDocument]. 
+	static final CollectionReference userCollection = 
+		firestore.collection("students");
+
+	/// The admin profile collection.
+	/// 
+	/// Each admin has their own document to store their data. Note that the 
+	/// documents themselves do not grant admin privileges, since admins can modify
+	/// their own document. Rather, the scopes of their privileges are stored in 
+	/// FirebaseAuth custom claims. See [Auth.adminScopes]. 
+	/// 
+	/// To access a document in this collection, use [adminDocument].
+	static final CollectionReference adminCollection = 
+		firestore.collection("admin");
+
+	/// The course data collection.
+	/// 
+	/// Sections, not courses, are stored in the database. Each section has its 
+	/// own document with the data of that section. 
+	/// 
+	/// Do not access documents in this collection directly. 
+	/// Use either [getSections] or [getSection]. 
+	static final CollectionReference sectionCollection =
+		firestore.collection("classes");
+
+	/// The calendar collection. 
+	/// 
+	/// The calendar collection consists of 12 documents, one for each month. 
+	/// Each document has its month's data in the [calendarKey] field. 
+	/// 
+	/// Do not access documents in this collection directly.
+	/// Instead, use [calendar] or [getMonth]. 
+	static final CollectionReference calendarCollection =
+		firestore.collection("calendar");
+
+	/// The feedback collection.
+	/// 
+	/// Users can only create new documents here, not edit existing ones. 
+	/// 
+	/// Do not access documents in this collection.
+	/// Instead, create new ones. 
+	static final CollectionReference feedbackCollection =
+		firestore.collection("feedback");
+
+	/// The reminders collection. 
+	/// 
+	/// Each user has their own document here that holds just their reminders. 
+	/// The decision to separate reminders from the rest of the user data was 
+	/// made to minimize the amount of processing time, since the student document
+	/// contains other irrelevant data. 
+	/// 
+	/// To access a document in this collection, use [remindersDocument].
+	static final CollectionReference remindersCollection = 
+		firestore.collection("reminders");
+
+	/// The sports collection. 
+	/// 
+	/// Each academic year has its own document, with all the games for that year 
+	/// in a list. This structure is still up for redesign, but seems to hold up.
+	/// 
+	/// To access a document in this collection, use [sportsDocument].
+	static final CollectionReference sportsCollection =
+		firestore.collection("sports");
+
+	/// The document for this user's data. 
+	/// 
+	/// The collection is indexed by email. 
+	DocumentReference get userDocument => 
+		userCollection.doc(Auth.email);
+
+	/// The document for this user's reminders. 
+	/// 
+	/// The collection is indexed by email. 
+	DocumentReference get remindersDocument => 
+		remindersCollection.doc(Auth.email);
+
+	/// The document for this user's admin profile. 
+	/// 
+	/// The collection is indexed by email.
+	DocumentReference get adminDocument => 
+		adminCollection.doc(Auth.email);
+
+	/// The document for this academic year's sports games.
+	///  
+	/// The collection is indexed by `"$firstYear-$secondYear"` (eg, 2020-2021).  
+	DocumentReference get sportsDocument => sportsCollection.doc(_now.month > 7 
+		? "${_now.year}-${_now.year + 1}"
+		: "${_now.year - 1}-${_now.year}"
+	);
+
+	@override
+	bool get isReady => Auth.isReady;
+
+	@override
+	Future<void> reset() => Auth.signOut();
+
+	/// Signs the user in, and initializes their reminders. 
+	@override
+	Future<void> initialize() async {
+		await Auth.signIn();
+		final DocumentSnapshot remindersSnapshot = await remindersDocument.get();
+		if (!remindersSnapshot.exists) {
+			await remindersDocument.set({remindersKey: []});
 		}
-		return result;
 	}
 
-	/// Submits feedback. 
-	/// 
-	/// The feedback collection is write-only, and can only be accessed by admins.
-	static Future<void> sendFeedback(
-		Map<String, dynamic> json
-	) => _feedback.document().setData(json);
+	@override
+	Future<Map<String, dynamic>> get user async => 
+		(await userDocument.get()).data();
 
-	/// Downloads the calendar for a given month. 
-	static Future<List<List<Map<String, dynamic>>>> getCalendar(
-		{bool download = false}
-	) async => [
-		for (int month = 1; month < 13; month++) <Map<String, dynamic>>[
-			for (final entry in (await _calendar.document(month.toString()).get(
-				source: download ? fb.Source.server : fb.Source.serverAndCache,
-			)).data ["calendar"])
-				Map<String, dynamic>.from(entry)
-		]
+	/// No-op -- The user cannot edit their own profile. 
+	/// 
+	/// User profiles can only be modified by the admin SDK. 
+	/// Admin profiles may be modified. See [setAdmin]. 
+	@override
+	Future<void> setUser(Map<String, dynamic> json) async {}
+
+	/// Gets an individual section. 
+	/// 
+	/// Do not use directly. Use [getSections] instead. 
+	Future<Map<String, dynamic>> getSection(String id) async => 
+		(await sectionCollection.doc(id).get()).data();
+
+	@override
+	Future<Map<String, Map<String, dynamic>>> getSections(Set<String> ids)
+		async => {
+			for (final String id in ids)
+				id: await getSection(id)
+		};
+
+	/// No-op -- The user cannot edit the courses list. 
+	/// 
+	/// The courses list can only be modified by the admin SDK. 
+	@override
+	Future<void> setSections(Map<String, Map<String, dynamic>> json) async {}
+
+	/// Gets a month of the calendar. 
+	/// 
+	/// Do not use directly. Use [calendar].
+	Future<List<Map<String, dynamic>>> getMonth(int month) async {
+		final DocumentReference document = calendarCollection.doc(month.toString());
+		final DocumentSnapshot snapshot = await document.get();
+		final Map<String, dynamic> data = snapshot.data();
+		return [
+			for (final dynamic json in data [calendarKey])
+				Map<String, dynamic>.from(json)
+		];
+	}
+
+	@override
+	Future<List<List<Map<String, dynamic>>>> get calendar async => [
+		for (int month = 1; month <= 12; month++) 
+			await getMonth(month)
 	];
 
-	/// Uploads the given month to the Firestore calendar collection. 
-	static Future<void> saveCalendar(int month, List<Map<String, dynamic>> json) =>
-		_calendar.document(month.toString()).setData({"calendar": json});
+	@override 
+	Future<void> setCalendar(int month, List<Map<String, dynamic>> json) => 
+		calendarCollection.doc(month.toString()).set({calendarKey: json});
+
+	@override
+	Future<List<Map<String, dynamic>>> get reminders async {
+		final DocumentSnapshot snapshot = await remindersDocument.get();
+		final Map<String, dynamic> data = snapshot.data();
+		return [
+			for (final dynamic json in data [remindersKey])
+				Map<String, dynamic>.from(json)
+		];
+	}
+
+	@override
+	Future<void> setReminders(List<Map<String, dynamic>> json) => 
+		remindersDocument.set({remindersKey: json});
+
+	@override
+	Future<Map<String, dynamic>> get admin async => 
+		(await adminDocument.get()).data();
+
+	@override
+	Future<void> setAdmin(Map<String, dynamic> json) => adminDocument.set(json);
+
+	@override
+	Future<List<Map<String, dynamic>>> get sports async {
+		final DocumentSnapshot snapshot = await sportsDocument.get();
+		final Map<String, dynamic> data = snapshot.data();
+		return [
+			for (final dynamic json in data [sportsKey])
+				Map<String, dynamic>.from(json)
+		];
+	}
+
+	@override
+	Future<void> setSports(List<Map<String, dynamic>> json) => 
+		sportsDocument.set({sportsKey: json});
+
+	/// Submits feedback. 
+	static Future<void> sendFeedback(
+		Map<String, dynamic> json
+	) => feedbackCollection.doc().set(json);
 
 	/// Listens to a month for changes in the calendar. 
 	static Stream<List<Map<String, dynamic>>> getCalendarStream(int month) => 
-		_calendar.document(month.toString()).snapshots().map(
-			(fb.DocumentSnapshot snapshot) => [
-				for (final dynamic entry in snapshot.data ["calendar"])
+		calendarCollection.doc(month.toString()).snapshots().map(
+			(DocumentSnapshot snapshot) => [
+				for (final dynamic entry in snapshot.data() ["calendar"])
 					Map<String, dynamic>.from(entry)
 				]
 		);
-
-	/// Downloads the reminders for the user. 
-	/// 
-	/// At least for now, these are stored in a separate collection than
-	/// the student profile data. This choice was made since reminders are 
-	/// updated frequently and this saves the system from processing the
-	/// student's schedule every time this happens. 
-	static Future<List<Map<String, dynamic>>> get reminders async {
-		// If the user never made a reminder yet, the document will not exist. 
-		// So the map of data needs to be fetched first, and if it's null,
-		// return null. If the document does exist, check the `reminders` field. 
-		// 
-		// Get the document as a json. This may be null. 
-		final Map<String, dynamic> json = (await _reminders.document(
-			await Auth.email
-		).get())?.data;
-
-		// If the document doesn't exist, `json` will be null.
-		// If it is, set this to null. 
-		// Otherwise, set it to the `reminders` field. 
-		final List listOfReminders = json == null 
-			? [] : (json ["reminders"] ?? []);
-		return <Map<String, dynamic>>[
-			for (final entry in listOfReminders)
-				Map<String, dynamic>.from(entry)
-		];
-	} 
-
-	/// Uploads the user's reminders to the database. 
-	/// 
-	/// This function saves the reminders along with a record of the reminders
-	/// that were already read. Those reminders will be deleted once they are
-	/// irrelevant.
-	/// 
-	/// This should be re-written to only accept a list of JSON elements, as 
-	/// this creates a dependency between this library and the data library.
-	/// This should also probably not persist the read reminders in the database 
-	/// (ie, keep them local).
-	static Future<void> saveReminders(
-		List<Map<String, dynamic>> remindersList, 
-	) async => _reminders
-		.document(await Auth.email)
-		.setData({"reminders": remindersList});
-
-	/// Retrieves the admin data from the cloud.
-	/// 
-	/// Admins have their own collection. However, this collection is not what 
-	/// provides users with administrative privileges. That is handled by Firebase
-	/// Authentication custom tokens. The document here simply provides helpful
-	/// data for the user, such as their custom-made specials. 
-	static Future<Map<String, dynamic>> get admin async => 
-		(await _admin.document(await Auth.email).get()).data;
-
-	/// Saves the admin profile to the cloud. 
-	static Future<void> saveAdmin (Map<String, dynamic> data) async => 
-		_admin.document(await Auth.email).setData(data);
-
-	/// The document name for this school year's sports games.
-	///  
-	/// Each document is titled `"$firstYear-$secondYear" and has a 
-	/// `games` field for a list of JSON entries. 
-	static String get sportsDocument => _now.month > 7 
-		? "${_now.year}-${_now.year + 1}"
-		: "${_now.year - 1}-${_now.year}";
-
-	/// Downloads the sports data from the database. 
-	/// 
-	/// The sports games are split into documents by school year. Each document
-	/// has a `games` field for a list of JSON entries. 
-	static Future<List<Map<String, dynamic>>> get sports async => [
-		for (final dynamic entry in (
-			await _sports.document(sportsDocument).get()
-		).data ["games"]) 
-			Map<String, dynamic>.from(entry)
-	];
-
-	/// Saves the list of sports games to the database. 
-	static Future<void> saveGames(List<Map<String, dynamic>> games) async => 
-		_sports.document(sportsDocument).setData({
-			"games": games,
-		});
 }
