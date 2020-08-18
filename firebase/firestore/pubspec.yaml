@@ -11,7 +11,7 @@ dependencies:
   # prior to 2.1.0, the values for custom claims had to be Strings
   # (I changed that with my own PR -- be the change you want to see in the world) 
   firebase_admin_interop: ^2.1.0
-  node_io: ^1.0.1+2
+  node_io: ^1.1.1
   build_runner: any 
   build_node_compilers: any
   node_interop: any

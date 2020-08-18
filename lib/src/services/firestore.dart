@@ -68,10 +68,6 @@ class Firestore {
 	/// This function goes over the student's schedule and keeps a record 
 	/// of the unique section IDs and queries the database for them afterwards 
 	/// using [getClass].
-	/// 
-	/// This function should be re-written to only accept a list of IDs
-	/// instead of a student, as this creates a dependency between this 
-	/// library and the data library.
 	static Future<Map<String, Map<String, dynamic>>> getClasses(
 		Set<String> ids		
 	) async {

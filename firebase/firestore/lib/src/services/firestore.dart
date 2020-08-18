@@ -141,4 +141,16 @@ class Firestore {
 			count++;
 		}
 	}
+
+	static Future<List<Map<String, dynamic>>> getMonth(int month) async {
+		final fb.DocumentReference document = 
+			calendarCollection.document(month.toString());
+		final fb.DocumentSnapshot snapshot = await document.get();
+		final Map<String, dynamic> data = snapshot.data.toMap();
+		final List<Map<String, dynamic>> calendar = [
+			for (final dynamic json in data ["calendar"])	
+				Map<String, dynamic>.from(json)
+		];
+		return calendar;
+	} 
 }
