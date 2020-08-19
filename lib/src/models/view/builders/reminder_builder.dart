@@ -2,7 +2,6 @@ import "package:flutter/foundation.dart";
 
 import "package:ramaz/data.dart";
 import "package:ramaz/models.dart";
-import "package:ramaz/services_collection.dart";
 
 /// A view model for the dialog that allows the user to build a reminder.
 // ignore: prefer_mixin
@@ -46,13 +45,10 @@ class RemindersBuilderModel with ChangeNotifier {
 	/// 
 	/// If [reminder] is not null, then the relevant fields of this 
 	/// class are filled in with the corresponding fields of the reminder. 
-	RemindersBuilderModel({
-		@required ServicesCollection services, 
-		Reminder reminder
-	}) : 
-		_schedule = services.schedule,
+	RemindersBuilderModel(Reminder reminder) : 
+		_schedule = Models.schedule,
 		courses = [
-			for (final Subject subject in services.schedule.subjects.values)
+			for (final Subject subject in Models.schedule.subjects.values)
 				subject.name
 		]
 	{

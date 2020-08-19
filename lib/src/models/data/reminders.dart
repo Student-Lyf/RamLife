@@ -10,8 +10,6 @@ import "package:ramaz/services.dart";
 /// this data model.
 // ignore: prefer_mixin
 class Reminders with ChangeNotifier {
-	final Reader _reader;
-
 	/// The reminders for the user.
 	List<Reminder> reminders;
 
@@ -30,22 +28,12 @@ class Reminders with ChangeNotifier {
 	/// These reminders will be marked for deletion if they do not repeat.
 	List<int> readReminders;
 
-	/// Creates a Reminders data model. 
-	/// 
-	/// This automatically calls [setup].
-	Reminders(this._reader) {setup();}
-
-	/// Initializes this data model.
-	/// 
-	/// This function should be called any time completely new data is available.
-	void setup() {
-		final Map<String, dynamic> data = _reader.remindersData;
-		readReminders = List<int>.from(data ["read"] ?? []);
+	/// Initializes the data model. 
+	Future<void> init() async {
 		reminders = [
-			for (final json in data ["reminders"] ?? [])
+			for (final json in await Services.instance.reminders)
 				Reminder.fromJson(json)
 		];
-		notifyListeners();
 	}
 
 	/// Whether any reminder applies to the current period.
@@ -83,19 +71,12 @@ class Reminders with ChangeNotifier {
 	).toList();
 
 	/// Saves all reminders to the device and the cloud. 
-	/// 
-	/// This method sets [Reader.remindersData] and calls 
-	/// [Firestore.saveReminders].
-	void saveReminders() {
+	Future<void> saveReminders() async {
 		final List<Map<String, dynamic>> json = [
-			for (final Reminder reminder in reminders ?? [])
+			for (final Reminder reminder in reminders)
 				reminder.toJson()
 		];
-		_reader.remindersData = {
-			"reminders": json,
-			"read": readReminders ?? [],
-		};
-		Firestore.saveReminders(json);
+		await Services.instance.setReminders(json);
 	}
 
 	/// Checks if any reminders have been modified and removes them. 

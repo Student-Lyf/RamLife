@@ -1,9 +1,10 @@
 import "dart:async" show Timer;
+
 import "package:flutter/foundation.dart";
 
 import "package:ramaz/services.dart";
 import "package:ramaz/data.dart";
-
+import "package:ramaz/models.dart";
 import "reminders.dart";
 
 /// A data model for the user's schedule.
@@ -16,13 +17,6 @@ class Schedule with ChangeNotifier {
 
 	/// How often to refresh the schedule.
 	static const timerInterval = Duration (minutes: 1);
-
-	/// The reminders data model.
-	/// 
-	/// This is used to schedule reminders based on the next and 
-	/// upcoming periods, as well as react to changes in user reminders. 
-	/// See [updateReminders] and [scheduleReminders].
-	final Reminders reminders;
 
 	/// The student object for the user. 
 	Student student;
@@ -56,27 +50,25 @@ class Schedule with ChangeNotifier {
 
 	/// Initializes the schedule model.
 	Schedule(
-		Reader reader,
-		{@required this.reminders}
 	) {
-		setup(reader);
-		reminders.addListener(remindersListener);
+		Models.reminders.addListener(remindersListener);
 	}
 
 	/// Does the main initialization work for the schedule model.
 	/// 
 	/// Should be called whenever there is new data for this model to work with.
-	void setup(Reader reader) {
-		subjects = Subject.getSubjects(reader.subjectData);
-		student = Student.fromJson(reader.studentData);
-		calendar = Day.getCalendar(reader.calendarData);
+	Future<void> init() async {
+		final Services services = Services.instance;
+		student = Student.fromJson(await services.user);
+		subjects = Subject.getSubjects(await services.getSections(student.getIds()));
+		calendar = Day.getCalendar(await services.calendar);
 		setToday();
 		notifyListeners();
 	}
 
 	@override 
 	void dispose() {
-		reminders.removeListener(remindersListener);
+		Models.reminders.removeListener(remindersListener);
 		timer.cancel();
 		super.dispose();
 	}
@@ -172,19 +164,19 @@ class Schedule with ChangeNotifier {
 	/// response to changed reminders. See [scheduleReminders] for more details
 	/// on scheduling notifications.
 	void updateReminders({bool scheduleNotifications = false}) {
-		reminders
-			..currentReminders = reminders.getReminders(
+		Models.reminders
+			..currentReminders = Models.reminders.getReminders(
 				period: period?.period,
 				subject: subjects [period?.id]?.name,
 				letter: today.letter,
 			)
-			..nextReminders = reminders.getReminders(
+			..nextReminders = Models.reminders.getReminders(
 				period: nextPeriod?.period,
 				subject: subjects [nextPeriod?.id]?.name,
 				letter: today.letter,
 			);
 
-		(reminders.currentReminders ?? []).forEach(reminders.markShown);
+		(Models.reminders.currentReminders ?? []).forEach(Models.reminders.markShown);
 
 		if (scheduleNotifications) {
 			Future(scheduleReminders);
@@ -208,7 +200,7 @@ class Schedule with ChangeNotifier {
 		// For all periods starting from periodIndex, schedule applicable reminders.
 		for (int index = periodIndex; index < periods.length; index++) {
 			final Period period = periods [index];
-			for (final int reminderIndex in reminders.getReminders(
+			for (final int reminderIndex in Models.reminders.getReminders(
 				period: period?.period,
 				subject: subjects [period?.id]?.name,
 				letter: today.letter,
@@ -223,7 +215,7 @@ class Schedule with ChangeNotifier {
 					),
 					notification: Notification.reminder(
 						title: "New reminder",
-						message: reminders.reminders [reminderIndex].message,
+						message: Models.reminders.reminders [reminderIndex].message,
 					)
 				);
 			}

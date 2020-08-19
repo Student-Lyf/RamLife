@@ -56,11 +56,11 @@ class CalendarModel with ChangeNotifier {
 	/// Creates a data model to hold the calendar.
 	/// 
 	/// Initializing a [CalendarModel] automatically listens to the calendar in 
-	/// Firebase. See [Firestore.getCalendarStream] for details. 
+	/// Firebase. See [Database.getCalendarStream] for details. 
 	CalendarModel() {
 		for (int month = 0; month < 12; month++) {
 			subscriptions.add(
-				Firestore.getCalendarStream(month + 1).listen(
+				Database.getCalendarStream(month + 1).listen(
 					(List<Map<String, dynamic>> cal) {
 						calendar [month] = Day.getMonth(cal);
 						calendar [month] = layoutMonth(month);
@@ -99,7 +99,7 @@ class CalendarModel with ChangeNotifier {
 			return;
 		}
 		calendar [date.month - 1] [date.day - 1] = day;
-		await Firestore.saveCalendar(
+		await Services.instance.setCalendar(
 			date.month, 
 			Day.monthToJson(calendar [date.month - 1])
 		);

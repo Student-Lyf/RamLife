@@ -24,6 +24,11 @@
 /// 	state should depend on their corresponding view model.
 library models;
 
+import "src/models/data/admin.dart";
+import "src/models/data/reminders.dart";
+import "src/models/data/schedule.dart";
+import "src/models/data/sports.dart";
+
 // data models
 export "src/models/data/admin.dart";
 export "src/models/data/reminders.dart";
@@ -39,3 +44,31 @@ export "src/models/view/feedback.dart";
 export "src/models/view/home.dart";
 export "src/models/view/schedule.dart";
 export "src/models/view/sports.dart";
+
+class Models {
+	static Reminders reminders;
+
+	static Schedule schedule;
+
+	static Sports sports;
+
+	static AdminModel admin;
+
+	static Future<void> init() async {
+		reminders = Reminders();
+		await reminders.init();
+		schedule = Schedule();
+		await schedule.init();
+		sports = Sports();
+		await sports.init(refresh: true);
+		admin = AdminModel();
+		await admin.init();
+	}
+
+	static void reset() {
+		reminders = null;
+		schedule = null;
+		sports = null;
+		admin = null;
+	}
+}

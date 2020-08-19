@@ -1,4 +1,4 @@
-import "package:flutter/foundation.dart" show ChangeNotifier;
+import "package:flutter/foundation.dart";
 
 import "package:ramaz/data.dart";
 import "package:ramaz/services.dart";
@@ -9,24 +9,22 @@ import "package:ramaz/services.dart";
 /// the admin's data to the database.
 // ignore: prefer_mixin
 class AdminUserModel with ChangeNotifier {
-	/// Provides access to the file system.
-	final Reader reader;
-
 	/// The admin being managed by this model.
 	final Admin admin;
 
 	/// Creates a data model to manage admin data.
-	AdminUserModel(this.reader, List<String> scopes) :
-		admin = Admin.fromJson(reader.adminData, scopes);
+	AdminUserModel({
+		@required Map<String, dynamic> json, 
+		@required List<String> scopes
+	}) : admin = Admin.fromJson(json, scopes);
 
 	/// The list of this admin's custom [Special]s.
 	List<Special> get specials => admin.specials;
 
 	/// Saves the admin's data both to the device and the cloud.
 	Future<void> save() async {
-		reader.adminData = admin.toJson();
+		await Services.instance.setAdmin(admin.toJson());
 		notifyListeners();
-		await Firestore.saveAdmin(admin.toJson());
 	}
 
 	/// Adds a [Special] to the admin's list of custom specials.

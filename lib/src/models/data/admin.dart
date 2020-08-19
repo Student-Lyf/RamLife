@@ -1,4 +1,4 @@
-import "package:ramaz/services_collection.dart";
+import "package:ramaz/services.dart";
 
 import "admin/calendar.dart";
 import "admin/user.dart";
@@ -15,9 +15,12 @@ class AdminModel {
 	/// This is an [AdminUserModel], not just the user itself. 
 	AdminUserModel user;
 
-	/// Creates an admin data model. 
-	AdminModel(ServicesCollection services, List<String> scopes) : 
-		user = AdminUserModel(services.reader, scopes);
+	Future<void> init() async {
+		user = AdminUserModel(
+			json: await Services.instance.admin, 
+			scopes: await Auth.adminScopes
+		);
+	}
 
 	/// The data model for modifying the calendar. 
 	CalendarModel get calendar => _calendar ??= CalendarModel();

@@ -1,7 +1,6 @@
 import "package:flutter/foundation.dart";
 
 import "package:ramaz/models.dart";
-import "package:ramaz/services_collection.dart";
 
 /// A ViewModel for the home page. 
 /// 
@@ -18,9 +17,9 @@ class HomeModel with ChangeNotifier {
 	final Sports sports;
 
 	/// Creates a ViewModel for the home screen. 
-	HomeModel(ServicesCollection services) : 
-		schedule = services.schedule,
-		sports = services.sports
+	HomeModel() : 
+		schedule = Models.schedule,
+		sports = Models.sports
 	{
 		schedule.addListener(notifyListeners);
 		sports.addListener(notifyListeners);

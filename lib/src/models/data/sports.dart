@@ -14,17 +14,9 @@ import "package:ramaz/services.dart";
 class Sports with ChangeNotifier {
 	static const Duration _minute = Duration(minutes: 1);
 
-	/// Provides access to the file system.
-	final Reader reader; 
-
 	/// A timer to refresh [todayGames].
 	Timer timer; 
 
-	/// The current day.
-	/// 
-	/// In [setup] (called every minute), the system date is checked against this
-	/// value. If they do not match, [getTodayGames] is called to refresh 
-	/// the list [todayGames].
 	DateTime now;
 
 	/// A list of all the games taking place. 
@@ -34,15 +26,14 @@ class Sports with ChangeNotifier {
 	List<int> todayGames;
 
 	/// Creates a data model for sports games. 
-	Sports(this.reader) {
+	Sports() {
 		timer = Timer.periodic(_minute, (_) => todayGames = getTodayGames());
-		setup(refresh: true);
 	}
 
 	/// Loads data from the device and 
-	void setup({bool refresh = false}) {
+	Future<void> init({bool refresh = false}) async {
 		if (refresh) {
-			games = SportsGame.fromList(reader.sportsData);
+			games = SportsGame.fromList(await Services.instance.sports);
 			todayGames = getTodayGames();
 			now = DateTime.now();
 		} else {		
@@ -94,5 +85,6 @@ class Sports with ChangeNotifier {
 	/// Saves the games to the database. 
 	/// 
 	/// Used in any database CRUD methods. 
-	Future<void> saveGames() => Firestore.saveGames(SportsGame.getJsonList(games));
+	Future<void> saveGames() => 
+		Services.instance.setSports(SportsGame.getJsonList(games));
 }

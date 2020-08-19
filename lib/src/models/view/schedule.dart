@@ -1,8 +1,7 @@
-import "package:flutter/foundation.dart" show ChangeNotifier, required;
+import "package:flutter/foundation.dart" show ChangeNotifier;
 
 import "package:ramaz/data.dart";
 import "package:ramaz/models.dart";
-import "package:ramaz/services_collection.dart";
 
 /// A view model for the schedule page. 
 // ignore: prefer_mixin
@@ -44,8 +43,8 @@ class ScheduleModel with ChangeNotifier {
 	/// Also initializes the default day shown to the user. 
 	/// If today is a school day, then use that. Otherwise, use the 
 	/// defaults (see [defaultLetter] and [defaultSpecial]).
-	ScheduleModel ({@required ServicesCollection services}) : 
-		schedule = services.schedule
+	ScheduleModel () : 
+		schedule = Models.schedule
 	{
 		day = schedule.hasSchool
 			? schedule.today
