@@ -15,20 +15,34 @@
 /// 
 library ramaz_services;
 
+import "package:firebase_core/firebase_core.dart";
+import "package:path_provider/path_provider.dart";
+import "package:shared_preferences/shared_preferences.dart";
+
 import "src/services/auth.dart";
 import "src/services/database.dart";
+import "src/services/fcm.dart";
+import "src/services/preferences.dart";
 import "src/services/service.dart";
 import "src/services/storage.dart";
 
 export "src/services/auth.dart";
 export "src/services/database.dart";
-export "src/services/fcm.dart";
 export "src/services/notifications.dart";
 export "src/services/preferences.dart";
 
 class Services implements Service {
 	/// The singleton instance of this class. 
 	static Services instance;
+
+	static Future<void> init() async {
+		await Firebase.initializeApp();
+		final SharedPreferences prefs = await SharedPreferences.getInstance();
+		final String dir = (await getApplicationDocumentsDirectory()).path;
+		Services.instance = Services(dir, prefs);
+	}
+
+	final Preferences prefs;
 
 	/// Provides a connection to the database. 
 	final Database database = Database();
@@ -40,7 +54,9 @@ class Services implements Service {
 	final Storage storage;
 
 	/// Creates a wrapper around the services. 
-	Services(String dir) : storage = Storage(dir);
+	Services(String dir, SharedPreferences prefs) : 
+		prefs = Preferences(prefs),
+		storage = Storage(dir);
 
 	@override
 	bool get isReady => database.isReady && storage.isReady;
@@ -55,20 +71,33 @@ class Services implements Service {
 	Future<void> initialize() async {
 		await storage.initialize();
 		await database.initialize();
-		if (storage.isReady) {
-			return;
-		}
 
-		await storage.reset();
 		await storage.setUser(await database.user);
 		await storage.setSections({});  // to-do later
 		await storage.setReminders(await database.reminders);
-		await storage.setSports(await database.sports);
+
+		await updateSports();
 		await updateCalendar();
 
 		if (await Auth.isAdmin) {
 			await storage.setAdmin(await database.admin);
 		}
+
+		// Register for FCM notifications. 
+		// We don't care when this happens
+		// ignore: unawaited_futures 
+		Future(
+			() async {
+				await FCM.registerNotifications(
+					{
+						"refresh": initialize,
+						"updateCalendar": updateCalendar,
+						"updateSports": updateSports,
+					}
+				);
+				await FCM.subscribeToTopics();
+			}
+		);
 	}
 
 	@override

@@ -1,5 +1,5 @@
-import "dart:convert" show jsonDecode, jsonEncode;
-import "dart:io" show File;
+import "dart:convert";
+import "dart:io";
 
 import "service.dart";
 
@@ -24,7 +24,7 @@ class Storage implements Service {
 	final File subjectFile;
 
 	/// The file containing the calendar. 
-	final File calendarFile;
+	final Directory calendarDir;
 
 	/// The file containing the user's reminders. 
 	final File remindersFile;
@@ -39,7 +39,7 @@ class Storage implements Service {
 	Storage(this.dir) :
 		userFile = File("$dir/student.json"),
 		subjectFile = File("$dir/subjects.json"),
-		calendarFile = File("$dir/calendar.json"),
+		calendarDir = Directory("$dir/calendar"),
 		adminFile = File("$dir/admin.json"),
 		sportsFile = File("$dir/sports.json"),
 		remindersFile = File("$dir/reminders.json");
@@ -47,7 +47,7 @@ class Storage implements Service {
 	@override
 	bool get isReady => userFile.existsSync()
 		&& subjectFile.existsSync()
-		&& calendarFile.existsSync()
+		&& calendarDir.existsSync()
 		&& remindersFile.existsSync()
 		&& adminFile.existsSync()
 		&& sportsFile.existsSync();
@@ -60,8 +60,8 @@ class Storage implements Service {
 		if (subjectFile.existsSync()) {
 			subjectFile.deleteSync();
 		}
-		if (calendarFile.existsSync()) {
-			calendarFile.deleteSync();
+		if (calendarDir.existsSync()) {
+			calendarDir.deleteSync(recursive: true);
 		}
 		if (remindersFile.existsSync()) {
 			remindersFile.deleteSync();
@@ -76,7 +76,9 @@ class Storage implements Service {
 
 	@override
 	Future<void> initialize() async {
-		// No-op -- Files are always ready for writing
+		if (!calendarDir.existsSync()) {
+			calendarDir.createSync();
+		}
 	}
 
 	@override 
@@ -90,9 +92,10 @@ class Storage implements Service {
 
 	@override
 	Future<Map<String, Map<String, dynamic>>> getSections(_) async => 
-		jsonDecode(await subjectFile.readAsString()).map(
-			(String id, dynamic json) => 
-				MapEntry(id, Map<String, dynamic>.from(json))	
+		jsonDecode(await subjectFile.readAsString())
+			.map<String, Map<String, dynamic>>(
+				(String id, dynamic json) => 
+					MapEntry(id, Map<String, dynamic>.from(jsonDecode(json)))	
 		);
 
 	@override
@@ -101,18 +104,19 @@ class Storage implements Service {
 
 	@override
 	Future<List<List<Map<String, dynamic>>>> get calendar async => [
-		for (final List entry in jsonDecode(await calendarFile.readAsString())) [
-			for (final entry2 in entry) 
-				Map<String, dynamic>.from(entry2)
+		for (int month = 1; month <= 12; month++) [
+			for (final dynamic json in 
+				jsonDecode(
+					await File("${calendarDir.path}/${month.toString()}.json").readAsString()
+				)
+			)	Map<String, dynamic>.from(json)
 		]
 	];
 
 	@override
 	Future<void> setCalendar(int month, List<Map<String, dynamic>> json) async {
-		final List<List<Map<String, dynamic>>> cal = await calendar 
-			?? List.filled(12, null);
-		cal [month - 1] = json;
-		await calendarFile.writeAsString(jsonEncode(cal));
+		final File file = File("${calendarDir.path}/${month.toString()}.json");
+		await file.writeAsString(jsonEncode(json));
 	}
 
 	@override
@@ -134,8 +138,10 @@ class Storage implements Service {
 		adminFile.writeAsString(jsonEncode(json));
 
 	@override
-	Future<List<Map<String, dynamic>>> get sports async => 
-		jsonDecode(await sportsFile.readAsString());
+	Future<List<Map<String, dynamic>>> get sports async => [
+		for (final dynamic json in jsonDecode(await sportsFile.readAsString()))
+			Map<String, dynamic>.from(json)
+	];
 
 	@override
 	Future<void> setSports(List<Map<String, dynamic>> json) => 
