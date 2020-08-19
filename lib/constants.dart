@@ -6,33 +6,28 @@ import "package:ramaz/data.dart";
 
 /// A container for Ramaz-specific colors
 /// 
-// TODO: Change this link to use the new colors
-/// See https://material.io/resources/color/#!/primary.color=004b8d&secondary.color=f9ca15
-/// for visuals.
+/// [blue] and [gold] were taken from seniorelectives.ramaz.org
+/// 
+/// The other variants were taken from: 
+/// https://material.io/resources/color/#!/?view.left=0&view.right=0&primary.color=074d92&secondary.color=fcc30c
 class RamazColors {
 	/// Ramaz's brand blue.
-	static const Color blue = Color(0xFF004B8D);
-	// Taken from seniorelectives.ramaz.org: ff074d92
+	static const Color blue = Color(0xff074d92);
 
 	/// Ramaz's brand gold.
-	static const Color gold = Color(0xFFF9CA15);
-	// Taken from seniorelectives.ramaz.org: fffcc30c
+	static const Color gold = Color(0xfffcc30c);
 
 	/// The material-specific light variant of [blue].
-	static const Color blueLight = Color(0xFF4A76BE);
-	// New color: 4e78c3
+	static const Color blueLight = Color(0xff4e78c3);
 
 	/// The material-specific dark variant of [blue].
-	static const Color blueDark = Color (0xFF00245F);
-	// New color: 002664
+	static const Color blueDark = Color (0xff002664);
 
 	/// The material-specific dark variant of [gold].	
-	static const Color goldDark = Color (0xFFC19A00);
-	// New color: c49300
+	static const Color goldDark = Color (0xffc49300);
 
 	/// The material-specific light variant of [gold].	
-	static const Color goldLight = Color (0xFFFFFD56);
-	// New color: fff552
+	static const Color goldLight = Color (0xfffff552);
 }
 
 /// Route names for each page in the app.
