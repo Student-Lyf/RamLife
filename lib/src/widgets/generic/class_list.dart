@@ -97,7 +97,7 @@ class ClassList extends StatelessWidget {
 	});
 
 	@override Widget build(BuildContext context) => ModelListener<Reminders>(
-		model: () => Services.of(context).reminders,
+		model: () => Models.reminders,
 		dispose: false,
 		// ignore: sort_child_properties_last
 		child: DrawerHeader (
@@ -109,26 +109,23 @@ class ClassList extends StatelessWidget {
 				)
 			)
 		),
-		builder: (BuildContext context, Reminders reminders, Widget header) {
-			final Services services = Services.of(context);
-			return ListView (
-				shrinkWrap: true,
-				children: [
-					if (headerText != null) header,
-					...[
-						for (
-							final Period period in 
-							periods ?? services.schedule.student.getPeriods(day)
-						) getPanel(services, period)
-					],
-				]
-			);
-		}
+		builder: (_, __, Widget header) => ListView(
+			shrinkWrap: true,
+			children: [
+				if (headerText != null) header,
+				...[
+					for (
+						final Period period in 
+						periods ?? Models.schedule.student.getPeriods(day)
+					) getPanel(period)
+				],
+			]
+		)
 	);
 
 	/// Creates a [ClassPanel] for a given period. 
-	Widget getPanel(Services services, Period period) {
-		final Subject subject = services.schedule.subjects[period.id];
+	Widget getPanel(Period period) {
+		final Subject subject = Models.schedule.subjects[period.id];
 		return ClassPanel (
 			children: [
 				for (final String description in period.getInfo(subject))
@@ -140,7 +137,7 @@ class ClassList extends StatelessWidget {
 			title: int.tryParse(period.period) == null 
 				? period.getName(subject)
 				: "${period.period}: ${period.getName(subject)}",
-			reminders: services.reminders.getReminders(
+			reminders: Models.reminders.getReminders(
 				period: period.period,
 				letter: day.letter,
 				subject: subject?.name,

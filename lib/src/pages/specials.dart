@@ -8,7 +8,7 @@ import "package:ramaz/widgets.dart";
 class SpecialPage extends StatelessWidget {
 	@override
 	Widget build(BuildContext context) => ModelListener<AdminUserModel>(
-		model: () => Services.of(context).admin.user,
+		model: () => Models.admin.user,
 		dispose: false,
 		builder: (_, AdminUserModel model, __) => Scaffold(
 			appBar: AppBar(
@@ -36,7 +36,7 @@ class SpecialPage extends StatelessWidget {
 								ListTile(
 									title: Text (model.admin.specials [index].name),
 									trailing: IconButton(
-										icon: Icon(Icons.remove_circle),
+										icon: const Icon(Icons.remove_circle),
 										onPressed: () => model.removeSpecial(index),
 									),
 									onTap: () async => model.replaceSpecial(

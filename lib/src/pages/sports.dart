@@ -4,6 +4,7 @@ import "package:ramaz/constants.dart";
 import "package:ramaz/data.dart";
 import "package:ramaz/models.dart";
 import "package:ramaz/pages.dart";
+import "package:ramaz/services.dart";
 import "package:ramaz/widgets.dart";
 
 import "package:url_launcher/url_launcher.dart";
@@ -69,7 +70,7 @@ class SportsPage extends StatelessWidget {
 	Widget build(BuildContext context) => DefaultTabController(
 		length: 2,
 		child: ModelListener<SportsModel>(
-			model: () => SportsModel(Services.of(context).sports),
+			model: () => SportsModel(Models.sports),
 			builder: (BuildContext context, SportsModel model, Widget _) => Scaffold(
 				appBar: AppBar(
 					title: const Text("Sports"),
@@ -89,7 +90,7 @@ class SportsPage extends StatelessWidget {
 								),
 							),
 	          PopupMenuButton(
-	            icon: Icon(Icons.sort),
+	            icon: const Icon(Icons.sort),
 	            onSelected: (SortOption option) => model.sortOption = option,
 	            tooltip: "Sort games",
 	            itemBuilder: (_) => [
@@ -109,7 +110,7 @@ class SportsPage extends StatelessWidget {
 	      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
 				floatingActionButton: FloatingActionButton.extended(
 	        label: const Text("Watch livestream"),
-	        icon: Icon(Icons.open_in_new),
+	        icon: const Icon(Icons.open_in_new),
 	        onPressed: () => launch(Urls.sportsLivestream),
 	      ),
 				body: getLayout(context, model),
@@ -123,7 +124,7 @@ class SportsPage extends StatelessWidget {
 			case SortOption.chronological: 
 				return GenericSportsView<int>(
 					loading: model.loading,
-					onRefresh: model.adminFunc(Services.of(context).services.updateSports),
+					onRefresh: model.adminFunc(Services.instance.updateSports),
 					recents: model.recents,
 					upcoming: model.upcoming,
 					builder: (int index) => SportsTile(
@@ -138,7 +139,7 @@ class SportsPage extends StatelessWidget {
 			case SortOption.sport: 
 				return GenericSportsView<MapEntry<Sport, List<int>>>(
 					loading: model.loading,
-					onRefresh: model.adminFunc(Services.of(context).services.updateSports),
+					onRefresh: model.adminFunc(Services.instance.updateSports),
 					recents: model.recentBySport.entries.toList(),
 					upcoming: model.upcomingBySport.entries.toList(),
 					builder: (MapEntry<Sport, List<int>> entry) => Column(
@@ -184,7 +185,7 @@ class SportsPage extends StatelessWidget {
 				  		return;
 				  	}
 				  	model.loading = true;
-				  	await Services.of(context).sports.replace(
+				  	await Models.sports.replace(
 					  	index, 
 					  	model.data.games [index].replaceScores(scores)
 			  		);
@@ -197,7 +198,7 @@ class SportsPage extends StatelessWidget {
 					onPressed: () async {
 				  	Navigator.of(newContext).pop();
 				  	model.loading = true;
-				  	await Services.of(context).sports.replace(
+				  	await Models.sports.replace(
 					  	index, 
 					  	model.data.games [index].replaceScores(null)
 			  		);
@@ -210,7 +211,7 @@ class SportsPage extends StatelessWidget {
 				  onPressed: () async {
 				  	Navigator.of(newContext).pop();
 				  	model.loading = true;
-				  	await Services.of(context).sports.replace(
+				  	await Models.sports.replace(
 					  	index, 
 					  	await SportsBuilder.createGame(context, model.data.games [index])
 				  	);
@@ -241,7 +242,7 @@ class SportsPage extends StatelessWidget {
 			  		);
 			  		if (confirm) {
 			  			model.loading = true;
-					  	await Services.of(context).sports.delete(index);
+					  	await Models.sports.delete(index);
 			  			model.loading = false;
 					  }
 				  },

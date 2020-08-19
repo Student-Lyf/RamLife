@@ -58,7 +58,7 @@ class SpecialBuilderState extends State<SpecialBuilder> {
 				title: const Text("Make new schedule"),
 				actions: [
 					IconButton(
-						icon: Icon (Icons.sync),
+						icon: const Icon(Icons.sync),
 						tooltip: "Use preset",
 						onPressed: () async {
 							final Special special = await showModalBottomSheet<Special>(
@@ -80,7 +80,7 @@ class SpecialBuilderState extends State<SpecialBuilder> {
 										const Divider(),
 										for (
 											final Special special in 
-											Services.of(context).admin.user.specials
+											Models.admin.user.specials
 										) ListTile(
 											title: Text (special.name),
 											onTap: () => Navigator.of(context).pop(special),
@@ -96,7 +96,7 @@ class SpecialBuilderState extends State<SpecialBuilder> {
 			),
 			floatingActionButton: FloatingActionButton.extended(
 				label: const Text("Save"),
-				icon: Icon (Icons.done),
+				icon: const Icon(Icons.done),
 				onPressed: !model.ready ? null : 
 					() => Navigator.of(context).pop(model.special),
 				backgroundColor: model.ready

@@ -4,6 +4,7 @@ import "package:flutter/services.dart";
 
 import "package:ramaz/models.dart";
 import "package:ramaz/pages.dart";
+import "package:ramaz/services.dart";
 import "package:ramaz/widgets.dart";
 
 /// The homepage of the app. 
@@ -27,8 +28,8 @@ class HomePageState extends State<HomePage> {
 	/// Downloads the calendar again and calls [Schedule.onNewPeriod].
 	Future<void> refresh() async {
 		try {
-			await Services.of(context).services.updateCalendar();
-			await Services.of(context).services.updateSports();
+			await Services.instance.updateCalendar();
+			await Services.instance.updateSports();
 		} on PlatformException catch(error) {
 			if (error.code == "Error performing get") {
 				scaffoldKey.currentState.showSnackBar(
@@ -50,7 +51,7 @@ class HomePageState extends State<HomePage> {
 
 	@override 
 	Widget build (BuildContext context) => ModelListener<HomeModel>(
-		model: () => HomeModel(Services.of(context).services),
+		model: () => HomeModel(),
 		builder: (BuildContext context, HomeModel model, _) => Scaffold (
 			key: scaffoldKey,
 			appBar: AppBar (
@@ -97,7 +98,7 @@ class HomePageState extends State<HomePage> {
 						),
 						const SizedBox (height: 20),
 						if (model.schedule.hasSchool) NextClass(
-							reminders: model.schedule.reminders.currentReminders,
+							reminders: Models.reminders.currentReminders,
 							period: model.schedule.period,
 							subject: model.schedule.subjects [model.schedule.period?.id],
 							modified: model.schedule.today.isModified,
@@ -108,7 +109,7 @@ class HomePageState extends State<HomePage> {
 							!model.schedule.today.isModified
 						) NextClass (
 							next: true,
-							reminders: model.schedule.reminders.nextReminders,
+							reminders: Models.reminders.nextReminders,
 							period: model.schedule.nextPeriod,
 							subject: model.schedule.subjects [model.schedule.nextPeriod?.id],
 							modified: model.schedule.today.isModified,

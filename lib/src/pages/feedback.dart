@@ -36,7 +36,7 @@ class FeedbackPage extends StatelessWidget {
 						const SizedBox(height: 50),
 						RaisedButton.icon(
 							label: const Text ("Submit"),
-							icon: Icon (Icons.send),
+							icon: const Icon(Icons.send),
 							onPressed: !model.ready 
 								? null 
 								: () {

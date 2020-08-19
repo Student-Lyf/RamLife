@@ -11,7 +11,7 @@ import "package:ramaz/widgets.dart";
 class SchedulePage extends StatelessWidget {
 	@override
 	Widget build (BuildContext context) => ModelListener<ScheduleModel>(
-		model: () => ScheduleModel(services: Services.of(context).services),
+		model: () => ScheduleModel(),
 		// ignore: sort_child_properties_last
 		builder: (
 			BuildContext context, 
@@ -23,7 +23,7 @@ class SchedulePage extends StatelessWidget {
 				actions: [
 					if (ModalRoute.of(context).isFirst)
 						IconButton (
-							icon: Icon (Icons.home),
+							icon: const Icon(Icons.home),
 							onPressed: () => Navigator.of(context)
 								.pushReplacementNamed(Routes.home)
 						)

@@ -45,9 +45,9 @@ class CalendarTile extends StatelessWidget{
 						day?.letter != null &&
 						!<String>[Special.rotate.name, Special.regular.name]
 							.contains(day.special?.name)
-					) Align(
+					) const Align(
 						alignment: Alignment.bottomCenter,
-						child: const Text ("•", textScaleFactor: 0.8),
+						child: Text ("•", textScaleFactor: 0.8),
 					)
 				]
 			]

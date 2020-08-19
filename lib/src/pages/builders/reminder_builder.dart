@@ -84,10 +84,7 @@ class ReminderBuilderState extends State<ReminderBuilder> {
 
 	@override
 	Widget build(BuildContext context) => ModelListener<RemindersBuilderModel>(
-		model: () => RemindersBuilderModel(
-			services: Services.of(context).services, 
-			reminder: widget.reminder
-		),
+		model: () => RemindersBuilderModel(widget.reminder),
 		// ignore: sort_child_properties_last
 		child: FlatButton(
 			onPressed: Navigator.of(context).pop,

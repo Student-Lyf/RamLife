@@ -13,7 +13,7 @@ library widgets;
 
 // Ambient widgets can be accessed using `BuildContext`s
 export "src/widgets/ambient/brightness_changer.dart";
-export "src/widgets/ambient/services.dart";
+// export "src/widgets/ambient/services.dart";
 export "src/widgets/ambient/theme_changer.dart";
 
 // Atomic widgets represent a single data object.

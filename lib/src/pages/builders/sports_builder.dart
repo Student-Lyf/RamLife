@@ -51,7 +51,7 @@ class FormRow extends StatelessWidget {
 				onTap: setNewValue,
 				child: Text(
 					value,
-					style: TextStyle(color: Colors.blue),
+					style: const TextStyle(color: Colors.blue),
 				),
 			);
 

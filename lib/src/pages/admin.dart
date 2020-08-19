@@ -119,7 +119,16 @@ class AdminHomePageState extends State<AdminHomePage> {
 	@override
 	Widget build(BuildContext context) => Scaffold(
 		drawer: NavigationDrawer(),
-		appBar: AppBar(title: const Text("Admin Console")),
+		appBar: AppBar(
+      title: const Text("Admin Console"),
+      actions: [
+        IconButton(
+          icon: const Icon(Icons.home),
+          onPressed: () =>
+            Navigator.of(context).pushReplacementNamed(Routes.home),
+        )
+      ]
+    ),
 		body: Column(
       children: [
         const SizedBox(height: 10),
@@ -132,17 +141,17 @@ class AdminHomePageState extends State<AdminHomePage> {
             shrinkWrap: true,
             crossAxisCount: 2,
             children: [
-              if (_isCalendarAdmin ?? false) AdminMenuItem(
+              if (_isCalendarAdmin ?? false) const AdminMenuItem(
               	icon: Icons.schedule,
               	label: "Manage schedules",
               	routeName: Routes.specials, 
             	),
-              if (_isCalendarAdmin ?? false) AdminMenuItem(
+              if (_isCalendarAdmin ?? false) const AdminMenuItem(
               	icon: Icons.today,
               	label: "Edit calendar",
               	routeName: Routes.calendar,
             	),
-              if (_isSportsAdmin ?? false) AdminMenuItem(
+              if (_isSportsAdmin ?? false) const AdminMenuItem(
                 icon: Icons.directions_run,
                 label: "Manage games",
                 routeName: Routes.sports,

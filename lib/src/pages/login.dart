@@ -5,9 +5,9 @@ import "package:flutter/services.dart" show PlatformException;
 import "package:firebase_crashlytics/firebase_crashlytics.dart";
 import "package:url_launcher/url_launcher.dart";
 
-import "package:ramaz/widgets.dart";
-import "package:ramaz/services_collection.dart";
+import "package:ramaz/models.dart";
 import "package:ramaz/services.dart";
+import "package:ramaz/widgets.dart";
 
 /// The login page. 
 /// 
@@ -20,11 +20,8 @@ import "package:ramaz/services.dart";
 /// This page holds methods that can safely clean the errors away before
 /// prompting the user to try again. 
 class Login extends StatefulWidget {
-	/// The services needed to log the user in. 
-	final ServicesCollection services;
-
 	/// Creates the login page. 
-	const Login(this.services);
+	Login();
 
 	@override LoginState createState() => LoginState();
 }
@@ -33,62 +30,57 @@ class Login extends StatefulWidget {
 /// 
 /// This state keeps a reference to the [BuildContext].
 class LoginState extends State<Login> {
-	/// Rebuilds the widget tree when the loading bar dis/appears.
-	final ValueNotifier<bool> loadingNotifier = ValueNotifier(false);
+	bool isLoading = false;
 
-	@override void initState() {
+	@override 
+	void initState() {
 		super.initState();
 		// "To log in, one must first log out"
 		// -- Levi Lesches, class of '21, creator of this app, 2019
-		Auth.signOut();
-		widget.services.reader.deleteAll();
+		Services.instance.reset();
+		Models.reset();
 	}
 
 	@override
-	Widget build (BuildContext context) => ValueListenableBuilder(
-		valueListenable: loadingNotifier,
-		// ignore: sort_child_properties_last
-		child: Padding (
-			padding: const EdgeInsets.all (20),
-			child: Column (
-				children: [
-					if (ThemeChanger.of(context).brightness == Brightness.light) ClipRRect(
-						borderRadius: BorderRadius.circular (20),
-						child: RamazLogos.teal
-					)
-					else RamazLogos.ramSquareWords, 
-					const SizedBox (height: 50),
-					Center (
-						child: Container (
-							decoration: BoxDecoration (
-								border: Border.all(color: Colors.blue),
-								borderRadius: BorderRadius.circular(20),
-							),
-							child: Builder (
-								builder: (BuildContext context) => ListTile (
-									leading: Logos.google,
-									title: const Text ("Sign in with Google"),
-									onTap: () => googleLogin(context)  // see func
+	Widget build (BuildContext context) => Scaffold (
+		appBar: AppBar (
+			title: const Text ("Login"),
+			actions: [
+				BrightnessChanger.iconButton(prefs: Services.instance.prefs),
+			],
+		),
+		body: ListView (
+			children: [
+				if (isLoading) const LinearProgressIndicator(),
+				Padding (
+					padding: const EdgeInsets.all (20),
+					child: Column (
+						children: [
+							if (ThemeChanger.of(context).brightness == Brightness.light) ClipRRect(
+								borderRadius: BorderRadius.circular (20),
+								child: RamazLogos.teal
+							)
+							else RamazLogos.ramSquareWords, 
+							const SizedBox (height: 50),
+							Center (
+								child: Container (
+									decoration: BoxDecoration (
+										border: Border.all(color: Colors.blue),
+										borderRadius: BorderRadius.circular(20),
+									),
+									child: Builder (
+										builder: (BuildContext context) => ListTile (
+											leading: Logos.google,
+											title: const Text ("Sign in with Google"),
+											onTap: () => googleLogin(context)  // see func
+										)
+									)
 								)
 							)
-						)
+						]
 					)
-				]
-			)
-		),
-		builder: (BuildContext context, bool loading, Widget child) => Scaffold (
-			appBar: AppBar (
-				title: const Text ("Login"),
-				actions: [
-					BrightnessChanger.iconButton(prefs: widget.services.prefs),
-				],
-			),
-			body: ListView (
-				children: [
-					if (loading) const LinearProgressIndicator(),
-					child,
-				]
-			)
+				)
+			]
 		)
 	);
 
@@ -99,14 +91,13 @@ class LoginState extends State<Login> {
 	/// user-friendly way, while at the same time making sure they don't prevent 
 	/// the user from logging in.
 	Future<void> onError(dynamic error, StackTrace stack) async {
-		loadingNotifier.value = false;
-		await Crashlytics.instance.setUserEmail(await Auth.email);
-		Crashlytics.instance.log("Attempting to log in...");
+		setState(() => isLoading = false);
+		await Crashlytics.instance.setUserEmail(Auth.email);
+		Crashlytics.instance.log("Attempted to log in");
 		await Crashlytics.instance.recordError(error, stack);
-
-		await Auth.signOut();
-		// ignore: unawaited_futures
-		showDialog (
+		await Services.instance.reset();
+		Models.reset();
+		return showDialog (
 			context: context,
 			builder: (dialogContext) => AlertDialog (
 				title: const Text ("Cannot connect"),
@@ -146,28 +137,29 @@ class LoginState extends State<Login> {
 				Scaffold.of(scaffoldContext).showSnackBar (
 					const SnackBar (content: Text ("No Internet")),
 				);
-				loadingNotifier.value = false;
+				setState(() => isLoading = false);
 				return;
 			} else {
 				await onError(error, stack);
-				rethrow;
+				return;
 			}
 		// ignore: avoid_catches_without_on_clauses
 		} catch (error, stack) {
 			await onError(error, stack);
-			rethrow;
+			return;
 		}
 		onSuccess();
 	}
 
 	/// Downloads the user data and initializes the app.
-	/// 
-	/// See [ServicesCollection.initOnLogin]. 
 	Future<void> downloadData(
 		String username, 
 		BuildContext scaffoldContext
 	) => safely(
-		function: () => widget.services.initOnLogin(username),
+		function: () async {
+			await Services.instance.initialize();
+			await Models.init();
+		},
 		onSuccess: () => Navigator.of(context).pushReplacementNamed("home"),
 		scaffoldContext: scaffoldContext,
 	);
@@ -183,13 +175,13 @@ class LoginState extends State<Login> {
 	/// we need another context that is higher up the tree than that.
 	/// The tighter context is passed in as [scaffoldContext], and the higher
 	/// context is [State.context]. 
-		Future<void> googleLogin(BuildContext scaffoldContext) async => safely(
-		function: Auth.signInWithGoogle,
+	Future<void> googleLogin(BuildContext scaffoldContext) async => safely(
+		function: Auth.signIn,
 		onSuccess: () async {
-			loadingNotifier.value = true;
-			final String email = await Auth.email;
+			setState(() => isLoading = true);
+			final String email = Auth.email;
 			if (email == null) {
-				loadingNotifier.value = false;
+				setState(() => isLoading = false);
 				return;
 			}
 			await downloadData(email.toLowerCase(), scaffoldContext);

@@ -3,7 +3,6 @@ import "package:flutter/material.dart";
 import "package:ramaz/data.dart";
 import "package:ramaz/models.dart";
 import "package:ramaz/pages.dart";
-import "package:ramaz/widgets.dart";
 
 /// A widget to represent a [Reminder].
 /// 
@@ -23,7 +22,7 @@ class ReminderTile extends StatelessWidget {
 
 	@override 
 	Widget build (BuildContext context) {
-		final Reminders reminders = Services.of(context).reminders;
+		final Reminders reminders = Models.reminders;
 		final Reminder reminder = reminders.reminders [index];
 		
 		return SizedBox (

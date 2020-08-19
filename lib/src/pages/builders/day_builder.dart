@@ -40,7 +40,7 @@ class DayBuilder extends StatelessWidget {
 
 	@override
 	Widget build (BuildContext context) => ModelListener<DayBuilderModel>(
-		model: () => DayBuilderModel(Services.of(context).admin, day),
+		model: () => DayBuilderModel(day),
 		// ignore: sort_child_properties_last
 		child: FlatButton(
 			onPressed: () => Navigator.of(context).pop(),

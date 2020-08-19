@@ -9,7 +9,7 @@ import "package:ramaz/widgets.dart";
 class RemindersPage extends StatelessWidget {
 	@override 
 	Widget build(BuildContext context) => ModelListener<Reminders>(
-		model: () => Services.of(context).reminders,
+		model: () => Models.reminders,
 		dispose: false,
 		// ignore: sort_child_properties_last
 		child: const Center (
@@ -26,7 +26,7 @@ class RemindersPage extends StatelessWidget {
 				title: const Text ("Reminders"),
 				actions: [
 					IconButton(
-						icon: Icon (Icons.home),
+						icon: const Icon(Icons.home),
 						onPressed: () => Navigator.of(context).pushReplacementNamed(Routes.home)
 					)
 				]
