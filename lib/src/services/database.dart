@@ -1,7 +1,7 @@
 import "package:cloud_firestore/cloud_firestore.dart";
 
 import "auth.dart";
-import "model.dart";
+import "service.dart";
 
 /// A wrapper around Cloud Firestore. 
 class Database implements Service {
@@ -123,6 +123,9 @@ class Database implements Service {
 	/// Signs the user in, and initializes their reminders. 
 	@override
 	Future<void> initialize() async {
+		if (Auth.isReady) {
+			return;
+		}
 		await Auth.signIn();
 		final DocumentSnapshot remindersSnapshot = await remindersDocument.get();
 		if (!remindersSnapshot.exists) {

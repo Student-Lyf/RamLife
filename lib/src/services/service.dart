@@ -15,7 +15,10 @@ abstract class Service {
 	/// 
 	/// While this may delete data from local storage, it should not wipe data
 	/// from off-device sources, such as the database. It's sole purpose is to
-	/// help the service respond again. 
+	/// help the service respond again.
+	/// 
+	/// [reset] may be called when [isReady] is false, so it should have built-in
+	/// error handling.  
 	Future<void> reset();
 
 	/// Initializes the service. 
@@ -24,6 +27,9 @@ abstract class Service {
 	/// 
 	/// Additionally, there may be other setup needed, that while may not be needed
 	/// for the service as a whole, may be done here as well. 
+	/// 
+	/// Note that this method will be called even when [isReady] is true, so make
+	/// make sure this function does not delete user data. 
 	Future<void> initialize();
 
 	/// The user object as JSON
@@ -47,6 +53,8 @@ abstract class Service {
 	/// 
 	/// The fact that this method takes a [month] parameter while [calendar] does
 	/// not is an indicator that the calendar schema needs to be rewritten. 
+	/// 
+	/// [month] must be 1-12, not 0-11. 
 	/// 
 	/// Only admins can change this. 
 	Future<void> setCalendar(int month, List<Map<String, dynamic>> json);
