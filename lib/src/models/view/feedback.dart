@@ -31,7 +31,7 @@ class FeedbackModel with ChangeNotifier {
 	/// Sends the feedback to Cloud Firestore. 
 	/// 
 	/// The feedback is anonymized if [anonymous] is true.
-	Future<void> send() async => Database.sendFeedback(
+	Future<void> send() async => CloudDatabase.sendFeedback(
 		Feedback (
 			message: message,
 			timestamp: DateTime.now(),

@@ -16,18 +16,17 @@
 library ramaz_services;
 
 import "package:firebase_core/firebase_core.dart";
-import "package:path_provider/path_provider.dart";
 import "package:shared_preferences/shared_preferences.dart";
 
 import "src/services/auth.dart";
-import "src/services/database.dart";
+import "src/services/cloud_db.dart";
 import "src/services/fcm.dart";
+import "src/services/local_db.dart";
 import "src/services/preferences.dart";
 import "src/services/service.dart";
-import "src/services/storage.dart";
 
 export "src/services/auth.dart";
-export "src/services/database.dart";
+export "src/services/cloud_db.dart";
 export "src/services/notifications.dart";
 export "src/services/preferences.dart";
 
@@ -38,49 +37,49 @@ class Services implements Service {
 	static Future<void> init() async {
 		await Firebase.initializeApp();
 		final SharedPreferences prefs = await SharedPreferences.getInstance();
-		final String dir = (await getApplicationDocumentsDirectory()).path;
-		Services.instance = Services(dir, prefs);
+		Services.instance = Services(prefs);
 	}
 
 	final Preferences prefs;
 
-	/// Provides a connection to the database. 
-	final Database database = Database();
+	/// Provides a connection to the online database. 
+	final CloudDatabase cloudDatabase = CloudDatabase();
 
 	/// The local device storage.
 	/// 
 	/// Used to minimize the number of requests to the database and keep the app
 	/// offline-first. 
-	final Storage storage;
+	final LocalDatabase localDatabase;
 
 	/// Creates a wrapper around the services. 
-	Services(String dir, SharedPreferences prefs) : 
+	Services(SharedPreferences prefs) : 
 		prefs = Preferences(prefs),
-		storage = Storage(dir);
+		localDatabase = LocalDatabase();
 
 	@override
-	bool get isReady => database.isReady && storage.isReady;
+	Future<bool> get isReady async => await cloudDatabase.isReady 
+		&& await localDatabase.isReady;
 
 	@override
 	Future<void> reset() async {
-		await storage.reset();
-		await database.reset();
+		await localDatabase.reset();
+		await cloudDatabase.reset();
 	}
 
 	@override 
 	Future<void> initialize() async {
-		await storage.initialize();
-		await database.initialize();
+		await localDatabase.initialize();
+		await cloudDatabase.initialize();
 
-		await storage.setUser(await database.user);
-		await storage.setSections({});  // to-do later
-		await storage.setReminders(await database.reminders);
+		await localDatabase.setUser(await cloudDatabase.user);
+		await localDatabase.setSections({});  // to-do later
+		await localDatabase.setReminders(await cloudDatabase.reminders);
 
 		await updateSports();
 		await updateCalendar();
 
 		if (await Auth.isAdmin) {
-			await storage.setAdmin(await database.admin);
+			await localDatabase.setAdmin(await cloudDatabase.admin);
 		}
 
 		// Register for FCM notifications. 
@@ -101,17 +100,18 @@ class Services implements Service {
 	}
 
 	@override
-	Future<Map<String, dynamic>> get user => storage.user;
+	Future<Map<String, dynamic>> get user => localDatabase.user;
 
 	@override
 	Future<void> setUser(_) async {}  // user cannot modify data
 
 	@override
 	Future<Map<String, Map<String, dynamic>>> getSections(Set<String> ids) async {
-		Map<String, Map<String, dynamic>> result = await storage.getSections(ids);
+		Map<String, Map<String, dynamic>> result = 
+			await localDatabase.getSections(ids);
 		if (result == null) {
-			result = await database.getSections(ids);
-			await storage.setSections(result);
+			result = await cloudDatabase.getSections(ids);
+			await localDatabase.setSections(result);
 		}
 		return result;
 	}
@@ -120,47 +120,48 @@ class Services implements Service {
 	Future<void> setSections(_) async {}  // user cannot modify sections
 
 	@override
-	Future<List<List<Map<String, dynamic>>>> get calendar => storage.calendar;
+	Future<List<List<Map<String, dynamic>>>> get calendar => 
+		localDatabase.calendar;
 
 	@override
 	Future<void> setCalendar(int month, List<Map<String, dynamic>> json) async {
-		await database.setCalendar(month, json);
-		await storage.setCalendar(month, json);
+		await cloudDatabase.setCalendar(month, json);
+		await localDatabase.setCalendar(month, json);
 	}
 
 	@override
-	Future<List<Map<String, dynamic>>> get reminders => storage.reminders;
+	Future<List<Map<String, dynamic>>> get reminders => localDatabase.reminders;
 
 	@override
 	Future<void> setReminders(List<Map<String, dynamic>> json) async {
-		await database.setReminders(json);
-		await storage.setReminders(json);
+		await cloudDatabase.setReminders(json);
+		await localDatabase.setReminders(json);
 	}
 
 	@override
-	Future<Map<String, dynamic>> get admin => storage.admin;
+	Future<Map<String, dynamic>> get admin => localDatabase.admin;
 
 	@override
 	Future<void> setAdmin(Map<String, dynamic> json) async {
-		await database.setAdmin(json);
-		await storage.setAdmin(json);
+		await cloudDatabase.setAdmin(json);
+		await localDatabase.setAdmin(json);
 	}
 
 	@override
-	Future<List<Map<String, dynamic>>> get sports => storage.sports;
+	Future<List<Map<String, dynamic>>> get sports => localDatabase.sports;
 
 	@override
 	Future<void> setSports(List<Map<String, dynamic>> json) async {
-		await database.setSports(json);
-		await storage.setSports(json);
+		await cloudDatabase.setSports(json);
+		await localDatabase.setSports(json);
 	}
 
 	Future<void> updateCalendar() async {
 		for (int month = 1; month <= 12; month++) {
-			await storage.setCalendar(month, await database.getMonth(month));
+			await localDatabase.setCalendar(month, await cloudDatabase.getMonth(month));
 		}
 	}
 
 	Future<void> updateSports() async => 
-		storage.setSports(await database.sports);
+		localDatabase.setSports(await cloudDatabase.sports);
 }

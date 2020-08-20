@@ -4,7 +4,7 @@ import "auth.dart";
 import "service.dart";
 
 /// A wrapper around Cloud Firestore. 
-class Database implements Service {
+class CloudDatabase implements Service {
 	static final DateTime _now = DateTime.now();
 
 	/// The [FirebaseFirestore service].
@@ -115,7 +115,7 @@ class Database implements Service {
 	);
 
 	@override
-	bool get isReady => Auth.isReady;
+	Future<bool> get isReady async => Auth.isReady;
 
 	@override
 	Future<void> reset() => Auth.signOut();

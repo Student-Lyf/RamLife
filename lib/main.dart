@@ -28,8 +28,11 @@ Future<void> main({bool restart = false}) async {
 
 	// This initializes services -- it is always safe. 
 	await Services.init();
+	bool isReady;
 	try {
-		if (Services.instance.isReady) {
+		isReady = await Services.instance.isReady;
+		// Checks whther services are ready -- REALLY shouldn't error, but might
+		if (isReady) {
 			// This initializes data models -- it may error. 
 			await Models.init();
 		}
@@ -59,6 +62,7 @@ Future<void> main({bool restart = false}) async {
 	runZoned(
 		() => runApp (
 			RamazApp (
+				isReady: isReady,
 				brightness: brightness,
 			)
 		),
@@ -68,12 +72,15 @@ Future<void> main({bool restart = false}) async {
 
 /// The main app widget. 
 class RamazApp extends StatelessWidget {
+	final bool isReady;
+
 	/// The brightness to default to. 
 	final Brightness brightness;
 
 	/// Creates the main app widget.
 	const RamazApp ({
 		@required this.brightness,
+		@required this.isReady,
 	});
 
 	@override 
@@ -125,7 +132,7 @@ class RamazApp extends StatelessWidget {
 			),
 		),
 		builder: (BuildContext context, ThemeData theme) => MaterialApp (
-			home: Services.instance.isReady ? HomePage() : Login(),
+			home: isReady ? HomePage() : Login(),
 			title: "Ram Life",
 			color: RamazColors.blue,
 			theme: theme,

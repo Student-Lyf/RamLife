@@ -9,7 +9,7 @@ abstract class Service {
 	/// 
 	/// If it's not ready, it was either never set up or misbehaving. 
 	/// Call [reset] just in case. 
-	bool get isReady;
+	Future<bool> get isReady;
 
 	/// Resets the service as if the app were just installed. 
 	/// 

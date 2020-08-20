@@ -8,7 +8,7 @@ import "service.dart";
 /// This class handles reading and writing JSON to and from files. 
 /// Note that only raw data should be used with this class. Using 
 /// dataclasses will create a dependency on the data library. 
-class Storage implements Service {
+class LocalDatabase implements Service {
 	/// The path for this app's file directory.
 	/// 
 	/// Every app is provided a unique path in the file system by the OS. 
@@ -36,7 +36,7 @@ class Storage implements Service {
 	final File sportsFile;
 
 	/// Initializes the files based on the path ([dir]) provided to it. 
-	Storage(this.dir) :
+	LocalDatabase(this.dir) :
 		userFile = File("$dir/student.json"),
 		subjectFile = File("$dir/subjects.json"),
 		calendarDir = Directory("$dir/calendar"),
@@ -45,7 +45,7 @@ class Storage implements Service {
 		remindersFile = File("$dir/reminders.json");
 
 	@override
-	bool get isReady => userFile.existsSync()
+	Future<bool> get isReady async => userFile.existsSync()
 		&& subjectFile.existsSync()
 		&& calendarDir.existsSync()
 		&& remindersFile.existsSync()
