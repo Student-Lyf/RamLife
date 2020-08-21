@@ -8,7 +8,7 @@ import "package:google_sign_in/google_sign_in.dart";
 /// There is no need to create an instance of this class.
 class Auth {
 	/// The [FirebaseAuth] service.
-	static final FirebaseAuth firebase = FirebaseAuth.instance;
+	static final FirebaseAuth auth = FirebaseAuth.instance;
 
 	/// The [GoogleSignIn] service.
 	static final GoogleSignIn google = GoogleSignIn();
@@ -28,7 +28,7 @@ class Auth {
 	/// This getter returns a [User], which should not be used 
 	/// outside this library. This method should only be called by 
 	/// methods that provide higher level functionality, such as [isReady].
-	static User get currentUser => firebase.currentUser;
+	static User get currentUser => auth.currentUser;
 
 	/// The user's email.
 	static String get email => currentUser?.email;
@@ -67,8 +67,8 @@ class Auth {
 
 	/// Signs out the currently logged in user.
 	static Future<void> signOut() async {
-		await firebase.signOut();
 		await google.signOut();
+		await auth.signOut();
 	}
 
 	/// Determines whether the provided email is a valid Ramaz account
@@ -78,17 +78,20 @@ class Auth {
 	static bool isValidGoogleAccount(GoogleSignInAccount account) => account
 		.email.endsWith("@ramaz.org");
 
-	/// Signs in the user with Google as the provider. 
+	/// Signs the user in using Google as a provider. 
 	static Future<void> signIn() async {
-		final GoogleSignInAccount account = await google.signIn();
-		if (account == null) {
+		final GoogleSignInAccount googleAccount = await google.signIn();
+		if (googleAccount == null) {
 			return;
 		}
-		final GoogleSignInAuthentication _auth = await account.authentication;
-		final AuthCredential credential = GoogleAuthProvider.credential (
-			accessToken: _auth.accessToken,
-			idToken: _auth.idToken
+		final GoogleSignInAuthentication googleAuth = 
+			await googleAccount.authentication;
+
+		final AuthCredential credential = GoogleAuthProvider.credential(
+			accessToken: googleAuth.accessToken,
+			idToken: googleAuth.idToken,
 		);
-		await firebase.signInWithCredential(credential);
+
+		await auth.signInWithCredential(credential);
 	}
 }
