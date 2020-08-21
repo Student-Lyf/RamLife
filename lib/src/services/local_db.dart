@@ -4,6 +4,37 @@ import "auth.dart";  // for user email
 import "local_db/idb_factory.dart";  // for platform-specific database
 import "service.dart";
 
+/// Provides convenience methods around an [ObjectStore].
+extension ObjectExtension on ObjectStore {
+	Future<T> get<T>(dynamic key) async => await getObject(key) as T; 
+}
+
+/// Provides convenience methods on a [Database]. 
+extension DatabaseExtension on Database {
+	Future<T> get<T>(String storeName, dynamic key) => 
+		transaction(storeName, idbModeReadOnly)
+		.objectStore(storeName)
+		.get<T>(key);
+
+	Future<void> add<T>(String storeName, T value) => 
+		transaction(storeName, idbModeReadWrite)
+		.objectStore(storeName)
+		.add(value);
+
+	Future<void> update<T>(String storeName, T value) => 
+		transaction(storeName, idbModeReadWrite)
+		.objectStore(storeName)
+		.put(value);
+
+	Future<List<Map<String, dynamic>>> getAll(String storeName) async => [
+		await for (
+			final CursorWithValue cursor in transaction(storeName, idbModeReadOnly)
+				.objectStore(storeName)
+				.openCursor(autoAdvance: true)
+		) Map<String, dynamic>.from(cursor.value)
+	];
+}
+
 class LocalDatabase implements Service {
 	static const String userStoreName = "users";
 	static const String sectionStoreName = "sections";
@@ -41,13 +72,13 @@ class LocalDatabase implements Service {
 	/// Simply opening the database is async, so that is done in [isReady], since 
 	/// it is needed to initialize the service. However, modifying the database
 	/// is only allowed within [IdbFactory.open], so it cannot be held off until
-	/// login. Hence, this function should be ommited from the global service 
+	/// login. Hence, this function should be omitted from the global service 
 	/// manager's [initialize] function, and should instead be called from 
 	/// within [isReady] (which is allowed, since it is async). 
 	/// 
 	/// Additionally, since the data itself is only provided in the service 
 	/// manager's [initialize] function, this function doesn't have to worry about
-	/// retreiving data so much as structuring it.  
+	/// retrieving data so much as structuring it.  
 	@override
 	Future<void> initialize() async => database
 		..createObjectStore(userStoreName, keyPath: "email")
@@ -66,45 +97,16 @@ class LocalDatabase implements Service {
 		}
 	}
 
-	Future<void> add<T>(String storeName, T value) => database
-		.transaction(storeName, idbModeReadWrite)
-		.objectStore(storeName)
-		.add(value);
-
-	Future<void> update<T>(String storeName, T value) => database
-		.transaction(storeName, idbModeReadWrite)
-		.objectStore(storeName)
-		.put(value);
-
-	Future<V> get<K, V>(String storeName, K key) => database
-		.transaction(storeName, idbModeReadOnly)
-		.objectStore(storeName)
-		.getObject(key);
-
-	Future<List<T>> getAll<T>(
-		String storeName, 
-		T Function(Object) transform
-	) async {
-		final Stream<CursorWithValue> cursors = database
-			.transaction(storeName, idbModeReadOnly)
-			.objectStore(storeName)
-			.openCursor();
-		final List<T> result = [];
-		await for (final CursorWithValue cursor in cursors) {
-			print("Got cursor: <${cursor.value}>");
-			result.add(transform(cursor.value));
-		}
-		return result;
-	}
+	@override
+	Future<Map<String, dynamic>> get user => 
+		database.get(userStoreName, Auth.email);
 
 	@override
-	Future<Map<String, dynamic>> get user => get(userStoreName, Auth.email);
-
-	@override
-	Future<void> setUser(Map<String, dynamic> json) => add(userStoreName, json);
+	Future<void> setUser(Map<String, dynamic> json) => 
+		database.add(userStoreName, json);
 
 	Future<Map<String, dynamic>> getSection(String id) => 
-		get(sectionStoreName, id);
+		database.get(sectionStoreName, id);
 
 	@override
 	Future<Map<String, Map<String, dynamic>>> getSections(
@@ -115,11 +117,20 @@ class LocalDatabase implements Service {
 	};
 
 	@override
-	Future<void> setSections(Map<String, Map<String, dynamic>> json) => 
-		add(sectionStoreName, json);
+	Future<void> setSections(Map<String, Map<String, dynamic>> json) async {
+		for (final Map<String, dynamic> entry in json.values) {
+			await database.add(sectionStoreName, entry);
+		}
+	} 
 
-	Future<List<Map<String, dynamic>>> getMonth(int month) => 
-		get(calendarStoreName, month);
+	Future<List<Map<String, dynamic>>> getMonth(int month) async {
+		final Map<String, dynamic> json = 
+			await database.get(calendarStoreName, month);
+		return [
+			for (final dynamic entry in json ["calendar"])
+				Map<String, dynamic>.from(entry)
+		];
+	}
 
 	@override
 	Future<List<List<Map<String, dynamic>>>> get calendar async => [
@@ -128,36 +139,37 @@ class LocalDatabase implements Service {
 	];
 
 	@override
-	Future<void> setCalendar(int month, List<Map<String, dynamic>> json) => 
-		update(calendarStoreName, json);
+	Future<void> setCalendar(int month, Map<String, dynamic> json) async {
+		await database.update(calendarStoreName, json);
+	}
 
 	@override
 	Future<List<Map<String, dynamic>>> get reminders => 
-		getAll(reminderStoreName, (value) => Map<String, dynamic>.from(value));
+		database.getAll(reminderStoreName);
 
 	@override 
 	Future<void> setReminders(List<Map<String, dynamic>> json) async {
 		for (final Map<String, dynamic> entry in json) {
-			await update(reminderStoreName, entry);
+			await database.update(reminderStoreName, entry);
 		}
 	}
 
 	@override
-	Future<Map<String, dynamic>> get admin => get(adminStoreName, Auth.email);
+	Future<Map<String, dynamic>> get admin => 
+		database.get(adminStoreName, Auth.email);
 
 	@override
 	Future<void> setAdmin(Map<String, dynamic> json) => 
-		update(adminStoreName, json);
-
+		database.update(adminStoreName, json);
 
 	@override
 	Future<List<Map<String, dynamic>>> get sports => 
-		getAll(sportsStoreName, (value) => Map<String, dynamic>.from(value));
+		database.getAll(sportsStoreName);
 
 	@override
 	Future<void> setSports(List<Map<String, dynamic>> json) async {
 		for (final Map<String, dynamic> entry in json) {
-			await update(sportsStoreName, entry);
+			await database.update(sportsStoreName, entry);
 		}
 	}
 }

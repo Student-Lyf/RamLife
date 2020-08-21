@@ -27,6 +27,7 @@ import "src/services/service.dart";
 
 export "src/services/auth.dart";
 export "src/services/cloud_db.dart";
+export "src/services/crashlytics.dart";
 export "src/services/notifications.dart";
 export "src/services/preferences.dart";
 
@@ -57,8 +58,19 @@ class Services implements Service {
 		localDatabase = LocalDatabase();
 
 	@override
-	Future<bool> get isReady async => await cloudDatabase.isReady 
-		&& await localDatabase.isReady;
+	Future<bool> get isReady async {
+		// This can be shortened but DON'T 
+		// 
+		// The && operator short-circuits -- meaning if cloudDatabase is not ready
+		// then this getter won't even check localdatabase. But the [isReady] getter
+		// also doubles as a setup method, so it NEEDS to be called. 
+		// 
+		// Doing it this way ensures that all services will be setup even if a [reset]
+		// is needed
+		final bool cloudIsReady = await cloudDatabase.isReady;
+		final bool localIsReady = await localDatabase.isReady;
+		return cloudIsReady && localIsReady;
+	}
 
 	@override
 	Future<void> reset() async {
@@ -68,11 +80,9 @@ class Services implements Service {
 
 	@override 
 	Future<void> initialize() async {
-		await localDatabase.initialize();
 		await cloudDatabase.initialize();
 
 		await localDatabase.setUser(await cloudDatabase.user);
-		await localDatabase.setSections({});  // to-do later
 		await localDatabase.setReminders(await cloudDatabase.reminders);
 
 		await updateSports();
@@ -109,7 +119,7 @@ class Services implements Service {
 	Future<Map<String, Map<String, dynamic>>> getSections(Set<String> ids) async {
 		Map<String, Map<String, dynamic>> result = 
 			await localDatabase.getSections(ids);
-		if (result == null) {
+		if (result.values.every((value) => value == null)) {
 			result = await cloudDatabase.getSections(ids);
 			await localDatabase.setSections(result);
 		}
@@ -124,7 +134,7 @@ class Services implements Service {
 		localDatabase.calendar;
 
 	@override
-	Future<void> setCalendar(int month, List<Map<String, dynamic>> json) async {
+	Future<void> setCalendar(int month, Map<String, dynamic> json) async {
 		await cloudDatabase.setCalendar(month, json);
 		await localDatabase.setCalendar(month, json);
 	}

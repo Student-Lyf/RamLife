@@ -31,7 +31,7 @@ class Reminders with ChangeNotifier {
 	/// Initializes the data model. 
 	Future<void> init() async {
 		reminders = [
-			for (final json in await Services.instance.reminders)
+			for (final Map<String, dynamic> json in await Services.instance.reminders)
 				Reminder.fromJson(json)
 		];
 	}

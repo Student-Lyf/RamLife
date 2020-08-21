@@ -256,9 +256,9 @@ class Reminder {
 	/// 
 	/// Uses `json ["message"]` for the message and passes `json["time"]` 
 	/// to [ReminderTime.fromJson]
-	Reminder.fromJson(Map<String, dynamic> json) :
+	Reminder.fromJson(dynamic json) :
 		message = json ["message"],
-		time = ReminderTime.fromJson(json ["time"]);
+		time = ReminderTime.fromJson(Map<String, dynamic>.from(json ["time"]));
 
 	@override String toString() => "$message ($time)";
 
