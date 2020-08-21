@@ -3,8 +3,6 @@ import "dart:async" show runZoned;
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 
-import "package:firebase_crashlytics/firebase_crashlytics.dart";
-
 import "package:ramaz/constants.dart";  // for route keys
 import "package:ramaz/models.dart";
 import "package:ramaz/pages.dart";
@@ -22,7 +20,7 @@ Future<void> main({bool restart = false}) async {
 					(Brightness platform) => brightness = platform
 			)
 		),
-		onError: Crashlytics.instance.recordError,
+		onError: Crashlytics.recordError,
 	);
 	await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 
@@ -58,7 +56,7 @@ Future<void> main({bool restart = false}) async {
 	}
 
 	// Now we are ready to run the app (with error catching)
-	FlutterError.onError = Crashlytics.instance.recordFlutterError;
+	FlutterError.onError = Crashlytics.recordFlutterError;
 	runZoned(
 		() => runApp (
 			RamazApp (
@@ -66,7 +64,7 @@ Future<void> main({bool restart = false}) async {
 				brightness: brightness,
 			)
 		),
-		onError: Crashlytics.instance.recordError,
+		onError: Crashlytics.recordError,
 	);
 }
 

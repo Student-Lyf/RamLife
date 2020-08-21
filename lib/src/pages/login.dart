@@ -2,7 +2,6 @@
 import "package:flutter/material.dart";
 import "package:flutter/services.dart" show PlatformException;
 
-import "package:firebase_crashlytics/firebase_crashlytics.dart";
 import "package:url_launcher/url_launcher.dart";
 
 import "package:ramaz/models.dart";
@@ -92,12 +91,10 @@ class LoginState extends State<Login> {
 	/// the user from logging in.
 	Future<void> onError(dynamic error, StackTrace stack) async {
 		setState(() => isLoading = false);
-		await Crashlytics.instance.setUserEmail(Auth.email);
-		Crashlytics.instance.log("Attempted to log in");
-		await Crashlytics.instance.recordError(error, stack);
 		await Services.instance.reset();
 		Models.reset();
-		return showDialog (
+		// ignore: unawaited_futures
+		showDialog (
 			context: context,
 			builder: (dialogContext) => AlertDialog (
 				title: const Text ("Cannot connect"),
@@ -119,6 +116,9 @@ class LoginState extends State<Login> {
 				]
 			)
 		);
+		await Crashlytics.setUserEmail(Auth.email);
+		Crashlytics.log("Attempted to log in");
+		await Crashlytics.recordError(error, stack);
 	}
 
 	/// Safely execute a function.
