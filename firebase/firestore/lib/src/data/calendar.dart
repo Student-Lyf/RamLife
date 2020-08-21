@@ -16,8 +16,7 @@ class Day extends Serializable {
 	/// The current year. 
 	/// 
 	/// Used to determine what year is being referred to in the calendar.
-	// static final int currentYear = DateTime.now().year;
-	static final int currentYear = 2019;
+	static final int currentYear = DateTime.now().year;
 
 	/// The current month. 
 	/// 
