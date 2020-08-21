@@ -57,7 +57,7 @@ abstract class Service {
 	/// [month] must be 1-12, not 0-11. 
 	/// 
 	/// Only admins can change this. 
-	Future<void> setCalendar(int month, List<Map<String, dynamic>> json);
+	Future<void> setCalendar(int month, Map<String, dynamic> json);
 
 	/// The user's reminders. 
 	Future<List<Map<String, dynamic>>> get reminders;

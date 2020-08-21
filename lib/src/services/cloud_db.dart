@@ -166,25 +166,24 @@ class CloudDatabase implements Service {
 	/// Gets a month of the calendar. 
 	/// 
 	/// Do not use directly. Use [calendar].
-	Future<List<Map<String, dynamic>>> getMonth(int month) async {
+	Future<Map<String, dynamic>> getMonth(int month) async {
 		final DocumentReference document = calendarCollection.doc(month.toString());
 		final DocumentSnapshot snapshot = await document.get();
 		final Map<String, dynamic> data = snapshot.data();
-		return [
-			for (final dynamic json in data [calendarKey])
-				Map<String, dynamic>.from(json)
-		];
+		return data;
 	}
 
 	@override
 	Future<List<List<Map<String, dynamic>>>> get calendar async => [
-		for (int month = 1; month <= 12; month++) 
-			await getMonth(month)
+		for (int month = 1; month <= 12; month++) [
+			for (final dynamic json in (await getMonth(month)) [calendarKey])
+				Map<String, dynamic>.from(json)
+			]
 	];
 
 	@override 
-	Future<void> setCalendar(int month, List<Map<String, dynamic>> json) => 
-		calendarCollection.doc(month.toString()).set({calendarKey: json});
+	Future<void> setCalendar(int month, Map<String, dynamic> json) => 
+		calendarCollection.doc(month.toString()).set(json);
 
 	@override
 	Future<List<Map<String, dynamic>>> get reminders async {

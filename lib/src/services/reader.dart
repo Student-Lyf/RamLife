@@ -114,7 +114,7 @@ class LocalDatabase implements Service {
 	];
 
 	@override
-	Future<void> setCalendar(int month, List<Map<String, dynamic>> json) async {
+	Future<void> setCalendar(int month, Map<String, dynamic> json) async {
 		final File file = File("${calendarDir.path}/${month.toString()}.json");
 		await file.writeAsString(jsonEncode(json));
 	}
