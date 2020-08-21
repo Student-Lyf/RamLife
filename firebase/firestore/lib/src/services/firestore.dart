@@ -113,10 +113,11 @@ class Firestore {
 	static Future<void> uploadMonth(int month, List<Day> calendar) =>
 		calendarCollection.document(month.toString()).updateData(
 			fb.UpdateData.fromMap({
+				"month": month,
 				"calendar": [
 					for (final Day day in calendar)
 						day.json
-				]
+				], 
 			}
 		)
 	);
@@ -139,6 +140,9 @@ class Firestore {
 				fb.DocumentData.fromMap(section.json),
 			);
 			count++;
+		}
+		for (final fb.WriteBatch batch in batches) {
+			await batch.commit();
 		}
 	}
 

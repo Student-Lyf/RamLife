@@ -16,7 +16,8 @@ class Day extends Serializable {
 	/// The current year. 
 	/// 
 	/// Used to determine what year is being referred to in the calendar.
-	static final int currentYear = DateTime.now().year;
+	// static final int currentYear = DateTime.now().year;
+	static final int currentYear = 2019;
 
 	/// The current month. 
 	/// 
@@ -158,7 +159,7 @@ class Day extends Serializable {
 			special = special.substring(0, special.indexOf(" Schedule"));
 		}
 		if (special.startsWith("modified")) {
-			special = "modified";
+			special = "Modified";
 		} else if (special.isEmpty || !specialNames.containsKey(special)) {
 			special = null;
 		} else {

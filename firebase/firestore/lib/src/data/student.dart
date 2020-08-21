@@ -141,6 +141,7 @@ class User extends Serializable {
 		"F": scheduleToJson(schedule [Letter.F]),
 		"homeroom": homeroom,
 		"homeroom meeting room": homeroomLocation,
+		"email": email,
 	};
 
 	@override

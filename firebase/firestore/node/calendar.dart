@@ -41,10 +41,7 @@ Future<void> main() async {
 		if (summerMonths.contains(month)) {
 			Logger.verbose("Setting summer month $month.");
 			if (Args.upload) {
-				await Logger.logProgress(
-					"blank calendar upload",
-					() => Firestore.uploadMonth(month, Day.getEmptyCalendar(month))
-				);
+				await Firestore.uploadMonth(month, Day.getEmptyCalendar(month));
 			}
 			continue;
 		}
@@ -56,6 +53,9 @@ Future<void> main() async {
 			verified,
 			"Could not properly parse calendar for $month"
 		);
+		if (Args.upload) {
+			await Firestore.uploadMonth(month, monthCalendar);
+		}
 	}
 	if (!Args.upload) {
 		Logger.warning("Did not upload the calendar. Use the --upload flag.");

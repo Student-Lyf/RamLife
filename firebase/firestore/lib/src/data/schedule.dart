@@ -61,6 +61,7 @@ class Section extends Serializable {
 	Map<String, String> get json => {
 		"name": name,
 		"teacher": teacher,
+		"id": id,
 	};
 }
 
