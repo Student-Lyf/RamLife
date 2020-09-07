@@ -31,6 +31,7 @@
 
 # Personal
 *.txt.yaml
+todo
 /data/
 docs/
 
@@ -38,6 +39,7 @@ docs/
 node_modules
 firebase/firestore/admin.json
 firebase/rules_test/firestore.rules
+.firebase
 
 
 # IDE
