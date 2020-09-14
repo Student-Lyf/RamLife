@@ -27,11 +27,11 @@ extension DatabaseExtension on Database {
 		.put(value);
 
 	Future<List<Map<String, dynamic>>> getAll(String storeName) async => [
-		await for (
-			final CursorWithValue cursor in transaction(storeName, idbModeReadOnly)
-				.objectStore(storeName)
-				.openCursor(autoAdvance: true)
-		) Map<String, dynamic>.from(cursor.value)
+		for (
+			final dynamic entry in 
+			await transaction(storeName, idbModeReadOnly)
+				.objectStore(storeName).getAll()
+		)	Map<String, dynamic>.from(entry)
 	];
 }
 
@@ -98,8 +98,8 @@ class LocalDatabase implements Service {
 	}
 
 	@override
-	Future<Map<String, dynamic>> get user => 
-		database.get(userStoreName, Auth.email);
+	Future<Map<String, dynamic>> get user async => 
+		Map<String, dynamic>.from(await database.get(userStoreName, Auth.email));
 
 	@override
 	Future<void> setUser(Map<String, dynamic> json) => 
@@ -125,7 +125,7 @@ class LocalDatabase implements Service {
 
 	Future<List<Map<String, dynamic>>> getMonth(int month) async {
 		final Map<String, dynamic> json = 
-			await database.get(calendarStoreName, month);
+			Map<String, dynamic>.from(await database.get(calendarStoreName, month));
 		return [
 			for (final dynamic entry in json ["calendar"])
 				Map<String, dynamic>.from(entry)
@@ -155,8 +155,8 @@ class LocalDatabase implements Service {
 	}
 
 	@override
-	Future<Map<String, dynamic>> get admin => 
-		database.get(adminStoreName, Auth.email);
+	Future<Map<String, dynamic>> get admin async => 
+		Map<String, dynamic>.from(await database.get(adminStoreName, Auth.email));
 
 	@override
 	Future<void> setAdmin(Map<String, dynamic> json) => 

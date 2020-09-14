@@ -175,8 +175,8 @@ class CloudDatabase implements Service {
 
 	@override
 	Future<List<List<Map<String, dynamic>>>> get calendar async => [
-		for (int month = 1; month <= 12; month++) [
-			for (final dynamic json in (await getMonth(month)) [calendarKey])
+		for (int month = 1; month <= 12; month++)
+			for (final dynamic json in (await getMonth(month)) [calendarKey]) [
 				Map<String, dynamic>.from(json)
 			]
 	];
