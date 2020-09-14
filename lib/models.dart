@@ -24,6 +24,7 @@
 /// 	state should depend on their corresponding view model.
 library models;
 
+import "package:ramaz/services.dart";
 import "src/models/data/admin.dart";
 import "src/models/data/reminders.dart";
 import "src/models/data/schedule.dart";
@@ -61,8 +62,10 @@ class Models {
 		await schedule.init();
 		sports = Sports();
 		await sports.init(refresh: true);
-		admin = AdminModel();
-		await admin.init();
+		if (await Auth.isAdmin) {
+			admin = AdminModel();
+			await admin.init();
+		}
 	}
 
 	static void reset() {
