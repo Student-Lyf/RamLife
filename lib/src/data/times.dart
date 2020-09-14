@@ -349,9 +349,9 @@ class Special {
 	/// Determines whether to use a Winter Friday or regular Friday schedule. 
 	/// 
 	/// Winter Fridays mean shorter periods, with an ultimately shorter dismissal.
-	static Special getWinterFriday() {
-		final DateTime today = DateTime.now();
-		final int month = today.month, day = today.day;
+	static Special getWinterFriday([DateTime today]) {
+		final DateTime date = today ?? DateTime.now();
+		final int month = date.month, day = date.day;
 		if (month >= Times.schoolStart && month < Times.winterFridayMonthStart) {
 			return friday;
 		} else if (
