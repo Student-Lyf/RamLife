@@ -22,6 +22,7 @@ Future<void> setClaims(Map<String, List<String>> admins) async {
 			"Previous claims for $email", () => Auth.getClaims(email)
 		);
 		await Auth.setScopes(email, scopes);
+		await Firestore.uploadAdmin(email);
 	}
 }
 

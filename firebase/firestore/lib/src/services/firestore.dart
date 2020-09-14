@@ -24,6 +24,8 @@ class Firestore {
 	/// The name of the reminders collection.
 	static const String remindersKey = "reminders";
 
+	static const String adminsKey = "admin";
+
 	/// The students collection.
 	static final fb.CollectionReference studentsCollection = 
 		firestore.collection(studentsKey);
@@ -43,6 +45,9 @@ class Firestore {
 	/// The reminders collection.
 	static final fb.CollectionReference remindersCollection =
 		firestore.collection(remindersKey);
+
+	static final fb.CollectionReference adminsCollection = 
+		firestore.collection(adminsKey);
 
 	/// Deletes reminders froma given user that fit a predicate function.
 	/// 
@@ -157,4 +162,11 @@ class Firestore {
 		];
 		return calendar;
 	} 
+
+	static Future<void> uploadAdmin(String email) async => adminsCollection
+		.document(email)
+		.setData(
+			fb.DocumentData.fromMap({"email": email}),
+			fb.SetOptions(merge: true),
+		);
 }
