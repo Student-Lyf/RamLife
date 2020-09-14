@@ -3,6 +3,7 @@ import "package:flutter/material.dart";
 import "package:ramaz/constants.dart";
 import "package:ramaz/pages.dart";
 import "package:ramaz/services.dart";
+import "package:ramaz/widgets.dart";
 
 /// A widget to represent a calendar icon.
 /// 
@@ -117,7 +118,7 @@ class AdminHomePageState extends State<AdminHomePage> {
   }
 
 	@override
-	Widget build(BuildContext context) => Scaffold(
+	Widget build(BuildContext context) => AdaptiveScaffold(
 		drawer: NavigationDrawer(),
 		appBar: AppBar(
       title: const Text("Admin Console"),

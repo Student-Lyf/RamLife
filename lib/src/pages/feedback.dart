@@ -8,7 +8,7 @@ import "package:ramaz/models.dart";
 class FeedbackPage extends StatelessWidget {
 
 	@override 
-	Widget build (BuildContext context) => Scaffold(
+	Widget build (BuildContext context) => AdaptiveScaffold(
 		appBar: AppBar(title: const Text ("Send Feedback")),
 		body: Padding(
 			padding: const EdgeInsets.symmetric(horizontal: 50),
