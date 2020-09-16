@@ -58,8 +58,10 @@ class Models {
 	static Future<void> init() async {
 		reminders = Reminders();
 		await reminders.init();
+
 		schedule = Schedule();
 		await schedule.init();
+
 		sports = Sports();
 		await sports.init(refresh: true);
 		if (await Auth.isAdmin) {
