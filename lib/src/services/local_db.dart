@@ -105,15 +105,12 @@ class LocalDatabase implements Service {
 	Future<void> setUser(Map<String, dynamic> json) => 
 		database.add(userStoreName, json);
 
-	Future<Map<String, dynamic>> getSection(String id) => 
-		database.get(sectionStoreName, id);
-
 	@override
 	Future<Map<String, Map<String, dynamic>>> getSections(
 		Set<String> ids
 	) async => {
-		for (final String id in ids)
-			id: await getSection(id)
+		for (final Map<String, dynamic> json in await database.getAll("sections"))
+			json ["id"]: Map<String, dynamic>.from(json)
 	};
 
 	@override
