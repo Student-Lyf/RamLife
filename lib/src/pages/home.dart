@@ -19,9 +19,6 @@ class HomePage extends StatefulWidget {
 
 /// A state for the home page, to keep track of when the page loads. 
 class HomePageState extends State<HomePage> {
-	/// A key to access the [Scaffold]s state. 
-	// final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
-
 	/// Whether the page is loading. 
 	bool loading = false;
 
@@ -53,7 +50,6 @@ class HomePageState extends State<HomePage> {
 	Widget build (BuildContext context) => ModelListener<HomeModel>(
 		model: () => HomeModel(),
 		builder: (BuildContext context, HomeModel model, _) => AdaptiveScaffold (
-			// key: scaffoldKey,
 			appBarBuilder: (isShowingSchedule) => AppBar (
 				title: const Text ("Home"),
 				actions: [
@@ -67,8 +63,8 @@ class HomePageState extends State<HomePage> {
 				],
 			),
 			drawer: NavigationDrawer(),
-			// endDrawer: !model.schedule.hasSchool ? null : Drawer (
-			endDrawer: !model.schedule.hasSchool ? null : ClassList(
+			endDrawer: !model.schedule.hasSchool ? null : Drawer(
+				child: ClassList(
 					day: model.schedule.today,
 					periods: model.schedule.nextPeriod == null 
 						? model.schedule.periods
@@ -79,13 +75,19 @@ class HomePageState extends State<HomePage> {
 					headerText: model.schedule.period == null 
 						? "Today's Schedule" 
 						: "Upcoming Classes"
-				// )
+				)
 			),
 			body: RefreshIndicator (  // so you can refresh the period
 				onRefresh: refresh,
 				child: ListView (
+					padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
 					children: [
 						if (loading) const LinearProgressIndicator(),
+						// AspectRatio(
+							// height: 100, 
+							// width: 100, 
+							// aspectRatio: 3,
+						// ),
 						RamazLogos.ramRectangle,
 						const Divider(),
 						Text (
@@ -96,7 +98,7 @@ class HomePageState extends State<HomePage> {
 							textScaleFactor: 2,
 							textAlign: TextAlign.center
 						),
-						const SizedBox (height: 20),
+						const SizedBox (height: 30),
 						if (model.schedule.hasSchool) NextClass(
 							reminders: Models.reminders.currentReminders,
 							period: model.schedule.period,

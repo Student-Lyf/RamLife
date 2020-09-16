@@ -2,8 +2,8 @@ import "package:flutter/material.dart";
 
 class AdaptiveScaffold extends StatelessWidget {
 	static const double largeScreenWidth = 768;
-	// static const double drawerWidth = 256;
-	static const double drawerWidth = 320;	
+	static const double drawerWidth = 256;
+	// static const double drawerWidth = 320;	
 	static const double endDrawerWidth = 320;
 
 	final Widget body;
@@ -33,7 +33,7 @@ class AdaptiveScaffold extends StatelessWidget {
 		return Scaffold(
 			drawer: shouldShowDrawer ? null : drawer,
 			endDrawer: !shouldShowDrawer && shouldShowEndDrawer ? null : endDrawer,
-			appBar: shouldShowDrawer ? null : appBar,
+			appBar: appBar,
 			body: !shouldShowDrawer 
 				? body 
 				: StandardDrawerBody(
@@ -89,16 +89,10 @@ class StandardDrawerBody extends StatelessWidget {
 	Widget build(BuildContext context) => Row(
 		children: [
 	    Container(
-			  width: 256,
-			  child: drawer
+			  width: AdaptiveScaffold.drawerWidth,
+			  child: Drawer(elevation: 0, child: drawer)
 			),
-			Expanded(
-				child: Scaffold(
-					appBar: appBar, 
-					body: body,
-					endDrawer: endDrawer, 
-				)
-			)
+			Expanded(child: body)
 		]
 	);
 }
