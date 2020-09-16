@@ -48,8 +48,7 @@ class LoginState extends State<Login> {
 				BrightnessChanger.iconButton(prefs: Services.instance.prefs),
 			],
 		),
-		body: Align(
-			alignment: Alignment.center, 
+		body: Center(
 			child: Column(
 				children: [
 					if (isLoading) const LinearProgressIndicator(minHeight: 8),
@@ -181,5 +180,4 @@ class LoginState extends State<Login> {
 		},
 		scaffoldContext: scaffoldContext,
 	);
-
 }

@@ -32,7 +32,7 @@ class AdaptiveScaffold extends StatelessWidget {
 
 		return Scaffold(
 			drawer: shouldShowDrawer ? null : drawer,
-			endDrawer: !shouldShowDrawer && shouldShowEndDrawer ? null : endDrawer,
+			endDrawer: shouldShowEndDrawer ? null : endDrawer,
 			appBar: appBar,
 			body: !shouldShowDrawer 
 				? body 
