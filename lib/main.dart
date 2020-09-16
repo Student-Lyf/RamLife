@@ -2,6 +2,7 @@ import "dart:async" show runZoned;
 
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
+import "package:flutter/foundation.dart" show kDebugMode;
 
 import "package:ramaz/constants.dart";  // for route keys
 import "package:ramaz/models.dart";
@@ -38,7 +39,7 @@ Future<void> main({bool restart = false}) async {
 	// ignore: avoid_catches_without_on_clauses
 	} catch (_) {
 		debugPrint("Error on main.");
-		if (!restart) {
+		if (!restart && !kDebugMode) {
 			debugPrint("Trying again...");
 			await Services.instance.reset();
 			return main(restart: true);
