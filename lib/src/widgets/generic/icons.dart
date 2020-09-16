@@ -36,8 +36,10 @@ class SportsIcons {
 class Logos {
 	/// The Google logo. 
 	static const Widget google = CircleAvatar (
-		backgroundImage: AssetImage ("images/logos/google.png"),
-		radius: 18,
+		backgroundColor: Colors.transparent,
+		backgroundImage: NetworkImage(
+			"https://developers.google.com/identity/images/g-logo.png"
+		),
 	);
 
 	/// The Google Drive logo. 
@@ -77,7 +79,7 @@ class RamazLogos {
 	/// 
 	/// https://pbs.twimg.com/profile_images/378800000152983492/5724a8d14e67b53234ed96e3235fe526.jpeg
 	static const Widget teal = LoadingImage (
-		"images/logos/ramaz/teal.jpg",
+		AssetImage("images/logos/ramaz/teal.jpg"),
 		aspectRatio: 1
 	);
 
@@ -86,7 +88,7 @@ class RamazLogos {
 	/// Like https://www.the-rampage.org/wp-content/uploads/2019/08/IMG_0432.png,
 	/// but with the word Ramaz underneath. 
 	static const Widget ramSquareWords = LoadingImage (
-		"images/logos/ramaz/ram_square_words.png",
+		AssetImage("images/logos/ramaz/ram_square_words.png"),
 		aspectRatio: 0.9276218611521418
 	);
 
@@ -94,7 +96,7 @@ class RamazLogos {
 	/// 
 	/// https://www.the-rampage.org/wp-content/uploads/2019/08/IMG_0432.png
 	static const Widget ramSquare = LoadingImage(
-		"images/logos/ramaz/ram_square.png",
+		AssetImage("images/logos/ramaz/ram_square.png"),
 		aspectRatio: 1.0666666666666667
 	);
 
@@ -104,7 +106,7 @@ class RamazLogos {
 	/// with https://upload.wikimedia.org/wikipedia/commons/a/aa/RamazNewLogo_BLUE_RGB_Large72dpi.jpg
 	/// next to it. 
 	static const Widget ramRectangle = LoadingImage (
-		"images/logos/ramaz/ram_rectangle.png",
+		AssetImage("images/logos/ramaz/ram_rectangle.png"),
 		aspectRatio: 2.8915864378401004
 	);
 }
