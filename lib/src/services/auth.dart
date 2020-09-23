@@ -11,7 +11,7 @@ class Auth {
 	static final FirebaseAuth auth = FirebaseAuth.instance;
 
 	/// The [GoogleSignIn] service.
-	static final GoogleSignIn google = GoogleSignIn();
+	static final GoogleSignIn google = GoogleSignIn(hostedDomain: "ramaz.org");
 
 	/// The scope for the calendar.
 	/// 
@@ -70,13 +70,6 @@ class Auth {
 		await google.signOut();
 		await auth.signOut();
 	}
-
-	/// Determines whether the provided email is a valid Ramaz account
-	/// 
-	/// This does no server side validation, only checking if it ends in 
-	/// "@ramaz.org".
-	static bool isValidGoogleAccount(GoogleSignInAccount account) => account
-		.email.endsWith("@ramaz.org");
 
 	/// Signs the user in using Google as a provider. 
 	static Future<void> signIn() async {
