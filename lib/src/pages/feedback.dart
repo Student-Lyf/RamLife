@@ -12,7 +12,9 @@ class FeedbackPage extends StatelessWidget {
 		body: ModelListener<FeedbackModel>(
 			model: () => FeedbackModel(),
 			builder: (BuildContext context, FeedbackModel model, _) => Center(
-				child: Column(
+				child: SizedBox(
+					width: 400, 
+					child: Column(
 				mainAxisAlignment: MainAxisAlignment.center,
 				crossAxisAlignment: CrossAxisAlignment.center,
 				children: [
@@ -46,6 +48,6 @@ class FeedbackPage extends StatelessWidget {
 					]
 				)
 			)
-		)
+		))
 	);
 }

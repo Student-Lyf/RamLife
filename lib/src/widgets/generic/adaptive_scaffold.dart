@@ -9,6 +9,8 @@ class AdaptiveScaffold extends StatelessWidget {
 	final Widget body;
 	final Widget drawer;
 	final Widget endDrawer;
+	final Widget floatingActionButton;
+	final Widget bottomNavigationBar;
 	final AppBar appBar;
 	final AppBar Function(bool) appBarBuilder;
 
@@ -18,6 +20,8 @@ class AdaptiveScaffold extends StatelessWidget {
 		this.appBarBuilder,
 		this.drawer,
 		this.endDrawer, 
+		this.floatingActionButton,
+		this.bottomNavigationBar,
 	});
 
 	@override
@@ -34,7 +38,9 @@ class AdaptiveScaffold extends StatelessWidget {
 			drawer: shouldShowDrawer ? null : drawer,
 			endDrawer: shouldShowEndDrawer ? null : endDrawer,
 			appBar: appBar,
-			body: !shouldShowDrawer 
+			floatingActionButton: floatingActionButton,
+			bottomNavigationBar: bottomNavigationBar,
+			body: !shouldShowDrawer
 				? body 
 				: StandardDrawerBody(
 						appBar: appBar,
@@ -87,12 +93,16 @@ class StandardDrawerBody extends StatelessWidget {
 
 	@override
 	Widget build(BuildContext context) => Row(
+		mainAxisSize: MainAxisSize.min,
 		children: [
 	    Container(
 			  width: AdaptiveScaffold.drawerWidth,
 			  child: Drawer(elevation: 0, child: drawer)
 			),
-			Expanded(child: body)
+			Flexible(
+			  fit: FlexFit.loose,
+			  child: body,
+		  ),
 		]
 	);
 }
