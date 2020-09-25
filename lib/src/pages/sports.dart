@@ -71,7 +71,7 @@ class SportsPage extends StatelessWidget {
 		length: 2,
 		child: ModelListener<SportsModel>(
 			model: () => SportsModel(Models.sports),
-			builder: (BuildContext context, SportsModel model, Widget _) => Scaffold(
+			builder: (BuildContext context, SportsModel model, _) => AdaptiveScaffold(
 				appBar: AppBar(
 					title: const Text("Sports"),
 					bottom: const TabBar(
@@ -103,16 +103,15 @@ class SportsPage extends StatelessWidget {
 	                child: Text("By sport"),
 	              )
 	            ]
-	          )
+	          ),
+	          IconButton(
+	          	icon: const Icon(Icons.live_tv),
+	          	onPressed: () => launch(Urls.sportsLivestream),
+	          	tooltip: "Watch livestream",
+          	)
 					]
 				),
 				drawer: NavigationDrawer(),
-	      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-				floatingActionButton: FloatingActionButton.extended(
-	        label: const Text("Watch livestream"),
-	        icon: const Icon(Icons.open_in_new),
-	        onPressed: () => launch(Urls.sportsLivestream),
-	      ),
 				body: getLayout(context, model),
 			),
 		)

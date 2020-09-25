@@ -80,7 +80,7 @@ class Urls {
 	static const String seniorSystems = "https://my.ramaz.org/SeniorApps/facelets/home/home.xhtml";
 
 	/// The URL for Ramaz livestreaming. 
-	static const String sportsLivestream = "https://ramaz.org/streaming";
+	static const String sportsLivestream = "https://www.ramaz.org/page.cfm?p=10769";
 }
 
 /// Some date constants.
