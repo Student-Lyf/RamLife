@@ -139,17 +139,22 @@ class AdminHomePageState extends State<AdminHomePage> {
     body: SizedBox(
       width: 150, 
       height: 150, 
-      child: Container(
-        color: const Color(0x88000000),
-        child: Row(
-          children: [
-            if (_isCalendarAdmin ?? false) const AdminMenuItem(
-              icon: Icons.schedule,
-              label: "Manage schedules",
-              routeName: Routes.specials, 
-            ),            
-          ]
-        )
+      child: GridView.extent(
+        maxCrossAxisExtent: 200, 
+        children: [
+          Container(
+            color: const Color(0x88000000),
+          )
+        ]
+        // child: Row(
+        //   children: [
+        //     if (_isCalendarAdmin ?? false) const AdminMenuItem(
+        //       icon: Icons.schedule,
+        //       label: "Manage schedules",
+        //       routeName: Routes.specials, 
+        //     ),
+        //   ]
+        // )
         // child: GridView.count(
           // shrinkWrap: true,
           // crossAxisCount: 2,
