@@ -64,7 +64,7 @@ abstract class ReminderTime {
 	/// 	"type": "period",
 	/// 	"repeats": false,
 	/// 	"period": "9",
-	/// 	"letter": "M",
+	/// 	"name": "Monday",
 	/// }
 	/// ```
 	factory ReminderTime.fromJson(Map<String, dynamic> json) {
