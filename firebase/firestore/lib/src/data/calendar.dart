@@ -2,8 +2,6 @@ import "package:meta/meta.dart";
 
 import "package:firestore/helpers.dart";
 
-import "letters.dart";
-
 /// An extension for [DateTime] to print out the date. 
 extension PrettyDatePrinter on DateTime {
 	/// Prints the date only.
@@ -51,7 +49,7 @@ class Day extends Serializable {
 	static List<Day> getEmptyCalendar(int month) => List.generate(
 		31, 
 		(int day) => Day(
-			letter: null,
+			name: null,
 			date: DateTime(getYear(month), month, day + 1)
 		)
 	);
@@ -60,17 +58,17 @@ class Day extends Serializable {
 	/// 
 	/// Passes each entry of the three parameters (and [month]) to [Day.raw].
 	/// 
-	/// [dateLine], [letterLine], and [specialLine] must be the same length.
+	/// [dateLine], [nameLine], and [specialLine] must be the same length.
 	static Iterable<Day> getList({
 		@required List<String> dateLine,
-		@required List<String> letterLine,
+		@required List<String> nameLine,
 		@required List<String> specialLine,
 		@required int month,
 	}) sync* {
 		for (int index = 0; index < dateLine.length; index++) {
 			final Day day = Day.raw(
 				rawDate: dateLine [index],
-				rawLetter: letterLine [index],
+				rawName: nameLine [index],
 				rawSpecial: specialLine [index],
 				month: month,
 			);
@@ -106,8 +104,8 @@ class Day extends Serializable {
 	/// The date for this day.
 	final DateTime date;
 
-	/// The letter for this day.
-	final Letter letter;
+	/// The name for this day.
+	final String name;
 
 	/// The special schedule for this day.
 	/// 
@@ -117,12 +115,12 @@ class Day extends Serializable {
 	/// Creates a day in the schedule.
 	const Day({
 		@required this.date, 
-		@required this.letter, 
+		@required this.name, 
 		this.special
 	}) : 
 		assert (
-			letter != null || special == null, 
-			"Cannot have a special without a letter: $date"
+			name != null || special == null, 
+			"Cannot have a special without a name: $date"
 		);
 
 	/// Parses an entry in the calendar and converts it to a [Day] object.
@@ -130,18 +128,17 @@ class Day extends Serializable {
 	/// The format of these parameters:
 	/// 
 	/// - [rawDate] must be able to pass through [int.parse]
-	/// - [rawLetter] must be present in [stringToLetter] (eg, "M Day")
 	/// - [rawSpecial] can be one of a few things:
 	/// 	1. start with "Modified", in which case it will be a modified schedule
 	/// 	2. end in " Schedule", and start with something present in [specialNames].
 	/// 	3. empty or not present in [specialNames]
 	/// 	4. exactly present in [specialNames]
 	/// 
-	/// [month] and [rawDate] will be used to determine [date], while [rawLetter]
-	/// and [rawSpecial] will decide [letter] and [special], respectively.
+	/// [month] and [rawDate] will be used to determine [date], while [rawName]
+	/// and [rawSpecial] will decide [name] and [special], respectively.
 	factory Day.raw({
 		@required String rawDate, 
-		@required String rawLetter, 
+		@required String rawName, 
 		@required String rawSpecial,
 		@required int month
 	}) {
@@ -151,8 +148,7 @@ class Day extends Serializable {
 		final int year = getYear(month);
 		final int day = int.parse(rawDate);
 		final DateTime date = DateTime(year, month, day);
-		final String letterString = rawLetter.split(" ") [0];
-		final Letter letter = stringToLetter [letterString];
+		final String dayName = rawName.split(" ") [0];
 		String special = rawSpecial.toLowerCase();
 		if (special.endsWith(" Schedule")) {
 			special = special.substring(0, special.indexOf(" Schedule"));
@@ -166,19 +162,19 @@ class Day extends Serializable {
 		}
 		return Day(
 			date: date,
-			letter: letter,
+			name: dayName,
 			special: special,
 		);
 	}
 
 	@override
-	String toString() => letter != null 
-		? "${date.prettyPrint}: $letter ${special ?? ''}"
+	String toString() => name != null 
+		? "${date.prettyPrint}: $name ${special ?? ''}"
 		: "${date.prettyPrint}: No School";
 
 	@override
 	Map<String, String> get json => {
-		"letter": letterToString [letter],
+		"name": name,
 		"special": special,
 	};
 }
