@@ -49,9 +49,6 @@ class DataFiles {
 	/// Each row should be the name of the admin, followed by a list of scopes.
 	static final String admins = "${dataDir.path}\\admins.csv";
 
-	/// The zoom schedule.
-	static final String zoom = "${dataDir.path}\\zoom.csv";
-
 	/// Returns the path for the calendar at a given month.
 	/// 
 	/// The month should follow 1-based indexing.
