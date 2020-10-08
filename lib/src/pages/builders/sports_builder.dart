@@ -119,8 +119,8 @@ class SportBuilderState extends State<SportsBuilder> {
 
 	@override
 	void initState() {
-		teamController.text = widget.parent.team;
-		opponentController.text = widget.parent.opponent;
+		teamController.text = widget.parent?.team;
+		opponentController.text = widget.parent?.opponent;
 		super.initState();
 	}
 
@@ -225,8 +225,9 @@ class SportBuilderState extends State<SportsBuilder> {
 					const SizedBox(height: 20),
 					SportsTile(
 						model.game,
-						onTap: () => model.scores = 
-							SportsScoreUpdater.updateScores(context, model.game) ?? model.scores
+						onTap: () async => model.scores = 
+							await SportsScoreUpdater.updateScores(context, model.game) 
+								?? model.scores
 					),
 					ButtonBar(
 						children: [

@@ -16,8 +16,8 @@ class Student {
 	/// This student's schedule.
 	/// 
 	/// Each key is a different day, and the value is a list of periods. 
-	/// See [Letters] and [PeriodData] for more information.
-	final Map <Letters, List<PeriodData>> schedule;
+	/// See [PeriodData] for more information.
+	final Map<String, List<PeriodData>> schedule;
 
 	/// The section ID for this student's homeroom; 
 	final String homeroomId;
@@ -64,29 +64,11 @@ class Student {
 		}
 		final String homeroomId = json [homeroomKey];
 
-		// Check for null schedules
-		const List<String> letters = ["A", "B", "C", "E", "F", "M", "R"];
-		for (final String letter in letters) {
-			if (!json.containsKey (letter)) {
-				throw JsonUnsupportedObjectError(
-					json, cause: "Cannot find letter $letter"
-				);
-			}
-			if (json [letter] == null) {
-				throw ArgumentError.notNull ("$letter has no schedule");
-			}
-		}
-
 		// Real code starts here
 		return Student (
 			schedule: {
-				Letters.A: PeriodData.getList (json ["A"]),
-				Letters.B: PeriodData.getList (json ["B"]),
-				Letters.C: PeriodData.getList (json ["C"]),
-				Letters.E: PeriodData.getList (json ["E"]),
-				Letters.F: PeriodData.getList (json ["F"]),
-				Letters.M: PeriodData.getList (json ["M"]),
-				Letters.R: PeriodData.getList (json ["R"]),
+				for (final String dayName in json ["dayNames"])
+					dayName: PeriodData.getList(json [dayName])
 			},
 			homeroomId: homeroomId, 
 			homeroomLocation: homeroomLocation,
@@ -105,28 +87,33 @@ class Student {
 			return [];
 		} 
 
-		// Get indices for `schedule [day.letter]`, keeping skipped periods in mind
+		// Get indices for `schedule [day.name]`, keeping skipped periods in mind
 		int periodIndex = 0;
 		final List<int> periodIndices = [];
 		final Map<String, Activity> activities = day.special.activities ?? {};
-		final Special special = day.isModified 
-			? Day.specials [day.letter] 
-			: day.special;
+		// TODO: Remove this line. 
+		// final Special special = day.isModified 
+		// 	? Day.specials [day.letter] 
+		// 	: day.special;
+		final Special special = day.special;
 
 		for (int index = 0; index < special.periods.length; index++) {
-			while (special?.skip?.contains(periodIndex + 1) ?? false) {
-				periodIndex++;
-			}
+			// if (special.skip?.contains(index) ?? false)
+			// 	periodIndex++;
+			// while (special?.skip?.contains(periodIndex + 1) ?? false) {
+			// 	periodIndex++;
+			// }
 			periodIndices.add(
-				special.homeroom == index || special.mincha == index 
+				special.homeroom == index 
+				|| special.mincha == index 
+				|| (special.skip?.contains(index) ?? false)
 					? null
 					: periodIndex++
 			);
 		}
-
 		// Loop over all the periods and assign each one a Period.
 		return [
-			for (int index = 0; index < special.periods.length; index++)
+			for (int index = 0; index < special.periods.length; index++) 
 				if (special.homeroom == index)
 					Period(
 						PeriodData.free,
@@ -139,8 +126,15 @@ class Student {
 						day.isModified ? null : special.periods [index],
 						activity: activities ["Mincha"],
 					)
+				else if (periodIndices [index] == null) 
+					Period(
+						PeriodData.free,
+						time: day.isModified ? null : special.periods [index],
+						period: "Free",
+						activity: null,
+					)
 				else Period(
-					schedule [day.letter] [periodIndices [index]] ?? PeriodData.free,
+					schedule [day.name] [periodIndices [index]] ?? PeriodData.free,
 					time: day.isModified ? null : special.periods [index],
 					period: (periodIndices [index] + 1).toString(),
 					activity: activities [(periodIndices [index] + 1).toString()]

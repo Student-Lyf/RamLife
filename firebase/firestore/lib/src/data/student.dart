@@ -1,7 +1,9 @@
 import "package:meta/meta.dart";
 
+import "package:firestore/constants.dart";
 import "package:firestore/helpers.dart";
-import "package:firestore/data.dart";
+
+import "schedule.dart";
 
 /// A user object.
 /// 
@@ -50,7 +52,7 @@ class User extends Serializable {
 	/// This user's schedule.
 	/// 
 	/// This must have all the letters inside. 
-	final Map<Letter, List<Period>> schedule;
+	final Map<String, List<Period>> schedule;
 
 	/// This user's full name.
 	String get name => "$first $last";
@@ -82,10 +84,10 @@ class User extends Serializable {
 			homeroomLocation != null,
 			"Could not find homeroom location for user: ${toString()}"
 		);
-		for (final Letter letter in Letter.values) {
+		for (final String dayName in dayNames) {
 			assert(
-				schedule.containsKey(letter), 
-				"$name does not have a schedule for $letter days,"
+				schedule.containsKey(dayName), 
+				"$name does not have a schedule for $dayName days,"
 			);
 		}
 	}
@@ -120,7 +122,7 @@ class User extends Serializable {
 	/// 
 	/// To fill in the homeroom as well, call this function on the return value
 	/// of [addHomeroom].
-	User addSchedule(Map<Letter, List<Period>> schedule) => User(
+	User addSchedule(Map<String, List<Period>> schedule) => User(
 		first: first, 
 		last: last,
 		email: email,
@@ -132,13 +134,8 @@ class User extends Serializable {
 
 	@override
 	Map<String, dynamic> get json => {
-		"M": scheduleToJson(schedule [Letter.M]),
-		"R": scheduleToJson(schedule [Letter.R]),
-		"A": scheduleToJson(schedule [Letter.A]),
-		"B": scheduleToJson(schedule [Letter.B]),
-		"C": scheduleToJson(schedule [Letter.C]),
-		"E": scheduleToJson(schedule [Letter.E]),
-		"F": scheduleToJson(schedule [Letter.F]),
+		for (final String dayName in dayNames) 
+			dayName: scheduleToJson(schedule [dayName]),
 		"homeroom": homeroom,
 		"homeroom meeting room": homeroomLocation,
 		"email": email,

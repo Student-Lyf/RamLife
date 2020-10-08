@@ -9,67 +9,6 @@ import "package:flutter/foundation.dart";
 
 import "times.dart";
 
-/// An enum describing the different letter days.
-enum Letters {
-	/// An M day at Ramaz
-	/// 
-	/// Happens every Monday
-	M, 
-
-	/// An R day at Ramaz.
-	/// 
-	/// Happens every Thursday.
-	R, 
-
-	/// A day at Ramaz.
-	/// 
-	/// Tuesdays and Wednesdays rotate between A, B, and C days.
-	A, 
-
-	/// B day at Ramaz.
-	/// 
-	/// Tuesdays and Wednesdays rotate between A, B, and C days.
-	B, 
-
-	/// C day at Ramaz.
-	/// 
-	/// Tuesdays and Wednesdays rotate between A, B, and C days.
-	C, 
-
-	/// E day at Ramaz.
-	/// 
-	/// Fridays rotate between E and F days.
-	E, 
-
-	/// F day at Ramaz.
-	/// 
-	/// Fridays rotate between E and F days.
-	F
-}
-
-/// Maps a [Letters] to a [String] without a function.
-const Map<Letters, String> lettersToString = {
-	Letters.A: "A",
-	Letters.B: "B",
-	Letters.C: "C",
-	Letters.M: "M",
-	Letters.R: "R",
-	Letters.E: "E",
-	Letters.F: "F",
-};
-
-/// Maps a [String] to a [Letters] without a function.
-const Map<String, Letters> stringToLetters = {
-	"A": Letters.A,
-	"B": Letters.B,
-	"C": Letters.C,
-	"M": Letters.M,
-	"R": Letters.R,
-	"E": Letters.E,
-	"F": Letters.F,
-	null: null,
-};
-
 /// A subject, or class, that a student can take.
 /// 
 /// Since one's schedule contains multiple instances of the same subject,
@@ -310,24 +249,11 @@ class Period {
 
 /// A day at Ramaz. 
 /// 
-/// Each day has a [letter] and [special] property.
-/// The [letter] property decides which schedule to show,
+/// Each day has a [name] and [special] property.
+/// The [name] property decides which schedule to show,
 /// while the [special] property decides what time slots to give the periods. 
 @immutable
 class Day {
-	/// The default [Special] for a given [Letters].
-	/// 
-	/// See [Special.getWinterFriday] for how to determine the Friday schedule.
-	static final Map<Letters, Special> specials = {
-		Letters.A: Special.rotate,
-		Letters.B: Special.rotate,
-		Letters.C: Special.rotate,
-		Letters.M: Special.regular,
-		Letters.R: Special.regular,
-		Letters.E: Special.getWinterFriday(),
-		Letters.F: Special.getWinterFriday(),
-	};
-
 	/// Gets the calendar for the whole year.
 	/// 
 	/// Each element of [data]'s months should be a JSON representation of a [Day].
@@ -357,65 +283,52 @@ class Day {
 	static Day getDate(List<List<Day>> calendar, DateTime date) => 
 		calendar [date.month - 1] [date.day - 1];
 
-	/// The letter of this day. 
+	/// The name of this day. 
 	/// 
 	/// This decides which schedule of the student is shown. 
-	final Letters letter;
+	final String name;
 
 	/// The time allotment for this day.
 	/// 
 	/// See the [Special] class for more details.
 	final Special special;
 
-	/// Returns a new Day from a [Letters] and [Special].
-	/// 
-	/// [special] can be null, in which case [specials] will be used.
-	Day ({
-		@required this.letter,
-		special
-	}) : special = special ?? specials [letter];
+	/// Returns a new Day from a [name] and [Special].
+	const Day({
+		@required this.name,
+		@required this.special
+	});
 
 	/// Returns a Day from a JSON object.
 	/// 
-	/// `json ["letter"]` must be one of the specials in [Special.stringToSpecial].
-	/// `json ["letter"]` must not be null.
+	/// `json ["name"]` and `json ["special"]` must not be null.
 	/// 
 	/// `json ["special"]` may be: 
 	/// 
-	/// 1. One of the specials from [specials].
+	/// 1. One of the specials from [Special.specials].
 	/// 2. JSON of a special. See [Special.fromJson].
-	/// 3. null, in which case [specials] will be used.
 	/// 
 	/// This factory is not a constructor so it can dynamically check 
-	/// for a valid [letter] while keeping the field final.
+	/// for a valid [name] while keeping the field final.
 	factory Day.fromJson(Map<String, dynamic> json) {
-		if (!json.containsKey("letter")) {
+		if (!json.containsKey("name")) {
 			throw JsonUnsupportedObjectError(json);
 		}
-		final String jsonLetter = json ["letter"];
+		final String name = json ["name"];
 		final jsonSpecial = json ["special"];
-		if (!stringToLetters.containsKey (jsonLetter)) {
-			throw ArgumentError.value(
-				jsonLetter,  // invalid value
-				"letter",  // arg name
-				"$jsonLetter is not a valid letter",  // message
-			); 
-		}
-		final Letters letter = stringToLetters [jsonLetter];
 		final Special special = Special.fromJson(jsonSpecial);
-		return Day (letter: letter, special: special);
+		return Day(name: name, special: special);
 	}
 
 	@override 
-	String toString() => name;
+	String toString() => displayName;
 
 	@override
 	int get hashCode => name.hashCode;
 
 	@override 
 	bool operator == (dynamic other) => other is Day && 
-		other.letter == letter &&
-		// other.lunch == lunch &&
+		other.name == name &&
 		other.special == special;
 
 	/// Returns a JSON representation of this Day. 
@@ -423,46 +336,33 @@ class Day {
 	/// Will convert [special] to its name if it is a built-in special.
 	/// Otherwise it will convert it to JSON form. 
 	Map<String, dynamic> toJson() => {
-		"letter": lettersToString [letter],
-		"special": special == null ? null : 
-			Special.stringToSpecial.containsKey(special.name)
-				? special.name
-				: special.toJson()
+		"name": name,
+		"special": Special.stringToSpecial.containsKey(special.name)
+			? special.name
+			: special.toJson()
 	};
 
 	/// A human-readable string representation of this day.
 	/// 
-	/// If the letter is null, returns null. 
-	/// Otherwise, returns [letter] and [special].
-	/// If [special] was left as the default, will only return the [letter].
-	String get name => letter == null
+	/// If [name] is null, returns null. 
+	/// Otherwise, returns [name] and [special].
+	/// If [special] was left as the default, will only return the [name].
+	String get displayName => name == null
 		? "No School"
-		: "${lettersToString [letter]} day${
+		: "$name${
 			special == Special.regular || special == Special.rotate 
 				? '' : ' ${special.name}'
 		}";
 
 	/// Whether to say "a" or "an".
 	/// 
-	/// This method is needed since [letter] is a letter and not a word. 
+	/// Remember, [name] can be a letter and not a word. 
 	/// So a letter like "R" might need "an" while "B" would need "a".
-	String get n {
-		switch (letter) {
-			case Letters.A:
-			case Letters.E:
-			case Letters.M:
-			case Letters.R:
-			case Letters.F:
-				return "n";
-			case Letters.B:
-			case Letters.C:
-			default: 
-				return "";
-		}
-	}
+	String get n => {"A", "E", "I", "O", "U"}.contains(name [0])
+		|| {"A", "M", "R", "E", "F"}.contains(name) ? "n" : "";
 
 	/// Whether there is school on this day.
-	bool get school => letter != null;
+	bool get school => name != null;
 
 	/// Whether the times for this day are known.
 	bool get isModified => special == Special.modified;

@@ -1,5 +1,6 @@
 import "package:firestore/data.dart";
 import "package:firestore/helpers.dart";
+import "package:firestore/constants.dart";
 
 import "reader.dart";  // for doc comments, can be removed if necessary.
 
@@ -42,7 +43,7 @@ class StudentLogic {
 	/// in order to keep the data and logic layers separate. 
 	/// 
 	/// Additionally, this function populates [seniors] and [homerooms].
-	static Map<User, Map<Letter, List<Period>>> getSchedules({
+	static Map<User, Map<String, List<Period>>> getSchedules({
 		@required Map<String, User> students,
 		@required Map<String, List<Period>> periods,
 		@required Map<String, List<String>> studentClasses, 
@@ -50,8 +51,8 @@ class StudentLogic {
 	}) {
 		homerooms = {};
 		seniors = {};
-		final Map<User, DefaultMap<Letter, List<Period>>> result = DefaultMap(
-			(_) => DefaultMap((Letter letter) => 
+		final Map<User, DefaultMap<String, List<Period>>> result = DefaultMap(
+			(_) => DefaultMap((String letter) => 
 				List.filled(Period.periodsInDay[letter], null))
 		);
 		for (final MapEntry<String, List<String>> entry in studentClasses.entries) {
@@ -62,7 +63,13 @@ class StudentLogic {
 					continue;
 				}
 
-				if (semesters != null && !semesters [sectionId].semester2) {
+				if (
+					semesters != null && 
+					!(isSemester1 
+						? semesters [sectionId].semester1 
+						: semesters [sectionId].semester2
+					)
+				) {
 					continue;
 				} else if (sectionId.startsWith("12")) {
 					seniors.add(student);
@@ -79,7 +86,7 @@ class StudentLogic {
 			}
 		}
 		for (final schedule in result.values) {
-			schedule.setDefaultForAll(Letter.values);
+			schedule.setDefaultForAll(dayNames);
 		}
 		return result;
 	}
@@ -98,12 +105,12 @@ class StudentLogic {
 	/// These are kept as parameters instead of calling the functions by itself
 	/// in order to keep the data and logic layers separate. 
 	static List<User> getStudentsWithSchedules({
-		@required Map<User, Map<Letter, List<Period>>> schedules, 
+		@required Map<User, Map<String, List<Period>>> schedules, 
 		@required Map<User, String> homerooms,
 		@required Map<String, String> homeroomLocations,
 	}) => [
 		for (
-			final MapEntry<User, Map<Letter, List<Period>>> entry in 
+			final MapEntry<User, Map<String, List<Period>>> entry in 
 			schedules.entries
 		)
 			if (!expelled.contains(entry.key.id))

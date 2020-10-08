@@ -412,6 +412,24 @@ class Special {
 		"homeroom": homeroom,
 	};
 
+	static const Special covid = Special(
+		"COVID-19",
+		[
+			Range(Time(8, 30), Time(9, 15)),
+			Range(Time(9, 20), Time(9, 55)),
+			Range(Time(10, 00), Time(10, 45)),
+			Range(Time(10, 55), Time(11, 40)), 
+			Range(Time(11, 50), Time(12, 35)), 
+			Range(Time(12, 35), Time(13, 05)), 
+			Range(Time(13, 15), Time(14, 00)),
+			Range(Time(14, 00), Time(14, 10)), 
+			Range(Time(14, 20), Time(15, 05)),
+			Range(Time(15, 15), Time(16, 00)),
+		],
+		mincha: 7,
+		skip: [1, 5],
+	);
+
 	/// The [Special] for Rosh Chodesh.
 	static const Special roshChodesh = Special (
 		"Rosh Chodesh", 
@@ -647,6 +665,7 @@ class Special {
 		rotate,
 		early,
 		modified,
+		covid, 
 	];
 
 	/// Maps the default special names to their [Special] objects

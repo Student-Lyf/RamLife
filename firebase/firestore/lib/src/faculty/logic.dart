@@ -1,5 +1,6 @@
 import "package:firestore/data.dart";
 import "package:firestore/helpers.dart" show DefaultMap, Logger;
+import "package:firestore/constants.dart";
 
 // for doc comments
 import "package:firestore/sections.dart"; 
@@ -135,14 +136,14 @@ class FacultyLogic {
 		// Compiles a list of periods into a full schedule.
 		final List<User> result = [];
 		for (final MapEntry<User, List<Period>> entry in schedules.entries) {
-			final DefaultMap<Letter, List<Period>> schedule = DefaultMap(
-				(Letter letter) => List.filled(Period.periodsInDay [letter], null)
+			final DefaultMap<String, List<Period>> schedule = DefaultMap(
+				(String letter) => List.filled(Period.periodsInDay [letter], null)
 			);
 
 			for (final Period period in entry.value) {
 				schedule [period.day] [period.period - 1] = period;
 			}
-			schedule.setDefaultForAll(Letter.values);
+			schedule.setDefaultForAll(dayNames);
 			result.add(entry.key.addSchedule(schedule));
 		}
 

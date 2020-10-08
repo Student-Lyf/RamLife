@@ -93,7 +93,7 @@ class HomePageState extends State<HomePage> {
 						Text (
 							model.schedule.hasSchool
 								? "Today is a${model.schedule.today.n} "
-									"${model.schedule.today.name}"
+									"${model.schedule.today.displayName}"
 								: "There is no school today",
 							textScaleFactor: 2,
 							textAlign: TextAlign.center

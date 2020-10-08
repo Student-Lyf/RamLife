@@ -2,7 +2,7 @@ import "package:meta/meta.dart";
 
 import "package:firestore/helpers.dart";
 
-import "letters.dart";
+import "calendar.dart";  // for doc comments
 
 @immutable
 /// Tracks if a section meets in a semester.
@@ -68,19 +68,17 @@ class Section extends Serializable {
 @immutable
 /// A period in the day. 
 class Period extends Serializable {
-	/// Maps a [Letter] to the number of periods in that day.
+	/// Maps a [Day.name] to the number of periods in that day.
 	/// 
 	/// Not all periods will be shown in the app. `Special.periods.length` will
 	/// dictate that, and `Special.periods.skips` dictates which periods will 
 	/// be skipped.
-	static Map<Letter, int> periodsInDay = {
-		Letter.A: 11, 
-		Letter.B: 11,
-		Letter.C: 11,
-		Letter.M: 11,
-		Letter.R: 11, 
-		Letter.E: 7,
-		Letter.F: 7,
+	static Map<String, int> periodsInDay = {
+		"Monday": 7, 
+		"Tuesday": 7, 
+		"Wednesday": 7, 
+		"Thursday": 7, 
+		"Friday": 7,
 	};
 
 	/// THe room this period is located in.
@@ -90,7 +88,7 @@ class Period extends Serializable {
 	final String id;
 
 	/// The day this period takes place.
-	final Letter day;
+	final String day;
 
 	/// The period number.
 	final int period;

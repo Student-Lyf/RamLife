@@ -15,6 +15,7 @@ dependencies:
   build_runner: any 
   build_node_compilers: any
   node_interop: any
+  yaml: any
 
 # dev_dependencies:
 #  test: ^1.6.0
