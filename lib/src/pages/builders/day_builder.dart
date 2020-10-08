@@ -64,10 +64,10 @@ class DayBuilder extends StatelessWidget {
 							alignment: WrapAlignment.spaceBetween,
 							crossAxisAlignment: WrapCrossAlignment.center,
 							children: [
-								const Text("Letter", textAlign: TextAlign.center),
+								const Text("Day", textAlign: TextAlign.center),
 								DropdownButton<String>(
 									value: model.name,
-									hint: const Text("Letter"),
+									hint: const Text("Day"),
 									onChanged: !model.hasSchool ? null : 
 										(String value) => model.name = value,
 									items: [

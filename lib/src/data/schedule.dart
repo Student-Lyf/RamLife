@@ -356,7 +356,7 @@ class Day {
 
 	/// Whether to say "a" or "an".
 	/// 
-	/// This method is needed since [name] can be a letter and not a word. 
+	/// Remember, [name] can be a letter and not a word. 
 	/// So a letter like "R" might need "an" while "B" would need "a".
 	String get n => {"A", "E", "I", "O", "U"}.contains(name [0])
 		|| {"A", "M", "R", "E", "F"}.contains(name) ? "n" : "";
