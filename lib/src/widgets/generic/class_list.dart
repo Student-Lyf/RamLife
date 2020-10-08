@@ -139,7 +139,7 @@ class ClassList extends StatelessWidget {
 				: "${period.period}: ${period.getName(subject)}",
 			reminders: Models.reminders.getReminders(
 				period: period.period,
-				letter: day.letter,
+				dayName: day.name,
 				subject: subject?.name,
 			),
 			activity: period?.activity,

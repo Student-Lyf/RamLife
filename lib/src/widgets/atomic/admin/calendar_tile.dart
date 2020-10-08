@@ -34,15 +34,15 @@ class CalendarTile extends StatelessWidget{
 						alignment: Alignment.topLeft,
 						child: Text ((date + 1).toString()),
 					),
-					if (day?.letter != null)
+					if (day?.name != null)
 						Center (
 							child: Text (
-								lettersToString [day.letter], 
+								day.name, 
 								textScaleFactor: 1.5
 							),
 						),
 					if (
-						day?.letter != null &&
+						day?.name != null &&
 						!<String>[Special.rotate.name, Special.regular.name]
 							.contains(day.special?.name)
 					) const Align(
