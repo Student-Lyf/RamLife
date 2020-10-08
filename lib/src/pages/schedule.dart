@@ -40,7 +40,7 @@ class SchedulePage extends StatelessWidget {
 			body: Column (
 				children: [
 					ListTile (
-						title: const Text ("Choose a letter"),
+						title: const Text ("Day"),
 						trailing: DropdownButton<String> (
 							value: model.day.name, 
 							onChanged: (String value) => model.update(newName: value),
@@ -54,7 +54,7 @@ class SchedulePage extends StatelessWidget {
 						)
 					),
 					ListTile (
-						title: const Text ("Choose a schedule"),
+						title: const Text ("Schedule"),
 						trailing: DropdownButton<Special> (
 							value: model.day.special,
 							onChanged: (Special special) => model.update(newSpecial: special),
