@@ -41,6 +41,8 @@ Future<void> main() async {
 	final Map<User, String> homerooms = StudentLogic.homerooms;
 	Logger.debug("Homerooms", homerooms);
 
+	Logger.debug("Seniors", StudentLogic.seniors);
+
 	final List<User> studentsWithSchedules = await Logger.logValue(
 		"student schedules", () => StudentLogic.getStudentsWithSchedules(
 			schedules: schedules,
