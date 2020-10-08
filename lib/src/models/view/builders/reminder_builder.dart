@@ -139,7 +139,7 @@ class RemindersBuilderModel with ChangeNotifier {
 	/// Changes the [period] of this reminder. 
 	/// 
 	/// Only relevant when [type] is [ReminderTimeType.period].
-	void changeLetter(String value) {
+	void changeDay(String value) {
 		dayName = value;
 		period = null;
 		notifyListeners();
