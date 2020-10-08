@@ -28,7 +28,7 @@ Future<void> main() async {
 		"semesters", StudentReader.getSemesters
 	);
 
-	final Map<User, Map<Letter, List<Period>>> schedules = 
+	final Map<User, Map<String, List<Period>>> schedules = 
 		await Logger.logValue(
 			"schedules", () => StudentLogic.getSchedules(
 				students: students,

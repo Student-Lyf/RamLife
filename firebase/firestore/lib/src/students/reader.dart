@@ -39,7 +39,6 @@ class StudentReader {
 			) {
 				final String sectionId = entry ["SECTION_ID"];
 				final String day = entry ["WEEKDAY_NAME"];
-				final Letter letter = stringToLetter [day];
 				final String periodString = entry ["BLOCK_NAME"];
 				final String room = entry ["ROOM"];
 				final int periodNumber = int.tryParse(periodString);
@@ -50,7 +49,7 @@ class StudentReader {
 					continue;
 				} 
 				final Period period = Period(
-					day: letter,
+					day: day,
 					room: room,
 					id: sectionId,
 					period: periodNumber,
