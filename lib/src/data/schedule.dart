@@ -321,7 +321,7 @@ class Day {
 	}
 
 	@override 
-	String toString() => name;
+	String toString() => displayName;
 
 	@override
 	int get hashCode => name.hashCode;
@@ -349,7 +349,7 @@ class Day {
 	/// If [special] was left as the default, will only return the [name].
 	String get displayName => name == null
 		? "No School"
-		: "$name day${
+		: "$name${
 			special == Special.regular || special == Special.rotate 
 				? '' : ' ${special.name}'
 		}";

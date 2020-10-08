@@ -68,14 +68,13 @@ class ScheduleModel with ChangeNotifier {
 	/// If the dayName is non-null, the special defaults to [defaultSpecial].
 	void update({String newName, Special newSpecial}) {
 		String name  = day.name;
-		final Special special = day.special;
 		if (newName != null) {
 			name = newName;
-			day = Day(name: name, special: null);
+			day = Day(name: name, special: defaultSpecial);
 			notifyListeners();
 		} 
 		if (newSpecial != null) {
-			day = Day (name: name, special: special);
+			day = Day (name: name, special: newSpecial);
 			notifyListeners();
 		}
 	}
