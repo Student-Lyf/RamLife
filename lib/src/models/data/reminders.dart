@@ -62,11 +62,11 @@ class Reminders with ChangeNotifier {
 	List<int> getReminders({
 		@required String subject,
 		@required String period,
-		@required Letters letter,
+		@required String dayName,
 	}) => Reminder.getReminders(
 		reminders: reminders,
 		subject: subject,
-		letter: letter,
+		dayName: dayName,
 		period: period,
 	).toList();
 

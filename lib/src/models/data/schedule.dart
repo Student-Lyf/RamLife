@@ -168,12 +168,12 @@ class Schedule with ChangeNotifier {
 			..currentReminders = Models.reminders.getReminders(
 				period: period?.period,
 				subject: subjects [period?.id]?.name,
-				letter: today.letter,
+				dayName: today.name,
 			)
 			..nextReminders = Models.reminders.getReminders(
 				period: nextPeriod?.period,
 				subject: subjects [nextPeriod?.id]?.name,
-				letter: today.letter,
+				dayName: today.name,
 			);
 
 		(Models.reminders.currentReminders ?? []).forEach(Models.reminders.markShown);
@@ -203,7 +203,7 @@ class Schedule with ChangeNotifier {
 			for (final int reminderIndex in Models.reminders.getReminders(
 				period: period?.period,
 				subject: subjects [period?.id]?.name,
-				letter: today.letter,
+				dayName: today.name,
 			)) {
 				Notifications.scheduleNotification(
 					date: DateTime(
