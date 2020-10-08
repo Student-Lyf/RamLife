@@ -63,7 +63,13 @@ class StudentLogic {
 					continue;
 				}
 
-				if (semesters != null && !semesters [sectionId].semester2) {
+				if (
+					semesters != null && 
+					!(isSemester1 
+						? semesters [sectionId].semester1 
+						: semesters [sectionId].semester2
+					)
+				) {
 					continue;
 				} else if (sectionId.startsWith("12")) {
 					seniors.add(student);
