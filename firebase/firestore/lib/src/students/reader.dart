@@ -1,3 +1,4 @@
+import "package:firestore/constants.dart";
 import "package:firestore/data.dart";
 import "package:firestore/helpers.dart";
 
@@ -13,12 +14,13 @@ class StudentReader {
 	/// Maps student IDs to their respective [User] objects.
 	static Future<Map<String, User>> getStudents() async => {
 		await for (final Map<String, String> entry in csvReader(DataFiles.students)) 
-			entry ["ID"]: User(
-				first: entry ["First Name"],
-				last: entry ["Last Name"],
-				email: entry ["Student E-mail"].toLowerCase(),
-				id: entry ["ID"],
-			)
+			if (!corruptStudents.contains(entry ["ID"]))
+				entry ["ID"]: User(
+					first: entry ["First Name"],
+					last: entry ["Last Name"],
+					email: entry ["Student E-mail"].toLowerCase(),
+					id: entry ["ID"],
+				)
 	};
 
 	/// Maps homeroom section IDs to their respective rooms.
@@ -63,6 +65,9 @@ class StudentReader {
 	static Future<Map<String, List<String>>> getStudentClasses() async {
 		final Map<String, List<String>> result = DefaultMap((_) => []);
 		await for (final Map<String, String> entry in csvReader(DataFiles.schedule)) {
+			if (corruptStudents.contains(entry ["STUDENT_ID"])) {
+				continue;
+			} 
 			result [entry ["STUDENT_ID"]].add(entry ["SECTION_ID"]);
 		}
 		return result;
