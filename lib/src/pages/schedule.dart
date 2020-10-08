@@ -41,14 +41,14 @@ class SchedulePage extends StatelessWidget {
 				children: [
 					ListTile (
 						title: const Text ("Choose a letter"),
-						trailing: DropdownButton<Letters> (
-							value: model.day.letter, 
-							onChanged: (Letters letter) => model.update(newLetter: letter),
+						trailing: DropdownButton<String> (
+							value: model.day.name, 
+							onChanged: (String value) => model.update(newName: value),
 							items: [
-								for (final Letters letter in Letters.values)
+								for (final String dayName in Models.schedule.student.schedule.keys)
 									DropdownMenuItem(
-										value: letter,
-										child: Text(lettersToString [letter]),
+										value: dayName,
+										child: Text(dayName),
 									)
 							]
 						)
