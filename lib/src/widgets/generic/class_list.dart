@@ -96,7 +96,7 @@ class ClassList extends StatelessWidget {
 		this.periods,
 	});
 
-	List<Period> _getPeriods(BuildContext context) {
+	Iterable<Period> _getPeriods(BuildContext context) {
 		try {
 			return periods ?? Models.schedule.student.getPeriods(day);
 		} on RangeError { // ignore: avoid_catching_errors
