@@ -40,10 +40,13 @@ class Admin {
 	/// These can be saved so the admin does not have to recreate them. 
 	final List<Special> specials;
 
+	final String email;
+
 	/// Creates a user with administrative privileges. 
 	const Admin ({
 		this.scopes, 
-		this.specials
+		this.specials,
+		this.email,
 	});
 
 	/// Creates an admin from a JSON entry. 
@@ -52,6 +55,7 @@ class Admin {
 			for (String scope in _scopes)
 				stringToScope [scope]
 		],
+		email = json ["email"],
 		specials = [
 			for (dynamic special in json ["specials"] ?? [])
 				Special.fromJson (Map<String, dynamic>.from(special))
@@ -62,6 +66,7 @@ class Admin {
 		"specials": [
 			for (final Special special in specials)
 				special.toJson(),
-		]
+		],
+		"email": email,
 	};
 }

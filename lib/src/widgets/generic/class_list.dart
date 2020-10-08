@@ -96,6 +96,21 @@ class ClassList extends StatelessWidget {
 		this.periods,
 	});
 
+	List<Period> _getPeriods(BuildContext context) {
+		try {
+			return periods ?? Models.schedule.student.getPeriods(day);
+		} on RangeError { // ignore: avoid_catching_errors
+			Future(
+				() => Scaffold.of(context).showSnackBar(
+					const SnackBar(content: Text("Invalid schedule"))
+				)
+			);
+			return Models.schedule.student.getPeriods(
+				Models.schedule.today
+			);
+		}
+	}
+
 	@override Widget build(BuildContext context) => ModelListener<Reminders>(
 		model: () => Models.reminders,
 		dispose: false,
@@ -114,10 +129,8 @@ class ClassList extends StatelessWidget {
 			children: [
 				if (headerText != null) header,
 				...[
-					for (
-						final Period period in 
-						periods ?? Models.schedule.student.getPeriods(day)
-					) getPanel(period)
+					for (final Period period in _getPeriods(context)) 
+						getPanel(period)
 				],
 			]
 		)

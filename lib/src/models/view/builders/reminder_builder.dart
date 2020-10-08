@@ -109,7 +109,7 @@ class RemindersBuilderModel with ChangeNotifier {
 		for (
 			final Period period in 
 			_schedule.student.getPeriods(
-				Day(name: dayName, special: Special.regular)
+				Day(name: dayName, special: Models.schedule.today.special),
 			)
 		)
 			period.period

@@ -98,19 +98,22 @@ class Student {
 		final Special special = day.special;
 
 		for (int index = 0; index < special.periods.length; index++) {
-			while (special?.skip?.contains(periodIndex + 1) ?? false) {
-				periodIndex++;
-			}
+			// if (special.skip?.contains(index) ?? false)
+			// 	periodIndex++;
+			// while (special?.skip?.contains(periodIndex + 1) ?? false) {
+			// 	periodIndex++;
+			// }
 			periodIndices.add(
-				special.homeroom == index || special.mincha == index 
+				special.homeroom == index 
+				|| special.mincha == index 
+				|| (special.skip?.contains(index) ?? false)
 					? null
 					: periodIndex++
 			);
 		}
-
 		// Loop over all the periods and assign each one a Period.
 		return [
-			for (int index = 0; index < special.periods.length; index++)
+			for (int index = 0; index < special.periods.length; index++) 
 				if (special.homeroom == index)
 					Period(
 						PeriodData.free,
@@ -122,6 +125,13 @@ class Student {
 					Period.mincha(
 						day.isModified ? null : special.periods [index],
 						activity: activities ["Mincha"],
+					)
+				else if (periodIndices [index] == null) 
+					Period(
+						PeriodData.free,
+						time: day.isModified ? null : special.periods [index],
+						period: "Free",
+						activity: null,
 					)
 				else Period(
 					schedule [day.name] [periodIndices [index]] ?? PeriodData.free,
