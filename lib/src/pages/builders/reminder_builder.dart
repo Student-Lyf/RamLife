@@ -156,18 +156,18 @@ class ReminderBuilderState extends State<ReminderBuilder> {
 							const SizedBox (height: 20),
 							if (model.type == ReminderTimeType.period) ...[
 								ListTile (
-									title: const Text ("Letter day"),
-									trailing: DropdownButton<Letters>(
+									title: const Text ("Day"),
+									trailing: DropdownButton<String>(
 										items: [
-											for (final Letters letter in Letters.values)
+											for (final String dayName in Models.schedule.student.schedule.keys)
 												DropdownMenuItem(
-													value: letter,
-													child: Text (lettersToString [letter]),
+													value: dayName,
+													child: Text(dayName),
 												),
 										],
-										onChanged: model.changeLetter,
-										value: model.letter,
-										hint: const Text ("Letter"),
+										onChanged: model.changeDay,
+										value: model.dayName,
+										hint: const Text("Day"),
 									),
 								),
 								ListTile (

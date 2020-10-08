@@ -9,11 +9,9 @@ library reminder_dataclasses;
 import "dart:convert" show JsonUnsupportedObjectError;
 import "package:flutter/foundation.dart" show required, immutable;
 
-import "schedule.dart";
-
 /// An enum to decide when the reminder should appear. 
 /// 
-/// `period` means the reminder needs a [Letters] and a period (as [String])
+/// `period` means the reminder needs a Day name and a period (as [String])
 /// `subject` means the reminder needs a name of a class.
 enum ReminderTimeType {
 	/// Whether the reminder should be displayed on a specific period.
@@ -66,7 +64,7 @@ abstract class ReminderTime {
 	/// 	"type": "period",
 	/// 	"repeats": false,
 	/// 	"period": "9",
-	/// 	"letter": "M",
+	/// 	"name": "Monday",
 	/// }
 	/// ```
 	factory ReminderTime.fromJson(Map<String, dynamic> json) {
@@ -86,7 +84,7 @@ abstract class ReminderTime {
 	/// such as a UI reminder builder. 
 	factory ReminderTime.fromType({
 		@required ReminderTimeType type,
-		@required Letters letter,
+		@required String dayName,
 		@required String period,
 		@required String name,
 		@required bool repeats,
@@ -94,7 +92,7 @@ abstract class ReminderTime {
 		switch (type) {
 			case ReminderTimeType.period: return PeriodReminderTime(
 				period: period,
-				letter: letter,
+				dayName: dayName,
 				repeats: repeats,
 			); case ReminderTimeType.subject: return SubjectReminderTime(
 				name: name,
@@ -110,7 +108,7 @@ abstract class ReminderTime {
 	/// 
 	/// All possible parameters are required. 
 	bool doesApply({
-		@required Letters letter, 
+		@required String dayName, 
 		@required String subject, 
 		@required String period,
 	});
@@ -122,11 +120,11 @@ abstract class ReminderTime {
 	String toString();
 }
 
-/// A [ReminderTime] that depends on a [Letters] and period.
+/// A [ReminderTime] that depends on a name and period.
 @immutable
 class PeriodReminderTime extends ReminderTime {
-	/// The [Letters] for when this [Reminder] should be displayed.
-	final Letters letter;
+	/// The day for when this [Reminder] should be displayed.
+	final String dayName;
 
 	/// The period when this [Reminder] should be displayed.
 	final String period;
@@ -135,41 +133,41 @@ class PeriodReminderTime extends ReminderTime {
 	/// 
 	/// All parameters must be non-null.
 	const PeriodReminderTime({
-		@required this.letter,
+		@required this.dayName,
 		@required this.period,
 		@required bool repeats
 	}) : super (repeats: repeats, type: ReminderTimeType.period);
 
 	/// Creates a new [ReminderTime] from JSON.
 	/// 
-	/// `json ["letter"]` should be one of the [Letters].
+	/// `json ["dayName"]` should be one of the valid names.
 	/// 
-	/// `json ["period"]` should be a valid period for that letter,
+	/// `json ["period"]` should be a valid period for that day,
 	/// notwithstanding any schedule changes (like an "early dismissal").
 	PeriodReminderTime.fromJson(Map<String, dynamic> json) :
-		letter = stringToLetters [json ["letter"]],
+		dayName = json ["dayName"],
 		period = json ["period"],
 		super (repeats: json ["repeats"], type: ReminderTimeType.period);
 
 	@override
 	String toString() => 
-		"${repeats ? 'Repeats every ' : ''}${lettersToString [letter]}-$period";
+		"${repeats ? 'Repeats every ' : ''}$dayName-$period";
 
 	@override 
 	Map<String, dynamic> toJson() => {
-		"letter": lettersToString [letter],
+		"name": dayName,
 		"period": period,
 		"repeats": repeats,
 		"type": reminderTimeToString [type],
 	};
 
-	/// Returns true if [letter] and [period] match this instance's fields.
+	/// Returns true if [dayName] and [period] match this instance's fields.
 	@override
 	bool doesApply({
-		@required Letters letter, 
+		@required String dayName, 
 		@required String subject, 
 		@required String period,
-	}) => letter == this.letter && period == this.period;
+	}) => dayName == this.dayName && period == this.period;
 }
 
 /// A [ReminderTime] that depends on a subject. 
@@ -205,7 +203,7 @@ class SubjectReminderTime extends ReminderTime {
 	/// matches the `subject` parameter.
 	@override
 	bool doesApply({
-		@required Letters letter, 
+		@required String dayName, 
 		@required String subject, 
 		@required String period,
 	}) => subject == name;
@@ -220,13 +218,13 @@ class Reminder {
 	/// This function delegates logic to [ReminderTime.doesApply]
 	static List<int> getReminders({
 		@required List<Reminder> reminders,
-		@required Letters letter,
+		@required String dayName,
 		@required String period,
 		@required String subject,
 	}) => [
 		for (int index = 0; index < reminders.length; index++)
 			if (reminders [index].time.doesApply(
-				letter: letter,
+				dayName: dayName,
 				period: period,
 				subject: subject				
 			)) index

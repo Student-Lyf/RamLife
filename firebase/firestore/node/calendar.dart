@@ -11,19 +11,19 @@ Future<List<Day>> getCalendar(int month) async {
 		DataFiles.getMonth(month)
 	).toList();
 
-	List<String> dateLine, letterLine, specialLine;
+	List<String> dateLine, nameLine, specialLine;
 	final List<Day> daysOfMonth = [];
 	for (int index = 0; index < lines.length; index++) {
 		if (isDateLine(index)) {
 			dateLine = lines [index];
 		} else if (isLetterLine(index)) {
-			letterLine = lines [index];
+			nameLine = lines [index];
 		} else if (isSpecialLine(index)) {
 			specialLine = lines [index];
 			daysOfMonth.addAll(
 			 	Day.getList(
 					dateLine: dateLine,
-					letterLine: letterLine,
+					nameLine: nameLine,
 					specialLine: specialLine,
 					month: month,
 				)
