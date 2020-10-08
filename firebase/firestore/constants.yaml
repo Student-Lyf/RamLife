@@ -1,0 +1,11 @@
+dayNames:
+  - "Monday" 
+  - "Tuesday" 
+  - "Wednesday" 
+  - "Thursday" 
+  - "Friday"
+
+corruptStudents:
+  - "724703"
+  - "722601"
+  - "723397"
