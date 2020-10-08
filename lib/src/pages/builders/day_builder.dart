@@ -8,12 +8,12 @@ import "special_builder.dart";
 
 /// A widget to guide the admin in modifying a day in the calendar. 
 /// 
-/// Creates a pop-up that allows the admin to set the [Letters] and [Special]
+/// Creates a pop-up that allows the admin to set the dayName and [Special]
 /// for a given day in the calendar, even providing an option to create a custom
 /// [Special].
 /// 
-/// If [day] is provided, then the fields [DayBuilderModel.letter],
-/// [DayBuilderModel.special], are set to `day.letter` ([Day.letter]) and 
+/// If [day] is provided, then the fields [DayBuilderModel.name],
+/// [DayBuilderModel.special], are set to `day.name` ([Day.name]) and 
 /// `day.special` ([Day.special]), respectively.  
 class DayBuilder extends StatelessWidget {
 	/// Returns the [Day] created by this widget. 
@@ -65,16 +65,16 @@ class DayBuilder extends StatelessWidget {
 							crossAxisAlignment: WrapCrossAlignment.center,
 							children: [
 								const Text("Letter", textAlign: TextAlign.center),
-								DropdownButton<Letters>(
-									value: model.letter,
+								DropdownButton<String>(
+									value: model.name,
 									hint: const Text("Letter"),
 									onChanged: !model.hasSchool ? null : 
-										(Letters letter) => model.letter = letter,
+										(String value) => model.name = value,
 									items: [
-										for (final Letters letter in Letters.values)
-											DropdownMenuItem<Letters>(
-												value: letter,
-												child: Text (lettersToString [letter]),
+										for (final String dayName in Models.schedule.student.schedule.keys)
+											DropdownMenuItem<String>(
+												value: dayName,
+												child: Text(dayName),
 											)
 									],
 								)

@@ -226,7 +226,8 @@ class SportBuilderState extends State<SportsBuilder> {
 					SportsTile(
 						model.game,
 						onTap: () async => model.scores = 
-							await SportsScoreUpdater.updateScores(context, model.game) ?? model.scores
+							await SportsScoreUpdater.updateScores(context, model.game) 
+								?? model.scores
 					),
 					ButtonBar(
 						children: [
