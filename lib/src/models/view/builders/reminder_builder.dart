@@ -23,10 +23,7 @@ class RemindersBuilderModel with ChangeNotifier {
 	/// being displayed once. 
 	bool shouldRepeat = false;
 
-	/// The day this reminder should be displayed.
-	/// 
-	/// Only relevant for [PeriodReminderTime].
-	Day day;
+	String dayName;
 
 	/// The period this reminder should be displayed.
 	/// 
@@ -65,7 +62,7 @@ class RemindersBuilderModel with ChangeNotifier {
 			case ReminderTimeType.period: 
 				final PeriodReminderTime reminderTime = time;
 				period = reminderTime.period;
-				day = Day (letter: reminderTime.letter);
+				dayName = reminderTime.dayName;
 				break;
 			case ReminderTimeType.subject:
 				final SubjectReminderTime reminderTime = time;
@@ -81,7 +78,7 @@ class RemindersBuilderModel with ChangeNotifier {
 		message: message, 
 		time: ReminderTime.fromType(
 			type: type,
-			letter: letter,
+			dayName: dayName,
 			period: period,
 			name: course,
 			repeats: shouldRepeat,
@@ -94,27 +91,29 @@ class RemindersBuilderModel with ChangeNotifier {
 	/// 
 	/// - [message] is null or empty,
 	/// - [type] is null,
-	/// - [type] is [ReminderTimeType.period] and [letter] or [period] is null, or
+	/// - [type] is [ReminderTimeType.period] and [dayName] or [period] is null, or
 	/// - [type] is [ReminderTimeType.subject] and [course] is null.
 	/// 
 	bool get ready => (message?.isNotEmpty ?? false) && 
 		type != null &&
 		(type != ReminderTimeType.period ||
-			(day?.letter != null && period != null)
+			(dayName != null && period != null)
 		) && (
 			type != ReminderTimeType.subject || course != null			
 		);
 
-	/// A list of all the periods in [day].
+	/// A list of all the periods in [dayName].
 	/// 
-	/// Make sure this field is only accessed *after* setting [day].
-	List<String> get periods => day == null ? null : [
-		for (final Period period in _schedule.student.getPeriods(day))
+	/// Make sure this field is only accessed *after* setting [dayName].
+	List<String> get periods => dayName == null ? null : [
+		for (
+			final Period period in 
+			_schedule.student.getPeriods(
+				Day(name: dayName, special: Special.regular)
+			)
+		)
 			period.period
 	];
-
-	/// The selected letter.
-	Letters get letter => day?.letter;
 
 	/// Sets the message to the given string.
 	/// 
@@ -140,8 +139,8 @@ class RemindersBuilderModel with ChangeNotifier {
 	/// Changes the [period] of this reminder. 
 	/// 
 	/// Only relevant when [type] is [ReminderTimeType.period].
-	void changeLetter(Letters value) {
-		day = Day (letter: value);
+	void changeLetter(String value) {
+		dayName = value;
 		period = null;
 		notifyListeners();
 	}
