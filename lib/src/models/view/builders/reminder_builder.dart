@@ -105,15 +105,16 @@ class RemindersBuilderModel with ChangeNotifier {
 	/// A list of all the periods in [dayName].
 	/// 
 	/// Make sure this field is only accessed *after* setting [dayName].
-	List<String> get periods => dayName == null ? null : [
-		for (
-			final Period period in 
-			_schedule.student.getPeriods(
-				Day(name: dayName, special: Models.schedule.today.special),
-			)
-		)
-			period.period
-	];
+	List<String> get periods {
+		if (dayName == null) {
+			return null;
+		}
+		final List<PeriodData> schedule = _schedule.student.schedule [dayName];
+		return [
+			for (int index = 0; index < schedule.length; index++) 
+				(index + 1).toString() 
+		];
+	}
 
 	/// Sets the message to the given string.
 	/// 
