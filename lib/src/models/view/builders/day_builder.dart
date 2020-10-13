@@ -71,7 +71,7 @@ class DayBuilderModel with ChangeNotifier {
 	/// The model uses [name] and [special]. 
 	Day get day => hasSchool
 		? Day(name: name, special: special)
-		: const Day(name: null, special: null);
+		: Day(name: null, special: presetSpecials [0]);
 
 	/// The built-in specials.  
 	List<Special> get presetSpecials => Special.specials;
