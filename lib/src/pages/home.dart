@@ -30,6 +30,7 @@ class HomePageState extends State<HomePage> {
 		try {
 			await Services.instance.updateCalendar();
 			await Services.instance.updateSports();
+			await Models.schedule.initCalendar();
 		} on PlatformException catch(error) {
 			if (error.code == "Error performing get") {
 				scaffoldKey.currentState.showSnackBar(
@@ -91,7 +92,8 @@ class HomePageState extends State<HomePage> {
 						Text (
 							model.schedule.hasSchool
 								? "Today is a${model.schedule.today.n} "
-									"${model.schedule.today.displayName}"
+									"${model.schedule.today.name}"
+									"\nSchedule: ${model.schedule.today.special.name}"
 								: "There is no school today",
 							textScaleFactor: 2,
 							textAlign: TextAlign.center
