@@ -31,10 +31,19 @@ class ReminderTile extends StatelessWidget {
 				child: ListTile(
 					title: Text (reminder.message),
 					subtitle: Text (reminder.time.toString() ?? ""),
-					onTap: () async => reminders.replaceReminder(
-						index, 
-						await ReminderBuilder.buildReminder(context, reminder),
-					),
+					onTap: () async {
+						if (!Models.schedule.isValidReminder(reminder)) {
+							reminders.deleteReminder(index);
+							Scaffold.of(context).showSnackBar(
+								const SnackBar(content: Text("Deleted outdated reminder"))
+							);
+							return;
+						}
+						reminders.replaceReminder(
+							index, 
+							await ReminderBuilder.buildReminder(context, reminder),
+						);
+						},
 					trailing: IconButton (
 						icon: Icon (
 							Icons.remove_circle, 
