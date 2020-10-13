@@ -41,11 +41,11 @@ class NavigationDrawer extends StatelessWidget {
 									leading: Icon (Icons.note),
 									onTap: pushRoute(context, Routes.reminders),
 								),
-								ListTile (
-									title: Text ("Sports"),
-									leading: Icon (Icons.directions_run),
-									onTap: pushRoute(context, Routes.sports),
-								),
+								// ListTile (
+								// 	title: Text ("Sports"),
+								// 	leading: Icon (Icons.directions_run),
+								// 	onTap: pushRoute(context, Routes.sports),
+								// ),
 								if (Models.admin != null)
 									ListTile(
 										title: const Text("Admin console"),
