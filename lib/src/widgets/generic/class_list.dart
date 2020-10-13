@@ -100,7 +100,7 @@ class ClassList extends StatelessWidget {
 		try {
 			return periods ?? Models.schedule.student.getPeriods(day);
 		} on RangeError { // ignore: avoid_catching_errors
-			Future(
+			Future(  // cannot show snackbar on build, so wait for next frame
 				() => Scaffold.of(context).showSnackBar(
 					const SnackBar(content: Text("Invalid schedule"))
 				)
