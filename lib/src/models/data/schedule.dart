@@ -61,7 +61,11 @@ class Schedule with ChangeNotifier {
 		final Services services = Services.instance;
 		student = Student.fromJson(await services.user);
 		subjects = Subject.getSubjects(await services.getSections(student.getIds()));
-		calendar = Day.getCalendar(await services.calendar);
+		await initCalendar();
+	}
+
+	Future<void> initCalendar() async {
+		calendar = Day.getCalendar(await Services.instance.calendar);
 		setToday();
 		notifyListeners();
 	}
@@ -219,6 +223,20 @@ class Schedule with ChangeNotifier {
 					)
 				);
 			}
+		}
+	}
+
+	bool isValidReminder(Reminder reminder) {
+		switch(reminder.time.type) {
+			case ReminderTimeType.period: 
+				final PeriodReminderTime time = reminder.time;
+				final Iterable<String> dayNames = student.schedule.keys;
+				return dayNames.contains(time.dayName) 
+					&& int.parse(time.period) <= student.schedule [time.dayName].length;
+			case ReminderTimeType.subject: 
+				final SubjectReminderTime time = reminder.time;
+				return subjects.keys.contains(time.name);
+			default: throw StateError("Reminder <$reminder> has invalid ReminderTime");
 		}
 	}
 }
