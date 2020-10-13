@@ -34,6 +34,7 @@ class Reminders with ChangeNotifier {
 			for (final Map<String, dynamic> json in await Services.instance.reminders)
 				Reminder.fromJson(json)
 		];
+		readReminders = [];
 	}
 
 	/// Whether any reminder applies to the current period.
