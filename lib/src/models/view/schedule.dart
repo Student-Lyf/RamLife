@@ -7,7 +7,7 @@ import "package:ramaz/models.dart";
 // ignore: prefer_mixin
 class ScheduleModel with ChangeNotifier {
 	/// The default [Special] for the UI.
-	static const Special defaultSpecial = Special.regular;
+	static const Special defaultSpecial = Special.covid;
 
 	/// The default [Day] for the UI.
 	Day defaultDay;

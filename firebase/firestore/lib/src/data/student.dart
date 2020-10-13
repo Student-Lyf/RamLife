@@ -31,6 +31,8 @@ class User extends Serializable {
 			period?.json
 	];
 
+	static final dayNamesList = List<String>.from(dayNames);
+
 	/// This user's email.
 	final String email;
 
@@ -139,6 +141,7 @@ class User extends Serializable {
 		"homeroom": homeroom,
 		"homeroom meeting room": homeroomLocation,
 		"email": email,
+		"dayNames": dayNamesList, 
 	};
 
 	@override
