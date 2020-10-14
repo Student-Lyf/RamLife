@@ -31,13 +31,17 @@ class FeedbackModel with ChangeNotifier {
 	/// Sends the feedback to Cloud Firestore. 
 	/// 
 	/// The feedback is anonymized if [anonymous] is true.
-	Future<void> send() async => CloudDatabase.sendFeedback(
-		Feedback (
-			message: message,
-			timestamp: DateTime.now(),
-			anonymous: anonymous,
-			name: anonymous ? null : Auth.name,
-			email: anonymous ? null : Auth.email,
-		).toJson()
+	Future<void> send() async => Services
+		.instance
+		.database
+		.cloudDatabase
+		.sendFeedback(
+			Feedback (
+				message: message,
+				timestamp: DateTime.now(),
+				anonymous: anonymous,
+				name: anonymous ? null : Auth.name,
+				email: anonymous ? null : Auth.email,
+			).toJson()
 	);
 }
