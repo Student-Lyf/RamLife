@@ -36,7 +36,7 @@ class LoginState extends State<Login> {
 		super.initState();
 		// "To log in, one must first log out"
 		// -- Levi Lesches, class of '21, creator of this app, 2019
-		Services.instance.reset();
+		Services.instance.database.signOut();
 		Models.reset();
 	}
 
@@ -91,7 +91,7 @@ class LoginState extends State<Login> {
 	/// the user from logging in.
 	Future<void> onError(dynamic error, StackTrace stack) async {
 		setState(() => isLoading = false);
-		await Services.instance.reset();
+		await Services.instance.database.signOut();
 		Models.reset();
 		// ignore: unawaited_futures
 		showDialog (
@@ -157,7 +157,7 @@ class LoginState extends State<Login> {
 		BuildContext scaffoldContext
 	) => safely(
 		function: () async {
-			await Services.instance.initialize();
+			await Services.instance.signIn();
 			await Models.init();
 		},
 		onSuccess: () => Navigator.of(context).pushReplacementNamed("home"),
