@@ -17,6 +17,7 @@ library ramaz_services;
 
 import "src/services/crashlytics.dart";
 import "src/services/databases.dart";
+import "src/services/notifications.dart";
 import "src/services/preferences.dart";
 import "src/services/service.dart";
 
@@ -31,9 +32,10 @@ class Services implements Service {
 	/// The singleton instance of this class. 
 	static Services instance = Services();
 
-	final Preferences prefs = Preferences();
-	final Databases database = Databases();
 	final Crashlytics crashlytics = Crashlytics.instance;
+	final Databases database = Databases();
+	final Notifications notifications = Notifications();
+	final Preferences prefs = Preferences();
 
 	List<Service> services;
 
@@ -41,7 +43,7 @@ class Services implements Service {
 	/// 
 	/// Also initializes [services].
 	Services() {
-		services = [prefs, database];
+		services = [prefs, database, crashlytics, notifications];
 	}
 
 	@override
