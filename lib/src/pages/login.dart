@@ -92,8 +92,9 @@ class LoginState extends State<Login> {
 	/// the user from logging in.
 	Future<void> onError(dynamic error, StackTrace stack) async {
 		setState(() => isLoading = false);
-		Crashlytics.log("Attempted to log in");
-		await Crashlytics.setUserEmail(Auth.email);
+		final Crashlytics crashlytics = Services.instance.crashlytics;
+		await crashlytics.log("Attempted to log in");
+		await crashlytics.setEmail(Auth.email);
 		await Services.instance.database.signOut();
 		Models.reset();
 		// ignore: unawaited_futures
@@ -119,7 +120,7 @@ class LoginState extends State<Login> {
 				]
 			)
 		);
-		await Crashlytics.recordError(error, stack);
+		await crashlytics.recordError(error, stack);
 	}
 
 	/// Safely execute a function.

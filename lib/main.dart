@@ -14,19 +14,17 @@ Future<void> main({bool restart = false}) async {
 	// This shows a splash screen but secretly 
 	// determines the desired `platformBrightness`
 	Brightness brightness;
-	runZoned(
-		() => runApp (
-			SplashScreen(
-				setBrightness: 
-					(Brightness platform) => brightness = platform
-			)
-		),
-		onError: Crashlytics.recordError,
+	runApp(
+		SplashScreen(
+			setBrightness: 
+				(Brightness platform) => brightness = platform
+		)
 	);
 	await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 
 	// This initializes services -- it is always safe. 
 	await Services.instance.init();
+	final Crashlytics crashlytics = Services.instance.crashlytics;
 	final bool isSignedIn = await Services.instance.database.isSignedIn;
 	try {
 		if (isSignedIn) {
@@ -56,11 +54,11 @@ Future<void> main({bool restart = false}) async {
 
 	if (kDebugMode) {
 		// Turns Crashlyitcs off in debug mode. 
-	  await Crashlytics.toggle(false);
+	  await crashlytics.toggle(false);
 	}
 
 	// Now we are ready to run the app (with error catching)
-	FlutterError.onError = Crashlytics.recordFlutterError;
+	FlutterError.onError = crashlytics.recordFlutterError;
 	runZoned(
 		() => runApp (
 			RamazApp (
@@ -68,7 +66,7 @@ Future<void> main({bool restart = false}) async {
 				brightness: brightness,
 			)
 		),
-		onError: Crashlytics.recordError,
+		onError: crashlytics.recordError,
 	);
 }
 
