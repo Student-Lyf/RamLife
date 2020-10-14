@@ -31,9 +31,9 @@ class HomePage extends StatelessWidget {
 	}
 
 	@override 
-	Widget build (BuildContext context) => AnimatedBuilder(
-		animation: Listenable.merge([Models.schedule, Models.sports]),
-		builder: (BuildContext context, _) => Scaffold (
+	Widget build (BuildContext context) => ModelListener<HomeModel>(
+		model: () => HomeModel(),
+		builder: (BuildContext context, _, __) => Scaffold (
 			appBar: AppBar (
 				title: const Text ("Home"),
 				actions: [
