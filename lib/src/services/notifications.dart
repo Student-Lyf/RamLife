@@ -62,7 +62,6 @@ class Notification {
 	}) : details = reminderDetails;
 }
 
-// ignore: avoid_classes_with_only_static_members
 /// An abstract wrapper around the notifications plugin. 
 /// 
 /// There are two types of notifications: local notifications, and push
