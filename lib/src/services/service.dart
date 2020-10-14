@@ -1,69 +1,34 @@
+/// A Service that interacts with third-party code. 
+/// 
+/// A service can be defined as a plugin which needs special code to interact
+/// with, independent of the functionality of the service. For example, 
+/// authentication needs a lot of extra code, before you even get into the 
+/// details like sign-in providers and UI flow. 
+/// 
+/// This class is abstract and provides a structure to all services, which 
+/// should inherit from it. There are two functions that provide convenient
+/// hooks for managing the life cycle of the service. 
+/// 
+/// The first one is the [init] function. The init function should contain code
+/// that needs to be run when the app starts, whether or not the user is signed
+/// in. 
+/// 
+/// The other function is the [signIn] function. The signIn function should 
+/// contain code that needs to be run when the user signs into the app. One
+/// example can be notifications that need to request permissions when the 
+/// user logs in. 
+/// 
+/// Other than the [signIn] function, services should not care (or know) whether
+/// the user is signed in or not. 
 abstract class Service {
+	/// Initializes the service. 
+	/// 
+	/// Override this function with code that needs to be run when the app starts. 
+	/// A good use for this is registering with plugins that return a Future. 
 	Future<void> init();
 
+	/// A callback that runs when the user signs in. 
+	/// 
+	/// Override this function with code that facilitates the sign-in process. 
 	Future<void> signIn();
-}
-
-abstract class Database extends Service {
-	static const String calendarKey = "calendar";
-
-	Future<bool> get isSignedIn;
-
-	Future<void> signOut();
-
-	/// The user object as JSON
-	Future<Map<String, dynamic>> get user;
-
-	/// Changes the user JSON object. 
-	Future<void> setUser(Map<String, dynamic> json);
-
-	/// The different classes (sections, not courses) for a schedule.
-	Future<Map<String, Map<String, dynamic>>> getSections(Set<String> ids);
-
-	/// Changes the user's classes.
-	Future<void> setSections(Map<String, Map<String, dynamic>> json);
-
-	/// The calendar in JSON form. 
-	/// 
-	/// Admins can change this with [setCalendar]. 
-	Future<List<List<Map<String, dynamic>>>> get calendar async => [
-		for (int month = 1; month <= 12; month++) [
-			for (final dynamic day in (await getCalendarMonth(month)) [calendarKey])
-				Map<String, dynamic>.from(day)
-		]
-	];
-
-	Future<Map<String, dynamic>> getCalendarMonth(int month);
-
-	/// Changes the calendar in the database. 
-	/// 
-	/// The fact that this method takes a [month] parameter while [calendar] does
-	/// not is an indicator that the calendar schema needs to be rewritten. 
-	/// 
-	/// [month] must be 1-12, not 0-11. 
-	/// 
-	/// Only admins can change this. 
-	Future<void> setCalendar(int month, Map<String, dynamic> json);
-
-	/// The user's reminders. 
-	Future<List<Map<String, dynamic>>> get reminders;
-
-	/// Changes the user's reminders. 
-	Future<void> setReminders(List<Map<String, dynamic>> json);
-
-	/// The admin object (or null).
-	Future<Map<String, dynamic>> get admin;
-
-	/// Sets the admin object for this user.
-	Future<void> setAdmin(Map<String, dynamic> json);
-
-	/// The sports games. 
-	/// 
-	/// Admins can change this with [setSports]. 
-	Future<List<Map<String, dynamic>>> get sports;
-
-	/// Changes the sports games (for all users). 
-	/// 
-	/// Only admins can change this. 
-	Future<void> setSports(List<Map<String, dynamic>> json);
 }

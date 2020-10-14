@@ -5,6 +5,7 @@ import "package:ramaz/constants.dart";
 
 import "service.dart";
 
+/// Describes how a reminders notification should look. 
 NotificationDetails reminderDetails = const NotificationDetails(
 	android: AndroidNotificationDetails(
 		"reminders",
@@ -35,7 +36,7 @@ NotificationDetails reminderDetails = const NotificationDetails(
 class Notification {
 	/// The ID of this notification.
 	/// 
-	/// The ID is used for cancelling the notifications. 
+	/// The ID is used for canceling the notifications. 
 	int get id => 0;
 
 	/// The title of this notification.
@@ -64,8 +65,15 @@ class Notification {
 // ignore: avoid_classes_with_only_static_members
 /// An abstract wrapper around the notifications plugin. 
 /// 
-/// This class uses static methods to send and schedule
-/// notifications.
+/// There are two types of notifications: local notifications, and push
+/// notifications. Local notifications are sent by the app itself, and 
+/// push notifications are sent by the server. These are local notifications. 
+/// 
+/// Local notifications can be customized to appear differently depending on
+/// the type of notification and platform. They can also be scheduled to appear
+/// at certain times. This is based on [FlutterLocalNotificationsPlugin].
+/// 
+/// Currently, Web is not supported. 
 class Notifications extends Service {
 	final _plugin = FlutterLocalNotificationsPlugin();
 

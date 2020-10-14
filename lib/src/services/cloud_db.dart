@@ -1,8 +1,8 @@
 import "package:cloud_firestore/cloud_firestore.dart";
 
 import "auth.dart";
+import "database.dart";
 import "firebase_core.dart";
-import "service.dart";
 
 /// A wrapper around Cloud Firestore. 
 class CloudDatabase extends Database {
@@ -125,9 +125,6 @@ class CloudDatabase extends Database {
 	/// If the user does not have a reminders document, this function creates it.
 	@override
 	Future<void> signIn() async {
-		if (Auth.isReady) {
-			return;
-		}
 		await Auth.signIn();
 		final DocumentSnapshot remindersSnapshot = await remindersDocument.get();
 		if (!remindersSnapshot.exists) {
@@ -138,7 +135,7 @@ class CloudDatabase extends Database {
 	// Database methods. 
 
 	@override
-	Future<bool> get isSignedIn async => Auth.isReady;
+	Future<bool> get isSignedIn async => Auth.isSignedIn;
 
 	@override
 	Future<void> signOut() => Auth.signOut();
@@ -160,18 +157,9 @@ class CloudDatabase extends Database {
 	@override
 	Future<void> setUser(Map<String, dynamic> json) async {}
 
-	/// Gets an individual section. 
-	/// 
-	/// Do not use directly. Use [getSections] instead. 
+	@override
 	Future<Map<String, dynamic>> getSection(String id) async => 
 		(await sectionCollection.doc(id).get()).data();
-
-	@override
-	Future<Map<String, Map<String, dynamic>>> getSections(Set<String> ids)
-		async => {
-			for (final String id in ids)
-				id: await getSection(id)
-		};
 
 	/// No-op -- The user cannot edit the courses list. 
 	/// 
@@ -227,12 +215,12 @@ class CloudDatabase extends Database {
 		sportsDocument.set({sportsKey: json});
 
 	/// Submits feedback. 
-	static Future<void> sendFeedback(
+	Future<void> sendFeedback(
 		Map<String, dynamic> json
 	) => feedbackCollection.doc().set(json);
 
 	/// Listens to a month for changes in the calendar. 
-	static Stream<List<Map<String, dynamic>>> getCalendarStream(int month) => 
+	Stream<List<Map<String, dynamic>>> getCalendarStream(int month) => 
 		calendarCollection.doc(month.toString()).snapshots().map(
 			(DocumentSnapshot snapshot) => [
 				for (final dynamic entry in snapshot.data() ["calendar"])
