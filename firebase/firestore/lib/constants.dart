@@ -12,3 +12,8 @@ final Set<String> dayNames = Set.from(yamlContents ["dayNames"]);
 final Set<String> corruptStudents = Set.from(yamlContents ["corruptStudents"]);
 
 final bool isSemester1 = DateTime.now().month > 7;
+
+final List<Map<String, dynamic>> testers = [
+	for (final MapEntry entry in yamlContents ["testers"].entries)
+		{"email": entry.key}..addAll(Map<String, dynamic>.from(entry.value))
+];
