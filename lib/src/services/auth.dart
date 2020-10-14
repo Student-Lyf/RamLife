@@ -33,7 +33,7 @@ class Auth {
 	static User get currentUser => auth.currentUser;
 
 	/// The user's email.
-	static String get email => currentUser?.email;
+	static String get email => currentUser?.email?.toLowerCase();
 
 	/// The user's full name.
 	static String get name => currentUser?.displayName;
