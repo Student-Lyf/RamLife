@@ -58,9 +58,10 @@ class Schedule with ChangeNotifier {
 	/// 
 	/// Should be called whenever there is new data for this model to work with.
 	Future<void> init() async {
-		final Databases database = Services.instance.database;
-		student = Student.fromJson(await database.user);
-		subjects = Subject.getSubjects(await database.getSections(student.getIds()));
+		student = Student.fromJson(await Services.instance.database.user);
+		subjects = Subject.getSubjects(
+			await Services.instance.database.getSections(student.getIds())
+		);
 		await initCalendar();
 	}
 
