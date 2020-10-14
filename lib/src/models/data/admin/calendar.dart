@@ -56,7 +56,7 @@ class CalendarModel with ChangeNotifier {
 	/// Creates a data model to hold the calendar.
 	/// 
 	/// Initializing a [CalendarModel] automatically listens to the calendar in 
-	/// Firebase. See [CloudDatabase.getCalendarStream] for details. 
+	/// Firebase. 
 	CalendarModel() {
 		for (int month = 0; month < 12; month++) {
 			subscriptions.add(
