@@ -12,8 +12,8 @@ class HomePage extends StatelessWidget {
 	/// Downloads the calendar again and calls [Schedule.onNewPeriod].
 	Future<void> refresh(BuildContext context) async {
 		try {
-			await Services.instance.updateCalendar();
-			await Services.instance.updateSports();
+			await Services.instance.database.updateCalendar();
+			await Services.instance.database.updateSports();
 			await Models.schedule.initCalendar();
 		} on PlatformException catch(error) {
 			if (error.code == "Error performing get") {

@@ -124,7 +124,7 @@ class SportsPage extends StatelessWidget {
 			case SortOption.chronological: 
 				return GenericSportsView<int>(
 					loading: model.loading,
-					onRefresh: model.adminFunc(Services.instance.updateSports),
+					onRefresh: model.adminFunc(Services.instance.database.updateSports),
 					recents: model.recents,
 					upcoming: model.upcoming,
 					builder: (int index) => SportsTile(
@@ -139,7 +139,7 @@ class SportsPage extends StatelessWidget {
 			case SortOption.sport: 
 				return GenericSportsView<MapEntry<Sport, List<int>>>(
 					loading: model.loading,
-					onRefresh: model.adminFunc(Services.instance.updateSports),
+					onRefresh: model.adminFunc(Services.instance.database.updateSports),
 					recents: model.recentBySport.entries.toList(),
 					upcoming: model.upcomingBySport.entries.toList(),
 					builder: (MapEntry<Sport, List<int>> entry) => Column(
