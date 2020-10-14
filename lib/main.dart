@@ -25,12 +25,10 @@ Future<void> main({bool restart = false}) async {
 	await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 
 	// This initializes services -- it is always safe. 
-	await Services.init();
-	bool isReady;
+	await Services.instance.init();
+	final bool isSignedIn = await Services.instance.database.isSignedIn;
 	try {
-		isReady = await Services.instance.isReady;
-		// Checks whther services are ready -- REALLY shouldn't error, but might
-		if (isReady) {
+		if (isSignedIn) {
 			// This initializes data models -- it may error. 
 			await Models.init();
 		}
@@ -40,7 +38,7 @@ Future<void> main({bool restart = false}) async {
 		debugPrint("Error on main.");
 		if (!restart) {
 			debugPrint("Trying again...");
-			await Services.instance.reset();
+			await Services.instance.database.signOut();
 			return main(restart: true);
 		} else {
 			rethrow;
@@ -60,7 +58,7 @@ Future<void> main({bool restart = false}) async {
 	runZoned(
 		() => runApp (
 			RamazApp (
-				isReady: isReady,
+				isSignedIn: isSignedIn,
 				brightness: brightness,
 			)
 		),
@@ -70,7 +68,7 @@ Future<void> main({bool restart = false}) async {
 
 /// The main app widget. 
 class RamazApp extends StatelessWidget {
-	final bool isReady;
+	final bool isSignedIn;
 
 	/// The brightness to default to. 
 	final Brightness brightness;
@@ -78,7 +76,7 @@ class RamazApp extends StatelessWidget {
 	/// Creates the main app widget.
 	const RamazApp ({
 		@required this.brightness,
-		@required this.isReady,
+		@required this.isSignedIn,
 	});
 
 	@override 
@@ -130,7 +128,7 @@ class RamazApp extends StatelessWidget {
 			),
 		),
 		builder: (BuildContext context, ThemeData theme) => MaterialApp (
-			home: isReady ? HomePage() : Login(),
+			home: isSignedIn ? HomePage() : Login(),
 			title: "Ram Life",
 			color: RamazColors.blue,
 			theme: theme,
