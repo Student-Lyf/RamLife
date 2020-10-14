@@ -191,9 +191,9 @@ class Schedule with ChangeNotifier {
 	/// Schedules notifications for today's reminders. 
 	/// 
 	/// Starting from the current period, schedules a notification for the period
-	/// using [Notifications.scheduleNotification].
+	/// using [Notifications.scheduleNotification]
 	Future<void> scheduleReminders() async {
-		Notifications.cancelAll();
+		Services.instance.notifications.cancelAll();
 		final DateTime now = DateTime.now();
 
 		// No school today/right now
@@ -209,7 +209,7 @@ class Schedule with ChangeNotifier {
 				subject: subjects [period?.id]?.name,
 				dayName: today.name,
 			)) {
-				Notifications.scheduleNotification(
+				Services.instance.notifications.scheduleNotification(
 					date: DateTime(
 						now.year, 
 						now.month, 
