@@ -1,22 +1,33 @@
 import "package:flutter/foundation.dart";
+import "../crashlytics.dart";
 
-class Crashlytics {
-	static dynamic firebase;
+Crashlytics getCrashlytics() => CrashlyticsStub();
 
-	static Future<void> recordError (
+class CrashlyticsStub extends Crashlytics {
+	@override
+	Future<void> init() async {}
+
+	@override
+	Future<void> signIn() async {}
+
+	@override
+	Future<void> recordError (
 		dynamic exception,
 		StackTrace stack,
 		{dynamic context}
-	) => throw exception;
+	) async => throw exception;
 
-	static Future<void> recordFlutterError (
+	@override
+	Future<void> recordFlutterError (
 		FlutterErrorDetails details
-	) => throw details.exception;
+	) async => throw details.exception;
 
-	static Future<void> setUserEmail(String email) async {}
+	@override
+	Future<void> setEmail(String email) async {}
 
-	static void log(String message) {}
+	@override
+	Future<void> log(String message) async {}
 
-	// ignore: avoid_positional_boolean_parameters
-	static Future<void> toggle(bool value) async {}
+	@override
+	Future<void> toggle(bool value) async {}
 }

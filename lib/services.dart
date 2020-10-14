@@ -15,6 +15,7 @@
 /// 
 library ramaz_services;
 
+import "src/services/crashlytics.dart";
 import "src/services/databases.dart";
 import "src/services/preferences.dart";
 import "src/services/service.dart";
@@ -32,6 +33,7 @@ class Services implements Service {
 
 	final Preferences prefs = Preferences();
 	final Databases database = Databases();
+	final Crashlytics crashlytics = Crashlytics.instance;
 
 	List<Service> services;
 
