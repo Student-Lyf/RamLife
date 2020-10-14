@@ -1,20 +1,21 @@
-import "package:firebase_crashlytics/firebase_crashlytics.dart" as fb;
+import "package:firebase_crashlytics/firebase_crashlytics.dart";
 import "package:flutter/foundation.dart";
 
 class Crashlytics {
+	static FirebaseCrashlytics firebase = FirebaseCrashlytics.instance;
 	static Future<void> recordError (
 		dynamic exception,
 		StackTrace stack,
 		{dynamic context}
-	) => fb.Crashlytics.instance.recordError(exception, stack, context: context);
+	) => firebase.recordError(exception, stack);
 
 	static Future<void> recordFlutterError (
 		FlutterErrorDetails details
-	) => fb.Crashlytics.instance.recordFlutterError(details);
+	) => firebase.recordFlutterError(details);
 
 	static Future<void> setUserEmail(String email) => 
-		fb.Crashlytics.instance.setUserEmail(email);
+		firebase.setUserIdentifier(email);
 
 	static void log(String message) => 
-		fb.Crashlytics.instance.log(message);
+		firebase.log(message);
 }

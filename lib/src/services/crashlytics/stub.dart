@@ -1,6 +1,8 @@
 import "package:flutter/foundation.dart";
 
 class Crashlytics {
+	static dynamic firebase;
+
 	static Future<void> recordError (
 		dynamic exception,
 		StackTrace stack,
