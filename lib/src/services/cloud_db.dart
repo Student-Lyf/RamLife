@@ -134,8 +134,14 @@ class CloudDatabase implements Service {
 	}
 
 	@override
-	Future<Map<String, dynamic>> get user async => 
-		(await userDocument.get()).data();
+	Future<Map<String, dynamic>> get user async {
+		final DocumentSnapshot snapshot = await userDocument.get();
+		if (!snapshot.exists) {
+			throw StateError("User ${Auth.email} does not exist in the database");
+		} else {
+			return snapshot.data();
+		}
+	}
 
 	/// No-op -- The user cannot edit their own profile. 
 	/// 
