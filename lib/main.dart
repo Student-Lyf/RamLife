@@ -2,6 +2,7 @@ import "dart:async" show runZoned;
 
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
+import "package:flutter/foundation.dart";
 
 import "package:ramaz/constants.dart";  // for route keys
 import "package:ramaz/models.dart";
@@ -51,6 +52,11 @@ Future<void> main({bool restart = false}) async {
 		brightness = savedBrightness
 			? Brightness.light
 			: Brightness.dark;
+	}
+
+	if (kDebugMode) {
+		// Turns Crashlyitcs off in debug mode. 
+	  await Crashlytics.toggle(false);
 	}
 
 	// Now we are ready to run the app (with error catching)

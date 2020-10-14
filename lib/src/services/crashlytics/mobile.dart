@@ -18,4 +18,8 @@ class Crashlytics {
 
 	static void log(String message) => 
 		firebase.log(message);
+
+	// ignore: avoid_positional_boolean_parameters
+	static Future<void> toggle(bool value) => 
+		firebase.setCrashlyticsCollectionEnabled(value);
 }

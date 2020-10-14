@@ -16,4 +16,7 @@ class Crashlytics {
 	static Future<void> setUserEmail(String email) async {}
 
 	static void log(String message) {}
+
+	// ignore: avoid_positional_boolean_parameters
+	static Future<void> toggle(bool value) async {}
 }
