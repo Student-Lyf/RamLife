@@ -1,41 +1,41 @@
-import "package:idb_shim/idb_shim.dart";
+import "package:idb_shim/idb_shim.dart" as idb;
 
 import "auth.dart";  // for user email
 import "local_db/idb_factory.dart";  // for platform-specific database
 import "service.dart";
 
-/// Provides convenience methods around an [ObjectStore].
-extension ObjectExtension on ObjectStore {
+/// Provides convenience methods around an [idb.ObjectStore].
+extension ObjectExtension on idb.ObjectStore {
 	Future<T> get<T>(dynamic key) async => await getObject(key) as T; 
 }
 
 /// Provides convenience methods on a [Database]. 
-extension DatabaseExtension on Database {
+extension DatabaseExtension on idb.Database {
 	Future<T> get<T>(String storeName, dynamic key) => 
-		transaction(storeName, idbModeReadOnly)
+		transaction(storeName, idb.idbModeReadOnly)
 		.objectStore(storeName)
 		.get<T>(key);
 
 	Future<void> add<T>(String storeName, T value) => 
-		transaction(storeName, idbModeReadWrite)
+		transaction(storeName, idb.idbModeReadWrite)
 		.objectStore(storeName)
 		.add(value);
 
 	Future<void> update<T>(String storeName, T value) => 
-		transaction(storeName, idbModeReadWrite)
+		transaction(storeName, idb.idbModeReadWrite)
 		.objectStore(storeName)
 		.put(value);
 
 	Future<List<Map<String, dynamic>>> getAll(String storeName) async => [
 		for (
 			final dynamic entry in 
-			await transaction(storeName, idbModeReadOnly)
+			await transaction(storeName, idb.idbModeReadOnly)
 				.objectStore(storeName).getAll()
 		)	Map<String, dynamic>.from(entry)
 	];
 }
 
-class LocalDatabase implements Service {
+class LocalDatabase extends Database {
 	static const String userStoreName = "users";
 	static const String sectionStoreName = "sections";
 	static const String calendarStoreName = "calendar";
@@ -48,39 +48,9 @@ class LocalDatabase implements Service {
 		adminStoreName, sportsStoreName,
 	];
 
-	Database database;
+	idb.Database database;
 
-	@override
-	Future<bool> get isReady async {
-		database = await (await idbFactory).open(
-			"ramaz.db",
-			version: 1, 
-			onUpgradeNeeded: (VersionChangeEvent event) {
-				database = event.database;  // for access within [initialize].
-				switch (event.oldVersion) {
-					case 0: // fresh install
-						initialize();
-						break;
-				}
-			}
-		);
-		return true;  // if it weren't ready there would be an error
-	}
-
-	/// Initializes the database. 
-	/// 
-	/// Simply opening the database is async, so that is done in [isReady], since 
-	/// it is needed to initialize the service. However, modifying the database
-	/// is only allowed within [IdbFactory.open], so it cannot be held off until
-	/// login. Hence, this function should be omitted from the global service 
-	/// manager's [initialize] function, and should instead be called from 
-	/// within [isReady] (which is allowed, since it is async). 
-	/// 
-	/// Additionally, since the data itself is only provided in the service 
-	/// manager's [initialize] function, this function doesn't have to worry about
-	/// retrieving data so much as structuring it.  
-	@override
-	Future<void> initialize() async => database
+	Future<void> initialize(idb.Database database) async => database
 		..createObjectStore(userStoreName, keyPath: "email")
 		..createObjectStore(sectionStoreName, keyPath: "id")
 		..createObjectStore(calendarStoreName, keyPath: "month")
@@ -88,10 +58,29 @@ class LocalDatabase implements Service {
 		..createObjectStore(adminStoreName, keyPath: "email")
 		..createObjectStore(sportsStoreName, autoIncrement:  true);
 
+	@override 
+	Future<void> init() async => database = await (await idbFactory).open(
+		"ramaz.db",
+		version: 1, 
+		onUpgradeNeeded: (idb.VersionChangeEvent event) {
+			switch (event.oldVersion) {
+				case 0: // fresh install
+					initialize(event.database);
+					break;
+			}
+		}
+	);
+
 	@override
-	Future<void> reset() async {
-		final Transaction transaction = 
-			database.transactionList(storeNames, idbModeReadWrite);
+	Future<void> signIn() async {}
+
+	@override
+	Future<bool> get isSignedIn async => true;
+
+	@override
+	Future<void> signOut() async {
+		final idb.Transaction transaction = 
+			database.transactionList(storeNames, idb.idbModeReadWrite);
 		for (final String storeName in storeNames) {
 			await transaction.objectStore(storeName).clear();
 		}
@@ -123,20 +112,9 @@ class LocalDatabase implements Service {
 		}
 	} 
 
-	Future<List<Map<String, dynamic>>> getMonth(int month) async {
-		final Map<String, dynamic> json = 
-			Map<String, dynamic>.from(await database.get(calendarStoreName, month));
-		return [
-			for (final dynamic entry in json ["calendar"])
-				Map<String, dynamic>.from(entry)
-		];
-	}
-
 	@override
-	Future<List<List<Map<String, dynamic>>>> get calendar async => [
-		for (int month = 1; month <= 12; month++)
-			await getMonth(month)
-	];
+	Future<Map<String, dynamic>> getCalendarMonth(int month) =>
+		database.get(calendarStoreName, month);
 
 	@override
 	Future<void> setCalendar(int month, Map<String, dynamic> json) async {

@@ -95,4 +95,22 @@ class FCM {
 			await _firebase.subscribeToTopic(topic);
 		}
 	}
+
+	Future<void> init() async {
+		// Register for FCM notifications. 
+		// We don't care when this happens
+		// ignore: unawaited_futures 
+		Future(
+			() async {
+				await FCM.registerNotifications(
+					{
+						// "refresh": initialize,
+						// "updateCalendar": updateCalendar,
+						// "updateSports": updateSports,
+					}
+				);
+				await FCM.subscribeToTopics();
+			}
+		);
+	}
 }
