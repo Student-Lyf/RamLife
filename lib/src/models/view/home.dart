@@ -12,8 +12,8 @@ class HomeModel with ChangeNotifier {
 
 	@override
 	void dispose() {
-		Models?.schedule?.dispose();
-		Models?.sports?.dispose();
+		Models?.schedule?.removeListener(notifyListeners);
+		Models?.sports?.removeListener(notifyListeners);
 		super.dispose();
 	}
 }
