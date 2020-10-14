@@ -8,41 +8,21 @@ import "package:ramaz/services.dart";
 import "package:ramaz/widgets.dart";
 
 /// The homepage of the app. 
-/// 
-/// It's stateful because when refreshing the schedule a loading bar is shown,
-/// and needs to be dismissed. However, it can be rewritten to use a 
-/// [ValueNotifier] instead.
-class HomePage extends StatefulWidget {
-	@override
-	HomePageState createState() => HomePageState();
-}
-
-/// A state for the home page, to keep track of when the page loads. 
-class HomePageState extends State<HomePage> {
-	/// A key to access the [Scaffold]s state. 
-	final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
-
-	/// Whether the page is loading. 
-	bool loading = false;
-
+class HomePage extends StatelessWidget {
 	/// Downloads the calendar again and calls [Schedule.onNewPeriod].
-	Future<void> refresh() async {
+	Future<void> refresh(BuildContext context) async {
 		try {
 			await Services.instance.updateCalendar();
 			await Services.instance.updateSports();
 			await Models.schedule.initCalendar();
 		} on PlatformException catch(error) {
 			if (error.code == "Error performing get") {
-				scaffoldKey.currentState.showSnackBar(
+				Scaffold.of(context).showSnackBar(
 					SnackBar(
 						content: const Text("No Internet"), 
 						action: SnackBarAction(
 							label: "RETRY", 
-							onPressed: () async {
-								setState(() => loading = true);
-								await refresh();
-								setState(() => loading = false);
-							}
+							onPressed: () => refresh(context),
 						),
 					)
 				);
@@ -51,14 +31,13 @@ class HomePageState extends State<HomePage> {
 	}
 
 	@override 
-	Widget build (BuildContext context) => ModelListener<HomeModel>(
-		model: () => HomeModel(),
-		builder: (BuildContext context, HomeModel model, _) => Scaffold (
-			key: scaffoldKey,
+	Widget build (BuildContext context) => AnimatedBuilder(
+		animation: Listenable.merge([Models.schedule, Models.sports]),
+		builder: (BuildContext context, _) => Scaffold (
 			appBar: AppBar (
 				title: const Text ("Home"),
 				actions: [
-					if (model.schedule.hasSchool) Builder (
+					if (Models.schedule.hasSchool) Builder (
 						builder: (BuildContext context) => FlatButton(
 							textColor: Colors.white,
 							onPressed: () => Scaffold.of(context).openEndDrawer(),
@@ -68,55 +47,54 @@ class HomePageState extends State<HomePage> {
 				],
 			),
 			drawer: NavigationDrawer(),
-			endDrawer: !model.schedule.hasSchool ? null : Drawer (
+			endDrawer: !Models.schedule.hasSchool ? null : Drawer (
 				child: ClassList(
-					day: model.schedule.today,
-					periods: model.schedule.nextPeriod == null 
-						? model.schedule.periods
-						: model.schedule.periods.getRange (
-							(model.schedule.periodIndex ?? -1) + 1, 
-							model.schedule.periods.length
+					day: Models.schedule.today,
+					periods: Models.schedule.nextPeriod == null 
+						? Models.schedule.periods
+						: Models.schedule.periods.getRange (
+							(Models.schedule.periodIndex ?? -1) + 1, 
+							Models.schedule.periods.length
 						),
-					headerText: model.schedule.period == null 
+					headerText: Models.schedule.period == null 
 						? "Today's Schedule" 
 						: "Upcoming Classes"
 				)
 			),
 			body: RefreshIndicator (  // so you can refresh the period
-				onRefresh: refresh,
+				onRefresh: () => refresh(context),
 				child: ListView (
 					children: [
-						if (loading) const LinearProgressIndicator(),
 						RamazLogos.ramRectangle,
 						const Divider(),
 						Text (
-							model.schedule.hasSchool
-								? "Today is a${model.schedule.today.n} "
-									"${model.schedule.today.name}"
-									"\nSchedule: ${model.schedule.today.special.name}"
+							Models.schedule.hasSchool
+								? "Today is a${Models.schedule.today.n} "
+									"${Models.schedule.today.name}"
+									"\nSchedule: ${Models.schedule.today.special.name}"
 								: "There is no school today",
 							textScaleFactor: 2,
 							textAlign: TextAlign.center
 						),
 						const SizedBox (height: 20),
-						if (model.schedule.hasSchool) NextClass(
+						if (Models.schedule.hasSchool) NextClass(
 							reminders: Models.reminders.currentReminders,
-							period: model.schedule.period,
-							subject: model.schedule.subjects [model.schedule.period?.id],
-							modified: model.schedule.today.isModified,
+							period: Models.schedule.period,
+							subject: Models.schedule.subjects [Models.schedule.period?.id],
+							modified: Models.schedule.today.isModified,
 						),
 						// if school won't be over, show the next class
 						if (
-							model.schedule.nextPeriod != null && 
-							!model.schedule.today.isModified
+							Models.schedule.nextPeriod != null && 
+							!Models.schedule.today.isModified
 						) NextClass (
 							next: true,
 							reminders: Models.reminders.nextReminders,
-							period: model.schedule.nextPeriod,
-							subject: model.schedule.subjects [model.schedule.nextPeriod?.id],
-							modified: model.schedule.today.isModified,
+							period: Models.schedule.nextPeriod,
+							subject: Models.schedule.subjects [Models.schedule.nextPeriod?.id],
+							modified: Models.schedule.today.isModified,
 						),
-						if (model.sports.todayGames.isNotEmpty) ...[
+						if (Models.sports.todayGames.isNotEmpty) ...[
 							const SizedBox(height: 10),
 							const Center(
 								child: Text(
@@ -126,8 +104,8 @@ class HomePageState extends State<HomePage> {
 								)
 							),
 							const SizedBox(height: 10),
-							for (final int index in model.sports.todayGames)
-								SportsTile(model.sports.games [index])
+							for (final int index in Models.sports.todayGames)
+								SportsTile(Models.sports.games [index])
 						]
 					]
 				)

@@ -42,7 +42,6 @@ export "src/models/view/builders/reminder_builder.dart";
 export "src/models/view/builders/special_builder.dart";
 export "src/models/view/builders/sports_builder.dart";
 export "src/models/view/feedback.dart";
-export "src/models/view/home.dart";
 export "src/models/view/schedule.dart";
 export "src/models/view/sports.dart";
 
@@ -69,6 +68,9 @@ class Models {
 	}
 
 	static void reset() {
+		schedule?.dispose();
+		reminders?.dispose();
+		sports?.dispose();
 		reminders = null;
 		schedule = null;
 		sports = null;
