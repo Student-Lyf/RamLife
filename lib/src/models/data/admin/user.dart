@@ -23,7 +23,7 @@ class AdminUserModel with ChangeNotifier {
 
 	/// Saves the admin's data both to the device and the cloud.
 	Future<void> save() async {
-		await Services.instance.setAdmin(admin.toJson());
+		await Services.instance.database.setAdmin(admin.toJson());
 		notifyListeners();
 	}
 
