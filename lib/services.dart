@@ -43,7 +43,7 @@ class Services implements Service {
 	/// 
 	/// Also initializes [services].
 	Services() {
-		services = [prefs, database, crashlytics, notifications, pushNotifications];
+		services = [prefs, database, crashlytics, notifications];
 	}
 
 	@override

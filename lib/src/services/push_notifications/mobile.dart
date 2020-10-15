@@ -37,6 +37,8 @@ class FCM extends PushNotifications {
 	/// Provides the connection to Firebase Messaging. 
 	static final FirebaseMessaging firebase = FirebaseMessaging();
 
+	static Map<String, AsyncCallback> callbacks;
+
 	@override
 	Future<void> init() async {
 		await FirebaseCore.init();
@@ -57,9 +59,8 @@ class FCM extends PushNotifications {
 	/// 
 	/// This function uses the `command` field of the notification to find the 
 	/// right [AsyncCallback], and calls it. 
-	Future<void> callback(
+	static Future<void> callback(
 		Map<String, dynamic> message, 
-		Map<String, AsyncCallback> callbacks
 	) async {
 		final String command = (message["data"] ?? message) ["command"];
 		if (command == null) {
@@ -85,14 +86,13 @@ class FCM extends PushNotifications {
 	Future<void> registerForNotifications(
 		Map<String, AsyncCallback> callbacks
 	) async {
-		Future<void> handler(Map<String, dynamic> message) => 
-			callback(message, callbacks);
+		FCM.callbacks = callbacks;
 
 		firebase.configure(
-			onMessage: handler,
-			onBackgroundMessage: handler,
-			onLaunch: handler,
-			onResume: handler,
+			onMessage: callback,
+			onBackgroundMessage: callback,
+			onLaunch: callback,
+			onResume: callback,
 		);
 	}
 
