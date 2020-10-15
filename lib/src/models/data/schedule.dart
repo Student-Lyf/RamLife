@@ -74,7 +74,7 @@ class Schedule with ChangeNotifier {
 	@override 
 	void dispose() {
 		Models.reminders.removeListener(remindersListener);
-		timer.cancel();
+		timer?.cancel();
 		super.dispose();
 	}
 

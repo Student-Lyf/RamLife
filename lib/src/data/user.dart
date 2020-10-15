@@ -90,14 +90,15 @@ class User {
 			for (final String dayName in <String>[...json ["dayNames"]])
 				dayName: PeriodData.getList(json [dayName])
 		},
-		advisory = Advisory.fromJson(
+		advisory = json ["advisory"] == null ? null : Advisory.fromJson(
 			Map<String, dynamic>.from(json ["advisory"])
 		),
 		contactInfo = ContactInfo.fromJson(
 			Map<String, dynamic>.from(json ["contactInfo"])
 		),
 		grade = intToGrade [json ["grade"]],
-		registeredClubs = List<String>.from(json ["registeredClubs"]);
+		registeredClubs = json ["registeredClubs"] == null 
+			? null : List<String>.from(json ["registeredClubs"]);
 
 	/// Gets the unique section IDs for the courses this user is enrolled in.
 	/// 
