@@ -71,7 +71,7 @@ class DayBuilder extends StatelessWidget {
 									onChanged: !model.hasSchool ? null : 
 										(String value) => model.name = value,
 									items: [
-										for (final String dayName in Models.schedule.student.schedule.keys)
+										for (final String dayName in Models.schedule.user.dayNames)
 											DropdownMenuItem<String>(
 												value: dayName,
 												child: Text(dayName),

@@ -45,7 +45,7 @@ class SchedulePage extends StatelessWidget {
 							value: model.day.name, 
 							onChanged: (String value) => model.update(newName: value),
 							items: [
-								for (final String dayName in Models.schedule.student.schedule.keys)
+								for (final String dayName in Models.schedule.user.dayNames)
 									DropdownMenuItem(
 										value: dayName,
 										child: Text(dayName),
