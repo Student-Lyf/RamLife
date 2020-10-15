@@ -1,135 +1,158 @@
-library student_dataclasses;
+import "package:meta/meta.dart";
 
-import "dart:convert" show JsonUnsupportedObjectError;
-import "package:flutter/foundation.dart";
+import "contact_info.dart";
+import "schedule/advisory.dart";
+import "schedule/day.dart";
+import "schedule/period.dart";
+import "schedule/special.dart";
+import "schedule/time.dart";
 
-import "schedule.dart";
-import "times.dart";
-
-/// A representation of a student. 
+/// What grade the user is in. 
 /// 
-/// This object holds their schedule, and is a convenience class for getting 
-/// their schedule, as well as some other notable data, such as when and where
-/// to meet for homeroom. 
+/// The [User.grade] field could be an `int`, but by specifying the exact
+/// possible values, we avoid any possible errors, as well as possibly cleaner
+/// code.  
+/// 
+/// Faculty users can have [User.grade] be null. 
+enum Grade {
+	/// A Freshman. 
+	freshman, 
+
+	/// A Sophomore. 
+	sophomore,
+
+	/// A Junior. 
+	junior,
+
+	/// A Senior. 
+	senior
+}
+
+/// Maps grade numbers to a [Grade] type. 
+Map<int, Grade> intToGrade = {
+	9: Grade.freshman,
+	10: Grade.sophomore,
+	11: Grade.junior,
+	12: Grade.senior,
+};
+
+/// Represents a user and all their data. 
+/// 
+/// This objects includes data like the user's schedule, grade, list of clubs, 
+/// and more. 
 @immutable
-class Student {
-	/// This student's schedule.
+class User {
+	/// The user's schedule. 
 	/// 
-	/// Each key is a different day, and the value is a list of periods. 
-	/// See [PeriodData] for more information.
+	/// Each key is a different day, and the values are list of periods in that  
+	/// day. Possible key values are defined by [dayNames].
+	/// 
+	/// Periods may be null to indicate free periods (or, in the case of faculty,
+	/// periods where they don't teach).
 	final Map<String, List<PeriodData>> schedule;
 
-	/// The section ID for this student's homeroom; 
-	final String homeroomId;
+	/// The advisory for this user. 
+	// TODO: work this into the logic. 
+	final Advisory advisory;
 
-	/// The room location for this student's homeroom;
-	final String homeroomLocation;
+	/// This user's contact information. 
+	final ContactInfo contactInfo;
 
-	/// `const` constructor for a student.
-	const Student ({
+	/// The grade this user is in. 
+	/// 
+	/// This property is null for faculty. 
+	final Grade grade;
+
+	/// The IDs of the clubs this user attends.
+	/// 
+	/// TODO: decide if this is relevant for captains.
+	final List<String> registeredClubs; 
+
+	/// The possible day names for this user's schedule.
+	/// 
+	/// These will be used as the keys for [schedule].
+	final Iterable<String> dayNames;
+
+	/// Creates a new user.
+	const User({
 		@required this.schedule,
-		@required this.homeroomId,
-		@required this.homeroomLocation,
+		@required this.advisory,
+		@required this.contactInfo,
+		@required this.grade,
+		@required this.registeredClubs,
+		@required this.dayNames,
 	});
 
-	@override 
-	String toString() => schedule.toString();
+	/// Creates a new user from JSON. 
+	User.fromJson(Map<String, dynamic> json) : 
+		dayNames = List<String>.from(json ["dayNames"]),
+		schedule = {
+			for (final String dayName in <String>[...json ["dayNames"]])
+				dayName: PeriodData.getList(json [dayName])
+		},
+		advisory = Advisory.fromJson(
+			Map<String, dynamic>.from(json ["advisory"])
+		),
+		contactInfo = ContactInfo.fromJson(
+			Map<String, dynamic>.from(json ["contactInfo"])
+		),
+		grade = intToGrade [json ["grade"]],
+		registeredClubs = List<String>.from(json ["registeredClubs"]);
 
-	@override
-	int get hashCode => schedule.hashCode;
-
-	@override 
-	bool operator == (dynamic other) => other is Student && 
-		other.schedule == schedule;
-
-	/// Creates a student from a JSON object.
+	/// Gets the unique section IDs for the courses this user is enrolled in.
 	/// 
-	/// Needs to be a factory so there can be proper error checking.
-	factory Student.fromJson (Map<String, dynamic> json) {
-		// Fun Fact: ALl this is error checking. 
-		// Your welcome. 
+	/// For teachers, these will be the courses they teach. 
+	Set<String> get sectionIDs => {
+		for (final List<PeriodData> daySchedule in schedule.values)
+			for (final PeriodData period in daySchedule)
+				if (period?.id != null)
+					period.id
+	};
 
-		// Check for null homeroom
-		const String homeroomLocationKey = "homeroom meeting room";
-		if (!json.containsKey(homeroomLocationKey)) {
-			throw JsonUnsupportedObjectError(
-				json, cause: "No homeroom location present"
-			);
-		}
-		final String homeroomLocation = json [homeroomLocationKey];
-
-		const String homeroomKey = "homeroom";
-		if (!json.containsKey (homeroomKey)) {
-			throw JsonUnsupportedObjectError(json, cause: "No homeroom present");
-		}
-		final String homeroomId = json [homeroomKey];
-
-		// Real code starts here
-		return Student (
-			schedule: {
-				for (final String dayName in json ["dayNames"])
-					dayName: PeriodData.getList(json [dayName])
-			},
-			homeroomId: homeroomId, 
-			homeroomLocation: homeroomLocation,
-		);
-	}
-
-	/// Returns the schedule for this student on a given day. 
+	/// Computes the periods, in order, for a given day. 
 	/// 
-	/// Iterates over the schedule for [day] in [schedule], and converts the
-	/// [PeriodData]s to [Period] objects using the [Range]s in [Day.special]. 
+	/// This method converts the [PeriodData]s in [schedule] into [Period]s using 
+	/// [Day.special]. [PeriodData] objects are specific to the user's schedule, 
+	/// whereas the times of the day [Range]s are specific to the calendar. 
 	/// 
-	/// If `day.special` is [Special.modified], every [Period] will have their 
-	/// [Period.time] property set to null. 
-	List <Period> getPeriods (Day day) {
+	/// See [Special] for an explanation of the different factors this method
+	/// takes into account. 
+	/// 
+	/// TODO: consolidate behavior on no school. 
+	List<Period> getPeriods(Day day) {
 		if (!day.school) {
 			return [];
-		} 
+		}
 
-		int periodIndex = 0;
-		final Map<String, Activity> activities = day.special.activities ?? {};
 		final Special special = day.special;
+		int periodIndex = 0;
 
-		// Loop over all the periods and assign each one a Period.
+		Range getTime(int index) => day.isModified 
+			? null : special.periods [index];
+
 		return [
-			for (int index = 0; index < special.periods.length; index++) 
-				if (special.homeroom == index)
-					Period(
-						PeriodData.free,
-						time: day.isModified ? null : special.periods [index],
-						period: "Homeroom",
-						activity: activities ["Homeroom"]
-					)
-				else if (special.mincha == index)
-					Period.mincha(
-						day.isModified ? null : special.periods [index],
-						activity: activities ["Mincha"],
-					)
-				else if (special.skip.contains(index)) 
-					Period(
-						PeriodData.free,
-						time: day.isModified ? null : special.periods [index],
-						period: "Free",
-						activity: null,
-					)
-				else Period(
+			for (int index = 0; index < special.periods.length; index++)
+				if (special.homeroom == index) Period(
+					PeriodData.free,			
+					period: "Homeroom",
+					time: getTime(index),
+					activity: null,
+				) else if (special.mincha == index) Period(
+					PeriodData.free,
+					period: "Mincha",
+					time: getTime(index),
+					activity: null,
+				) else if (special.skip.contains(index)) Period(
+					PeriodData.free,
+					period: "Free period",
+					time: getTime(index),
+					activity: null,
+				) else Period(
 					schedule [day.name] [periodIndex] ?? PeriodData.free,
-					time: day.isModified ? null : special.periods [index],
 					period: (++periodIndex).toString(),
-					activity: activities [(periodIndex).toString()]
+					time: getTime(index),
+					activity: null,
 				)
 		];
 	}
-
-	/// Gets the section ids for this student. 
-	/// 
-	/// This includes every course in every day of the student's schedule,
-	/// without taking duplicates. 
-	Set<String> getIds() => {
-		for (final List<PeriodData> schedule in schedule.values)
-			for (final PeriodData period in schedule)
-				if (period != null && period != PeriodData.free)  // skip free periods
-					period.id
-	};
 }

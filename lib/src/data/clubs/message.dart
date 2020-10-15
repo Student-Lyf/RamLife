@@ -1,5 +1,6 @@
 import "package:meta/meta.dart";
-import "contact_info.dart";
+
+import "../contact_info.dart";
 
 class Message {
 	ContactInfo sender;
