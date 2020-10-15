@@ -1,7 +1,8 @@
-import "package:flutter/foundation.dart";
+import "package:meta/meta.dart";
 
 import "package:ramaz/constants.dart" show DayComparison;
-import "package:ramaz/data.dart";
+
+import "schedule/time.dart";
 
 /// All the different sports that can be played. 
 /// 
