@@ -52,7 +52,6 @@ class User {
 	final Map<String, List<PeriodData>> schedule;
 
 	/// The advisory for this user. 
-	// TODO: work this into the logic. 
 	final Advisory advisory;
 
 	/// This user's contact information. 
