@@ -131,8 +131,12 @@ class User {
 		Range getTime(int index) => day.isModified 
 			? null : special.periods [index];
 
+		final int periodCount = day.isModified
+			? schedule [day.name].length
+			: special.periods.length;
+
 		return [
-			for (int index = 0; index < special.periods.length; index++)
+			for (int index = 0; index < periodCount; index++)
 				if (special.homeroom == index) Period(
 					PeriodData.free,			
 					period: "Homeroom",
