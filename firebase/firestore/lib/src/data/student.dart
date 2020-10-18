@@ -159,6 +159,10 @@ class User extends Serializable {
 		},
 		"email": email,
 		"dayNames": dayNamesList, 
+		"contactInfo": {
+			"name": "$first $last",
+			"email": email,
+		}
 	};
 
 	@override
