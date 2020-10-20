@@ -37,6 +37,7 @@ class FCM extends PushNotifications {
 	/// Provides the connection to Firebase Messaging. 
 	static final FirebaseMessaging firebase = FirebaseMessaging();
 
+	/// Maps command payloads to async functions. 
 	static Map<String, AsyncCallback> callbacks;
 
 	@override
