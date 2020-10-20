@@ -83,7 +83,7 @@ class ClassList extends StatelessWidget {
 
 	/// A list of periods for today. 
 	/// 
-	/// Comes from using [day] with [Student.getPeriods].
+	/// Comes from using [day] with [User.getPeriods].
 	final Iterable<Period> periods;
 
 	/// The header for this list. May be null.
@@ -98,14 +98,14 @@ class ClassList extends StatelessWidget {
 
 	Iterable<Period> _getPeriods(BuildContext context) {
 		try {
-			return periods ?? Models.schedule.student.getPeriods(day);
+			return periods ?? Models.schedule.user.getPeriods(day);
 		} on RangeError { // ignore: avoid_catching_errors
 			Future(  // cannot show snackbar on build, so wait for next frame
 				() => Scaffold.of(context).showSnackBar(
 					const SnackBar(content: Text("Invalid schedule"))
 				)
 			);
-			return Models.schedule.student.getPeriods(
+			return Models.schedule.user.getPeriods(
 				Models.schedule.today
 			);
 		}

@@ -151,11 +151,18 @@ class User extends Serializable {
 	@override
 	Map<String, dynamic> get json => {
 		for (final String dayName in dayNames) 
-			dayName: scheduleToJson(schedule [dayName]),
-		"homeroom": homeroom,
-		"homeroom meeting room": homeroomLocation,
+			dayName: scheduleToJson(schedule [dayName]),		 
+
+		"advisory": homeroom == null ? null : {
+			"id": homeroom,
+			"room": homeroomLocation,
+		},
 		"email": email,
 		"dayNames": dayNamesList, 
+		"contactInfo": {
+			"name": "$first $last",
+			"email": email,
+		}
 	};
 
 	@override

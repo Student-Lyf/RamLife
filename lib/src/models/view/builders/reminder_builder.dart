@@ -109,7 +109,7 @@ class RemindersBuilderModel with ChangeNotifier {
 		if (dayName == null) {
 			return null;
 		}
-		final List<PeriodData> schedule = _schedule.student.schedule [dayName];
+		final List<PeriodData> schedule = _schedule.user.schedule [dayName];
 		return [
 			for (int index = 0; index < schedule.length; index++) 
 				(index + 1).toString() 

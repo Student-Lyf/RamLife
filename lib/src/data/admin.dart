@@ -1,6 +1,6 @@
-import "package:flutter/foundation.dart";
+import "package:meta/meta.dart";
 
-import "times.dart";
+import "schedule/special.dart";
 
 /// Scopes for administrative privileges.
 /// 

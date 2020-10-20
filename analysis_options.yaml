@@ -1,5 +1,8 @@
 analyzer: 
-  exclude: [lib/generated_plugin_registrant.dart]
+  exclude: 
+    - lib/generated_plugin_registrant.dart
+    - test/*
+    - firebase/*
 linter: 
   rules: 
     - always_declare_return_types

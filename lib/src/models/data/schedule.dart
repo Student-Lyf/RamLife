@@ -18,8 +18,8 @@ class Schedule with ChangeNotifier {
 	/// How often to refresh the schedule.
 	static const timerInterval = Duration (minutes: 1);
 
-	/// The student object for the user. 
-	Student student;
+	/// The current user. 
+	User user;
 
 	/// The subjects this user has. 
 	Map<String, Subject> subjects;
@@ -58,9 +58,10 @@ class Schedule with ChangeNotifier {
 	/// 
 	/// Should be called whenever there is new data for this model to work with.
 	Future<void> init() async {
-		final Databases database = Services.instance.database;
-		student = Student.fromJson(await database.user);
-		subjects = Subject.getSubjects(await database.getSections(student.getIds()));
+		user = User.fromJson(await Services.instance.database.user);
+		subjects = Subject.getSubjects(
+			await Services.instance.database.getSections(user.sectionIDs)
+		);
 		await initCalendar();
 	}
 
@@ -73,7 +74,7 @@ class Schedule with ChangeNotifier {
 	@override 
 	void dispose() {
 		Models.reminders.removeListener(remindersListener);
-		timer.cancel();
+		timer?.cancel();
 		super.dispose();
 	}
 
@@ -103,7 +104,7 @@ class Schedule with ChangeNotifier {
 		timer?.cancel();
 		if (today.school) {
 			// initialize periods.
-			periods = student.getPeriods(today);
+			periods = user.getPeriods(today);
 			// initialize the current period.
 			onNewPeriod(first: true);
 			// initialize the timer. See comments for [timer].
@@ -226,16 +227,22 @@ class Schedule with ChangeNotifier {
 		}
 	}
 
+	/// Determines whether a reminder is compatible with the user's schedule. 
+	/// 
+	/// If [User.dayNames] has changed, then reminders with [PeriodReminderTime]
+	/// might fail. Similarly, if the user changes classes, [SubjectReminderTime]
+	/// might fail. This method helps the app spot these inconsistencies and get
+	/// rid of the problematic reminders. 
 	bool isValidReminder(Reminder reminder) {
 		switch(reminder.time.type) {
 			case ReminderTimeType.period: 
 				final PeriodReminderTime time = reminder.time;
-				final Iterable<String> dayNames = student.schedule.keys;
+				final Iterable<String> dayNames = user.schedule.keys;
 				return dayNames.contains(time.dayName) 
-					&& int.parse(time.period) <= student.schedule [time.dayName].length;
+					&& int.parse(time.period) <= user.schedule [time.dayName].length;
 			case ReminderTimeType.subject: 
 				final SubjectReminderTime time = reminder.time;
-				return subjects.keys.contains(time.name);
+				return subjects.values.any((Subject subject) => subject.name == time.name);
 			default: throw StateError("Reminder <$reminder> has invalid ReminderTime");
 		}
 	}

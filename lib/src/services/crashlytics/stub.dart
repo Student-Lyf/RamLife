@@ -1,8 +1,13 @@
 import "package:flutter/foundation.dart";
 import "../crashlytics.dart";
 
+/// Provides the correct implementation for web. 
 Crashlytics getCrashlytics() => CrashlyticsStub();
 
+/// Provides an empty [Crashlytics] instance. 
+/// 
+/// Currently, crashlytics is only available on mobile, so this implementation 
+/// is used where `dart:io` is unavailable. 
 class CrashlyticsStub extends Crashlytics {
 	@override
 	Future<void> init() async {}

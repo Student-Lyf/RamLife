@@ -1,4 +1,4 @@
-import "package:flutter/foundation.dart" show immutable, required;
+import "package:meta/meta.dart";
 
 /// Feedback from the user.
 @immutable
