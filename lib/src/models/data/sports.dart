@@ -33,7 +33,7 @@ class Sports with ChangeNotifier {
 	/// Loads data from the device and 
 	Future<void> init({bool refresh = false}) async {
 		if (refresh) {
-			games = SportsGame.fromList(await Services.instance.sports);
+			games = SportsGame.fromList(await Services.instance.database.sports);
 			todayGames = getTodayGames();
 			now = DateTime.now();
 		} else {		
@@ -86,5 +86,5 @@ class Sports with ChangeNotifier {
 	/// 
 	/// Used in any database CRUD methods. 
 	Future<void> saveGames() => 
-		Services.instance.setSports(SportsGame.getJsonList(games));
+		Services.instance.database.setSports(SportsGame.getJsonList(games));
 }

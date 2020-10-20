@@ -99,7 +99,7 @@ class CalendarModel with ChangeNotifier {
 			return;
 		}
 		calendar [date.month - 1] [date.day - 1] = day;
-		await Services.instance.setCalendar(
+		await Services.instance.database.setCalendar(
 			date.month, 
 			{
 				"calendar": Day.monthToJson(calendar [date.month - 1]),
