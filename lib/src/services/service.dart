@@ -1,36 +1,15 @@
-/// A data model for services. 
-/// 
-/// All services must implement this class. It serves two main functions:
-/// 
-/// - Basic setup: the [isReady], [reset], and [initialize] methods. 
-/// - Data model: specifies which data is expected from the service.  
 abstract class Service {
-	/// Whether this service is ready. 
-	/// 
-	/// If it's not ready, it was either never set up or misbehaving. 
-	/// Call [reset] just in case. 
-	Future<bool> get isReady;
+	Future<void> init();
 
-	/// Resets the service as if the app were just installed. 
-	/// 
-	/// While this may delete data from local storage, it should not wipe data
-	/// from off-device sources, such as the database. It's sole purpose is to
-	/// help the service respond again.
-	/// 
-	/// [reset] may be called when [isReady] is false, so it should have built-in
-	/// error handling.  
-	Future<void> reset();
+	Future<void> signIn();
+}
 
-	/// Initializes the service. 
-	/// 
-	/// After calling this method, [isReady] should return true. 
-	/// 
-	/// Additionally, there may be other setup needed, that while may not be needed
-	/// for the service as a whole, may be done here as well. 
-	/// 
-	/// Note that this method will be called even when [isReady] is true, so make
-	/// make sure this function does not delete user data. 
-	Future<void> initialize();
+abstract class Database extends Service {
+	static const String calendarKey = "calendar";
+
+	Future<bool> get isSignedIn;
+
+	Future<void> signOut();
 
 	/// The user object as JSON
 	Future<Map<String, dynamic>> get user;
@@ -47,7 +26,14 @@ abstract class Service {
 	/// The calendar in JSON form. 
 	/// 
 	/// Admins can change this with [setCalendar]. 
-	Future<List<List<Map<String, dynamic>>>> get calendar;
+	Future<List<List<Map<String, dynamic>>>> get calendar async => [
+		for (int month = 1; month <= 12; month++) [
+			for (final dynamic day in (await getCalendarMonth(month)) [calendarKey])
+				Map<String, dynamic>.from(day)
+		]
+	];
+
+	Future<Map<String, dynamic>> getCalendarMonth(int month);
 
 	/// Changes the calendar in the database. 
 	/// 

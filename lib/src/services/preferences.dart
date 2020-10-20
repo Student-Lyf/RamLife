@@ -1,14 +1,21 @@
 import "package:shared_preferences/shared_preferences.dart";
 
+import "service.dart";
+
 /// An abstraction wrapper around the SharedPreferences plugin.
 /// 
 /// The SharedPreferences plugin allows for quick and small key-value based
 /// storage, which can be very useful. 
-class Preferences {
-	final SharedPreferences _prefs;
+class Preferences extends Service {
+	SharedPreferences _prefs;
 
-	/// Const constructor for this class.
-	const Preferences(this._prefs);
+	@override
+	Future<void> init() async {
+		_prefs = await SharedPreferences.getInstance();
+	}
+
+	@override 
+	Future<void> signIn() async {}
 
 	/// The key for if this is the first time or not.
 	static const String firstTimeKey = "firstTime";

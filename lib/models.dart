@@ -69,6 +69,9 @@ class Models {
 	}
 
 	static void reset() {
+		schedule?.dispose();
+		reminders?.dispose();
+		sports?.dispose();
 		reminders = null;
 		schedule = null;
 		sports = null;

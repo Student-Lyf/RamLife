@@ -17,7 +17,7 @@ class AdminModel {
 
 	Future<void> init() async {
 		user = AdminUserModel(
-			json: await Services.instance.admin, 
+			json: await Services.instance.database.admin, 
 			scopes: await Auth.adminScopes
 		);
 	}

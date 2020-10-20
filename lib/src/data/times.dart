@@ -412,6 +412,7 @@ class Special {
 		"homeroom": homeroom,
 	};
 
+	/// The shorter schedule for the Covid-19 pandemic. 
 	static const Special covid = Special(
 		"COVID-19",
 		[

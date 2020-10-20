@@ -58,14 +58,14 @@ class Schedule with ChangeNotifier {
 	/// 
 	/// Should be called whenever there is new data for this model to work with.
 	Future<void> init() async {
-		final Services services = Services.instance;
-		student = Student.fromJson(await services.user);
-		subjects = Subject.getSubjects(await services.getSections(student.getIds()));
+		final Databases database = Services.instance.database;
+		student = Student.fromJson(await database.user);
+		subjects = Subject.getSubjects(await database.getSections(student.getIds()));
 		await initCalendar();
 	}
 
 	Future<void> initCalendar() async {
-		calendar = Day.getCalendar(await Services.instance.calendar);
+		calendar = Day.getCalendar(await Services.instance.database.calendar);
 		setToday();
 		notifyListeners();
 	}
@@ -191,9 +191,9 @@ class Schedule with ChangeNotifier {
 	/// Schedules notifications for today's reminders. 
 	/// 
 	/// Starting from the current period, schedules a notification for the period
-	/// using [Notifications.scheduleNotification].
+	/// using [Notifications.scheduleNotification]
 	Future<void> scheduleReminders() async {
-		Notifications.cancelAll();
+		Services.instance.notifications.cancelAll();
 		final DateTime now = DateTime.now();
 
 		// No school today/right now
@@ -209,7 +209,7 @@ class Schedule with ChangeNotifier {
 				subject: subjects [period?.id]?.name,
 				dayName: today.name,
 			)) {
-				Notifications.scheduleNotification(
+				Services.instance.notifications.scheduleNotification(
 					date: DateTime(
 						now.year, 
 						now.month, 

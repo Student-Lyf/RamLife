@@ -31,9 +31,13 @@ class Reminders with ChangeNotifier {
 	/// Initializes the data model. 
 	Future<void> init() async {
 		reminders = [
-			for (final Map<String, dynamic> json in await Services.instance.reminders)
+			for (
+				final Map<String, dynamic> json in 
+				await Services.instance.database.reminders
+			)
 				Reminder.fromJson(json)
 		];
+		readReminders = [];
 	}
 
 	/// Whether any reminder applies to the current period.
@@ -76,7 +80,7 @@ class Reminders with ChangeNotifier {
 			for (final Reminder reminder in reminders)
 				reminder.toJson()
 		];
-		await Services.instance.setReminders(json);
+		await Services.instance.database.setReminders(json);
 	}
 
 	/// Checks if any reminders have been modified and removes them. 

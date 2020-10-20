@@ -87,30 +87,10 @@ class Student {
 			return [];
 		} 
 
-		// Get indices for `schedule [day.name]`, keeping skipped periods in mind
 		int periodIndex = 0;
-		final List<int> periodIndices = [];
 		final Map<String, Activity> activities = day.special.activities ?? {};
-		// TODO: Remove this line. 
-		// final Special special = day.isModified 
-		// 	? Day.specials [day.letter] 
-		// 	: day.special;
 		final Special special = day.special;
 
-		for (int index = 0; index < special.periods.length; index++) {
-			// if (special.skip?.contains(index) ?? false)
-			// 	periodIndex++;
-			// while (special?.skip?.contains(periodIndex + 1) ?? false) {
-			// 	periodIndex++;
-			// }
-			periodIndices.add(
-				special.homeroom == index 
-				|| special.mincha == index 
-				|| (special.skip?.contains(index) ?? false)
-					? null
-					: periodIndex++
-			);
-		}
 		// Loop over all the periods and assign each one a Period.
 		return [
 			for (int index = 0; index < special.periods.length; index++) 
@@ -126,7 +106,7 @@ class Student {
 						day.isModified ? null : special.periods [index],
 						activity: activities ["Mincha"],
 					)
-				else if (periodIndices [index] == null) 
+				else if (special.skip.contains(index)) 
 					Period(
 						PeriodData.free,
 						time: day.isModified ? null : special.periods [index],
@@ -134,10 +114,10 @@ class Student {
 						activity: null,
 					)
 				else Period(
-					schedule [day.name] [periodIndices [index]] ?? PeriodData.free,
+					schedule [day.name] [periodIndex] ?? PeriodData.free,
 					time: day.isModified ? null : special.periods [index],
-					period: (periodIndices [index] + 1).toString(),
-					activity: activities [(periodIndices [index] + 1).toString()]
+					period: (++periodIndex).toString(),
+					activity: activities [(periodIndex).toString()]
 				)
 		];
 	}

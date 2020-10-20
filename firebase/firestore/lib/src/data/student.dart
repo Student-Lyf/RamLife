@@ -31,6 +31,10 @@ class User extends Serializable {
 			period?.json
 	];
 
+	static DefaultMap<String, List<Period>> get emptySchedule => DefaultMap(
+		(String letter) => List.filled(Period.periodsInDay[letter], null)
+	)..setDefaultForAll(dayNames);
+
 	static final dayNamesList = List<String>.from(dayNames);
 
 	/// This user's email.
@@ -93,6 +97,16 @@ class User extends Serializable {
 			);
 		}
 	}
+
+	User.empty({
+		@required this.email,
+		@required this.first, 
+		@required this.last, 
+	}) : 
+		homeroom = "SENIOR_HOMEROOM",
+		homeroomLocation = "Unavailable",
+		id = null,
+		schedule = emptySchedule;
 
 	/// If this user has no classes.
 	bool get hasNoClasses => schedule.values.every(

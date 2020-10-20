@@ -9,3 +9,8 @@ corruptStudents:
   - "724703"
   - "722601"
   - "723397"
+
+testers: 
+  testt@ramaz.org: 
+    first: "Test"
+    last: "Account"

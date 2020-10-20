@@ -1,6 +1,8 @@
 import "package:firebase_auth/firebase_auth.dart";
 import "package:google_sign_in/google_sign_in.dart";
 
+class NoAccountException implements Exception {}
+
 // ignore: avoid_classes_with_only_static_members
 /// An abstraction around FirebaseAuth.
 /// 
@@ -31,7 +33,7 @@ class Auth {
 	static User get currentUser => auth.currentUser;
 
 	/// The user's email.
-	static String get email => currentUser?.email;
+	static String get email => currentUser?.email?.toLowerCase();
 
 	/// The user's full name.
 	static String get name => currentUser?.displayName;
@@ -82,7 +84,7 @@ class Auth {
 	static Future<void> signIn() async {
 		final GoogleSignInAccount googleAccount = await google.signIn();
 		if (googleAccount == null) {
-			return;
+			throw NoAccountException();
 		}
 		final GoogleSignInAuthentication googleAuth = 
 			await googleAccount.authentication;
