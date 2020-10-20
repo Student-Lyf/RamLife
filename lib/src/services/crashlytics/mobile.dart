@@ -4,9 +4,15 @@ import "package:flutter/foundation.dart";
 import "../crashlytics.dart";
 import "../firebase_core.dart";
 
+/// Provides the correct implementation for mobile. 
 Crashlytics getCrashlytics() => CrashlyticsImplementation();
 
+/// Connects the app to Firebase Crashlytics. 
+/// 
+/// Currently, Crashlytics is only available on mobile, so this implementation
+/// is only used where `dart:io` is available. 
 class CrashlyticsImplementation extends Crashlytics {
+	/// Provides the connection to Firebase Crashlytics. 
 	static FirebaseCrashlytics firebase = FirebaseCrashlytics.instance;
 
 	@override
@@ -41,7 +47,6 @@ class CrashlyticsImplementation extends Crashlytics {
 	Future<void> log(String message) => 
 		firebase.log(message);
 
-	// ignore: avoid_positional_boolean_parameters
 	@override
 	Future<void> toggle(bool value) => 
 		firebase.setCrashlyticsCollectionEnabled(value);

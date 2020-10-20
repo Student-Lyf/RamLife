@@ -36,7 +36,7 @@ class ScheduleModel with ChangeNotifier {
 			? schedule.today
 			: defaultDay;
 		defaultDay = Day(
-			name: schedule.student.schedule.keys.first, 
+			name: schedule.user.schedule.keys.first, 
 			special: defaultSpecial
 		);
 	}

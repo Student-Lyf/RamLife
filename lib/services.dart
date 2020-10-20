@@ -19,12 +19,11 @@ import "src/services/crashlytics.dart";
 import "src/services/databases.dart";
 import "src/services/notifications.dart";
 import "src/services/preferences.dart";
+import "src/services/push_notifications.dart";
 import "src/services/service.dart";
 
 export "src/services/auth.dart";
-export "src/services/cloud_db.dart";
 export "src/services/crashlytics.dart";
-export "src/services/databases.dart";
 export "src/services/notifications.dart";
 export "src/services/preferences.dart";
 
@@ -35,6 +34,7 @@ class Services implements Service {
 	final Crashlytics crashlytics = Crashlytics.instance;
 	final Databases database = Databases();
 	final Notifications notifications = Notifications();
+	final PushNotifications pushNotifications = PushNotifications.instance;
 	final Preferences prefs = Preferences();
 
 	List<Service> services;

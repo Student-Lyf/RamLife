@@ -9,9 +9,22 @@
 library data;
 
 export "src/data/admin.dart";
+
+// The clubs feature
+export "src/data/clubs/club.dart";
+export "src/data/clubs/message.dart";
+
 export "src/data/feedback.dart";
 export "src/data/reminder.dart";
-export "src/data/schedule.dart";
+
+// The schedule feature
+export "src/data/schedule/activity.dart";
+export "src/data/schedule/advisory.dart";
+export "src/data/schedule/day.dart";
+export "src/data/schedule/period.dart";
+export "src/data/schedule/special.dart";
+export "src/data/schedule/subject.dart";
+export "src/data/schedule/time.dart";
+
 export "src/data/sports.dart";
-export "src/data/student.dart";
-export "src/data/times.dart";
+export "src/data/user.dart";

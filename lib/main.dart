@@ -52,10 +52,8 @@ Future<void> main({bool restart = false}) async {
 			: Brightness.dark;
 	}
 
-	if (kDebugMode) {
-		// Turns Crashlyitcs off in debug mode. 
-	  await crashlytics.toggle(false);
-	}
+	// Turns Crashlyitcs off in debug mode. 
+  await crashlytics.toggle(!kDebugMode);
 
 	// Now we are ready to run the app (with error catching)
 	FlutterError.onError = crashlytics.recordFlutterError;

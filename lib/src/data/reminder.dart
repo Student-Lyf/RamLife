@@ -7,7 +7,7 @@
 library reminder_dataclasses;
 
 import "dart:convert" show JsonUnsupportedObjectError;
-import "package:flutter/foundation.dart" show required, immutable;
+import "package:meta/meta.dart";
 
 /// An enum to decide when the reminder should appear. 
 /// 
