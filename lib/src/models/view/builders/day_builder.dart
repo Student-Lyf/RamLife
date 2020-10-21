@@ -9,14 +9,14 @@ class DayBuilderModel with ChangeNotifier {
 	/// The admin creating this [Day].
 	/// 
 	/// This is used to create [userSpecials].
-	final AdminUserModel admin;
+	final UserModel admin;
 
 	String _name;
 	Special _special;
 	bool _hasSchool;
 
 	/// Creates a view model for modifying a [Day].
-	DayBuilderModel(Day day) : admin = Models.instance.admin.user {
+	DayBuilderModel(Day day) : admin = Models.instance.user {
 		admin.addListener(notifyListeners);
 		_name = day?.name;
 		_special = day?.special;
@@ -50,7 +50,7 @@ class DayBuilderModel with ChangeNotifier {
 				(Special preset) => preset.name == value.name
 			)
 		) {
-			admin.addSpecial(value);
+			admin.addSpecialToAdmin(value);
 		}
 
 		notifyListeners();

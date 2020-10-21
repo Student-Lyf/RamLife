@@ -80,7 +80,7 @@ class SpecialBuilderState extends State<SpecialBuilder> {
 										const Divider(),
 										for (
 											final Special special in 
-											Models.instance.admin.user.specials
+											Models.instance.user.admin.specials
 										) ListTile(
 											title: Text (special.name),
 											onTap: () => Navigator.of(context).pop(special),
