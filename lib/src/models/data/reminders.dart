@@ -1,7 +1,9 @@
-import "package:flutter/foundation.dart";
+import "package:meta/meta.dart";
 
 import "package:ramaz/data.dart";
 import "package:ramaz/services.dart";
+
+import "model.dart";
 
 /// A DataModel that keeps the state of the user's reminders. 
 /// 
@@ -9,7 +11,7 @@ import "package:ramaz/services.dart";
 /// and all other parts of the app that want to operate on reminders should use
 /// this data model.
 // ignore: prefer_mixin
-class Reminders with ChangeNotifier {
+class Reminders extends Model {
 	/// The reminders for the user.
 	List<Reminder> reminders;
 
@@ -28,7 +30,7 @@ class Reminders with ChangeNotifier {
 	/// These reminders will be marked for deletion if they do not repeat.
 	List<int> readReminders;
 
-	/// Initializes the data model. 
+	@override
 	Future<void> init() async {
 		reminders = [
 			for (

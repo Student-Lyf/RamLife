@@ -31,7 +31,7 @@ class ScheduleModel with ChangeNotifier {
 	/// Also initializes the default day shown to the user. 
 	/// If today is a school day, then use that. Otherwise, use the 
 	/// defaults (see [defaultSpecial]).
-	ScheduleModel () : schedule = Models.schedule	{
+	ScheduleModel () : schedule = Models.instance.schedule {
 		day = schedule.hasSchool
 			? schedule.today
 			: defaultDay;

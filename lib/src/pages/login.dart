@@ -38,7 +38,7 @@ class LoginState extends State<Login> {
 		// "To log in, one must first log out"
 		// -- Levi Lesches, class of '21, creator of this app, 2019
 		Services.instance.database.signOut();
-		Models.reset();
+		Models.instance.dispose();
 	}
 
 	@override
@@ -96,7 +96,7 @@ class LoginState extends State<Login> {
 		await crashlytics.log("Attempted to log in");
 		await crashlytics.setEmail(Auth.email);
 		await Services.instance.database.signOut();
-		Models.reset();
+		Models.instance.dispose();
 		// ignore: unawaited_futures
 		showDialog (
 			context: context,
@@ -156,7 +156,7 @@ class LoginState extends State<Login> {
 		function: () async {
 			setState(() => isLoading = true);
 			await Services.instance.signIn();
-			await Models.init();
+			await Models.instance.init();
 		},
 		onSuccess: () {
 			setState(() => isLoading = false);

@@ -22,7 +22,7 @@ class ReminderTile extends StatelessWidget {
 
 	@override 
 	Widget build (BuildContext context) {
-		final Reminders reminders = Models.reminders;
+		final Reminders reminders = Models.instance.reminders;
 		final Reminder reminder = reminders.reminders [index];
 		
 		return SizedBox (
@@ -32,7 +32,7 @@ class ReminderTile extends StatelessWidget {
 					title: Text (reminder.message),
 					subtitle: Text (reminder.time.toString() ?? ""),
 					onTap: () async {
-						if (!Models.schedule.isValidReminder(reminder)) {
+						if (!Models.instance.schedule.isValidReminder(reminder)) {
 							reminders.deleteReminder(index);
 							Scaffold.of(context).showSnackBar(
 								const SnackBar(content: Text("Deleted outdated reminder"))

@@ -98,21 +98,21 @@ class ClassList extends StatelessWidget {
 
 	Iterable<Period> _getPeriods(BuildContext context) {
 		try {
-			return periods ?? Models.schedule.user.getPeriods(day);
+			return periods ?? Models.instance.schedule.user.getPeriods(day);
 		} on RangeError { // ignore: avoid_catching_errors
 			Future(  // cannot show snackbar on build, so wait for next frame
 				() => Scaffold.of(context).showSnackBar(
 					const SnackBar(content: Text("Invalid schedule"))
 				)
 			);
-			return Models.schedule.user.getPeriods(
-				Models.schedule.today
+			return Models.instance.schedule.user.getPeriods(
+				Models.instance.schedule.today
 			);
 		}
 	}
 
 	@override Widget build(BuildContext context) => ModelListener<Reminders>(
-		model: () => Models.reminders,
+		model: () => Models.instance.reminders,
 		dispose: false,
 		// ignore: sort_child_properties_last
 		child: DrawerHeader (
@@ -138,7 +138,7 @@ class ClassList extends StatelessWidget {
 
 	/// Creates a [ClassPanel] for a given period. 
 	Widget getPanel(Period period) {
-		final Subject subject = Models.schedule.subjects[period.id];
+		final Subject subject = Models.instance.schedule.subjects[period.id];
 		return ClassPanel (
 			children: [
 				for (final String description in period.getInfo(subject))
@@ -150,7 +150,7 @@ class ClassList extends StatelessWidget {
 			title: int.tryParse(period.period) == null 
 				? period.getName(subject)
 				: "${period.period}: ${period.getName(subject)}",
-			reminders: Models.reminders.getReminders(
+			reminders: Models.instance.reminders.getReminders(
 				period: period.period,
 				dayName: day.name,
 				subject: subject?.name,

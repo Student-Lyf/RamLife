@@ -1,17 +1,17 @@
 import "dart:async";
 
-import "package:flutter/foundation.dart";
-
 import "package:ramaz/constants.dart" show DayComparison;
 import "package:ramaz/data.dart";
 import "package:ramaz/services.dart";
+
+import "model.dart";
 
 /// A data model for sports games. 
 /// 
 /// This class hosts [todayGames], a list of games being played today, 
 /// as well as CRUD methods for the database (if permissions allow). 
 // ignore: prefer_mixin
-class Sports with ChangeNotifier {
+class Sports extends Model {
 	static const Duration _minute = Duration(minutes: 1);
 
 	/// A timer to refresh [todayGames].
@@ -25,13 +25,10 @@ class Sports with ChangeNotifier {
 	/// A list of games being played today to be showed on the home screen. 
 	List<int> todayGames;
 
-	/// Creates a data model for sports games. 
-	Sports() {
-		timer = Timer.periodic(_minute, (_) => todayGames = getTodayGames());
-	}
-
 	/// Loads data from the device and 
+	@override
 	Future<void> init({bool refresh = false}) async {
+		timer = Timer.periodic(_minute, (_) => todayGames = getTodayGames());
 		if (refresh) {
 			games = SportsGame.fromList(await Services.instance.database.sports);
 			todayGames = getTodayGames();

@@ -70,7 +70,7 @@ class SportsPage extends StatelessWidget {
 	Widget build(BuildContext context) => DefaultTabController(
 		length: 2,
 		child: ModelListener<SportsModel>(
-			model: () => SportsModel(Models.sports),
+			model: () => SportsModel(Models.instance.sports),
 			builder: (BuildContext context, SportsModel model, Widget _) => Scaffold(
 				appBar: AppBar(
 					title: const Text("Sports"),
@@ -185,7 +185,7 @@ class SportsPage extends StatelessWidget {
 				  		return;
 				  	}
 				  	model.loading = true;
-				  	await Models.sports.replace(
+				  	await Models.instance.sports.replace(
 					  	index, 
 					  	model.data.games [index].replaceScores(scores)
 			  		);
@@ -198,7 +198,7 @@ class SportsPage extends StatelessWidget {
 					onPressed: () async {
 				  	Navigator.of(newContext).pop();
 				  	model.loading = true;
-				  	await Models.sports.replace(
+				  	await Models.instance.sports.replace(
 					  	index, 
 					  	model.data.games [index].replaceScores(null)
 			  		);
@@ -211,7 +211,7 @@ class SportsPage extends StatelessWidget {
 				  onPressed: () async {
 				  	Navigator.of(newContext).pop();
 				  	model.loading = true;
-				  	await Models.sports.replace(
+				  	await Models.instance.sports.replace(
 					  	index, 
 					  	await SportsBuilder.createGame(context, model.data.games [index])
 				  	);
@@ -242,7 +242,7 @@ class SportsPage extends StatelessWidget {
 			  		);
 			  		if (confirm) {
 			  			model.loading = true;
-					  	await Models.sports.delete(index);
+					  	await Models.instance.sports.delete(index);
 			  			model.loading = false;
 					  }
 				  },

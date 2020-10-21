@@ -26,6 +26,7 @@ library models;
 
 import "package:ramaz/services.dart";
 import "src/models/data/admin.dart";
+import "src/models/data/model.dart";
 import "src/models/data/reminders.dart";
 import "src/models/data/schedule.dart";
 import "src/models/data/sports.dart";
@@ -46,21 +47,18 @@ export "src/models/view/home.dart";
 export "src/models/view/schedule.dart";
 export "src/models/view/sports.dart";
 
-class Models {
-	static Reminders reminders;
+class Models extends Model {
+	static Models instance = Models();
 
-	static Schedule schedule;
+	Reminders reminders = Reminders();
+	Schedule schedule = Schedule();
+	Sports sports = Sports();
+	AdminModel admin;
 
-	static Sports sports;
-
-	static AdminModel admin;
-
-	static Future<void> init() async {
-		reminders = Reminders();
+	@override
+	Future<void> init() async {
 		await reminders.init();
-		schedule = Schedule();
 		await schedule.init();
-		sports = Sports();
 		await sports.init(refresh: true);
 		if (await Auth.isAdmin) {
 			admin = AdminModel();
@@ -68,13 +66,16 @@ class Models {
 		}
 	}
 
-	static void reset() {
+	@override
+	void dispose() {
 		schedule?.dispose();
 		reminders?.dispose();
 		sports?.dispose();
+		admin?.dispose();
 		reminders = null;
 		schedule = null;
 		sports = null;
 		admin = null;
+		super.dispose();
 	}
 }

@@ -43,9 +43,9 @@ class RemindersBuilderModel with ChangeNotifier {
 	/// If [reminder] is not null, then the relevant fields of this 
 	/// class are filled in with the corresponding fields of the reminder. 
 	RemindersBuilderModel(Reminder reminder) : 
-		_schedule = Models.schedule,
+		_schedule = Models.instance.schedule,
 		courses = [
-			for (final Subject subject in Models.schedule.subjects.values)
+			for (final Subject subject in Models.instance.schedule.subjects.values)
 				subject.name
 		]
 	{
