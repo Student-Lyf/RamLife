@@ -24,20 +24,20 @@
 /// 	state should depend on their corresponding view model.
 library models;
 
-import "package:ramaz/services.dart";
-import "src/models/data/admin.dart";
 import "src/models/data/model.dart";
 import "src/models/data/reminders.dart";
 import "src/models/data/schedule.dart";
 import "src/models/data/sports.dart";
+import "src/models/data/user.dart";
 
 // data models
-export "src/models/data/admin.dart";
 export "src/models/data/reminders.dart";
 export "src/models/data/schedule.dart";
 export "src/models/data/sports.dart";
+export "src/models/data/user.dart";
 
 // view models
+export "src/models/data/admin/calendar.dart";
 export "src/models/view/builders/day_builder.dart";
 export "src/models/view/builders/reminder_builder.dart";
 export "src/models/view/builders/special_builder.dart";
@@ -50,32 +50,36 @@ export "src/models/view/sports.dart";
 class Models extends Model {
 	static Models instance = Models();
 
-	Reminders reminders = Reminders();
-	Schedule schedule = Schedule();
-	Sports sports = Sports();
-	AdminModel admin;
+	Reminders reminders;
+	Schedule schedule;
+	Sports sports;
+	UserModel user;
 
 	@override
 	Future<void> init() async {
+		reminders = Reminders();
+		schedule = Schedule();
+		sports = Sports();
+		user  = UserModel();
+		
 		await reminders.init();
 		await schedule.init();
 		await sports.init(refresh: true);
-		if (await Auth.isAdmin) {
-			admin = AdminModel();
-			await admin.init();
-		}
+		await user.init();
 	}
 
 	@override
+	// This object can be revived using [init].
+	// ignore: must_call_super
 	void dispose() {
 		schedule?.dispose();
 		reminders?.dispose();
 		sports?.dispose();
-		admin?.dispose();
+		user?.dispose();
+
 		reminders = null;
 		schedule = null;
 		sports = null;
-		admin = null;
-		super.dispose();
+		user = null;
 	}
 }

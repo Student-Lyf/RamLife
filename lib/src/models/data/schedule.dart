@@ -47,13 +47,12 @@ class Schedule extends Model {
 	/// The index that represents [period]'s location in [periods].
 	int periodIndex;
 
-	final Reminders reminders;
-
-	Schedule() : reminders = Models.instance.reminders;
+	Reminders reminders;
 
 	@override
 	Future<void> init() async {
-		reminders.addListener(remindersListener);
+		reminders = Models.instance.reminders
+			..addListener(remindersListener);
 		user = User.fromJson(await Services.instance.database.user);
 		subjects = Subject.getSubjects(
 			await Services.instance.database.getSections(user.sectionIDs)
@@ -69,7 +68,7 @@ class Schedule extends Model {
 
 	@override 
 	void dispose() {
-		reminders.removeListener(remindersListener);
+		Models.instance.reminders?.removeListener(remindersListener);
 		timer?.cancel();
 		super.dispose();
 	}
