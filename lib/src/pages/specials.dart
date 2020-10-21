@@ -8,7 +8,7 @@ import "package:ramaz/widgets.dart";
 class SpecialPage extends StatelessWidget {
 	@override
 	Widget build(BuildContext context) => ModelListener<AdminUserModel>(
-		model: () => Models.admin.user,
+		model: () => Models.instance.admin.user,
 		dispose: false,
 		builder: (_, AdminUserModel model, __) => Scaffold(
 			appBar: AppBar(

@@ -159,7 +159,7 @@ class ReminderBuilderState extends State<ReminderBuilder> {
 									title: const Text ("Day"),
 									trailing: DropdownButton<String>(
 										items: [
-											for (final String dayName in Models.schedule.user.dayNames)
+											for (final String dayName in Models.instance.schedule.user.dayNames)
 												DropdownMenuItem(
 													value: dayName,
 													child: Text(dayName),

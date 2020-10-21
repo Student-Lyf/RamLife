@@ -6,14 +6,14 @@ import "package:ramaz/models.dart";
 class HomeModel with ChangeNotifier {
 	// Do NOT use a list here. See null checks in [dispose].
 	HomeModel() {
-		Models.schedule.addListener(notifyListeners);
-		Models.sports.addListener(notifyListeners);
+		Models.instance.schedule.addListener(notifyListeners);
+		Models.instance.sports.addListener(notifyListeners);
 	}
 
 	@override
 	void dispose() {
-		Models?.schedule?.removeListener(notifyListeners);
-		Models?.sports?.removeListener(notifyListeners);
+		Models.instance?.schedule?.removeListener(notifyListeners);
+		Models.instance?.sports?.removeListener(notifyListeners);
 		super.dispose();
 	}
 }

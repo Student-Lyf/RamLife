@@ -16,7 +16,7 @@ class DayBuilderModel with ChangeNotifier {
 	bool _hasSchool;
 
 	/// Creates a view model for modifying a [Day].
-	DayBuilderModel(Day day) : admin = Models.admin.user {
+	DayBuilderModel(Day day) : admin = Models.instance.admin.user {
 		admin.addListener(notifyListeners);
 		_name = day?.name;
 		_special = day?.special;

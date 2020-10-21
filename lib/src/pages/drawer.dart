@@ -46,7 +46,7 @@ class NavigationDrawer extends StatelessWidget {
 								// 	leading: Icon (Icons.directions_run),
 								// 	onTap: pushRoute(context, Routes.sports),
 								// ),
-								if (Models.admin != null)
+								if (Models.instance.admin != null)
 									ListTile(
 										title: const Text("Admin console"),
 										leading: Icon(Icons.verified_user),

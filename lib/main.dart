@@ -29,7 +29,7 @@ Future<void> main({bool restart = false}) async {
 	try {
 		if (isSignedIn) {
 			// This initializes data models -- it may error. 
-			await Models.init();
+			await Models.instance.init();
 		}
 	// We want to at least try again on ANY error. 
 	// ignore: avoid_catches_without_on_clauses

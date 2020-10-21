@@ -9,7 +9,7 @@ import "package:ramaz/widgets.dart";
 class RemindersPage extends StatelessWidget {
 	@override 
 	Widget build(BuildContext context) => ModelListener<Reminders>(
-		model: () => Models.reminders,
+		model: () => Models.instance.reminders,
 		dispose: false,
 		// ignore: sort_child_properties_last
 		child: const Center (

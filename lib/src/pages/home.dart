@@ -9,12 +9,21 @@ import "package:ramaz/widgets.dart";
 
 /// The homepage of the app. 
 class HomePage extends StatelessWidget {
+	final Schedule scheduleModel;
+	final Reminders remindersModel; 
+	final Sports sportsModel;
+
+	HomePage() : 
+		scheduleModel = Models.instance.schedule,
+		remindersModel = Models.instance.reminders,
+		sportsModel = Models.instance.sports;
+
 	/// Downloads the calendar again and calls [Schedule.onNewPeriod].
 	Future<void> refresh(BuildContext context) async {
 		try {
 			await Services.instance.database.updateCalendar();
 			await Services.instance.database.updateSports();
-			await Models.schedule.initCalendar();
+			await scheduleModel.initCalendar();
 		} on PlatformException catch(error) {
 			if (error.code == "Error performing get") {
 				Scaffold.of(context).showSnackBar(
@@ -37,7 +46,7 @@ class HomePage extends StatelessWidget {
 			appBar: AppBar (
 				title: const Text ("Home"),
 				actions: [
-					if (Models.schedule.hasSchool) Builder (
+					if (scheduleModel.hasSchool) Builder (
 						builder: (BuildContext context) => FlatButton(
 							textColor: Colors.white,
 							onPressed: () => Scaffold.of(context).openEndDrawer(),
@@ -47,16 +56,16 @@ class HomePage extends StatelessWidget {
 				],
 			),
 			drawer: NavigationDrawer(),
-			endDrawer: !Models.schedule.hasSchool ? null : Drawer (
+			endDrawer: !scheduleModel.hasSchool ? null : Drawer (
 				child: ClassList(
-					day: Models.schedule.today,
-					periods: Models.schedule.nextPeriod == null 
-						? Models.schedule.periods
-						: Models.schedule.periods.getRange (
-							(Models.schedule.periodIndex ?? -1) + 1, 
-							Models.schedule.periods.length
+					day: scheduleModel.today,
+					periods: scheduleModel.nextPeriod == null 
+						? scheduleModel.periods
+						: scheduleModel.periods.getRange (
+							(scheduleModel.periodIndex ?? -1) + 1, 
+							scheduleModel.periods.length
 						),
-					headerText: Models.schedule.period == null 
+					headerText: scheduleModel.period == null 
 						? "Today's Schedule" 
 						: "Upcoming Classes"
 				)
@@ -68,33 +77,33 @@ class HomePage extends StatelessWidget {
 						RamazLogos.ramRectangle,
 						const Divider(),
 						Text (
-							Models.schedule.hasSchool
-								? "Today is a${Models.schedule.today.n} "
-									"${Models.schedule.today.name}"
-									"\nSchedule: ${Models.schedule.today.special.name}"
+							scheduleModel.hasSchool
+								? "Today is a${scheduleModel.today.n} "
+									"${scheduleModel.today.name}"
+									"\nSchedule: ${scheduleModel.today.special.name}"
 								: "There is no school today",
 							textScaleFactor: 2,
 							textAlign: TextAlign.center
 						),
 						const SizedBox (height: 20),
-						if (Models.schedule.hasSchool) NextClass(
-							reminders: Models.reminders.currentReminders,
-							period: Models.schedule.period,
-							subject: Models.schedule.subjects [Models.schedule.period?.id],
-							modified: Models.schedule.today.isModified,
+						if (scheduleModel.hasSchool) NextClass(
+							reminders: remindersModel.currentReminders,
+							period: scheduleModel.period,
+							subject: scheduleModel.subjects [scheduleModel.period?.id],
+							modified: scheduleModel.today.isModified,
 						),
 						// if school won't be over, show the next class
 						if (
-							Models.schedule.nextPeriod != null && 
-							!Models.schedule.today.isModified
+							scheduleModel.nextPeriod != null && 
+							!scheduleModel.today.isModified
 						) NextClass (
 							next: true,
-							reminders: Models.reminders.nextReminders,
-							period: Models.schedule.nextPeriod,
-							subject: Models.schedule.subjects [Models.schedule.nextPeriod?.id],
-							modified: Models.schedule.today.isModified,
+							reminders: remindersModel.nextReminders,
+							period: scheduleModel.nextPeriod,
+							subject: scheduleModel.subjects [scheduleModel.nextPeriod?.id],
+							modified: scheduleModel.today.isModified,
 						),
-						if (Models.sports.todayGames.isNotEmpty) ...[
+						if (sportsModel.todayGames.isNotEmpty) ...[
 							const SizedBox(height: 10),
 							const Center(
 								child: Text(
@@ -104,8 +113,8 @@ class HomePage extends StatelessWidget {
 								)
 							),
 							const SizedBox(height: 10),
-							for (final int index in Models.sports.todayGames)
-								SportsTile(Models.sports.games [index])
+							for (final int index in sportsModel.todayGames)
+								SportsTile(sportsModel.games [index])
 						]
 					]
 				)
