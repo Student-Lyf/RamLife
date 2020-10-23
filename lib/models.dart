@@ -57,15 +57,15 @@ class Models extends Model {
 
 	@override
 	Future<void> init() async {
+		user  = UserModel();
 		reminders = Reminders();
 		schedule = Schedule();
 		sports = Sports();
-		user  = UserModel();
 
+		await user.init();
 		await reminders.init();
 		await schedule.init();
 		await sports.init(refresh: true);
-		await user.init();
 	}
 
 	@override
