@@ -37,11 +37,11 @@ export "src/models/data/sports.dart";
 export "src/models/data/user.dart";
 
 // view models
-export "src/models/data/admin/calendar.dart";
 export "src/models/view/builders/day_builder.dart";
 export "src/models/view/builders/reminder_builder.dart";
 export "src/models/view/builders/special_builder.dart";
 export "src/models/view/builders/sports_builder.dart";
+export "src/models/view/calendar_editor.dart";
 export "src/models/view/feedback.dart";
 export "src/models/view/home.dart";
 export "src/models/view/schedule.dart";
@@ -61,7 +61,7 @@ class Models extends Model {
 		schedule = Schedule();
 		sports = Sports();
 		user  = UserModel();
-		
+
 		await reminders.init();
 		await schedule.init();
 		await sports.init(refresh: true);

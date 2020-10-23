@@ -28,9 +28,9 @@ class CalendarPage extends StatelessWidget {
 		appBar: AppBar(title: const Text("Calendar")),
 		body: SingleChildScrollView(
 			padding: const EdgeInsets.symmetric(horizontal: 5),
-			child: ModelListener<CalendarModel>(
-				model: () => CalendarModel(),
-				builder: (_, CalendarModel model, __) => ExpansionPanelList.radio(
+			child: ModelListener<CalendarEditor>(
+				model: () => CalendarEditor(),
+				builder: (_, CalendarEditor model, __) => ExpansionPanelList.radio(
 					children: [
 						for (int month = 0; month < 12; month++)
 							ExpansionPanelRadio(

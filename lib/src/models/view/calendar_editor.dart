@@ -5,11 +5,11 @@ import "package:flutter/foundation.dart" show ChangeNotifier;
 import "package:ramaz/data.dart";
 import "package:ramaz/services.dart";
 
-/// A data model to manage the calendar. 
+/// A model to manage the calendar. 
 /// 
 /// This model listens to the calendar and can modify it in the database. 
 // ignore: prefer_mixin
-class CalendarModel with ChangeNotifier {
+class CalendarEditor with ChangeNotifier {
 	/// How many days there are in every month.
 	static const int daysInMonth = 7 * 5;
 
@@ -55,9 +55,9 @@ class CalendarModel with ChangeNotifier {
 
 	/// Creates a data model to hold the calendar.
 	/// 
-	/// Initializing a [CalendarModel] automatically listens to the calendar in 
+	/// Initializing a [CalendarEditor] automatically listens to the calendar in 
 	/// Firebase. 
-	CalendarModel() {
+	CalendarEditor() {
 		for (int month = 0; month < 12; month++) {
 			subscriptions.add(
 				Services
