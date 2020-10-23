@@ -53,7 +53,7 @@ class Schedule extends Model {
 	Future<void> init() async {
 		reminders = Models.instance.reminders
 			..addListener(remindersListener);
-		user = User.fromJson(await Services.instance.database.user);
+		user = Models.instance.user.data;
 		subjects = Subject.getSubjects(
 			await Services.instance.database.getSections(user.sectionIDs)
 		);
