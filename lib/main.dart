@@ -70,6 +70,9 @@ Future<void> main({bool restart = false}) async {
 
 /// The main app widget. 
 class RamazApp extends StatelessWidget {
+	/// Whether the user is already signed in. 
+	/// 
+	/// This was already determined using [Services] in [main]. 
 	final bool isSignedIn;
 
 	/// The brightness to default to. 

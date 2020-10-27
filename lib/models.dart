@@ -47,12 +47,30 @@ export "src/models/view/home.dart";
 export "src/models/view/schedule.dart";
 export "src/models/view/sports.dart";
 
+/// Bundles all the data models together. 
+/// 
+/// Each data model is responsible for different types of data. For example,
+/// [Schedule] keeps track of the schedule (as well as associated data such as
+/// the current period) and [UserModel] reads the user data. 
+/// 
+/// Each data model inherits from [Model], so it has [init] and [dispose] 
+/// functions. This model serves to bundles those together, so that calling
+/// [init] or [dispose] on this model will call the respective functions 
+/// on all the data models. 
 class Models extends Model {
+	/// The singleton instance of this class.
 	static Models instance = Models();
 
+	/// The reminders data model. 
 	Reminders reminders;
+
+	/// The schedule data model. 
 	Schedule schedule;
+
+	/// The sports data model. 
 	Sports sports;
+
+	/// The user data model. 
 	UserModel user;
 
 	@override

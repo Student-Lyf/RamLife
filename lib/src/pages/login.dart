@@ -20,9 +20,6 @@ import "package:ramaz/widgets.dart";
 /// This page holds methods that can safely clean the errors away before
 /// prompting the user to try again. 
 class Login extends StatefulWidget {
-	/// Creates the login page. 
-	Login();
-
 	@override LoginState createState() => LoginState();
 }
 
@@ -30,6 +27,7 @@ class Login extends StatefulWidget {
 /// 
 /// This state keeps a reference to the [BuildContext].
 class LoginState extends State<Login> {
+	/// Whether the page is loading. 
 	bool isLoading = false;
 
 	@override 
@@ -151,6 +149,9 @@ class LoginState extends State<Login> {
 		onSuccess();
 	}
 
+	/// Signs the user in. 
+	/// 
+	/// Calls [Services.signIn] and [Models.init]. 
 	Future<void> signIn(BuildContext scaffoldContext) => safely(
 		scaffoldContext: scaffoldContext,
 		function: () async {
