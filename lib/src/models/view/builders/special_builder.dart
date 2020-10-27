@@ -12,8 +12,6 @@ class SpecialBuilderModel with ChangeNotifier {
 	/// 
 	/// Regular periods have numbers, others (eg, homeroom and mincha) are null.
 	List<String> periods = [];
-	final Map<String, Activity> activities = {};
-
 	List<Range> _times = [];
 	List<int> _skips = [];
 	String _name;

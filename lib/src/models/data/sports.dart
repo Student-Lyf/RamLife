@@ -17,6 +17,7 @@ class Sports extends Model {
 	/// A timer to refresh [todayGames].
 	Timer timer; 
 
+	/// Helps partition [games] by past and future. 
 	DateTime now;
 
 	/// A list of all the games taking place. 

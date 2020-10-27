@@ -23,6 +23,7 @@ class RemindersBuilderModel with ChangeNotifier {
 	/// being displayed once. 
 	bool shouldRepeat = false;
 
+	/// The name of the day. 
 	String dayName;
 
 	/// The period this reminder should be displayed.

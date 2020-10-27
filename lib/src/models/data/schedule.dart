@@ -47,6 +47,7 @@ class Schedule extends Model {
 	/// The index that represents [period]'s location in [periods].
 	int periodIndex;
 
+	/// The reminders data model. 
 	Reminders reminders;
 
 	@override
@@ -60,6 +61,7 @@ class Schedule extends Model {
 		await initCalendar();
 	}
 
+	/// Initializes the calendar. 
 	Future<void> initCalendar() async {
 		calendar = Day.getCalendar(await Services.instance.database.calendar);
 		setToday();
