@@ -137,22 +137,22 @@ class User {
 		return [
 			for (int index = 0; index < periodCount; index++)
 				if (special.homeroom == index) Period(
-					PeriodData.free,			
+					data: null,		
 					period: "Homeroom",
 					time: getTime(index),
 					activity: null,
 				) else if (special.mincha == index) Period(
-					PeriodData.free,
+					data: null,
 					period: "Mincha",
 					time: getTime(index),
 					activity: null,
 				) else if (special.skip.contains(index)) Period(
-					PeriodData.free,
+					data: null,
 					period: "Free period",
 					time: getTime(index),
 					activity: null,
 				) else Period(
-					schedule [day.name] [periodIndex] ?? PeriodData.free,
+					data: schedule [day.name] [periodIndex],
 					period: (++periodIndex).toString(),
 					time: getTime(index),
 					activity: null,

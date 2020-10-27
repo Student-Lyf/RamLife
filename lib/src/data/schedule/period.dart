@@ -32,34 +32,22 @@ class PeriodData {
 
 	/// A const constructor for a [PeriodData]. 
 	/// 
-	/// If both [id] and [room] are null, then it is a free period.
-	/// Use [PeriodData.free] instead. Otherwise, it is considered an error
-	/// to have a null [room] OR [id].
+	/// It is an error to have a null [room] or [id]. Free periods should not be 
+	/// represented by [PeriodData]s, instead use null. 
 	const PeriodData ({
 		@required this.room,
 		@required this.id
-	}) : 
-		assert (
-			room != null || id != null,
-			"Room and id must both be null or not."
-		);
-
-	const PeriodData._free() : 
-		room = null,
-		id = null;
-
-	/// A free period.
-	/// 
-	/// Use this instead of manually constructing a [PeriodData] 
-	/// to keep consistency throughout the code. 
-	static const free = PeriodData._free();
+	}) : assert (
+		room != null && id != null,
+		"Room and id must both be non-null."
+	);
 
 	/// Returns a [PeriodData] from a JSON object.
 	/// 
 	/// If the JSON object is null, then it is considered a free period.
 	/// Otherwise, both `json ["room"]` and `json ["id"]` must be non-null.
-	factory PeriodData.fromJson (Map<String, dynamic> json) => json == null
-		? PeriodData.free
+	factory PeriodData.fromJson(Map<String, dynamic> json) => json == null
+		? null
 		: PeriodData(
 			room: json ["room"],
 			id: json ["id"]
@@ -89,14 +77,6 @@ class Period {
 	/// then this will be null. 
 	final Range time;
 
-	/// The room this period is in.
-	/// 
-	/// It may be null, indicating that the student is not expected to be in class.
-	/// 
-	/// Since the room comes from a [PeriodData] object, both the room and [id] 
-	/// must both be null, or both must be non-null. See [PeriodData()] for more.
-	final String room; 
-
 	/// A String representation of this period. 
 	/// 
 	/// Since a period can be a number (like 9), or a word (like "Homeroom"),
@@ -104,14 +84,8 @@ class Period {
 	/// care whether a period is a regular class or something like homeroom.
 	final String period;
 
-	/// The id of the [Subject] for this period. 
-	/// 
-	/// It may be null, indicating that the student is not expected 
-	/// to be in a class at this time. 
-	/// 
-	/// Since the id comes from a [PeriodData] object, both the id and [room] 
-	/// must both be null, or both must be non-null. See [PeriodData()] for more.
-	final String id;
+	/// The section ID and room for this period. 
+	final PeriodData data;
 
 	/// The activity for this period. 
 	/// 
@@ -119,19 +93,18 @@ class Period {
 	final Activity activity;
 
 	/// Unpacks a [PeriodData] object and returns a Period. 
-	Period(
-		PeriodData data,
-		{@required this.time, @required this.period, @required this.activity}
-	) : 
-		room = data.room,
-		id = data.id;
+	const Period({
+		@required this.data,
+		@required this.time, 
+		@required this.period, 
+		this.activity
+	});
 
 	/// Returns a period that represents time for Mincha. 
 	/// 
 	/// Use this constructor to keep a consistent definition of "Mincha".
 	const Period.mincha(this.time, {this.activity}) :
-		room = null,
-		id = null,
+		data = null,
 		period = "Mincha";
 
 	/// This is only for debug purposes. Use [getName] for UI labels.
@@ -139,48 +112,55 @@ class Period {
 	String toString() => "Period $period";
 
 	@override
-	int get hashCode => "$period-$id".hashCode;
+	int get hashCode => "$period-${data.id}".hashCode;
 	
 	@override 
 	bool operator == (dynamic other) => other is Period && 
 		other.time == time &&
-		other.room == room && 
 		other.period == period && 
-		other.id == id;
+		other.data == data;
+
+	/// Whether this is a free period. 
+	bool get isFree => data == null;
+
+	/// The section ID for this period. 
+	/// 
+	/// See [PeriodData.id]. 
+	String get id => data?.id;
 
 	/// Returns a String representation of this period. 
 	/// 
-	/// The expected subject can be retrieved by looking up the [id].
+	/// The expected subject can be retrieved by looking up `data.id`.
 	/// 
-	/// If [period] is an integer and [id] is null, then it is a free period.
+	/// If [period] is an integer and [data] is null, then it is a free period.
 	/// Otherwise, if [period] is not a number, than it is returned instead.
-	/// Finally, the [Subject] that corresponds to [id] will be returned.
+	/// Finally, the [Subject] that corresponds to [data] will be returned.
 	/// 
 	/// For example: 
 	/// 
-	/// 1. A period with [PeriodData.free] will return "Free period"
+	/// 1. A period with null [data] will return "Free period"
 	/// 2. A period with `period == "Homeroom"` will return "Homeroom"
 	/// 3. A period with `period == "3"` will return the name of the [Subject].
 	/// 
-	String getName(Subject subject) => int.tryParse(period) != null && id == null
+	String getName(Subject subject) => int.tryParse(period) != null && isFree
 		? "Free period"
 		: subject?.name ?? period;
 
 	/// Returns a list of descriptions for this period. 
 	/// 
-	/// The expected subject can be retrieved by looking up the [id].
+	/// The expected subject can be retrieved by looking up `data.id`.
 	/// 
 	/// Useful throughout the UI. This function will: 
 	/// 
 	/// 1. Always display the time.
 	/// 2. If [period] is a number, will display the period.
-	/// 3. If [room] is not null, will display the room.
-	/// 4. If [id] is valid, will return the name of the [Subject].
+	/// 3. If `data.room` is not null, will display the room.
+	/// 4. If `data.id` is valid, will return the name of the [Subject].
 	/// 
 	List <String> getInfo (Subject subject) => [
 		if (time != null) "Time: $time",
 		if (int.tryParse(period) != null) "Period: $period",
-		if (room != null) "Room: $room",
+		if (data.room != null) "Room: ${data.room}",
 		if (subject != null) "Teacher: ${subject.teacher}",
 	];
 }
