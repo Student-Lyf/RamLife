@@ -1,6 +1,7 @@
 import "package:flutter/foundation.dart";
 
 import "package:ramaz/models.dart";
+import "package:ramaz/services.dart";
 
 /// A view model for the home page. 
 /// 
@@ -30,5 +31,22 @@ class HomeModel with ChangeNotifier {
 		Models.instance?.schedule?.removeListener(notifyListeners);
 		Models.instance?.sports?.removeListener(notifyListeners);
 		super.dispose();
+	}
+
+
+	/// Refreshes the database. 
+	/// 
+	/// This only updates the calendar and sports games, not the user profile. To
+	/// update user data, sign out and sign back in.
+	Future<void> refresh(VoidCallback onFailure) async {
+		try {
+			await Services.instance.database.updateCalendar();
+			await Services.instance.database.updateSports();
+			await Models.instance.schedule.initCalendar();
+		} catch (error) {  // ignore: avoid_catches_without_on_clauses
+			// We just want to allow the user to retry. But still rethrow.
+			onFailure();
+			rethrow;
+		}
 	}
 }

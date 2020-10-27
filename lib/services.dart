@@ -27,16 +27,39 @@ export "src/services/crashlytics.dart";
 export "src/services/notifications.dart";
 export "src/services/preferences.dart";
 
+/// Bundles all the services. 
+/// 
+/// A [Service] has an [init] and a [signIn] function. This service serves
+/// to bundle them all, so that you only need to call the functions of this 
+/// service, and they will call all the other services' functions. 
 class Services implements Service {
 	/// The singleton instance of this class. 
 	static Services instance = Services();
 
+	/// The Crashlytics interface. 
 	final Crashlytics crashlytics = Crashlytics.instance;
+
+	/// The database bundle. 
 	final Databases database = Databases();
+
+	/// The local notifications interface. 
+	/// 
+	/// Local notifications come from the app and not a server. 
 	final Notifications notifications = Notifications();
+
+	/// The push notifications interface.
+	/// 
+	/// Push notifications come from the server. 
 	final PushNotifications pushNotifications = PushNotifications.instance;
+
+	/// The shared preferences interface.
+	/// 
+	/// Useful for storing small key-value pairs. 
 	final Preferences prefs = Preferences();
 
+	/// All the services in a list. 
+	/// 
+	/// The functions of this service operate on these services. 
 	List<Service> services;
 
 	/// Bundles services together. 
