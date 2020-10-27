@@ -15,6 +15,7 @@ class PeriodTile extends StatelessWidget {
 	/// Allows [range] to be formatted according to the user's locale.
 	final TimeOfDay start, end;
 
+	/// The [Activity] for this period. 
 	final Activity activity;
 
 	/// Whether this period is skipped. 
@@ -30,7 +31,7 @@ class PeriodTile extends StatelessWidget {
 		@required this.index,
 	}) : 
 		skipped = model.skips.contains(index),
-		activity = model.activities [index],
+		activity = null,
 		start = range.start.asTimeOfDay,
 		end = range.end.asTimeOfDay;
 
