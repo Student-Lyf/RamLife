@@ -60,7 +60,11 @@ class ModelListenerState<Model extends ChangeNotifier>
   }
 
   @override void dispose() {
-    model.removeListener(listener);
+    try {
+      model.removeListener(listener);
+    } catch(_) {  // ignore: avoid_catches_without_on_clauses
+      // The model may have already been disposed. If so, we're good. 
+    }
     if (widget.dispose) {
       model.dispose();
     }

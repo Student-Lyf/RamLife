@@ -1,34 +1,52 @@
 import "package:flutter/foundation.dart";
 
 import "package:ramaz/models.dart";
+import "package:ramaz/services.dart";
 
-/// A ViewModel for the home page. 
+/// A view model for the home page. 
 /// 
-/// The home page does not actually need it's own ViewModel -- it pulls data
-/// from other DataModels. But (currently), there is no efficient way for a 
-/// widget to listen to more than one DataModel, this ViewModel was made to  
-/// consolidate them into a single listener. 
+/// This model doesn't actually do much, it just listens to any data models
+/// that are relevant to the home page. Because we're using [ChangeNotifier], 
+/// as its the only [Listenable] with a [dispose] method, we can't simply use 
+/// [Listenable.merge]. 
+/// 
+/// Additionally, the data models being listened to here will be disposed after
+/// signing in and will be unusable. That's why we can't simply pass in a data 
+/// model. Instead, we have to reference it through [Models], which will always
+/// have an up-to-date instance. 
 // ignore: prefer_mixin
 class HomeModel with ChangeNotifier {
-	/// The schedule data model. 
-	final Schedule schedule; 
-
-	/// The sports data model.
-	final Sports sports;
-
-	/// Creates a ViewModel for the home screen. 
-	HomeModel() : 
-		schedule = Models.schedule,
-		sports = Models.sports
-	{
-		schedule.addListener(notifyListeners);
-		sports.addListener(notifyListeners);
+	/// Listens to [Schedule] (and by extension, [Reminders]) and [Sports].
+	HomeModel() {
+		Models.instance.schedule.addListener(notifyListeners);
+		Models.instance.sports.addListener(notifyListeners);
 	}
 
+	// Do not attempt to clean up this code by using a list. 
+	// 
+	// These models may be disposed, and the new instance from [Models] should 
+	// be used instead. 
 	@override
 	void dispose() {
-		schedule.removeListener(notifyListeners);
-		sports.removeListener(notifyListeners);
+		Models.instance?.schedule?.removeListener(notifyListeners);
+		Models.instance?.sports?.removeListener(notifyListeners);
 		super.dispose();
+	}
+
+
+	/// Refreshes the database. 
+	/// 
+	/// This only updates the calendar and sports games, not the user profile. To
+	/// update user data, sign out and sign back in.
+	Future<void> refresh(VoidCallback onFailure) async {
+		try {
+			await Services.instance.database.updateCalendar();
+			await Services.instance.database.updateSports();
+			await Models.instance.schedule.initCalendar();
+		} catch (error) {  // ignore: avoid_catches_without_on_clauses
+			// We just want to allow the user to retry. But still rethrow.
+			onFailure();
+			rethrow;
+		}
 	}
 }

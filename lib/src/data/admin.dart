@@ -1,6 +1,6 @@
-import "package:flutter/foundation.dart";
+import "package:meta/meta.dart";
 
-import "times.dart";
+import "schedule/special.dart";
 
 /// Scopes for administrative privileges.
 /// 
@@ -40,6 +40,9 @@ class Admin {
 	/// These can be saved so the admin does not have to recreate them. 
 	final List<Special> specials;
 
+	/// This user's email. 
+	/// 
+	/// This is needed here so it can be indexed in a database. 
 	final String email;
 
 	/// Creates a user with administrative privileges. 

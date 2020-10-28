@@ -1,7 +1,9 @@
-import "package:flutter/foundation.dart";
+import "package:meta/meta.dart";
 
 import "package:ramaz/data.dart";
 import "package:ramaz/services.dart";
+
+import "model.dart";
 
 /// A DataModel that keeps the state of the user's reminders. 
 /// 
@@ -9,7 +11,7 @@ import "package:ramaz/services.dart";
 /// and all other parts of the app that want to operate on reminders should use
 /// this data model.
 // ignore: prefer_mixin
-class Reminders with ChangeNotifier {
+class Reminders extends Model {
 	/// The reminders for the user.
 	List<Reminder> reminders;
 
@@ -28,10 +30,13 @@ class Reminders with ChangeNotifier {
 	/// These reminders will be marked for deletion if they do not repeat.
 	List<int> readReminders;
 
-	/// Initializes the data model. 
+	@override
 	Future<void> init() async {
 		reminders = [
-			for (final Map<String, dynamic> json in await Services.instance.reminders)
+			for (
+				final Map<String, dynamic> json in 
+				await Services.instance.database.reminders
+			)
 				Reminder.fromJson(json)
 		];
 		readReminders = [];
@@ -77,7 +82,7 @@ class Reminders with ChangeNotifier {
 			for (final Reminder reminder in reminders)
 				reminder.toJson()
 		];
-		await Services.instance.setReminders(json);
+		await Services.instance.database.setReminders(json);
 	}
 
 	/// Checks if any reminders have been modified and removes them. 

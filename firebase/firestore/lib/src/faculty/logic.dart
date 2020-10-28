@@ -119,7 +119,7 @@ class FacultyLogic {
 			final User newFaculty = replaceHomerooms.containsKey(faculty) 
 				? replaceHomerooms[faculty]
 				: faculty.addHomeroom(  // will be overriden
-					homeroom: "TEST_HOMEROOM",
+					homeroom: "SENIOR_HOMEROOM",
 					homeroomLocation: "Unavailable",
 				);
 			schedules [newFaculty] = schedule;

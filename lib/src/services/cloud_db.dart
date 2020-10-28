@@ -1,10 +1,11 @@
 import "package:cloud_firestore/cloud_firestore.dart";
 
 import "auth.dart";
-import "service.dart";
+import "database.dart";
+import "firebase_core.dart";
 
 /// A wrapper around Cloud Firestore. 
-class CloudDatabase implements Service {
+class CloudDatabase extends Database {
 	static final DateTime _now = DateTime.now();
 
 	/// The [FirebaseFirestore service].
@@ -55,7 +56,7 @@ class CloudDatabase implements Service {
 	/// Each document has its month's data in the [calendarKey] field. 
 	/// 
 	/// Do not access documents in this collection directly.
-	/// Instead, use [calendar] or [getMonth]. 
+	/// Instead, use [calendar] or [getCalendarMonth]. 
 	static final CollectionReference calendarCollection =
 		firestore.collection("calendar");
 
@@ -114,18 +115,16 @@ class CloudDatabase implements Service {
 		: "${_now.year - 1}-${_now.year}"
 	);
 
-	@override
-	Future<bool> get isReady async => Auth.isReady;
+	// Service methods
 
 	@override
-	Future<void> reset() => Auth.signOut();
+	Future<void> init() => FirebaseCore.init();
 
-	/// Signs the user in, and initializes their reminders. 
+	/// Signs the user in.
+	/// 
+	/// If the user does not have a reminders document, this function creates it.
 	@override
-	Future<void> initialize() async {
-		if (Auth.isReady) {
-			return;
-		}
+	Future<void> signIn() async {
 		await Auth.signIn();
 		final DocumentSnapshot remindersSnapshot = await remindersDocument.get();
 		if (!remindersSnapshot.exists) {
@@ -133,9 +132,23 @@ class CloudDatabase implements Service {
 		}
 	}
 
+	// Database methods. 
+
 	@override
-	Future<Map<String, dynamic>> get user async => 
-		(await userDocument.get()).data();
+	Future<bool> get isSignedIn async => Auth.isSignedIn;
+
+	@override
+	Future<void> signOut() => Auth.signOut();
+
+	@override
+	Future<Map<String, dynamic>> get user async {
+		final DocumentSnapshot snapshot = await userDocument.get();
+		if (!snapshot.exists) {
+			throw StateError("User ${Auth.email} does not exist in the database");
+		} else {
+			return snapshot.data();
+		}
+	}
 
 	/// No-op -- The user cannot edit their own profile. 
 	/// 
@@ -144,18 +157,9 @@ class CloudDatabase implements Service {
 	@override
 	Future<void> setUser(Map<String, dynamic> json) async {}
 
-	/// Gets an individual section. 
-	/// 
-	/// Do not use directly. Use [getSections] instead. 
+	@override
 	Future<Map<String, dynamic>> getSection(String id) async => 
 		(await sectionCollection.doc(id).get()).data();
-
-	@override
-	Future<Map<String, Map<String, dynamic>>> getSections(Set<String> ids)
-		async => {
-			for (final String id in ids)
-				id: await getSection(id)
-		};
 
 	/// No-op -- The user cannot edit the courses list. 
 	/// 
@@ -163,23 +167,13 @@ class CloudDatabase implements Service {
 	@override
 	Future<void> setSections(Map<String, Map<String, dynamic>> json) async {}
 
-	/// Gets a month of the calendar. 
-	/// 
-	/// Do not use directly. Use [calendar].
-	Future<Map<String, dynamic>> getMonth(int month) async {
+	@override
+	Future<Map<String, dynamic>> getCalendarMonth(int month) async {
 		final DocumentReference document = calendarCollection.doc(month.toString());
 		final DocumentSnapshot snapshot = await document.get();
 		final Map<String, dynamic> data = snapshot.data();
 		return data;
 	}
-
-	@override
-	Future<List<List<Map<String, dynamic>>>> get calendar async => [
-		for (int month = 1; month <= 12; month++)
-			for (final dynamic json in (await getMonth(month)) [calendarKey]) [
-				Map<String, dynamic>.from(json)
-			]
-	];
 
 	@override 
 	Future<void> setCalendar(int month, Map<String, dynamic> json) => 
@@ -221,12 +215,12 @@ class CloudDatabase implements Service {
 		sportsDocument.set({sportsKey: json});
 
 	/// Submits feedback. 
-	static Future<void> sendFeedback(
+	Future<void> sendFeedback(
 		Map<String, dynamic> json
 	) => feedbackCollection.doc().set(json);
 
 	/// Listens to a month for changes in the calendar. 
-	static Stream<List<Map<String, dynamic>>> getCalendarStream(int month) => 
+	Stream<List<Map<String, dynamic>>> getCalendarStream(int month) => 
 		calendarCollection.doc(month.toString()).snapshots().map(
 			(DocumentSnapshot snapshot) => [
 				for (final dynamic entry in snapshot.data() ["calendar"])

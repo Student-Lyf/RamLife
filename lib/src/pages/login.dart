@@ -4,6 +4,7 @@ import "package:flutter/services.dart" show PlatformException;
 
 import "package:url_launcher/url_launcher.dart";
 
+import "package:ramaz/constants.dart";
 import "package:ramaz/models.dart";
 import "package:ramaz/services.dart";
 import "package:ramaz/widgets.dart";
@@ -19,9 +20,6 @@ import "package:ramaz/widgets.dart";
 /// This page holds methods that can safely clean the errors away before
 /// prompting the user to try again. 
 class Login extends StatefulWidget {
-	/// Creates the login page. 
-	Login();
-
 	@override LoginState createState() => LoginState();
 }
 
@@ -29,6 +27,7 @@ class Login extends StatefulWidget {
 /// 
 /// This state keeps a reference to the [BuildContext].
 class LoginState extends State<Login> {
+	/// Whether the page is loading. 
 	bool isLoading = false;
 
 	@override 
@@ -36,8 +35,8 @@ class LoginState extends State<Login> {
 		super.initState();
 		// "To log in, one must first log out"
 		// -- Levi Lesches, class of '21, creator of this app, 2019
-		Services.instance.reset();
-		Models.reset();
+		Services.instance.database.signOut();
+		Models.instance.dispose();
 	}
 
 	@override
@@ -67,7 +66,7 @@ class LoginState extends State<Login> {
 					FlatButton.icon(
 						icon: Logos.google,
 						label: const Text("Sign in with Google"),
-						onPressed: () => login(context),
+						onPressed: () => signIn(context),
 					),
 					const Spacer(flex: 2),
 				]
@@ -83,8 +82,11 @@ class LoginState extends State<Login> {
 	/// the user from logging in.
 	Future<void> onError(dynamic error, StackTrace stack) async {
 		setState(() => isLoading = false);
-		await Services.instance.reset();
-		Models.reset();
+		final Crashlytics crashlytics = Services.instance.crashlytics;
+		await crashlytics.log("Attempted to log in");
+		await crashlytics.setEmail(Auth.email);
+		await Services.instance.database.signOut();
+		Models.instance.dispose();
 		// ignore: unawaited_futures
 		showDialog (
 			context: context,
@@ -108,9 +110,7 @@ class LoginState extends State<Login> {
 				]
 			)
 		);
-		await Crashlytics.setUserEmail(Auth.email);
-		Crashlytics.log("Attempted to log in");
-		await Crashlytics.recordError(error, stack);
+		await crashlytics.recordError(error, stack);
 	}
 
 	/// Safely execute a function.
@@ -129,55 +129,31 @@ class LoginState extends State<Login> {
 				Scaffold.of(scaffoldContext).showSnackBar (
 					const SnackBar (content: Text ("No Internet")),
 				);
-				setState(() => isLoading = false);
-				return;
+				return setState(() => isLoading = false);
 			} else {
-				await onError(error, stack);
-				return;
+				return onError(error, stack);
 			}
-		// ignore: avoid_catches_without_on_clauses
-		} catch (error, stack) {
-			await onError(error, stack);
-			return;
+		} on NoAccountException {
+			return setState(() => isLoading = false);
+		} catch (error, stack) {  // ignore: avoid_catches_without_on_clauses
+			return onError(error, stack);
 		}
 		onSuccess();
 	}
 
-	/// Downloads the user data and initializes the app.
-	Future<void> downloadData(
-		String username, 
-		BuildContext scaffoldContext
-	) => safely(
+	/// Signs the user in. 
+	/// 
+	/// Calls [Services.signIn] and [Models.init]. 
+	Future<void> signIn(BuildContext scaffoldContext) => safely(
+		scaffoldContext: scaffoldContext,
 		function: () async {
-			await Services.instance.initialize();
-			await Models.init();
-		},
-		onSuccess: () => Navigator.of(context).pushReplacementNamed("home"),
-		scaffoldContext: scaffoldContext,
-	);
-	
-	/// Signs the user into their Google account.  	
-	/// 
-	/// If the user cancels the operation, cancel the loading animation. 
-	/// Otherwise, download the user's data and start the main app. 
-	/// See [downloadData].
-	/// 
-	/// This function needs two contexts. The first one can locate the
-	/// [Scaffold]. But since that will rebuild (because of the loading bar), 
-	/// we need another context that is higher up the tree than that.
-	/// The tighter context is passed in as [scaffoldContext], and the higher
-	/// context is [State.context]. 
-	Future<void> login(BuildContext scaffoldContext) async => safely(
-		function: Auth.signIn,
-		onSuccess: () async {
 			setState(() => isLoading = true);
-			final String email = Auth.email;
-			if (email == null) {
-				setState(() => isLoading = false);
-				return;
-			}
-			await downloadData(email.toLowerCase(), scaffoldContext);
+			await Services.instance.signIn();
+			await Models.instance.init();
 		},
-		scaffoldContext: scaffoldContext,
+		onSuccess: () {
+			setState(() => isLoading = false);
+			Navigator.of(context).pushReplacementNamed(Routes.home);
+		},
 	);
 }

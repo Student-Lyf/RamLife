@@ -1,15 +1,14 @@
 import "dart:async" show Timer;
 
-import "package:flutter/foundation.dart";
-
 import "package:ramaz/services.dart";
 import "package:ramaz/data.dart";
 import "package:ramaz/models.dart";
+
+import "model.dart";
 import "reminders.dart";
 
 /// A data model for the user's schedule.
-// ignore: prefer_mixin
-class Schedule with ChangeNotifier {
+class Schedule extends Model {
 	/// The current date.
 	/// 
 	/// This helps track when the day has changed. 
@@ -18,8 +17,8 @@ class Schedule with ChangeNotifier {
 	/// How often to refresh the schedule.
 	static const timerInterval = Duration (minutes: 1);
 
-	/// The student object for the user. 
-	Student student;
+	/// The current user. 
+	User user;
 
 	/// The subjects this user has. 
 	Map<String, Subject> subjects;
@@ -48,32 +47,31 @@ class Schedule with ChangeNotifier {
 	/// The index that represents [period]'s location in [periods].
 	int periodIndex;
 
-	/// Initializes the schedule model.
-	Schedule(
-	) {
-		Models.reminders.addListener(remindersListener);
-	}
+	/// The reminders data model. 
+	Reminders reminders;
 
-	/// Does the main initialization work for the schedule model.
-	/// 
-	/// Should be called whenever there is new data for this model to work with.
+	@override
 	Future<void> init() async {
-		final Services services = Services.instance;
-		student = Student.fromJson(await services.user);
-		subjects = Subject.getSubjects(await services.getSections(student.getIds()));
+		reminders = Models.instance.reminders
+			..addListener(remindersListener);
+		user = Models.instance.user.data;
+		subjects = Subject.getSubjects(
+			await Services.instance.database.getSections(user.sectionIDs)
+		);
 		await initCalendar();
 	}
 
+	/// Initializes the calendar. 
 	Future<void> initCalendar() async {
-		calendar = Day.getCalendar(await Services.instance.calendar);
+		calendar = Day.getCalendar(await Services.instance.database.calendar);
 		setToday();
 		notifyListeners();
 	}
 
 	@override 
 	void dispose() {
-		Models.reminders.removeListener(remindersListener);
-		timer.cancel();
+		Models.instance.reminders?.removeListener(remindersListener);
+		timer?.cancel();
 		super.dispose();
 	}
 
@@ -103,7 +101,7 @@ class Schedule with ChangeNotifier {
 		timer?.cancel();
 		if (today.school) {
 			// initialize periods.
-			periods = student.getPeriods(today);
+			periods = user.getPeriods(today);
 			// initialize the current period.
 			onNewPeriod(first: true);
 			// initialize the timer. See comments for [timer].
@@ -123,8 +121,6 @@ class Schedule with ChangeNotifier {
 			now = newDate;
 			return setToday();
 		}
-
-		updateReminders(scheduleNotifications: first);  
 		
 		// no school today.
 		if (!today.school) {  
@@ -138,12 +134,12 @@ class Schedule with ChangeNotifier {
 
 		// Maybe the day changed
 		if (newIndex != null && newIndex == periodIndex) {
-			// return notifyListeners();
 			return;
 		}
 
 		// period changed since last checked.
 		periodIndex = newIndex;
+		updateReminders(scheduleNotifications: first);  
 
 		// School ended
 		if (periodIndex == null) { 
@@ -156,8 +152,6 @@ class Schedule with ChangeNotifier {
 		nextPeriod = periodIndex < periods.length - 1 
 			? periods [periodIndex + 1] 
 			: null;
-
-		updateReminders(scheduleNotifications: first);  
 	}
 
 	/// Updates the reminders given the current period.
@@ -168,19 +162,19 @@ class Schedule with ChangeNotifier {
 	/// response to changed reminders. See [scheduleReminders] for more details
 	/// on scheduling notifications.
 	void updateReminders({bool scheduleNotifications = false}) {
-		Models.reminders
-			..currentReminders = Models.reminders.getReminders(
+		reminders
+			..currentReminders = reminders.getReminders(
 				period: period?.period,
 				subject: subjects [period?.id]?.name,
 				dayName: today.name,
 			)
-			..nextReminders = Models.reminders.getReminders(
+			..nextReminders = reminders.getReminders(
 				period: nextPeriod?.period,
 				subject: subjects [nextPeriod?.id]?.name,
 				dayName: today.name,
 			);
 
-		(Models.reminders.currentReminders ?? []).forEach(Models.reminders.markShown);
+		(reminders.currentReminders ?? []).forEach(reminders.markShown);
 
 		if (scheduleNotifications) {
 			Future(scheduleReminders);
@@ -191,9 +185,9 @@ class Schedule with ChangeNotifier {
 	/// Schedules notifications for today's reminders. 
 	/// 
 	/// Starting from the current period, schedules a notification for the period
-	/// using [Notifications.scheduleNotification].
+	/// using [Notifications.scheduleNotification]
 	Future<void> scheduleReminders() async {
-		Notifications.cancelAll();
+		Services.instance.notifications.cancelAll();
 		final DateTime now = DateTime.now();
 
 		// No school today/right now
@@ -204,12 +198,12 @@ class Schedule with ChangeNotifier {
 		// For all periods starting from periodIndex, schedule applicable reminders.
 		for (int index = periodIndex; index < periods.length; index++) {
 			final Period period = periods [index];
-			for (final int reminderIndex in Models.reminders.getReminders(
+			for (final int reminderIndex in reminders.getReminders(
 				period: period?.period,
 				subject: subjects [period?.id]?.name,
 				dayName: today.name,
 			)) {
-				Notifications.scheduleNotification(
+				Services.instance.notifications.scheduleNotification(
 					date: DateTime(
 						now.year, 
 						now.month, 
@@ -219,23 +213,29 @@ class Schedule with ChangeNotifier {
 					),
 					notification: Notification.reminder(
 						title: "New reminder",
-						message: Models.reminders.reminders [reminderIndex].message,
+						message: reminders.reminders [reminderIndex].message,
 					)
 				);
 			}
 		}
 	}
 
+	/// Determines whether a reminder is compatible with the user's schedule. 
+	/// 
+	/// If [User.dayNames] has changed, then reminders with [PeriodReminderTime]
+	/// might fail. Similarly, if the user changes classes, [SubjectReminderTime]
+	/// might fail. This method helps the app spot these inconsistencies and get
+	/// rid of the problematic reminders. 
 	bool isValidReminder(Reminder reminder) {
 		switch(reminder.time.type) {
 			case ReminderTimeType.period: 
 				final PeriodReminderTime time = reminder.time;
-				final Iterable<String> dayNames = student.schedule.keys;
+				final Iterable<String> dayNames = user.schedule.keys;
 				return dayNames.contains(time.dayName) 
-					&& int.parse(time.period) <= student.schedule [time.dayName].length;
+					&& int.parse(time.period) <= user.schedule [time.dayName].length;
 			case ReminderTimeType.subject: 
 				final SubjectReminderTime time = reminder.time;
-				return subjects.keys.contains(time.name);
+				return subjects.values.any((Subject subject) => subject.name == time.name);
 			default: throw StateError("Reminder <$reminder> has invalid ReminderTime");
 		}
 	}

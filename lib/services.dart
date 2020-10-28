@@ -15,163 +15,71 @@
 /// 
 library ramaz_services;
 
-import "package:firebase_core/firebase_core.dart";
-import "package:shared_preferences/shared_preferences.dart";
-
-import "src/services/auth.dart";
-import "src/services/cloud_db.dart";
-import "src/services/fcm.dart";
-import "src/services/local_db.dart";
+import "src/services/crashlytics.dart";
+import "src/services/databases.dart";
+import "src/services/notifications.dart";
 import "src/services/preferences.dart";
+import "src/services/push_notifications.dart";
 import "src/services/service.dart";
 
 export "src/services/auth.dart";
-export "src/services/cloud_db.dart";
 export "src/services/crashlytics.dart";
 export "src/services/notifications.dart";
 export "src/services/preferences.dart";
 
+/// Bundles all the services. 
+/// 
+/// A [Service] has an [init] and a [signIn] function. This service serves
+/// to bundle them all, so that you only need to call the functions of this 
+/// service, and they will call all the other services' functions. 
 class Services implements Service {
 	/// The singleton instance of this class. 
-	static Services instance;
+	static Services instance = Services();
 
-	static Future<void> init() async {
-		await Firebase.initializeApp();
-		final SharedPreferences prefs = await SharedPreferences.getInstance();
-		Services.instance = Services(prefs);
-	}
+	/// The Crashlytics interface. 
+	final Crashlytics crashlytics = Crashlytics.instance;
 
-	final Preferences prefs;
+	/// The database bundle. 
+	final Databases database = Databases();
 
-	/// Provides a connection to the online database. 
-	final CloudDatabase cloudDatabase = CloudDatabase();
-
-	/// The local device storage.
+	/// The local notifications interface. 
 	/// 
-	/// Used to minimize the number of requests to the database and keep the app
-	/// offline-first. 
-	final LocalDatabase localDatabase;
+	/// Local notifications come from the app and not a server. 
+	final Notifications notifications = Notifications();
 
-	/// Creates a wrapper around the services. 
-	Services(SharedPreferences prefs) : 
-		prefs = Preferences(prefs),
-		localDatabase = LocalDatabase();
+	/// The push notifications interface.
+	/// 
+	/// Push notifications come from the server. 
+	final PushNotifications pushNotifications = PushNotifications.instance;
 
-	@override
-	Future<bool> get isReady async {
-		// This can be shortened but DON'T 
-		// 
-		// The && operator short-circuits -- meaning if cloudDatabase is not ready
-		// then this getter won't even check localdatabase. But the [isReady] getter
-		// also doubles as a setup method, so it NEEDS to be called. 
-		// 
-		// Doing it this way ensures that all services will be setup even if a [reset]
-		// is needed
-		final bool cloudIsReady = await cloudDatabase.isReady;
-		final bool localIsReady = await localDatabase.isReady;
-		return cloudIsReady && localIsReady;
+	/// The shared preferences interface.
+	/// 
+	/// Useful for storing small key-value pairs. 
+	final Preferences prefs = Preferences();
+
+	/// All the services in a list. 
+	/// 
+	/// The functions of this service operate on these services. 
+	List<Service> services;
+
+	/// Bundles services together. 
+	/// 
+	/// Also initializes [services].
+	Services() {
+		services = [prefs, database, crashlytics, notifications];
 	}
 
 	@override
-	Future<void> reset() async {
-		await localDatabase.reset();
-		await cloudDatabase.reset();
-	}
-
-	@override 
-	Future<void> initialize() async {
-		await cloudDatabase.initialize();
-
-		await localDatabase.setUser(await cloudDatabase.user);
-		await localDatabase.setReminders(await cloudDatabase.reminders);
-
-		await updateSports();
-		await updateCalendar();
-
-		if (await Auth.isAdmin) {
-			await localDatabase.setAdmin(await cloudDatabase.admin);
-		}
-
-		// Register for FCM notifications. 
-		// We don't care when this happens
-		// ignore: unawaited_futures 
-		Future(
-			() async {
-				await FCM.registerNotifications(
-					{
-						"refresh": initialize,
-						"updateCalendar": updateCalendar,
-						"updateSports": updateSports,
-					}
-				);
-				await FCM.subscribeToTopics();
-			}
-		);
-	}
-
-	@override
-	Future<Map<String, dynamic>> get user => localDatabase.user;
-
-	@override
-	Future<void> setUser(_) async {}  // user cannot modify data
-
-	@override
-	Future<Map<String, Map<String, dynamic>>> getSections(Set<String> ids) async {
-		Map<String, Map<String, dynamic>> result = 
-			await localDatabase.getSections(ids);
-		if (result.values.every((value) => value == null)) {
-			result = await cloudDatabase.getSections(ids);
-			await localDatabase.setSections(result);
-		}
-		return result;
-	}
-
-	@override
-	Future<void> setSections(_) async {}  // user cannot modify sections
-
-	@override
-	Future<List<List<Map<String, dynamic>>>> get calendar => 
-		localDatabase.calendar;
-
-	@override
-	Future<void> setCalendar(int month, Map<String, dynamic> json) async {
-		await cloudDatabase.setCalendar(month, json);
-		await localDatabase.setCalendar(month, json);
-	}
-
-	@override
-	Future<List<Map<String, dynamic>>> get reminders => localDatabase.reminders;
-
-	@override
-	Future<void> setReminders(List<Map<String, dynamic>> json) async {
-		await cloudDatabase.setReminders(json);
-		await localDatabase.setReminders(json);
-	}
-
-	@override
-	Future<Map<String, dynamic>> get admin => localDatabase.admin;
-
-	@override
-	Future<void> setAdmin(Map<String, dynamic> json) async {
-		await cloudDatabase.setAdmin(json);
-		await localDatabase.setAdmin(json);
-	}
-
-	@override
-	Future<List<Map<String, dynamic>>> get sports => localDatabase.sports;
-
-	@override
-	Future<void> setSports(List<Map<String, dynamic>> json) async {
-		await cloudDatabase.setSports(json);
-		await localDatabase.setSports(json);
-	}
-
-	Future<void> updateCalendar() async {
-		for (int month = 1; month <= 12; month++) {
-			await localDatabase.setCalendar(month, await cloudDatabase.getMonth(month));
+	Future<void> init() async {
+		for (final Service service in services) {
+			await service.init();
 		}
 	}
 
-	Future<void> updateSports() async => 
-		localDatabase.setSports(await cloudDatabase.sports);
+	@override
+	Future<void> signIn() async {
+		for (final Service service in services) {
+			await service.signIn();
+		}
+	}
 }

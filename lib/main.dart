@@ -2,7 +2,6 @@ import "dart:async" show runZoned;
 
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
-import "package:flutter/foundation.dart" show kDebugMode;
 
 import "package:ramaz/constants.dart";  // for route keys
 import "package:ramaz/models.dart";
@@ -14,34 +13,30 @@ Future<void> main({bool restart = false}) async {
 	// This shows a splash screen but secretly 
 	// determines the desired `platformBrightness`
 	Brightness brightness;
-	runZoned(
-		() => runApp (
-			SplashScreen(
-				setBrightness: 
-					(Brightness platform) => brightness = platform
-			)
-		),
-		onError: Crashlytics.recordError,
+	runApp(
+		SplashScreen(
+			setBrightness: 
+				(Brightness platform) => brightness = platform
+		)
 	);
 	await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 
 	// This initializes services -- it is always safe. 
-	await Services.init();
-	bool isReady;
+	await Services.instance.init();
+	final Crashlytics crashlytics = Services.instance.crashlytics;
+	final bool isSignedIn = await Services.instance.database.isSignedIn;
 	try {
-		isReady = await Services.instance.isReady;
-		// Checks whther services are ready -- REALLY shouldn't error, but might
-		if (isReady) {
+		if (isSignedIn) {
 			// This initializes data models -- it may error. 
-			await Models.init();
+			await Models.instance.init();
 		}
 	// We want to at least try again on ANY error. 
 	// ignore: avoid_catches_without_on_clauses
 	} catch (_) {
 		debugPrint("Error on main.");
-		if (!restart && !kDebugMode) {
+		if (!restart) {
 			debugPrint("Trying again...");
-			await Services.instance.reset();
+			await Services.instance.database.signOut();
 			return main(restart: true);
 		} else {
 			rethrow;
@@ -56,22 +51,28 @@ Future<void> main({bool restart = false}) async {
 			: Brightness.dark;
 	}
 
+	// Turns Crashlyitcs off in debug mode. 
+  await crashlytics.toggle(!kDebugMode);
+
 	// Now we are ready to run the app (with error catching)
-	FlutterError.onError = Crashlytics.recordFlutterError;
+	FlutterError.onError = crashlytics.recordFlutterError;
 	runZoned(
 		() => runApp (
 			RamazApp (
-				isReady: isReady,
+				isSignedIn: isSignedIn,
 				brightness: brightness,
 			)
 		),
-		onError: Crashlytics.recordError,
+		onError: crashlytics.recordError,
 	);
 }
 
 /// The main app widget. 
 class RamazApp extends StatelessWidget {
-	final bool isReady;
+	/// Whether the user is already signed in. 
+	/// 
+	/// This was already determined using [Services] in [main]. 
+	final bool isSignedIn;
 
 	/// The brightness to default to. 
 	final Brightness brightness;
@@ -79,7 +80,7 @@ class RamazApp extends StatelessWidget {
 	/// Creates the main app widget.
 	const RamazApp ({
 		@required this.brightness,
-		@required this.isReady,
+		@required this.isSignedIn,
 	});
 
 	@override 
@@ -131,7 +132,7 @@ class RamazApp extends StatelessWidget {
 			),
 		),
 		builder: (BuildContext context, ThemeData theme) => MaterialApp (
-			home: isReady ? HomePage() : Login(),
+			home: isSignedIn ? HomePage() : Login(),
 			title: "Ram Life",
 			color: RamazColors.blue,
 			theme: theme,
