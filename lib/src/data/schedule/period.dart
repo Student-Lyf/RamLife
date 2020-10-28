@@ -160,7 +160,7 @@ class Period {
 	List <String> getInfo (Subject subject) => [
 		if (time != null) "Time: $time",
 		if (int.tryParse(period) != null) "Period: $period",
-		if (data.room != null) "Room: ${data.room}",
+		if (data != null) "Room: ${data.room}",
 		if (subject != null) "Teacher: ${subject.teacher}",
 	];
 }
