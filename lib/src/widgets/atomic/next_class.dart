@@ -74,7 +74,7 @@ class NextClass extends StatelessWidget {
 				title: modified ? "Times unavailable" : 
 					period == null
 						? "School is over"
-						: "${next ? 'Up next' : 'Right now'}: ${subject?.name ?? period.period}",
+						: "${next ? 'Up next' : 'Right now'}: ${period.getName(subject)}"
 			),
 			if (period?.activity != null) 
 				SpecialTile(child: ActivityTile(period.activity)),
