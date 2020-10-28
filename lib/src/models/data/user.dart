@@ -28,7 +28,7 @@ class UserModel extends Model {
 	/// 
 	/// Unlike [Auth.isAdmin], which authenticates with the server, this getter
 	/// simply checks to see if [admin] was initialized. 
-	bool get isAdmin => admin == null;
+	bool get isAdmin => admin != null;
 
 	@override
 	Future<void> init() async {
