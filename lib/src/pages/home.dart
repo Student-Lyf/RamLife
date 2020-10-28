@@ -5,12 +5,15 @@ import "package:ramaz/pages.dart";
 import "package:ramaz/widgets.dart";
 
 /// The homepage of the app. 
-
+class HomePage extends StatelessWidget {
 	/// The reminders data model. 
 	final Reminders remindersModel; 
 
 	/// The sports data model. 
 	final Sports sportsModel;
+
+	/// The schedule data model. 
+	final Schedule scheduleModel;
 
 	/// The home page. 
 	/// 
@@ -45,7 +48,7 @@ import "package:ramaz/widgets.dart";
 			appBarBuilder: (isShowingSchedule) => AppBar (
 				title: const Text ("Home"),
 				actions: [
-					if (model.schedule.hasSchool && !isShowingSchedule) Builder (
+					if (scheduleModel.hasSchool && !isShowingSchedule) Builder (
 						builder: (BuildContext context) => FlatButton(
 							textColor: Colors.white,
 							onPressed: () => Scaffold.of(context).openEndDrawer(),
@@ -73,7 +76,7 @@ import "package:ramaz/widgets.dart";
 				builder: (BuildContext context) => RefreshIndicator(
 					onRefresh: () => refresh(context, model),
 					child: ListView (
-						padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+						padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
 						children: [
 							RamazLogos.ramRectangle,
 							const Divider(),

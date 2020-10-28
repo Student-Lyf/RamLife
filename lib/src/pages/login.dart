@@ -85,8 +85,6 @@ class LoginState extends State<Login> {
 		final Crashlytics crashlytics = Services.instance.crashlytics;
 		await crashlytics.log("Attempted to log in");
 		await crashlytics.setEmail(Auth.email);
-		await Services.instance.database.signOut();
-		Models.instance.dispose();
 		// ignore: unawaited_futures
 		showDialog (
 			context: context,
@@ -109,7 +107,10 @@ class LoginState extends State<Login> {
 					)
 				]
 			)
-		);
+		).then((_) async {		
+			await Services.instance.database.signOut();
+			Models.instance.dispose();
+		});
 		await crashlytics.recordError(error, stack);
 	}
 

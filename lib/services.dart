@@ -45,7 +45,7 @@ class Services implements Service {
 	/// The local notifications interface. 
 	/// 
 	/// Local notifications come from the app and not a server. 
-	final Notifications notifications = Notifications();
+	final Notifications notifications = Notifications.instance;
 
 	/// The push notifications interface.
 	/// 

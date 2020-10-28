@@ -1,39 +1,39 @@
-// ignore_for_file: avoid_unused_constructor_parameters
-// ignore_for_file: public_member_api_docs
-class Notification {
-	Notification({
-		dynamic title,
-		dynamic message,
-		dynamic android,
-		dynamic ios,
-	}); 
+import "package:meta/meta.dart";
 
-	/// The optimal configuration for a reminder notification.
-	Notification.reminder({
-		dynamic title,
-		dynamic message,
-		bool root = false
-	});
-}
+import "../notifications.dart";
 
-// ignore: avoid_classes_with_only_static_members
-/// An abstract wrapper around the notifications plugin. 
+/// The web implementation of a reminders notification. 
 /// 
-/// This class uses static methods to send and schedule
-/// notifications.
-class Notifications {
-	/// Sends a notification immediately. 
-	static void sendNotification(Notification notification) {}
+/// Notifications are not yet supported on web. 
+Notification getReminderNotification({
+	@required String title, 
+	@required String message,
+}) => null;
 
-	/// Schedules a notification for [date]. 
-	/// 
-	/// If [date] is in the past, the notification will go off immediately.
-	static void scheduleNotification({
-		Notification notification,
-		DateTime date, 
-	}) {}
+/// The web implementation of the [Notifications] service. 
+/// 
+/// Notifications are not yet supported on web. 
+Notifications get notifications => StubNotifications();
 
-	/// Cancels all scheduled notifications, as well as 
-	/// dismissing all present notifications. 
-	static void cancelAll() {} 
+/// The notifications service for the web.
+/// 
+/// Notifications are not yet supported on web. 
+class StubNotifications extends Notifications {
+	@override
+	Future<void> init() async {}
+
+	@override
+	Future<void> signIn() async {}
+
+	@override
+	void sendNotification(Notification notification) {}
+
+	@override
+	void scheduleNotification({Notification notification, DateTime date}) {}
+
+	@override
+	void cancelAll() {}
+
+	@override
+	Future<List<String>> get pendingNotifications async => [];
 }
