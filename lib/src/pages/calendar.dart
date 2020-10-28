@@ -24,7 +24,7 @@ class CalendarPage extends StatelessWidget {
 	];
 
 	@override
-	Widget build(BuildContext context) => Scaffold(
+	Widget build(BuildContext context) => AdaptiveScaffold(
 		appBar: AppBar(title: const Text("Calendar")),
 		body: SingleChildScrollView(
 			padding: const EdgeInsets.symmetric(horizontal: 5),

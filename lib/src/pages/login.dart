@@ -47,38 +47,30 @@ class LoginState extends State<Login> {
 				BrightnessChanger.iconButton(prefs: Services.instance.prefs),
 			],
 		),
-		body: ListView (
-			children: [
-				if (isLoading) const LinearProgressIndicator(),
-				Padding (
-					padding: const EdgeInsets.all (20),
-					child: Column (
-						children: [
-							if (ThemeChanger.of(context).brightness == Brightness.light) ClipRRect(
-								borderRadius: BorderRadius.circular (20),
+		body: Center(
+			child: Column(
+				children: [
+					if (isLoading) const LinearProgressIndicator(minHeight: 8),
+					const Spacer(flex: 2),
+					SizedBox(
+						height: 300, 
+						width: 300, 
+						child: ThemeChanger.of(context).brightness == Brightness.light
+							? ClipRRect(
+								borderRadius: BorderRadius.circular(20),
 								child: RamazLogos.teal
-							)
-							else RamazLogos.ramSquareWords, 
-							const SizedBox (height: 50),
-							Center (
-								child: Container (
-									decoration: BoxDecoration (
-										border: Border.all(color: Colors.blue),
-										borderRadius: BorderRadius.circular(20),
-									),
-									child: Builder (
-										builder: (BuildContext context) => ListTile (
-											leading: Logos.google,
-											title: const Text ("Sign in with Google"),
-											onTap: () => signIn(context),
-										)
-									)
-								)
-							)
-						]
-					)
-				)
-			]
+							) : RamazLogos.ramSquareWords
+					),
+					// const SizedBox(height: 100),
+					const Spacer(flex: 1),
+					FlatButton.icon(
+						icon: Logos.google,
+						label: const Text("Sign in with Google"),
+						onPressed: () => signIn(context),
+					),
+					const Spacer(flex: 2),
+				]
+			)
 		)
 	);
 
@@ -93,8 +85,6 @@ class LoginState extends State<Login> {
 		final Crashlytics crashlytics = Services.instance.crashlytics;
 		await crashlytics.log("Attempted to log in");
 		await crashlytics.setEmail(Auth.email);
-		await Services.instance.database.signOut();
-		Models.instance.dispose();
 		// ignore: unawaited_futures
 		showDialog (
 			context: context,
@@ -117,7 +107,10 @@ class LoginState extends State<Login> {
 					)
 				]
 			)
-		);
+		).then((_) async {		
+			await Services.instance.database.signOut();
+			Models.instance.dispose();
+		});
 		await crashlytics.recordError(error, stack);
 	}
 

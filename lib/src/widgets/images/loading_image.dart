@@ -29,14 +29,12 @@ class LoadingImage extends StatefulWidget {
 	/// roughly the same size as the image will be when it loads. 
 	final double aspectRatio;
 
-	/// The path of the image. 
-	/// 
-	/// All [LoadingImage]s use [AssetImage]s. 
-	final String path;
+	/// The image being loaded. 
+	final ImageProvider image;
 
 	/// Creates an image with a placeholder while it loads. 
 	const LoadingImage(
-		this.path,
+		this.image,
 		{this.aspectRatio}
 	);
 
@@ -49,9 +47,6 @@ class LoadingImage extends StatefulWidget {
 /// This state handles loading the image in the background and switching 
 /// out the placeholder animation with the actual image when it loads. 
 class LoadingImageState extends State<LoadingImage> {
-	/// The image to be loaded. 
-	ImageProvider image;
-
 	/// A listener that will notify when the image has loaded. 
 	ImageStreamListener listener;
 
@@ -66,8 +61,7 @@ class LoadingImageState extends State<LoadingImage> {
 
 	@override void initState() {
 		super.initState();
-		image = AssetImage(widget.path);
-		stream = image.resolve(const ImageConfiguration());
+		stream = widget.image.resolve(const ImageConfiguration());
 		listener = ImageStreamListener(onLoad);
 		stream.addListener(listener);
 	}
@@ -85,7 +79,7 @@ class LoadingImageState extends State<LoadingImage> {
 			info.image.height.toDouble()
 		).aspectRatio;
 		if (widget.aspectRatio == null) {
-			debugPrint("LoadingImage: Aspect ratio for ${widget.path} is $aspectRatio");
+			debugPrint("LoadingImage: Aspect ratio for ${widget.image} is $aspectRatio");
 		}
 	}
 
@@ -96,7 +90,7 @@ class LoadingImageState extends State<LoadingImage> {
 		)
 		: AspectRatio (
 			aspectRatio: aspectRatio,
-			child: Image (image: image)
+			child: Image (image: widget.image)
 		);
 
 	@override void dispose () {

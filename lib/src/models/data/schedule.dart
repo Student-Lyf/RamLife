@@ -55,9 +55,7 @@ class Schedule extends Model {
 		reminders = Models.instance.reminders
 			..addListener(remindersListener);
 		user = Models.instance.user.data;
-		subjects = Subject.getSubjects(
-			await Services.instance.database.getSections(user.sectionIDs)
-		);
+		subjects = Models.instance.user.subjects;
 		await initCalendar();
 	}
 

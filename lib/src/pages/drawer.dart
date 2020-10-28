@@ -53,17 +53,6 @@ class NavigationDrawer extends StatelessWidget {
 										onTap: pushRoute(context, Routes.admin),
 									),
 								BrightnessChanger.dropdown(prefs: Services.instance.prefs),
-								// ListTile (
-								// 	title: Text ("Newspapers (coming soon)"),
-								// 	leading: Icon (Icons.new_releases),
-								// 	onTap: () => Navigator.of(context).pushReplacementNamed(NEWS),
-								// ),
-								// ListTile (
-								// 	title: Text ("Lost and Found (coming soon)"),
-								// 	leading: Icon (Icons.help),
-								// 	onTap: pushRoute(context, LOST_AND_FOUND)
-								// ),
-								// Divider(),
 								ListTile (
 									title: const Text ("Logout"),
 									leading: Icon (Icons.lock),
@@ -73,7 +62,7 @@ class NavigationDrawer extends StatelessWidget {
 									title: const Text ("Send Feedback"),
 									leading: Icon (Icons.feedback),
 									onTap: () => Navigator.of(context)
-										..pop()
+										..maybePop()
 										..pushNamed(Routes.feedback)
 								),
 								const AboutListTile (

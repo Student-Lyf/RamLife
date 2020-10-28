@@ -6,14 +6,14 @@ import "package:ramaz/widgets.dart";
 
 /// The homepage of the app. 
 class HomePage extends StatelessWidget {
-	/// The schedule data model. 
-	final Schedule scheduleModel;
-
 	/// The reminders data model. 
 	final Reminders remindersModel; 
 
 	/// The sports data model. 
 	final Sports sportsModel;
+
+	/// The schedule data model. 
+	final Schedule scheduleModel;
 
 	/// The home page. 
 	/// 
@@ -44,11 +44,11 @@ class HomePage extends StatelessWidget {
 	@override 
 	Widget build (BuildContext context) => ModelListener<HomeModel>(
 		model: () => HomeModel(),
-		builder: (BuildContext context, HomeModel model, __) => Scaffold (
-			appBar: AppBar (
+		builder: (BuildContext context, HomeModel model, _) => AdaptiveScaffold (
+			appBarBuilder: (isShowingSchedule) => AppBar (
 				title: const Text ("Home"),
 				actions: [
-					if (scheduleModel.hasSchool) Builder (
+					if (scheduleModel.hasSchool && !isShowingSchedule) Builder (
 						builder: (BuildContext context) => FlatButton(
 							textColor: Colors.white,
 							onPressed: () => Scaffold.of(context).openEndDrawer(),
@@ -76,6 +76,7 @@ class HomePage extends StatelessWidget {
 				builder: (BuildContext context) => RefreshIndicator(
 					onRefresh: () => refresh(context, model),
 					child: ListView (
+						padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
 						children: [
 							RamazLogos.ramRectangle,
 							const Divider(),
@@ -88,7 +89,7 @@ class HomePage extends StatelessWidget {
 								textScaleFactor: 2,
 								textAlign: TextAlign.center
 							),
-							const SizedBox (height: 20),
+							const SizedBox (height: 30),
 							if (scheduleModel.hasSchool) NextClass(
 								reminders: remindersModel.currentReminders,
 								period: scheduleModel.period,

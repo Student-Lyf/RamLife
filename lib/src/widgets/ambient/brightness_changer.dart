@@ -66,7 +66,7 @@ class BrightnessChanger extends StatelessWidget {
 			);
 
 			case BrightnessChangerForm.dropdown: return ListTile (
-				title: const Text ("Change theme"),
+				title: const Text ("Theme"),
 				leading: icon, 
 				trailing: DropdownButton<bool>(
 					onChanged: (bool value) => setBrightness(context, value: value),
@@ -74,15 +74,15 @@ class BrightnessChanger extends StatelessWidget {
 					items: const [
 						DropdownMenuItem<bool> (
 							value: null,
-							child: Text ("Automatic")
+							child: Text ("Auto")
 						),
 						DropdownMenuItem<bool> (
 							value: true,
-							child: Text ("Light theme")
+							child: Text ("Light")
 						),
 						DropdownMenuItem<bool> (
 							value: false,
-							child: Text ("Dark theme"),
+							child: Text ("Dark"),
 						),
 					],
 				)

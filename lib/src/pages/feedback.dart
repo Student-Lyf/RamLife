@@ -6,47 +6,48 @@ import "package:ramaz/models.dart";
 
 /// A page to submit feedback. 
 class FeedbackPage extends StatelessWidget {
-
 	@override 
 	Widget build (BuildContext context) => Scaffold(
 		appBar: AppBar(title: const Text ("Send Feedback")),
-		body: Padding(
-			padding: const EdgeInsets.symmetric(horizontal: 50),
-			child: ModelListener<FeedbackModel>(
-				model: () => FeedbackModel(),
-				builder: (BuildContext context, FeedbackModel model, _) => Column(
-					mainAxisAlignment: MainAxisAlignment.center,
-					children: [
-						TextField(
-							autofocus: true,
-							maxLength: 500,
-							onChanged: (String text) => model.message = text,
-							textCapitalization: TextCapitalization.sentences,
-						),
-						const SizedBox(height: 20),
-						CheckboxListTile(
-							value: model.anonymous, 
-							onChanged: (bool value) => model.anonymous = value,
-							title: const Text("Make anonymous"),
-							subtitle: const Text(
-								"We won't be able to see your name or email. "
-								"To share them with us, keep this unchecked."
-							)
-						),
-						const SizedBox(height: 50),
-						RaisedButton.icon(
-							label: const Text ("Submit"),
-							icon: const Icon(Icons.send),
-							onPressed: !model.ready 
-								? null 
-								: () {
-									model.send();
-									Navigator.of(context).pop();
-								}
+		body: ModelListener<FeedbackModel>(
+			model: () => FeedbackModel(),
+			builder: (BuildContext context, FeedbackModel model, _) => Center(
+				child: SizedBox(
+					width: 400, 
+					child: Column(
+				mainAxisAlignment: MainAxisAlignment.center,
+				crossAxisAlignment: CrossAxisAlignment.center,
+				children: [
+					TextField(
+						autofocus: true,
+						maxLength: 500,
+						onChanged: (String text) => model.message = text,
+						textCapitalization: TextCapitalization.sentences,
+					),
+					const SizedBox(height: 20),
+					CheckboxListTile(
+						value: model.anonymous, 
+						onChanged: (bool value) => model.anonymous = value,
+						title: const Text("Make anonymous"),
+						subtitle: const Text(
+							"We won't be able to see your name or email. "
+							"To share them with us, keep this unchecked."
+						)
+					),
+					const SizedBox(height: 50),
+					RaisedButton.icon(
+						label: const Text ("Submit"),
+						icon: const Icon(Icons.send),
+						onPressed: !model.ready 
+							? null 
+							: () {
+								model.send();
+								Navigator.of(context).pop();
+							}
 						)
 					]
 				)
 			)
-		)
+		))
 	);
 }

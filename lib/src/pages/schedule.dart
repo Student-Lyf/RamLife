@@ -23,7 +23,7 @@ class SchedulePage extends StatelessWidget {
 			BuildContext context, 
 			ScheduleModel model, 
 			Widget _
-		) => Scaffold(
+		) => AdaptiveScaffold(
 			appBar: AppBar (
 				title: const Text ("Schedule"),
 				actions: [
