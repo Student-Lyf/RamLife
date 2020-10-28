@@ -1,71 +1,37 @@
-import "dart:async" show runZoned;
-
 import "package:flutter/material.dart";
-import "package:flutter/foundation.dart" show kDebugMode;
 import "package:flutter/services.dart";
 
 import "package:ramaz/constants.dart";  // for route keys
-import "package:ramaz/models.dart";
 import "package:ramaz/pages.dart";
 import "package:ramaz/services.dart";
 import "package:ramaz/widgets.dart" show ThemeChanger;
 
-Future<void> main({bool restart = false}) async {
-	// This shows a splash screen but secretly 
-	// determines the desired `platformBrightness`
-	Brightness brightness;
-	runApp(
-		SplashScreen(
-			setBrightness: 
-				(Brightness platform) => brightness = platform
-		)
-	);
-	await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+void main({bool restart = false}) => runApp(const RamazApp());
 
-	// This initializes services -- it is always safe. 
-	await Services.instance.init();
-	final Crashlytics crashlytics = Services.instance.crashlytics;
-	final bool isSignedIn = await Services.instance.database.isSignedIn;
-	try {
-		if (isSignedIn) {
-			// This initializes data models -- it may error. 
-			await Models.instance.init();
-		}
-	// We want to at least try again on ANY error. 
-	// ignore: avoid_catches_without_on_clauses
-	} catch (_) {
-		debugPrint("Error on main.");
-		if (!restart) {
-			debugPrint("Trying again...");
-			await Services.instance.database.signOut();
-			return main(restart: true);
-		} else {
-			rethrow;
-		}
-	}
+class ErrorPage extends StatelessWidget {
+	final dynamic error; 
+	final VoidCallback restart;
 
-	// Determine the appropriate brightness. 
-	final bool savedBrightness = Services.instance.prefs.brightness;
-	if (savedBrightness != null) {
-		brightness = savedBrightness
-			? Brightness.light
-			: Brightness.dark;
-	}
+	const ErrorPage(this.error, this.restart); 
 
-	// Turns Crashlyitcs off in debug mode. 
-  await crashlytics.toggle(!kDebugMode);
-
-	// Now we are ready to run the app (with error catching)
-	FlutterError.onError = crashlytics.recordFlutterError;
-	runZoned(
-		() => runApp (
-			RamazApp (
-				isSignedIn: isSignedIn,
-				brightness: brightness,
+	@override
+	Widget build(BuildContext context) {
+		Future(() => throw error);
+		return MaterialApp(
+		home: Scaffold(
+			appBar: AppBar(title: const Text("Error")),
+			body: Center(
+				child: Text(
+					"The app is corrupted and cannot start. Make sure your app " 
+					"is updated and try again.\n\nThe error is: $error\n${error.stackTrace}"
+				),
+			),
+			floatingActionButton: FloatingActionButton(
+				onPressed: restart,
+				child: const Icon(Icons.refresh),
 			)
-		),
-		onError: crashlytics.recordError,
-	);
+		)
+	);}
 }
 
 /// The main app widget. 
@@ -75,18 +41,14 @@ class RamazApp extends StatelessWidget {
 	/// This was already determined using [Services] in [main]. 
 	final bool isSignedIn;
 
-	/// The brightness to default to. 
-	final Brightness brightness;
-
 	/// Creates the main app widget.
 	const RamazApp ({
-		@required this.brightness,
-		@required this.isSignedIn,
+		this.isSignedIn,
 	});
 
 	@override 
 	Widget build (BuildContext context) => ThemeChanger(
-		defaultBrightness: brightness,
+		defaultBrightness: null,
 		light: ThemeData (
 			brightness: Brightness.light,
 			primarySwatch: Colors.blue,
@@ -133,7 +95,9 @@ class RamazApp extends StatelessWidget {
 			),
 		),
 		builder: (BuildContext context, ThemeData theme) => MaterialApp (
-			home: isSignedIn ? HomePage() : Login(),
+			home: isSignedIn == null 
+				? SplashScreen()
+				: isSignedIn ? HomePage() : Login(),
 			title: "Ram Life",
 			color: RamazColors.blue,
 			theme: theme,
