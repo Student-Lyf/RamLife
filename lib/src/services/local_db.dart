@@ -11,7 +11,8 @@ extension ObjectStoreExtension on idb.ObjectStore {
 	/// Gets the data at the key in this object store. 
 	/// 
 	/// This extension provides type safety. 
-	Future<T> get<T>(dynamic key) async => await getObject(key) as T; 
+	Future<Map<String, dynamic>> get(dynamic key) async => 
+		Map<String, dynamic>.from(await getObject(key)); 
 }
 
 /// Provides convenience methods on a [Database]. 
@@ -19,10 +20,10 @@ extension DatabaseExtension on idb.Database {
 	/// Gets data at a key in an object store. 
 	/// 
 	/// This code handles transactions so other code doesn't have to. 
-	Future<T> get<T>(String storeName, dynamic key) => 
+	Future<Map<String, dynamic>> get(String storeName, dynamic key) => 
 		transaction(storeName, idb.idbModeReadOnly)
 		.objectStore(storeName)
-		.get<T>(key);
+		.get(key);
 
 	/// Adds data at a key to an object store. 
 	/// 
@@ -176,8 +177,8 @@ class LocalDatabase extends Database {
 	} 
 
 	@override
-	Future<Map<String, dynamic>> getCalendarMonth(int month) =>
-		database.get(calendarStoreName, month);
+	Future<Map<String, dynamic>> getCalendarMonth(int month) async =>
+		Map<String, dynamic>.from(await database.get(calendarStoreName, month));
 
 	@override
 	Future<void> setCalendar(int month, Map<String, dynamic> json) async {

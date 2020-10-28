@@ -3,6 +3,7 @@ import "package:flutter/material.dart";
 import "package:ramaz/constants.dart";
 import "package:ramaz/pages.dart";
 import "package:ramaz/services.dart";
+import "package:ramaz/widgets.dart";
 
 /// A widget to represent a calendar icon.
 /// 
@@ -117,7 +118,7 @@ class AdminHomePageState extends State<AdminHomePage> {
   }
 
 	@override
-	Widget build(BuildContext context) => Scaffold(
+	Widget build(BuildContext context) => AdaptiveScaffold(
 		drawer: NavigationDrawer(),
 		appBar: AppBar(
       title: const Text("Admin Console"),
@@ -129,37 +130,54 @@ class AdminHomePageState extends State<AdminHomePage> {
         )
       ]
     ),
-		body: Column(
-      children: [
-        const SizedBox(height: 10),
-        const Text("Select an option", textScaleFactor: 2),
-        const SizedBox(height: 25),
-        Expanded(
-          child: GridView.count(
-            childAspectRatio: 0.9,
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            shrinkWrap: true,
-            crossAxisCount: 2,
-            children: [
-              if (_isCalendarAdmin ?? false) const AdminMenuItem(
-              	icon: Icons.schedule,
-              	label: "Manage schedules",
-              	routeName: Routes.specials, 
-            	),
-              if (_isCalendarAdmin ?? false) const AdminMenuItem(
-              	icon: Icons.today,
-              	label: "Edit calendar",
-              	routeName: Routes.calendar,
-            	),
-              if (_isSportsAdmin ?? false) const AdminMenuItem(
-                icon: Icons.directions_run,
-                label: "Manage games",
-                routeName: Routes.sports,
-              )
-            ]
+		// body: Column(
+  //     children: [
+  //       const SizedBox(height: 10),
+  //       const Text("Select an option", textScaleFactor: 2),
+  //       const SizedBox(height: 25),
+        // body: Expanded(
+    body: SizedBox(
+      width: 150, 
+      height: 150, 
+      child: GridView.extent(
+        maxCrossAxisExtent: 200, 
+        children: [
+          Container(
+            color: const Color(0x88000000),
           )
-        )
-      ]
+        ]
+        // child: Row(
+        //   children: [
+        //     if (_isCalendarAdmin ?? false) const AdminMenuItem(
+        //       icon: Icons.schedule,
+        //       label: "Manage schedules",
+        //       routeName: Routes.specials, 
+        //     ),
+        //   ]
+        // )
+        // child: GridView.count(
+          // shrinkWrap: true,
+          // crossAxisCount: 2,
+        //   childAspectRatio: 0.5,
+          // children: [
+          //   if (_isCalendarAdmin ?? false) const AdminMenuItem(
+          //   	icon: Icons.schedule,
+          //   	label: "Manage schedules",
+          //   	routeName: Routes.specials, 
+          // 	),
+        //    //  if (_isCalendarAdmin ?? false) const AdminMenuItem(
+        //    //  	icon: Icons.today,
+        //    //  	label: "Edit calendar",
+        //    //  	routeName: Routes.calendar,
+        //   	// ),
+        //    //  if (_isSportsAdmin ?? false) const AdminMenuItem(
+        //    //    icon: Icons.directions_run,
+        //    //    label: "Manage games",
+        //    //    routeName: Routes.sports,
+        //    //  )
+        //   ]
+        // )
+      )
 		),
 	);
 }

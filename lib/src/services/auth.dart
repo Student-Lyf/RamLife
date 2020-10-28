@@ -15,7 +15,7 @@ class Auth {
 	static final FirebaseAuth auth = FirebaseAuth.instance;
 
 	/// The [GoogleSignIn] service.
-	static final GoogleSignIn google = GoogleSignIn();
+	static final GoogleSignIn google = GoogleSignIn(hostedDomain: "ramaz.org");
 
 	/// The scope for calendar admins. 
 	/// 

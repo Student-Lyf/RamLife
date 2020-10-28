@@ -76,7 +76,7 @@ flutter_*.png
 linked_*.png
 unlinked.ds
 unlinked_spec.ds
-lib/generated_plugin_registrant.dart
+**/lib/generated_plugin_registrant.dart
 
 # Android related
 **/android/**/GeneratedPluginRegistrant.java
