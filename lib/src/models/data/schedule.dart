@@ -121,8 +121,6 @@ class Schedule extends Model {
 			now = newDate;
 			return setToday();
 		}
-
-		updateReminders(scheduleNotifications: first);  
 		
 		// no school today.
 		if (!today.school) {  
@@ -136,12 +134,12 @@ class Schedule extends Model {
 
 		// Maybe the day changed
 		if (newIndex != null && newIndex == periodIndex) {
-			// return notifyListeners();
 			return;
 		}
 
 		// period changed since last checked.
 		periodIndex = newIndex;
+		updateReminders(scheduleNotifications: first);  
 
 		// School ended
 		if (periodIndex == null) { 
@@ -154,8 +152,6 @@ class Schedule extends Model {
 		nextPeriod = periodIndex < periods.length - 1 
 			? periods [periodIndex + 1] 
 			: null;
-
-		updateReminders(scheduleNotifications: first);  
 	}
 
 	/// Updates the reminders given the current period.
