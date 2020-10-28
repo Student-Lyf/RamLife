@@ -1,5 +1,8 @@
 import "package:flutter_local_notifications/flutter_local_notifications.dart";
 import "package:flutter/material.dart" show required, immutable;
+import "package:timezone/timezone.dart";
+import "package:timezone/data/latest.dart";
+import "package:flutter_native_timezone/flutter_native_timezone.dart";
 
 import "package:ramaz/constants.dart";
 
@@ -75,16 +78,23 @@ class Notification {
 /// Currently, Web is not supported. 
 class Notifications extends Service {
 	final _plugin = FlutterLocalNotificationsPlugin();
+	String timezoneName;
+	Location location;
 
 	@override
-	Future<void> init() => _plugin.initialize(
-		const InitializationSettings(
-			android: AndroidInitializationSettings(
-				"@mipmap/bright_yellow"  // default icon of app
-			),
-			iOS: IOSInitializationSettings(),  // defaults are good
-		)
-	);
+	Future<void> init() async {
+		await _plugin.initialize(
+			const InitializationSettings(
+				android: AndroidInitializationSettings(
+					"@mipmap/bright_yellow"  // default icon of app
+				),
+				iOS: IOSInitializationSettings(),  // defaults are good
+			)
+		);
+		initializeTimeZones();
+		timezoneName = await FlutterNativeTimezone.getLocalTimezone();
+		location = getLocation(timezoneName);
+	}
 
 	@override
 	Future<void> signIn() async {}
@@ -107,7 +117,7 @@ class Notifications extends Service {
 		notification.id,
 		notification.title,
 		notification.message,
-		date,
+		TZDateTime.from(date, location),
 		notification.details,
 		androidAllowWhileIdle: true,
 		uiLocalNotificationDateInterpretation: 
@@ -117,4 +127,12 @@ class Notifications extends Service {
 	/// Cancels all scheduled notifications, as well as 
 	/// dismissing all present notifications. 
 	void cancelAll() => _plugin.cancelAll();
+
+	Future<List<String>> get pendingNotifications async => [
+		for (
+			final PendingNotificationRequest request in 
+			await _plugin.pendingNotificationRequests()
+		)
+			request.title
+	];
 }
