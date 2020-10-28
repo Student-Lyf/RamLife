@@ -146,7 +146,7 @@ class User {
 					period: "Mincha",
 					time: getTime(index),
 					activity: null,
-				) else if (special.skip.contains(index)) Period(
+				) else if (special.skip?.contains(index) ?? false) Period(
 					data: null,
 					period: "Free period",
 					time: getTime(index),
