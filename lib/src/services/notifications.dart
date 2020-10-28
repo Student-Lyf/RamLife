@@ -1,40 +1,12 @@
-import "package:flutter_local_notifications/flutter_local_notifications.dart";
-import "package:flutter/material.dart" show required, immutable;
-import "package:timezone/timezone.dart";
-import "package:timezone/data/latest.dart";
-import "package:flutter_native_timezone/flutter_native_timezone.dart";
+import "package:meta/meta.dart";
 
-import "package:ramaz/constants.dart";
-
+import "notifications/stub.dart"
+	if (dart.library.io) "notifications/mobile.dart";
 import "service.dart";
 
-/// Describes how a reminders notification should look. 
-NotificationDetails reminderDetails = const NotificationDetails(
-	android: AndroidNotificationDetails(
-		"reminders",
-		"Reminders",
-		"When reminders are due.",
-		importance: Importance.high,
-		priority: Priority.high,
-		color: RamazColors.blue,
-		groupKey: "reminders",
-		playSound: true,
-		enableVibration: true,
-		setAsGroupSummary: false,
-		channelShowBadge: true,
-		icon: null,
-		styleInformation: null,
-		enableLights: true,
-	),
-	iOS: IOSNotificationDetails(
-		presentBadge: true,
-		presentSound: true
-	)
-);
-
-/// A platform-agnostic notification.
+/// A notification.
 /// 
-/// Helps creating [NotificationDetails].
+/// The notification has a [title] and a [message]. 
 @immutable 
 class Notification {
 	/// The ID of this notification.
@@ -48,24 +20,20 @@ class Notification {
 	/// The body of this notification.
 	final String message;
 
-	/// The platform-agnostic [NotificationDetails] for this class.  
-	final NotificationDetails details;
-
-	/// Returns a new [Notification]. 
+	/// Creates a notification. 
 	const Notification({
 		@required this.title,
 		@required this.message,
-		@required this.details,
 	});
 
-	/// The optimal configuration for a reminder notification.
-	Notification.reminder({
-		@required this.title,
-		@required this.message,
-	}) : details = reminderDetails;
+	/// Creates a notification for a reminder. 
+	factory Notification.reminder({
+		@required String title, 
+		@required String message,
+	}) => getReminderNotification(title: title, message: message);
 }
 
-/// An abstract wrapper around the notifications plugin. 
+/// The notifications service.
 /// 
 /// There are two types of notifications: local notifications, and push
 /// notifications. Local notifications are sent by the app itself, and 
@@ -73,66 +41,27 @@ class Notification {
 /// 
 /// Local notifications can be customized to appear differently depending on
 /// the type of notification and platform. They can also be scheduled to appear
-/// at certain times. This is based on [FlutterLocalNotificationsPlugin].
+/// at certain times.
 /// 
 /// Currently, Web is not supported. 
-class Notifications extends Service {
-	final _plugin = FlutterLocalNotificationsPlugin();
-	String timezoneName;
-	Location location;
-
-	@override
-	Future<void> init() async {
-		await _plugin.initialize(
-			const InitializationSettings(
-				android: AndroidInitializationSettings(
-					"@mipmap/bright_yellow"  // default icon of app
-				),
-				iOS: IOSInitializationSettings(),  // defaults are good
-			)
-		);
-		initializeTimeZones();
-		timezoneName = await FlutterNativeTimezone.getLocalTimezone();
-		location = getLocation(timezoneName);
-	}
-
-	@override
-	Future<void> signIn() async {}
+abstract class Notifications extends Service {
+	/// The singleton instance for this service. 
+	static Notifications instance = notifications;
 
 	/// Sends a notification immediately. 
-	void sendNotification(Notification notification) => _plugin.show(
-		notification.id, 
-		notification.title, 
-		notification.message, 
-		notification.details,
-	);
+	void sendNotification(Notification notification);
 
 	/// Schedules a notification for [date]. 
 	/// 
-	/// If [date] is in the past, the notification will go off immediately.
+	/// [date] must not be in the past. 
 	void scheduleNotification({
 		@required Notification notification,
-		@required DateTime date, 
-	}) => _plugin.zonedSchedule(
-		notification.id,
-		notification.title,
-		notification.message,
-		TZDateTime.from(date, location),
-		notification.details,
-		androidAllowWhileIdle: true,
-		uiLocalNotificationDateInterpretation: 
-			UILocalNotificationDateInterpretation.wallClockTime,
-	);
+		@required DateTime date
+	});
 
-	/// Cancels all scheduled notifications, as well as 
-	/// dismissing all present notifications. 
-	void cancelAll() => _plugin.cancelAll();
+	/// Cancels all notifications.
+	void cancelAll();
 
-	Future<List<String>> get pendingNotifications async => [
-		for (
-			final PendingNotificationRequest request in 
-			await _plugin.pendingNotificationRequests()
-		)
-			request.title
-	];
+	/// Notifications that are pending delivery. 
+	Future<List<String>> get pendingNotifications;
 }
