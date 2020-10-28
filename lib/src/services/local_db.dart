@@ -146,7 +146,7 @@ class LocalDatabase extends Database {
 	Future<void> signIn() async {}
 
 	@override
-	Future<bool> get isSignedIn async => true;
+	bool get isSignedIn => true;
 
 	@override
 	Future<void> signOut() async {
