@@ -56,8 +56,8 @@ class Databases extends Database {
 	}
 
 	@override 
-	Future<bool> get isSignedIn async => 
-		(await cloudDatabase.isSignedIn) && (await localDatabase.isSignedIn);
+	bool get isSignedIn => 
+		cloudDatabase.isSignedIn && localDatabase.isSignedIn;
 
 	@override
 	Future<void> signOut() async {

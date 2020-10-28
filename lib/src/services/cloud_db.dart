@@ -135,7 +135,7 @@ class CloudDatabase extends Database {
 	// Database methods. 
 
 	@override
-	Future<bool> get isSignedIn async => Auth.isSignedIn;
+	bool get isSignedIn => Auth.isSignedIn;
 
 	@override
 	Future<void> signOut() => Auth.signOut();

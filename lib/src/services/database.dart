@@ -25,9 +25,8 @@ abstract class Database extends Service {
 	/// Determines whether the user is signed in.
 	/// 
 	/// From all the services, a [Database] is the only one that can, and is 
-	/// expected to, know whether the user is signed in. The implementation 
-	/// is up to the database itself, but it's allowed to be asynchronous.  
-	Future<bool> get isSignedIn;
+	/// expected to, know whether the user is signed in.  
+	bool get isSignedIn;
 
 	/// Signs the user out of the app. 
 	/// 
