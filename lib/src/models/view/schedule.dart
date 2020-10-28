@@ -31,12 +31,12 @@ class ScheduleModel with ChangeNotifier {
 	/// Also initializes the default day shown to the user. 
 	/// If today is a school day, then use that. Otherwise, use the 
 	/// defaults (see [defaultSpecial]).
-	ScheduleModel () : schedule = Models.schedule	{
+	ScheduleModel () : schedule = Models.instance.schedule {
 		day = schedule.hasSchool
 			? schedule.today
 			: defaultDay;
 		defaultDay = Day(
-			name: schedule.student.schedule.keys.first, 
+			name: schedule.user.schedule.keys.first, 
 			special: defaultSpecial
 		);
 	}
@@ -66,7 +66,11 @@ class ScheduleModel with ChangeNotifier {
 	/// Updates the UI to a new day given a new dayName or special.
 	/// 
 	/// If the dayName is non-null, the special defaults to [defaultSpecial].
-	void update({String newName, Special newSpecial}) {
+	void update({
+		String newName, 
+		Special newSpecial, 
+		void Function() onInvalidSchedule,
+	}) {
 		String name  = day.name;
 		if (newName != null) {
 			name = newName;
@@ -76,6 +80,16 @@ class ScheduleModel with ChangeNotifier {
 		if (newSpecial != null) {
 			day = Day (name: name, special: newSpecial);
 			notifyListeners();
+		}
+		try {
+			// Just to see if the computation is possible. 
+			// TODO: Move the logic from ClassList here. 
+			Models.instance.schedule.user.getPeriods(day);
+		} on RangeError { // ignore: avoid_catching_errors
+			day = Day(name: day.name, special: defaultSpecial);
+			if (onInvalidSchedule != null) {
+				onInvalidSchedule();
+			}
 		}
 	}
 }

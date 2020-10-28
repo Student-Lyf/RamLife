@@ -1,11 +1,15 @@
 import "package:firebase_auth/firebase_auth.dart";
 import "package:google_sign_in/google_sign_in.dart";
 
+/// An exception thrown when no account has been selected. 
+class NoAccountException implements Exception {}
+
 // ignore: avoid_classes_with_only_static_members
 /// An abstraction around FirebaseAuth.
 /// 
-/// This class handles all authentication operations via static methods.
-/// There is no need to create an instance of this class.
+/// This class handles all authentication operations via static methods. Do 
+/// not create an instance of this class; it is not a Service. Instead, use 
+/// it from within other services. 
 class Auth {
 	/// The [FirebaseAuth] service.
 	static final FirebaseAuth auth = FirebaseAuth.instance;
@@ -13,57 +17,62 @@ class Auth {
 	/// The [GoogleSignIn] service.
 	static final GoogleSignIn google = GoogleSignIn(hostedDomain: "ramaz.org");
 
-	/// The scope for the calendar.
+	/// The scope for calendar admins. 
 	/// 
-	/// This string should be found in the users Firebase custom claims. 
+	/// This string should be found in the user's Firebase custom claims. 
 	static const String calendarScope = "calendar";
 
-	/// The scope for sports games. 
+	/// The scope for sports admins. 
 	/// 
-	/// This string should be found in the users Firebase custom claims. 
+	/// This string should be found in the user's Firebase custom claims. 
 	static const String sportsScope = "sports";
 
 	/// The currently logged in user.
 	/// 
 	/// This getter returns a [User], which should not be used 
 	/// outside this library. This method should only be called by 
-	/// methods that provide higher level functionality, such as [isReady].
-	static User get currentUser => auth.currentUser;
+	/// methods that provide higher level functionality, such as [isSignedIn].
+	static User get _currentUser => auth.currentUser;
 
 	/// The user's email.
-	static String get email => currentUser?.email;
+	/// 
+	/// Since the database is case-sensitive, we standardize the lower case. 
+	static String get email => _currentUser?.email?.toLowerCase();
 
 	/// The user's full name.
-	static String get name => currentUser?.displayName;
+	static String get name => _currentUser?.displayName;
 
 	/// Determines whether the user is currently logged
-	static bool get isReady => currentUser != null;
+	static bool get isSignedIn => _currentUser != null;
 
-	/// Whether the user is an admin or not. 
+	/// Gets the user's custom claims. 
+	/// 
+	/// See the official [Firebase docs](https://firebase.google.com/docs/auth/admin/custom-claims). 
 	static Future<Map> get claims async => (
-		await currentUser.getIdTokenResult()
+		await _currentUser.getIdTokenResult()
 	).claims;
 
 	/// Whether the user is an admin. 
+	/// 
+	/// This works by checking for an "isAdmin" flag in the user's custom [claims].
 	static Future<bool> get isAdmin async => (await claims) ["isAdmin"] ?? false;
 
 	/// The scopes of an admin. 
 	/// 
-	/// No null-checks are necessary here, because the `scopes` field should be 
-	/// present if the user is an admin, and this property will not be accessed 
-	/// unless [isAdmin] returns true. 
-	static Future<List<String>> get adminScopes async => [
-		for (final scope in (await claims) ["scopes"])
-			scope.toString()
-	];
+	/// Returns null if the user is not an admin (ie, [isAdmin] returns false).
+	static Future<List<String>> get adminScopes async => !(await isAdmin) 
+		? null : [
+			for (final scope in (await claims) ["scopes"])
+				scope.toString()
+		];
 
 	/// Whether the user is an admin for the calendar. 
 	static Future<bool> get isCalendarAdmin async => 
-		(await isAdmin) && (await adminScopes).contains(calendarScope);
+		(await adminScopes)?.contains(calendarScope) ?? false;
 
 	/// Whether the user is an admin for sports games. 
 	static Future<bool> get isSportsAdmin async => 
-		(await isAdmin) && (await adminScopes).contains(sportsScope);		
+		(await adminScopes)?.contains(sportsScope) ?? false;		
 
 	/// Signs out the currently logged in user.
 	static Future<void> signOut() async {
@@ -75,7 +84,7 @@ class Auth {
 	static Future<void> signIn() async {
 		final GoogleSignInAccount googleAccount = await google.signIn();
 		if (googleAccount == null) {
-			return;
+			throw NoAccountException();
 		}
 		final GoogleSignInAuthentication googleAuth = 
 			await googleAccount.authentication;

@@ -107,7 +107,9 @@ class BrightnessChanger extends StatelessWidget {
 		),
 	);
 
+	/// Sets the brightness of the app. 
 	/// 
+	/// Also saves it to [Preferences]. 
 	void setBrightness (BuildContext context, {bool value}) {
 		ThemeChanger.of(context).brightness = caseConverter<Brightness> (
 			value: value,
@@ -116,6 +118,5 @@ class BrightnessChanger extends StatelessWidget {
 			onNull: MediaQuery.of(context).platformBrightness,
 		);
 		prefs.brightness = value;
-		// brightnessNotifier.value = value;  // trigger rebuild
 	}
 }

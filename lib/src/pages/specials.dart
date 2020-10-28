@@ -7,15 +7,15 @@ import "package:ramaz/widgets.dart";
 /// A page to show the admin's custom specials. 
 class SpecialPage extends StatelessWidget {
 	@override
-	Widget build(BuildContext context) => ModelListener<AdminUserModel>(
-		model: () => Models.admin.user,
+	Widget build(BuildContext context) => ModelListener<UserModel>(
+		model: () => Models.instance.user,
 		dispose: false,
-		builder: (_, AdminUserModel model, __) => Scaffold(
+		builder: (_, UserModel model, __) => Scaffold(
 			appBar: AppBar(
 				title: const Text("Custom schedules"),
 			),
 			floatingActionButton: FloatingActionButton(
-				onPressed: () async => model.addSpecial(
+				onPressed: () async => model.addSpecialToAdmin(
 					await SpecialBuilder.buildSpecial(context),
 				),
 				child: const Icon(Icons.add),
@@ -37,9 +37,9 @@ class SpecialPage extends StatelessWidget {
 									title: Text (model.admin.specials [index].name),
 									trailing: IconButton(
 										icon: const Icon(Icons.remove_circle),
-										onPressed: () => model.removeSpecial(index),
+										onPressed: () => model.removeSpecialFromAdmin(index),
 									),
-									onTap: () async => model.replaceSpecial(
+									onTap: () async => model.replaceAdminSpecial(
 										index, 
 										await SpecialBuilder.buildSpecial(
 											context, 

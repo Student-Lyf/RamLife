@@ -23,6 +23,7 @@ class RemindersBuilderModel with ChangeNotifier {
 	/// being displayed once. 
 	bool shouldRepeat = false;
 
+	/// The name of the day. 
 	String dayName;
 
 	/// The period this reminder should be displayed.
@@ -43,9 +44,9 @@ class RemindersBuilderModel with ChangeNotifier {
 	/// If [reminder] is not null, then the relevant fields of this 
 	/// class are filled in with the corresponding fields of the reminder. 
 	RemindersBuilderModel(Reminder reminder) : 
-		_schedule = Models.schedule,
+		_schedule = Models.instance.schedule,
 		courses = [
-			for (final Subject subject in Models.schedule.subjects.values)
+			for (final Subject subject in Models.instance.schedule.subjects.values)
 				subject.name
 		]
 	{
@@ -109,7 +110,7 @@ class RemindersBuilderModel with ChangeNotifier {
 		if (dayName == null) {
 			return null;
 		}
-		final List<PeriodData> schedule = _schedule.student.schedule [dayName];
+		final List<PeriodData> schedule = _schedule.user.schedule [dayName];
 		return [
 			for (int index = 0; index < schedule.length; index++) 
 				(index + 1).toString() 

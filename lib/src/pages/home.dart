@@ -1,51 +1,42 @@
-// ignore_for_file: prefer_const_constructors_in_immutables
 import "package:flutter/material.dart";
-import "package:flutter/services.dart";
 
 import "package:ramaz/models.dart";
 import "package:ramaz/pages.dart";
-import "package:ramaz/services.dart";
 import "package:ramaz/widgets.dart";
 
 /// The homepage of the app. 
-/// 
-/// It's stateful because when refreshing the schedule a loading bar is shown,
-/// and needs to be dismissed. However, it can be rewritten to use a 
-/// [ValueNotifier] instead.
-class HomePage extends StatefulWidget {
-	@override
-	HomePageState createState() => HomePageState();
-}
 
-/// A state for the home page, to keep track of when the page loads. 
-class HomePageState extends State<HomePage> {
-	/// Whether the page is loading. 
-	bool loading = false;
+	/// The reminders data model. 
+	final Reminders remindersModel; 
 
-	/// Downloads the calendar again and calls [Schedule.onNewPeriod].
-	Future<void> refresh() async {
-		try {
-			await Services.instance.updateCalendar();
-			await Services.instance.updateSports();
-			await Models.schedule.initCalendar();
-		} on PlatformException catch(error) {
-			if (error.code == "Error performing get") {
-				// scaffoldKey.currentState.showSnackBar(
-				// 	SnackBar(
-				// 		content: const Text("No Internet"), 
-				// 		action: SnackBarAction(
-				// 			label: "RETRY", 
-				// 			onPressed: () async {
-				// 				setState(() => loading = true);
-				// 				await refresh();
-				// 				setState(() => loading = false);
-				// 			}
-				// 		),
-				// 	)
-				// );
-			}
-		}
-	}
+	/// The sports data model. 
+	final Sports sportsModel;
+
+	/// The home page. 
+	/// 
+	/// Listens to [Schedule] (and by extension, [Reminders]) and [Sports]. 
+	HomePage() : 
+		scheduleModel = Models.instance.schedule,
+		remindersModel = Models.instance.reminders,
+		sportsModel = Models.instance.sports;
+
+	/// Allows the user to refresh data. 
+	/// 
+	/// Updates the calendar and sports games. To update the user profile, 
+	/// log out and log back in. 
+	/// 
+	/// This has to be a separate function since it can recursively call itself. 
+	Future<void> refresh(BuildContext context, HomeModel model) => model.refresh(
+		() => Scaffold.of(context).showSnackBar(
+			SnackBar(
+				content: const Text("No Internet"), 
+				action: SnackBarAction(
+					label: "RETRY", 
+					onPressed: () => refresh(context, model),
+				),
+			)
+		)
+	);
 
 	@override 
 	Widget build (BuildContext context) => ModelListener<HomeModel>(
@@ -64,74 +55,70 @@ class HomePageState extends State<HomePage> {
 				],
 			),
 			drawer: NavigationDrawer(),
-			endDrawer: !model.schedule.hasSchool ? null : Drawer(
+			endDrawer: !scheduleModel.hasSchool ? null : Drawer (
 				child: ClassList(
-					day: model.schedule.today,
-					periods: model.schedule.nextPeriod == null 
-						? model.schedule.periods
-						: model.schedule.periods.getRange (
-							(model.schedule.periodIndex ?? -1) + 1, 
-							model.schedule.periods.length
+					day: scheduleModel.today,
+					periods: scheduleModel.nextPeriod == null 
+						? scheduleModel.periods
+						: scheduleModel.periods.getRange (
+							(scheduleModel.periodIndex ?? -1) + 1, 
+							scheduleModel.periods.length
 						),
-					headerText: model.schedule.period == null 
+					headerText: scheduleModel.period == null 
 						? "Today's Schedule" 
 						: "Upcoming Classes"
 				)
 			),
-			body: RefreshIndicator (  // so you can refresh the period
-				onRefresh: refresh,
-				child: ListView (
-					padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
-					children: [
-						if (loading) const LinearProgressIndicator(),
-						// AspectRatio(
-							// height: 100, 
-							// width: 100, 
-							// aspectRatio: 3,
-						// ),
-						RamazLogos.ramRectangle,
-						const Divider(),
-						Text (
-							model.schedule.hasSchool
-								? "Today is a${model.schedule.today.n} "
-									"${model.schedule.today.name}"
-									"\nSchedule: ${model.schedule.today.special.name}"
-								: "There is no school today",
-							textScaleFactor: 2,
-							textAlign: TextAlign.center
-						),
-						const SizedBox (height: 30),
-						if (model.schedule.hasSchool) NextClass(
-							reminders: Models.reminders.currentReminders,
-							period: model.schedule.period,
-							subject: model.schedule.subjects [model.schedule.period?.id],
-							modified: model.schedule.today.isModified,
-						),
-						// if school won't be over, show the next class
-						if (
-							model.schedule.nextPeriod != null && 
-							!model.schedule.today.isModified
-						) NextClass (
-							next: true,
-							reminders: Models.reminders.nextReminders,
-							period: model.schedule.nextPeriod,
-							subject: model.schedule.subjects [model.schedule.nextPeriod?.id],
-							modified: model.schedule.today.isModified,
-						),
-						if (model.sports.todayGames.isNotEmpty) ...[
-							const SizedBox(height: 10),
-							const Center(
-								child: Text(
-									"Sports games",
-									textScaleFactor: 1.5,
-									style: TextStyle(fontWeight: FontWeight.w300)
-								)
+			body: Builder(
+				builder: (BuildContext context) => RefreshIndicator(
+					onRefresh: () => refresh(context, model),
+					child: ListView (
+						padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+						children: [
+							RamazLogos.ramRectangle,
+							const Divider(),
+							Text (
+								scheduleModel.hasSchool
+									? "Today is a${scheduleModel.today.n} "
+										"${scheduleModel.today.name}"
+										"\nSchedule: ${scheduleModel.today.special.name}"
+									: "There is no school today",
+								textScaleFactor: 2,
+								textAlign: TextAlign.center
 							),
-							const SizedBox(height: 10),
-							for (final int index in model.sports.todayGames)
-								SportsTile(model.sports.games [index])
+							const SizedBox (height: 30),
+							if (scheduleModel.hasSchool) NextClass(
+								reminders: remindersModel.currentReminders,
+								period: scheduleModel.period,
+								subject: scheduleModel.subjects [scheduleModel.period?.id],
+								modified: scheduleModel.today.isModified,
+							),
+							// if school won't be over, show the next class
+							if (
+								scheduleModel.nextPeriod != null && 
+								!scheduleModel.today.isModified
+							) NextClass (
+								next: true,
+								reminders: remindersModel.nextReminders,
+								period: scheduleModel.nextPeriod,
+								subject: scheduleModel.subjects [scheduleModel.nextPeriod?.id],
+								modified: scheduleModel.today.isModified,
+							),
+							if (sportsModel.todayGames.isNotEmpty) ...[
+								const SizedBox(height: 10),
+								const Center(
+									child: Text(
+										"Sports games",
+										textScaleFactor: 1.5,
+										style: TextStyle(fontWeight: FontWeight.w300)
+									)
+								),
+								const SizedBox(height: 10),
+								for (final int index in sportsModel.todayGames)
+									SportsTile(sportsModel.games [index])
+							]
 						]
-					]
+					)
 				)
 			)
 		)

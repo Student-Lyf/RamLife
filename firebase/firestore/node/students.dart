@@ -1,3 +1,4 @@
+import "package:firestore/constants.dart";
 import "package:firestore/data.dart";
 import "package:firestore/helpers.dart";
 import "package:firestore/services.dart";
@@ -52,6 +53,17 @@ Future<void> main() async {
 	);
 	
 	User.verifySchedules(studentsWithSchedules);
+
+	final List<User> testUsers = [
+		for (final Map<String, dynamic> tester in testers)
+			User.empty(
+				email: tester ["email"],
+				first: tester ["first"],
+				last: tester ["last"],
+			)
+	];
+	Logger.info("Found ${testUsers.length} testers");
+	studentsWithSchedules.addAll(testUsers);
 
 	Logger.info("Finished data indexing.");
 

@@ -12,4 +12,11 @@
         </item>
     </style>
 
+    <style name="NormalTheme" parent="@android:style/Theme.Black.NoTitleBar">
+        <!-- Replaces LaunchTheme on the first frame -->
+        <item name="android:windowBackground">
+            @drawable/splash_screen
+        </item>
+    </style>
+
 </resources>

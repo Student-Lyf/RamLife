@@ -16,7 +16,7 @@ class Footer extends StatelessWidget {
 	static const double textScale = 1.25;
 
 	@override Widget build (BuildContext context) => ModelListener<Schedule>(
-		model: () => Models.schedule,
+		model: () => Models.instance.schedule,
 		dispose: false,
 		// ignore: sort_child_properties_last
 		child: Container(height: 0, width: 0),
@@ -25,7 +25,7 @@ class Footer extends StatelessWidget {
 				enableDrag: false,
 				onClosing: () {},
 				builder: (BuildContext context) => GestureDetector(
-					onTap: !Models.reminders.hasNextReminder ? null : 
+					onTap: !Models.instance.reminders.hasNextReminder ? null : 
 						() {
 							final NavigatorState nav = Navigator.of(context);
 							if (nav.canPop()) {
@@ -57,7 +57,7 @@ class Footer extends StatelessWidget {
 									),
 									if (schedule.nextPeriod?.activity != null) 
 										const Text("There is an activity"),
-									if (Models.reminders.hasNextReminder) 
+									if (Models.instance.reminders.hasNextReminder) 
 										const Text ("Click to see reminder"),
 								]
 							)

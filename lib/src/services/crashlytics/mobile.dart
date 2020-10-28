@@ -1,20 +1,53 @@
-import "package:firebase_crashlytics/firebase_crashlytics.dart" as fb;
+import "package:firebase_crashlytics/firebase_crashlytics.dart" show FirebaseCrashlytics;
 import "package:flutter/foundation.dart";
 
-class Crashlytics {
-	static Future<void> recordError (
+import "../crashlytics.dart";
+import "../firebase_core.dart";
+
+/// Provides the correct implementation for mobile. 
+Crashlytics getCrashlytics() => CrashlyticsImplementation();
+
+/// Connects the app to Firebase Crashlytics. 
+/// 
+/// Currently, Crashlytics is only available on mobile, so this implementation
+/// is only used where `dart:io` is available. 
+class CrashlyticsImplementation extends Crashlytics {
+	/// Provides the connection to Firebase Crashlytics. 
+	static FirebaseCrashlytics firebase = FirebaseCrashlytics.instance;
+
+	@override
+	Future<void> init() async {
+		await FirebaseCore.init();
+		didCrashLastTime = await firebase.didCrashOnPreviousExecution();
+		if (didCrashLastTime) {
+			await log("App crashed on last run");
+		}
+	}
+
+	@override
+	Future<void> signIn() async {}
+
+	@override
+	Future<void> recordError (
 		dynamic exception,
 		StackTrace stack,
 		{dynamic context}
-	) => fb.Crashlytics.instance.recordError(exception, stack, context: context);
+	) => firebase.recordError(exception, stack);
 
-	static Future<void> recordFlutterError (
+	@override
+	Future<void> recordFlutterError (
 		FlutterErrorDetails details
-	) => fb.Crashlytics.instance.recordFlutterError(details);
+	) => firebase.recordFlutterError(details);
 
-	static Future<void> setUserEmail(String email) => 
-		fb.Crashlytics.instance.setUserEmail(email);
+	@override
+	Future<void> setEmail(String email) => 
+		firebase.setUserIdentifier(email);
 
-	static void log(String message) => 
-		fb.Crashlytics.instance.log(message);
+	@override
+	Future<void> log(String message) => 
+		firebase.log(message);
+
+	@override
+	Future<void> toggle(bool value) => 
+		firebase.setCrashlyticsCollectionEnabled(value);
 }

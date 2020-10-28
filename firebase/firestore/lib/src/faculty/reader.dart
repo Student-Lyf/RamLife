@@ -12,7 +12,7 @@ class FacultyReader {
 		await for(final Map<String, dynamic> row in csvReader(DataFiles.faculty))
 			row ["ID"]: User(
 				id: row ["ID"],
-				email: row ["E-mail"],
+				email: row ["E-mail"].toLowerCase(),
 				first: row ["First Name"],
 				last: row ["Last Name"],
 			)

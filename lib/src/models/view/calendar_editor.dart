@@ -5,11 +5,11 @@ import "package:flutter/foundation.dart" show ChangeNotifier;
 import "package:ramaz/data.dart";
 import "package:ramaz/services.dart";
 
-/// A data model to manage the calendar. 
+/// A model to manage the calendar. 
 /// 
 /// This model listens to the calendar and can modify it in the database. 
 // ignore: prefer_mixin
-class CalendarModel with ChangeNotifier {
+class CalendarEditor with ChangeNotifier {
 	/// How many days there are in every month.
 	static const int daysInMonth = 7 * 5;
 
@@ -55,17 +55,22 @@ class CalendarModel with ChangeNotifier {
 
 	/// Creates a data model to hold the calendar.
 	/// 
-	/// Initializing a [CalendarModel] automatically listens to the calendar in 
-	/// Firebase. See [CloudDatabase.getCalendarStream] for details. 
-	CalendarModel() {
+	/// Initializing a [CalendarEditor] automatically listens to the calendar in 
+	/// Firebase. 
+	CalendarEditor() {
 		for (int month = 0; month < 12; month++) {
 			subscriptions.add(
-				CloudDatabase.getCalendarStream(month + 1).listen(
-					(List<Map<String, dynamic>> cal) {
-						calendar [month] = Day.getMonth(cal);
-						calendar [month] = layoutMonth(month);
-						notifyListeners();
-					}
+				Services
+					.instance
+					.database
+					.cloudDatabase
+					.getCalendarStream(month + 1)
+					.listen(
+						(List<Map<String, dynamic>> cal) {
+							calendar [month] = Day.getMonth(cal);
+							calendar [month] = layoutMonth(month);
+							notifyListeners();
+						}
 				)
 			);
 		}
@@ -99,7 +104,7 @@ class CalendarModel with ChangeNotifier {
 			return;
 		}
 		calendar [date.month - 1] [date.day - 1] = day;
-		await Services.instance.setCalendar(
+		await Services.instance.database.setCalendar(
 			date.month, 
 			{
 				"calendar": Day.monthToJson(calendar [date.month - 1]),
