@@ -30,6 +30,7 @@ class SplashScreenState extends State<SplashScreen> {
 
 	Future<void> init() async {
 		await initServices();
+		initBrightness();
 		if (isSignedIn) {
 			try {
 				await Models.instance.init();
@@ -48,6 +49,14 @@ class SplashScreenState extends State<SplashScreen> {
 		await launchApp();
 	}
 
+	void initBrightness() {
+		final bool isLightMode = Services.instance.prefs.brightness;
+		final Brightness brightness = isLightMode == null
+			? MediaQuery.of(context).platformBrightness
+			: isLightMode ? Brightness.light : Brightness.dark;
+		ThemeChanger.of(context).brightness = brightness;
+	}
+
 	Future<void> initServices() async {
 		// This initializes services -- it is always safe. 
 		await Services.instance.init();
@@ -55,14 +64,9 @@ class SplashScreenState extends State<SplashScreen> {
 	}
 
 	Future<void> launchApp() async {
-		final bool isLightMode = Services.instance.prefs.brightness;
-		final Brightness brightness = isLightMode == null
-			? MediaQuery.of(context).platformBrightness
-			: isLightMode ? Brightness.light : Brightness.dark;
 		final Crashlytics crashlytics = Services.instance.crashlytics;
 		await crashlytics.toggle(!kDebugMode);
 		FlutterError.onError = crashlytics.recordFlutterError;
-		ThemeChanger.of(context).brightness = brightness;
 		runZonedGuarded(
 			() => runApp(
 				RamazApp(
