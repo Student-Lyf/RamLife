@@ -11,8 +11,11 @@ extension ObjectStoreExtension on idb.ObjectStore {
 	/// Gets the data at the key in this object store. 
 	/// 
 	/// This extension provides type safety. 
-	Future<Map<String, dynamic>> get(dynamic key) async => 
-		Map<String, dynamic>.from(await getObject(key)); 
+	Future<Map<String, dynamic>> get(dynamic key) async {
+		final dynamic result = await getObject(key);
+		return result == null ? null : 
+			Map<String, dynamic>.from(result); 
+	}
 }
 
 /// Provides convenience methods on a [Database]. 
