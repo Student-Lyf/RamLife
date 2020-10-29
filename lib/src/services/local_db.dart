@@ -133,17 +133,24 @@ class LocalDatabase extends Database {
 		..createObjectStore(sportsStoreName, autoIncrement:  true);
 
 	@override 
-	Future<void> init() async => database = await (await idbFactory).open(
-		"ramaz.db",
-		version: 1, 
-		onUpgradeNeeded: (idb.VersionChangeEvent event) {
-			switch (event.oldVersion) {
-				case 0: // fresh install
-					createObjectStores(event.database);
-					break;
-			}
+	Future<void> init() async {
+		try {
+			database = await (await idbFactory).open(
+				"ramaz.db",
+				version: 1, 
+				onUpgradeNeeded: (idb.VersionChangeEvent event) {
+					switch (event.oldVersion) {
+						case 0: // fresh install
+							createObjectStores(event.database);
+							break;
+					}
+				}
+			);
+		} on StateError {  // ignore: avoid_catching_errors
+			await (await idbFactory).deleteDatabase("ramaz.db");
+			await init();
 		}
-	);
+	}
 
 	@override
 	Future<void> signIn() async {}
