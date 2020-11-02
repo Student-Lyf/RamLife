@@ -64,27 +64,26 @@ class AdminMenuItem extends StatelessWidget {
   /// The label to display.
   final String label;
 
+  /// A description of what this admin option does. 
+  final String description;
+
   /// The name of the route to push when tapped. 
   final String routeName; 
-  
+
   /// Creates a menu item for the admin console.
   const AdminMenuItem({
   	@required this.icon, 
   	@required this.label, 
+    @required this.description,
   	@required this.routeName
 	});
   
   @override
-  Widget build(BuildContext context) => InkWell(
+  Widget build(BuildContext context) => ListTile(
+    title: Text(label),
+    subtitle: Text(description),
+    leading: Icon(icon),
     onTap: () => Navigator.of(context).pushNamed(routeName),
-    child: Column(
-      children: [
-        const SizedBox(height: 10),
-        Text(label, textScaleFactor: 1.25),
-        const SizedBox(height: 25),
-        Icon(icon, size: 100),
-      ]
-    )
   );
 }
 
@@ -130,54 +129,33 @@ class AdminHomePageState extends State<AdminHomePage> {
         )
       ]
     ),
-		// body: Column(
-  //     children: [
-  //       const SizedBox(height: 10),
-  //       const Text("Select an option", textScaleFactor: 2),
-  //       const SizedBox(height: 25),
-        // body: Expanded(
-    body: SizedBox(
-      width: 150, 
-      height: 150, 
-      child: GridView.extent(
-        maxCrossAxisExtent: 200, 
-        children: [
-          Container(
-            color: const Color(0x88000000),
-          )
-        ]
-        // child: Row(
-        //   children: [
-        //     if (_isCalendarAdmin ?? false) const AdminMenuItem(
-        //       icon: Icons.schedule,
-        //       label: "Manage schedules",
-        //       routeName: Routes.specials, 
-        //     ),
-        //   ]
-        // )
-        // child: GridView.count(
-          // shrinkWrap: true,
-          // crossAxisCount: 2,
-        //   childAspectRatio: 0.5,
-          // children: [
-          //   if (_isCalendarAdmin ?? false) const AdminMenuItem(
-          //   	icon: Icons.schedule,
-          //   	label: "Manage schedules",
-          //   	routeName: Routes.specials, 
-          // 	),
-        //    //  if (_isCalendarAdmin ?? false) const AdminMenuItem(
-        //    //  	icon: Icons.today,
-        //    //  	label: "Edit calendar",
-        //    //  	routeName: Routes.calendar,
-        //   	// ),
-        //    //  if (_isSportsAdmin ?? false) const AdminMenuItem(
-        //    //    icon: Icons.directions_run,
-        //    //    label: "Manage games",
-        //    //    routeName: Routes.sports,
-        //    //  )
-        //   ]
-        // )
-      )
-		),
+    body: ListView(
+      padding: const EdgeInsets.all(20),
+      children: [
+        Text(
+          "Choose an admin option",
+          style: Theme.of(context).textTheme.headline5,
+        ),
+        const SizedBox(height: 20),
+        if (_isCalendarAdmin ?? false) const AdminMenuItem(
+          label: "Calendar",
+          icon: Icons.today,
+          description: "Modify the calendar",
+          routeName: Routes.calendar,
+        ),
+        if (_isCalendarAdmin ?? false) const AdminMenuItem(
+        	label: "Schedules",
+        	icon: Icons.schedule,
+          description: "Manage your custom schedules",
+        	routeName: Routes.specials, 
+      	),
+        if (_isSportsAdmin ?? false) const AdminMenuItem(
+          icon: Icons.directions_run,
+          label: "Sports",
+          description: "Add new sports games and record scores",
+          routeName: Routes.sports,
+        )
+      ]
+    )
 	);
 }
