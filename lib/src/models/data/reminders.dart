@@ -58,7 +58,6 @@ class Reminders extends Model {
 		}
 		readReminders.add(index);
 		cleanReminders();
-		updateReminders();
 	}
 
 	/// Gets all reminders that apply to the a given period. 
@@ -75,15 +74,6 @@ class Reminders extends Model {
 		dayName: dayName,
 		period: period,
 	).toList();
-
-	/// Saves all reminders to the device and the cloud. 
-	Future<void> saveReminders() async {
-		final List<Map<String, dynamic>> json = [
-			for (final Reminder reminder in reminders)
-				reminder.toJson()
-		];
-		await Services.instance.database.setReminders(json);
-	}
 
 	/// Checks if any reminders have been modified and removes them. 
 	/// 
@@ -109,51 +99,35 @@ class Reminders extends Model {
 		}
 	}
 
-	/// Runs errands whenever reminders have changed. 
-	/// 
-	/// Does the following: 
-	/// 
-	/// 1. Runs [verifyReminders] (if a reminder has changed and not simply added).
-	/// 2. Runs [saveReminders].
-	/// 3. Calls [notifyListeners].
-	void updateReminders([int changedIndex]) {
-		if (changedIndex != null) {
-			verifyReminders(changedIndex);
-		}
-		saveReminders();
-		notifyListeners();
-	}
-
 	/// Replaces a reminder at a given index. 
 	void replaceReminder(int index, Reminder reminder) {
 		if (reminder == null) {
 			return;
 		}
-		reminders
-			..removeAt(index)
-			..insert(index, reminder);
-		updateReminders(index);
+		final String oldHash = reminders [index].hash;
+		reminders [index] = reminder;
+		Services.instance.database.updateReminder(oldHash, reminder.toJson());
+		verifyReminders(index);
+		notifyListeners();
 	}
 
-	/// Adds a reminder to the reminders list. 
-	/// 
-	/// Use this method instead of simply `reminders.add` to 
-	/// ensure that [updateReminders] is called. 
+	/// Creates a new reminder. 
 	void addReminder(Reminder reminder) {
 		if (reminder == null) {
 			return;
 		}
 		reminders.add(reminder);
-		updateReminders();
+		Services.instance.database.updateReminder(null, reminder.toJson());
+		notifyListeners();
 	}
 
 	/// Deletes the reminder at a given index.
-	/// 
-	/// Use this instead of `reminders.removeAt` to ensure that 
-	/// [updateReminders] is called.
 	void deleteReminder(int index) {
+		final String oldHash = reminders [index].hash;
 		reminders.removeAt(index);
-		updateReminders(index);
+		Services.instance.database.deleteReminder(oldHash);
+		verifyReminders(index);  // remove the reminder from the schedule
+		notifyListeners();
 	}
 
 	/// Deletes expired reminders. 

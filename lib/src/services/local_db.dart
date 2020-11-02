@@ -1,4 +1,5 @@
 import "package:idb_shim/idb_shim.dart" as idb;
+import "package:meta/meta.dart";
 
 import "auth.dart";
 import "database.dart";
@@ -45,10 +46,10 @@ extension DatabaseExtension on idb.Database {
 	/// have a key. 
 	/// 
 	/// This code handles transactions so other code doesn't have to. 
-	Future<void> update<T>(String storeName, T value) => 
+	Future<void> update<T>(String storeName, T value, [dynamic key]) => 
 		transaction(storeName, idb.idbModeReadWrite)
 		.objectStore(storeName)
-		.put(value);
+		.put(value, key);
 
 	/// Gets all the data in an object store. 
 	/// 
@@ -61,6 +62,28 @@ extension DatabaseExtension on idb.Database {
 				.objectStore(storeName).getAll()
 		)	Map<String, dynamic>.from(entry)
 	];
+
+	/// Deletes a data from an object store. 
+	/// 
+	/// This code handles transactions so other code doesn't have to. 
+	Future<void> delete(String storeName, dynamic key) async => 
+		transaction(storeName, idb.idbModeReadWrite)
+		.objectStore(storeName)
+		.delete(key);
+
+	/// Finds an entry in an object store by a field and value. 
+	Future<idb.CursorWithValue> findEntry({
+		@required String storeName, 
+		@required String key, 
+		@required String path
+	}) async => key == null ? null : transaction(storeName, idb.idbModeReadWrite)
+		.objectStore(storeName)
+		.index(path)
+		.openCursor(range: idb.KeyRange.only(key), autoAdvance: true)
+		.firstWhere(
+			(idb.CursorWithValue cursor) => cursor.key == key,
+			orElse: () => null
+		);
 }
 
 /// A database that's hosted on the user's device. 
@@ -79,8 +102,7 @@ extension DatabaseExtension on idb.Database {
 /// Another quirk of idb is that object stores can only be created on startup. 
 /// One way this is relevant is in [isSignedIn]. If it turns out that the user 
 /// is not signed in, it would be too late to create new object stores. That's 
-/// why the function that creates new object stores ([createObjectStores]) is 
-/// called in [init], so that it runs right away. 
+/// why [init] creates new object stores, so that it runs right away. 
 /// 
 /// Another consequence of having to consolidate object store creation in the 
 /// very beginning is that there is a strict way of migrating from one database
@@ -123,28 +145,28 @@ class LocalDatabase extends Database {
 	/// Not to be confused with a RamLife [Database]. 
 	idb.Database database;
 
-	/// Creates all the object stores from scratch, specifying their keys. 
-	Future<void> createObjectStores(idb.Database database) async => database
-		..createObjectStore(userStoreName, keyPath: "email")
-		..createObjectStore(sectionStoreName, keyPath: "id")
-		..createObjectStore(calendarStoreName, keyPath: "month")
-		..createObjectStore(reminderStoreName, autoIncrement: true)
-		..createObjectStore(adminStoreName, keyPath: "email")
-		..createObjectStore(sportsStoreName, autoIncrement:  true);
-
 	@override 
 	Future<void> init() async {
 		try {
 			database = await (await idbFactory).open(
 				"ramaz.db",
-				version: 1, 
+				version: 2, 
 				onUpgradeNeeded: (idb.VersionChangeEvent event) {
-					switch (event.oldVersion) {
-						case 0: // fresh install
-							createObjectStores(event.database);
-							break;
+					switch(event.oldVersion) {
+						case 0: event.database
+							..createObjectStore(userStoreName, keyPath: "email")
+							..createObjectStore(sectionStoreName, keyPath: "id")
+							..createObjectStore(calendarStoreName, keyPath: "month")
+							..createObjectStore(reminderStoreName, autoIncrement: true)
+							..createObjectStore(adminStoreName, keyPath: "email")
+							..createObjectStore(sportsStoreName, autoIncrement:  true);
+							continue one;
+						one: case 1: event.database
+							..deleteObjectStore(reminderStoreName)
+							..createObjectStore(reminderStoreName, autoIncrement: true)
+								.createIndex("hash", "hash", unique: true);
 					}
-				}
+				},
 			);
 		} on StateError {  // ignore: avoid_catching_errors
 			await (await idbFactory).deleteDatabase("ramaz.db");
@@ -199,12 +221,27 @@ class LocalDatabase extends Database {
 	Future<List<Map<String, dynamic>>> get reminders => 
 		database.getAll(reminderStoreName);
 
-	@override 
-	Future<void> setReminders(List<Map<String, dynamic>> json) async {
-		for (final Map<String, dynamic> entry in json) {
-			await database.update(reminderStoreName, entry);
-		}
+	@override
+	Future<void> updateReminder(String oldHash, Map<String, dynamic> json) async {
+		final idb.CursorWithValue cursor = await database.findEntry(
+			storeName: reminderStoreName, 
+			key: oldHash, 
+			path: "hash"
+		);
+		return cursor?.update(json) ?? database
+			.transaction(reminderStoreName, idb.idbModeReadWrite)
+			.objectStore(reminderStoreName)
+			.put(json);
 	}
+
+	@override
+	Future<void> deleteReminder(dynamic oldHash) async => (
+		await database.findEntry(
+			storeName: reminderStoreName,
+			key: oldHash, 
+			path: "hash",
+		)
+	)?.delete();
 
 	@override
 	Future<Map<String, dynamic>> get admin async => 

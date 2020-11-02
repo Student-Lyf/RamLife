@@ -32,8 +32,13 @@ class Databases extends Database {
 		await localDatabase.signIn();
 
 		await localDatabase.setUser(await cloudDatabase.user);
-		await localDatabase.setReminders(await cloudDatabase.reminders);
 		await updateCalendar();
+
+		final List<Map<String, dynamic>> cloudReminders = 
+			await cloudDatabase.reminders;
+		for (int index = 0; index < cloudReminders.length; index++) {
+			await localDatabase.updateReminder(index.toString(), cloudReminders [index]);
+		}
 
 		if (await Auth.isAdmin) {
 			await localDatabase.setAdmin(await cloudDatabase.admin);
@@ -116,9 +121,15 @@ class Databases extends Database {
 	Future<List<Map<String, dynamic>>> get reminders => localDatabase.reminders;
 
 	@override
-	Future<void> setReminders(List<Map<String, dynamic>> json) async {
-		await cloudDatabase.setReminders(json);
-		await localDatabase.setReminders(json);
+	Future<void> updateReminder(dynamic oldHash, Map<String, dynamic> json) async {
+		await cloudDatabase.updateReminder(oldHash, json);
+		await localDatabase.updateReminder(oldHash, json);
+	}
+
+	@override
+	Future<void> deleteReminder(dynamic oldHash) async {
+		await cloudDatabase.deleteReminder(oldHash);
+		await localDatabase.deleteReminder(oldHash);
 	}
 
 	@override
