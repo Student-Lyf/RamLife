@@ -77,11 +77,7 @@ class SplashScreenState extends State<SplashScreen> {
 		await crashlytics.toggle(!kDebugMode);
 		FlutterError.onError = crashlytics.recordFlutterError;
 		runZonedGuarded(
-			() => runApp(
-				RamazApp(
-					isSignedIn: isSignedIn,
-				)
-			),
+			() => runApp(RamLife(isSignedIn: isSignedIn)),
 			crashlytics.recordError,
 		);
 	}

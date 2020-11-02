@@ -2,4 +2,4 @@ import "package:flutter/material.dart";
 
 import "app.dart";
 
-void main() => runApp(const RamazApp());
+void main() => runApp(const RamLife());

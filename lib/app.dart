@@ -3,17 +3,21 @@ import "package:flutter/material.dart";
 import "package:ramaz/constants.dart";
 import "package:ramaz/pages.dart";
 import "package:ramaz/widgets.dart";
+import "package:ramaz/services.dart";
 
 /// The main app widget. 
-class RamazApp extends StatelessWidget {
+class RamLife extends StatefulWidget {
 	/// Whether the user is already signed in. 
 	final bool isSignedIn;
 
 	/// Creates the main app widget.
-	const RamazApp ({
-		this.isSignedIn,
-	});
+	const RamLife ({this.isSignedIn});
 
+	@override
+	RamLifeState createState() => RamLifeState();
+}
+
+class RamLifeState extends State<RamLife> {
 	@override 
 	Widget build (BuildContext context) => ThemeChanger(
 		defaultBrightness: null,
@@ -63,23 +67,34 @@ class RamazApp extends StatelessWidget {
 			),
 		),
 		builder: (BuildContext context, ThemeData theme) => MaterialApp (
-			home: isSignedIn == null 
+			home: widget.isSignedIn == null 
 				? SplashScreen()
-				: isSignedIn ? HomePage() : Login(),
+				: widget.isSignedIn ? HomePage() : const Login(),
 			title: "Ram Life",
 			color: RamazColors.blue,
 			theme: theme,
 			routes: {
-				Routes.login: (_) => Login(),
-				Routes.home: (_) => HomePage(),
-				Routes.schedule: (_) => SchedulePage(),
-				Routes.reminders: (_) => RemindersPage(),
-				Routes.feedback: (_) => FeedbackPage(),
-				Routes.calendar: (_) => CalendarPage(),
-				Routes.specials: (_) => SpecialPage(),
-				Routes.admin: (_) => AdminHomePage(),
-				Routes.sports: (_) => SportsPage(),
+				Routes.login: enforceLogin((_) => const Login()),
+				Routes.home: enforceLogin((_) => HomePage()),
+				Routes.schedule: enforceLogin((_) => SchedulePage()),
+				Routes.reminders: enforceLogin((_) => RemindersPage()),
+				Routes.feedback: enforceLogin((_) => FeedbackPage()),
+				Routes.calendar: enforceLogin((_) => CalendarPage()),
+				Routes.specials: enforceLogin((_) => SpecialPage()),
+				Routes.admin: enforceLogin((_) => AdminHomePage()),
+				Routes.sports: enforceLogin((_) => SportsPage()),
 			}
 		)
 	);
+
+	WidgetBuilder enforceLogin(WidgetBuilder builder) => 
+		(_) {
+			if (widget.isSignedIn == null) {
+				return SplashScreen();
+			} else if (!Services.instance.database.isSignedIn) {
+				return Login(builder);
+			} else {
+				return builder(_);
+			}
+		};
 }
