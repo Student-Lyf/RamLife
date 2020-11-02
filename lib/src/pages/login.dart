@@ -20,6 +20,10 @@ import "package:ramaz/widgets.dart";
 /// This page holds methods that can safely clean the errors away before
 /// prompting the user to try again. 
 class Login extends StatefulWidget {
+	final WidgetBuilder destinationPage;
+
+	const Login([this.destinationPage]);
+
 	@override LoginState createState() => LoginState();
 }
 
@@ -154,7 +158,13 @@ class LoginState extends State<Login> {
 		},
 		onSuccess: () {
 			setState(() => isLoading = false);
-			Navigator.of(context).pushReplacementNamed(Routes.home);
+			if (widget.destinationPage == null) {
+				Navigator.of(context).pushReplacementNamed(Routes.home);
+			} else {
+				Navigator.of(context).pushReplacement(MaterialPageRoute(
+					builder: widget.destinationPage
+				));
+			}
 		},
 	);
 }
