@@ -4,6 +4,17 @@ import "auth.dart";
 import "database.dart";
 import "firebase_core.dart";
 
+/// Convenience methods on [CollectionReference].
+extension DocumentFinder on CollectionReference {
+	/// Returns a [DocumentReference] by querying a field. 
+	Future<DocumentReference> findDocument(String field, String value) async {
+		final Query query = where(field, isEqualTo: value);
+		final QueryDocumentSnapshot snapshot = (await query.get()).docs.first;
+		final DocumentReference document = snapshot.reference;
+		return document;
+	}
+}
+
 /// A wrapper around Cloud Firestore. 
 class CloudDatabase extends Database {
 	static final DateTime _now = DateTime.now();
@@ -69,17 +80,6 @@ class CloudDatabase extends Database {
 	static final CollectionReference feedbackCollection =
 		firestore.collection("feedback");
 
-	/// The reminders collection. 
-	/// 
-	/// Each user has their own document here that holds just their reminders. 
-	/// The decision to separate reminders from the rest of the user data was 
-	/// made to minimize the amount of processing time, since the student document
-	/// contains other irrelevant data. 
-	/// 
-	/// To access a document in this collection, use [remindersDocument].
-	static final CollectionReference remindersCollection = 
-		firestore.collection("reminders");
-
 	/// The sports collection. 
 	/// 
 	/// Each academic year has its own document, with all the games for that year 
@@ -95,11 +95,12 @@ class CloudDatabase extends Database {
 	DocumentReference get userDocument => 
 		userCollection.doc(Auth.email);
 
-	/// The document for this user's reminders. 
+	/// The reminders collection. 
 	/// 
-	/// The collection is indexed by email. 
-	DocumentReference get remindersDocument => 
-		remindersCollection.doc(Auth.email);
+	/// Each user document has a sub-collection that has their a document for each 
+	/// reminder.
+	CollectionReference get remindersCollection =>
+		userDocument.collection("reminders");
 
 	/// The document for this user's admin profile. 
 	/// 
@@ -126,10 +127,6 @@ class CloudDatabase extends Database {
 	@override
 	Future<void> signIn() async {
 		await Auth.signIn();
-		final DocumentSnapshot remindersSnapshot = await remindersDocument.get();
-		if (!remindersSnapshot.exists) {
-			await remindersDocument.set({remindersKey: []});
-		}
 	}
 
 	// Database methods. 
@@ -181,17 +178,24 @@ class CloudDatabase extends Database {
 
 	@override
 	Future<List<Map<String, dynamic>>> get reminders async {
-		final DocumentSnapshot snapshot = await remindersDocument.get();
-		final Map<String, dynamic> data = snapshot.data();
+		final QuerySnapshot snapshot = 
+			await remindersCollection.orderBy(FieldPath.documentId).get();
+		final List<QueryDocumentSnapshot> documents = snapshot.docs;
 		return [
-			for (final dynamic json in data [remindersKey])
-				Map<String, dynamic>.from(json)
+			for (final QueryDocumentSnapshot document in documents)
+				document.data()
 		];
 	}
 
 	@override
-	Future<void> setReminders(List<Map<String, dynamic>> json) => 
-		remindersDocument.set({remindersKey: json});
+	Future<void> updateReminder(String oldHash, Map<String, dynamic> json) async =>
+		oldHash == null
+			? remindersCollection.add(json)
+			: (await remindersCollection.findDocument("hash", oldHash)).set(json);
+
+	@override
+	Future<void> deleteReminder(String oldHash) async =>
+		(await remindersCollection.findDocument("hash", oldHash)).delete();
 
 	@override
 	Future<Map<String, dynamic>> get admin async => 

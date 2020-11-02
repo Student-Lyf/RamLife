@@ -91,8 +91,17 @@ abstract class Database extends Service {
 	/// The user's reminders. 
 	Future<List<Map<String, dynamic>>> get reminders;
 
-	/// Sets the user's reminders. 
-	Future<void> setReminders(List<Map<String, dynamic>> json);
+	/// Updates a reminder, creating it if necessary.
+	/// 
+	/// This function queries the database for a reminder with the same hash and 
+	/// updates it. 
+	Future<void> updateReminder(String oldHash, Map<String, dynamic> json);
+
+	/// Deletes a reminder at the given index. 
+	/// 
+	/// This function queries the database for a reminder with the same hash and
+	/// deletes it. 
+	Future<void> deleteReminder(String oldHash);
 
 	/// The admin object (or null).
 	Future<Map<String, dynamic>> get admin;
