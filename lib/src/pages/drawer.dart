@@ -49,7 +49,7 @@ class NavigationDrawer extends StatelessWidget {
 								if (Models.instance.user.isAdmin)
 									ListTile(
 										title: const Text("Admin console"),
-										leading: Icon(Icons.verified_user),
+										leading: Icon(Icons.admin_panel_settings),
 										onTap: pushRoute(context, Routes.admin),
 									),
 								BrightnessChanger.dropdown(prefs: Services.instance.prefs),
