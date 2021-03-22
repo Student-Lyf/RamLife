@@ -30,38 +30,6 @@ class RamazColors {
 	static const Color goldLight = Color (0xfffff552);
 }
 
-/// Route names for each page in the app.
-/// 
-/// These would be enums, but Flutter requires Strings. 
-class Routes {
-	/// The route name for the home page.
-	static const String home = "home";
-
-	/// The route name for the schedule page.
-	static const String schedule = "schedule";
-
-	/// The route name for the reminders page.
-	static const String reminders = "reminders";
-
-	/// The route name for the login page.
-	static const String login = "login";
-
-	/// The route name for the feedback page.
-	static const String feedback = "feedback";
-
-	/// The route name for the calendar page. 
-	static const String calendar = "calendar";
-
-	/// The route name for the specials manager page. 
-	static const String specials = "specials";
-
-	/// The route name for the admin home page. 
-	static const String admin = "admin";
-
-	/// The route name for the sports games page.
-	static const String sports = "sports";
-}
-
 /// A collection of URLs used throughout the app
 class Urls {
 	/// The URL for schoology.

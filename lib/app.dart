@@ -65,16 +65,23 @@ class RamLifeState extends State<RamLife> {
 				buttonColor: RamazColors.blueDark, 
 				textTheme: ButtonTextTheme.accent,
 			),
+			elevatedButtonTheme: ElevatedButtonThemeData(
+				style: ButtonStyle(
+					backgroundColor: MaterialStateProperty.all(RamazColors.blueDark)
+				)
+			),
 		),
 		builder: (BuildContext context, ThemeData theme) => MaterialApp (
-			home: widget.isSignedIn == null 
-				? SplashScreen()
-				: widget.isSignedIn ? HomePage() : const Login(),
+			initialRoute: Routes.home,
 			title: "Ram Life",
 			color: RamazColors.blue,
 			theme: theme,
 			routes: {
-				Routes.login: enforceLogin((_) => const Login()),
+				Routes.splash: (_) => RouteInitializer(
+					isAllowed: () => Auth.isSignedIn,
+					builder: (_) => HomePage(),
+				),
+				Routes.login: (_) => const Login(),
 				Routes.home: enforceLogin((_) => HomePage()),
 				Routes.schedule: enforceLogin((_) => SchedulePage()),
 				Routes.reminders: enforceLogin((_) => RemindersPage()),
@@ -88,13 +95,39 @@ class RamLifeState extends State<RamLife> {
 	);
 
 	WidgetBuilder enforceLogin(WidgetBuilder builder) => 
-		(_) {
-			if (widget.isSignedIn == null) {
-				return SplashScreen();
-			} else if (!Services.instance.database.isSignedIn) {
-				return Login(builder);
-			} else {
-				return builder(_);
-			}
-		};
+		(_) => RouteInitializer(
+			isAllowed: () => Auth.isSignedIn,
+			builder: builder,
+		);
+
+	// WidgetBuilder enforceLogin(WidgetBuilder builder) => 
+	// 	(_) {
+	// 		if (widget.isSignedIn == null) {
+	// 			return SplashScreen();
+	// 		} else if (!Services.instance.database.isSignedIn) {
+	// 			return Login(builder);
+	// 		} else {
+	// 			return builder(_);
+	// 		}
+	// 	};
 }
+
+
+
+// logic
+// initialRoute => route with/out login
+// routes: map with custom RouteInitializer
+// routeInitializer: 
+//  - Route onSuccess
+// 	- Route onDeny
+// 	- Route onError
+// onGenerateRoute: for complex URL logic (not needed yet)
+
+
+/// Some routeInitializers: 
+/// - home: RouteInitializer(
+/// 	- isAllowed: isSignedIn
+/// 	- onSuccess: Routes.home
+/// 	- onDeny: Routes.login
+/// 	- onError: reset(); Routes.login
+/// )
