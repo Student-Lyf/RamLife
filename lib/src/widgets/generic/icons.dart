@@ -37,8 +37,8 @@ class Logos {
 	/// The Google logo. 
 	static const Widget google = CircleAvatar (
 		backgroundColor: Colors.transparent,
-		backgroundImage: NetworkImage(
-			"https://developers.google.com/identity/images/g-logo.png"
+		backgroundImage: AssetImage(
+			"images/logos/google_sign_in.png",
 		),
 	);
 
