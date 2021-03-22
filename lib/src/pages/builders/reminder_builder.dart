@@ -86,7 +86,7 @@ class ReminderBuilderState extends State<ReminderBuilder> {
 	Widget build(BuildContext context) => ModelListener<RemindersBuilderModel>(
 		model: () => RemindersBuilderModel(widget.reminder),
 		// ignore: sort_child_properties_last
-		child: FlatButton(
+		child: TextButton(
 			onPressed: Navigator.of(context).pop,
 			child: Text (
 				"Cancel", 
@@ -104,8 +104,7 @@ class ReminderBuilderState extends State<ReminderBuilder> {
 				title: Text (widget.reminder == null ? "Create reminder" : "Edit reminder"),
 				actions: [
 					back,
-					RaisedButton(
-						color: Theme.of(context).buttonColor,
+					ElevatedButton(
 						onPressed: model.ready
 							? () => Navigator.of(context).pop(model.build())
 							: null,
@@ -123,93 +122,87 @@ class ReminderBuilderState extends State<ReminderBuilder> {
 						),
 					)
 				],
-				content: SingleChildScrollView(
-					child: Column (
-						mainAxisSize: MainAxisSize.min,
-						children: [
-							TextField (
-								controller: controller,
-								onChanged: model.onMessageChanged,
-								textCapitalization: TextCapitalization.sentences,
+				content: Column (
+					mainAxisSize: MainAxisSize.min,
+					children: [
+						TextField (
+							controller: controller,
+							onChanged: model.onMessageChanged,
+							textCapitalization: TextCapitalization.sentences,
+						),
+						const SizedBox (height: 20),
+						RadioListTile<ReminderTimeType> (
+							value: ReminderTimeType.period,
+							groupValue: model.type,
+							onChanged: model.toggleRepeatType,
+							title: Text (
+								"${model.shouldRepeat ? 'Repeats every' : 'On'} period"
 							),
-							const SizedBox (height: 20),
-							Wrap(
-								children: [
-									RadioListTile<ReminderTimeType> (
-										value: ReminderTimeType.period,
-										groupValue: model.type,
-										onChanged: model.toggleRepeatType,
-										title: Text (
-											"${model.shouldRepeat ? 'Repeats every' : 'On'} period"
-										),
-									),
-									RadioListTile<ReminderTimeType> (
-										value: ReminderTimeType.subject,
-										groupValue: model.type,
-										onChanged: model.toggleRepeatType,
-										title: Text (
-											"${model.shouldRepeat ? 'Repeats every' : 'On'} subject"
-										),
-									),
-								]
+						),
+						RadioListTile<ReminderTimeType> (
+							value: ReminderTimeType.subject,
+							groupValue: model.type,
+							onChanged: model.toggleRepeatType,
+							title: Text (
+								"${model.shouldRepeat ? 'Repeats every' : 'On'} subject"
 							),
-							const SizedBox (height: 20),
-							if (model.type == ReminderTimeType.period) ...[
-								ListTile (
-									title: const Text ("Day"),
-									trailing: DropdownButton<String>(
-										items: [
-											for (final String dayName in Models.instance.schedule.user.dayNames)
-												DropdownMenuItem(
-													value: dayName,
-													child: Text(dayName),
-												),
-										],
-										onChanged: model.changeDay,
-										value: model.dayName,
-										hint: const Text("Day"),
-									),
+						),
+						const SizedBox (height: 20),
+						if (model.type == ReminderTimeType.period) ...[
+							ListTile (
+								title: const Text ("Day"),
+								trailing: DropdownButton<String>(
+									items: [
+										for (final String dayName in Models.instance.schedule.user.dayNames)
+											DropdownMenuItem(
+												value: dayName,
+												child: Text(dayName),
+											),
+									],
+									onChanged: model.changeDay,
+									value: model.dayName,
+									hint: const Text("Day"),
 								),
-								ListTile (
-									title: const Text ("Period"),
-									trailing: DropdownButton<String> (
-										items: [
-											for (final String period in model.periods ?? [])
-												DropdownMenuItem(
-													value: period,
-													child: Text (period),
-												)
-										],
-										onChanged: model.changePeriod,
-										value: model.period,
-										hint: const Text ("Period"),
-									)
+							),
+							ListTile (
+								title: const Text ("Period"),
+								trailing: DropdownButton<String> (
+									items: [
+										for (final String period in model.periods ?? [])
+											DropdownMenuItem(
+												value: period,
+												child: Text (period),
+											)
+									],
+									onChanged: model.changePeriod,
+									value: model.period,
+									hint: const Text ("Period"),
 								)
-							] else if (model.type == ReminderTimeType.subject)
-								ListTile (
-									title: const Text ("Class"),
-									trailing: DropdownButton<String>(
-										items: [
-											for (final String course in model.courses)
-												DropdownMenuItem(
-													value: course,
-													child: Text("${ReminderBuilder.trimString(course, 14)}..."),
-												)
-										],
-										onChanged: model.changeCourse,
-										value: model.course,
-										isDense: true,
-										hint: const Text ("Class"),
-									)
-								),
-							SwitchListTile (
-								value: model.shouldRepeat,
-								onChanged: model.toggleRepeat,
-								title: const Text ("Repeat"),
-								secondary: const Icon (Icons.repeat),
+							)
+						] else if (model.type == ReminderTimeType.subject)
+							ListTile (
+								title: const Text ("Class"),
+								trailing: DropdownButton<String>(
+									items: [
+										for (final String course in model.courses)
+											DropdownMenuItem(
+												value: course,
+												child: Text("${ReminderBuilder.trimString(course, 14)}..."),
+											)
+									],
+									onChanged: model.changeCourse,
+									value: model.course,
+									isDense: true,
+									hint: const Text ("Class"),
+								)
 							),
-						]
-					)
+						SwitchListTile (
+							value: model.shouldRepeat,
+							onChanged: model.toggleRepeat,
+							title: const Text ("Repeat"),
+							secondary: const Icon (Icons.repeat),
+						),
+					]
 				)
 			)
 	);

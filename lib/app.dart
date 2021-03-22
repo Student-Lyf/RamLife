@@ -37,6 +37,11 @@ class RamLifeState extends State<RamLife> {
 				buttonColor: RamazColors.gold,
 				textTheme: ButtonTextTheme.normal,
 			),
+			elevatedButtonTheme: ElevatedButtonThemeData(
+				style: ButtonStyle(
+					backgroundColor: MaterialStateProperty.all(RamazColors.gold)
+				)
+			)
 		),
 		dark: ThemeData(
 			brightness: Brightness.dark,
