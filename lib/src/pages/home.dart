@@ -1,5 +1,8 @@
 import "package:flutter/material.dart";
 
+import "package:adaptive_components/adaptive_components.dart";
+import "package:breakpoint_scaffold/breakpoint_scaffold.dart";
+
 import "package:ramaz/models.dart";
 import "package:ramaz/pages.dart";
 import "package:ramaz/widgets.dart";
@@ -44,21 +47,32 @@ class HomePage extends StatelessWidget {
 	@override 
 	Widget build (BuildContext context) => ModelListener<HomeModel>(
 		model: () => HomeModel(),
-		builder: (BuildContext context, HomeModel model, _) => AdaptiveScaffold (
-			appBarBuilder: (isShowingSchedule) => AppBar (
+		builder: (_, HomeModel model, __) => ResponsiveScaffold.navBar(
+			// appBarBuilder: (isShowingSchedule) => AppBar(
+			appBar: AppBar(
 				title: const Text ("Home"),
 				actions: [
-					if (scheduleModel.hasSchool && !isShowingSchedule) Builder (
-						builder: (BuildContext context) => FlatButton(
-							textColor: Colors.white,
-							onPressed: () => Scaffold.of(context).openEndDrawer(),
-							child: const Text ("Tap for schedule"),
-						)
+					// if (scheduleModel.hasSchool && !isShowingSchedule) Builder(
+					if (scheduleModel.hasSchool) ResponsiveBuilder(
+						builder: (BuildContext context, LayoutInfo info, __) => 
+							info.hasStandardSideSheet ? Container() : FlatButton(
+								textColor: Colors.white,
+								onPressed: () => Scaffold.of(context).openEndDrawer(),
+								child: const Text ("Tap for schedule"),
+							)
 					)
 				],
 			),
-			drawer: NavigationDrawer(),
-			endDrawer: !scheduleModel.hasSchool ? null : Drawer (
+			drawer: ResponsiveBuilder(
+				builder: (BuildContext context, LayoutInfo info, Widget drawer) => 
+					info.hasStandardDrawer ? SizedBox(width: 256, child: drawer) : drawer,
+				child: NavigationDrawer(),
+			),
+			// SizedBox(width: 256, child: NavigationDrawer()),
+			sideSheet: ResponsiveBuilder(
+				builder: (BuildContext context, LayoutInfo info, Widget schedule) => 
+					!scheduleModel.hasSchool ? null : info.hasStandardSideSheet 
+						? SizedBox(width: 320, child: schedule) : Drawer(child: schedule),
 				child: ClassList(
 					day: scheduleModel.today,
 					periods: scheduleModel.nextPeriod == null 
@@ -70,51 +84,62 @@ class HomePage extends StatelessWidget {
 					headerText: scheduleModel.period == null 
 						? "Today's Schedule" 
 						: "Upcoming Classes"
-				)
+				),
 			),
+			navItems: const [
+				NavigationItem(icon: Icon(Icons.calendar_today), label: "Today"),
+				NavigationItem(icon: Icon(Icons.schedule), label: "Schedule"),
+				NavigationItem(icon: Icon(Icons.notifications), label: "Reminders"),
+			],
+			secondaryDrawer: NavigationDrawer(),
+			navIndex: 0,
+			onNavIndexChanged: (int value) {},
 			body: Builder(
 				builder: (BuildContext context) => RefreshIndicator(
 					onRefresh: () => refresh(context, model),
-					child: ListView (
-						padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+					child: ListView(
+						padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
 						children: [
-							RamazLogos.ramRectangle,
-							const Divider(),
 							Text (
-								scheduleModel.hasSchool
-									? "Today is a${scheduleModel.today.n} "
-										"${scheduleModel.today.name}"
-										"\nSchedule: ${scheduleModel.today.special.name}"
-									: "There is no school today",
-								textScaleFactor: 2,
+								"Today is XXX",
+								style: Theme.of(context).textTheme.headline3,
 								textAlign: TextAlign.center
 							),
-							const SizedBox (height: 30),
-							if (scheduleModel.hasSchool) NextClass(
-								reminders: remindersModel.currentReminders,
-								period: scheduleModel.period,
-								subject: scheduleModel.subjects [scheduleModel.period?.id],
-								modified: scheduleModel.today.isModified,
+							const SizedBox (height: 20),
+							Text(
+								scheduleModel.hasSchool
+									? "Schedule: ${scheduleModel.today.special.name}"
+									: "There is no school today",
+								textAlign: TextAlign.center,
+								style: Theme.of(context).textTheme.headline5,
 							),
-							// if school won't be over, show the next class
-							if (
-								scheduleModel.nextPeriod != null && 
-								!scheduleModel.today.isModified
-							) NextClass (
-								next: true,
-								reminders: remindersModel.nextReminders,
-								period: scheduleModel.nextPeriod,
-								subject: scheduleModel.subjects [scheduleModel.nextPeriod?.id],
-								modified: scheduleModel.today.isModified,
+							const SizedBox (height: 10),
+							ScheduleSlot(
+								children: [
+									if (scheduleModel.hasSchool) NextClass(
+										reminders: remindersModel.currentReminders,
+										period: scheduleModel.period,
+										subject: scheduleModel.subjects [scheduleModel.period?.id],
+										modified: scheduleModel.today.isModified,
+									),
+									if (
+										scheduleModel.nextPeriod != null && 
+										!scheduleModel.today.isModified
+									) NextClass (
+										next: true,
+										reminders: remindersModel.nextReminders,
+										period: scheduleModel.nextPeriod,
+										subject: scheduleModel.subjects [scheduleModel.nextPeriod?.id],
+										modified: scheduleModel.today.isModified,
+									),
+								]
 							),
 							if (sportsModel.todayGames.isNotEmpty) ...[
 								const SizedBox(height: 10),
-								const Center(
-									child: Text(
-										"Sports games",
-										textScaleFactor: 1.5,
-										style: TextStyle(fontWeight: FontWeight.w300)
-									)
+								Text(
+									"Sports games",
+									textAlign: TextAlign.center,
+									style: Theme.of(context).textTheme.headline5,
 								),
 								const SizedBox(height: 10),
 								for (final int index in sportsModel.todayGames)
@@ -125,5 +150,23 @@ class HomePage extends StatelessWidget {
 				)
 			)
 		)
+	);
+}
+
+
+class ScheduleSlot extends StatelessWidget {
+	final List<Widget> children;
+	const ScheduleSlot({@required this.children});
+
+	@override
+	Widget build(BuildContext context) => ResponsiveBuilder(
+		builder: (_, LayoutInfo layout, __) => 
+		layout.isDesktop && children.length > 1
+			? GridView.count(
+				shrinkWrap: true,
+				crossAxisCount: layout.isDesktop ? children.length : 1,
+				children: children
+			)
+			: Column(children: children)
 	);
 }
