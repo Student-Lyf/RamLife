@@ -42,8 +42,8 @@ abstract class ReminderTime {
 
 	/// Allows its subclasses to be `const`. 
 	const ReminderTime({
-		@required this.repeats, 
-		@required this.type
+		required this.repeats, 
+		required this.type
 	});
 
 	/// Initializes a new instance from JSON.
@@ -77,11 +77,11 @@ abstract class ReminderTime {
 	/// Used for cases where the caller doesn't care about the [ReminderTimeType],
 	/// such as a UI reminder builder. 
 	factory ReminderTime.fromType({
-		@required ReminderTimeType type,
-		@required String dayName,
-		@required String period,
-		@required String name,
-		@required bool repeats,
+		required ReminderTimeType type,
+		required String dayName,
+		required String period,
+		required String name,
+		required bool repeats,
 	}) {
 		switch (type) {
 			case ReminderTimeType.period: return PeriodReminderTime(
@@ -102,9 +102,9 @@ abstract class ReminderTime {
 	/// 
 	/// All possible parameters are required. 
 	bool doesApply({
-		@required String dayName, 
-		@required String subject, 
-		@required String period,
+		required String dayName, 
+		required String subject, 
+		required String period,
 	});
 
 	/// Returns a String representation of this [ReminderTime].
