@@ -1,5 +1,3 @@
-import "package:meta/meta.dart";
-
 import "reminder_time.dart";
 
 /// A [ReminderTime] that depends on a name and period.
@@ -14,9 +12,9 @@ class PeriodReminderTime extends ReminderTime {
 	/// 
 	/// All parameters must be non-null.
 	const PeriodReminderTime({
-		@required this.dayName,
-		@required this.period,
-		@required bool repeats
+		required this.dayName,
+		required this.period,
+		required bool repeats
 	}) : super (repeats: repeats, type: ReminderTimeType.period);
 
 	/// Creates a new [ReminderTime] from JSON.
@@ -45,9 +43,9 @@ class PeriodReminderTime extends ReminderTime {
 	/// Returns true if [dayName] and [period] match this instance's fields.
 	@override
 	bool doesApply({
-		@required String dayName, 
-		@required String subject, 
-		@required String period,
+		required String dayName, 
+		required String subject, 
+		required String period,
 	}) => dayName == this.dayName && period == this.period;
 
 	@override

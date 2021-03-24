@@ -1,5 +1,3 @@
-import "package:meta/meta.dart";
-
 import "reminder_time.dart";
 
 /// A [ReminderTime] that depends on a subject. 
@@ -9,8 +7,8 @@ class SubjectReminderTime extends ReminderTime {
 
 	/// Returns a new [SubjectReminderTime]. All parameters must be non-null.
 	const SubjectReminderTime({
-		@required this.name,
-		@required bool repeats,
+		required this.name,
+		required bool repeats,
 	}) : super (repeats: repeats, type: ReminderTimeType.subject);
 
 	/// Returns a new [SubjectReminderTime] from a JSON object.
@@ -34,9 +32,9 @@ class SubjectReminderTime extends ReminderTime {
 	/// matches the `subject` parameter.
 	@override
 	bool doesApply({
-		@required String dayName, 
-		@required String subject, 
-		@required String period,
+		required String dayName, 
+		required String subject, 
+		required String period,
 	}) => subject == name;
 
 	@override
