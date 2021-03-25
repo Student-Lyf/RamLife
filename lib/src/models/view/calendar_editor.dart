@@ -26,7 +26,7 @@ class CalendarEditor with ChangeNotifier {
 	// final List<List<Map<String, dynamic>>> data = List.filled(12, null);
 
 	/// The calendar filled with [Day]s.
-	final List<List<Day>> calendar = List.filled(12, null);
+	final List<List<Day?>?> calendar = List.filled(12, null);
 
 	/// A list of callbacks on the Firebase streams.
 	/// 
@@ -51,7 +51,7 @@ class CalendarEditor with ChangeNotifier {
 	/// Every entry is a list of two numbers. The first one is the amount of days
 	/// from Sunday before the month starts, and the second one is the amount of 
 	/// days after the month until Saturday. They will be represented by blanks. 
-	final List<List<int>> paddings = List.filled(12, null);
+	final List<List<int>?> paddings = List.filled(12, null);
 
 	/// Creates a data model to hold the calendar.
 	/// 
@@ -90,8 +90,8 @@ class CalendarEditor with ChangeNotifier {
 	/// (starting on Sunday) instead of defaulting to the first open cell on 
 	/// the calendar grid. This function pads the calendar with the correct 
 	/// amount of empty days before and after the month. 
-	List<Day> layoutMonth(int month) {
-		final List<Day> cal = calendar [month];
+	List<Day?> layoutMonth(int month) {
+		final List<Day?> cal = calendar [month]!;
 		final int firstDayOfWeek = DateTime(years [month], month + 1, 1).weekday;
 		final int weekday = firstDayOfWeek == 7 ? 0 : firstDayOfWeek;
 		paddings [month] = [weekday, daysInMonth - (weekday + cal.length)];
@@ -99,15 +99,15 @@ class CalendarEditor with ChangeNotifier {
 	}
 
 	/// Updates the calendar. 
-	Future<void> updateDay(DateTime date, Day day) async {
+	Future<void> updateDay(DateTime date, Day? day) async {
 		if (day == null) {
 			return;
 		}
-		calendar [date.month - 1] [date.day - 1] = day;
+		calendar [date.month - 1]! [date.day - 1] = day;
 		await Services.instance.database.setCalendar(
 			date.month, 
 			{
-				"calendar": Day.monthToJson(calendar [date.month - 1]),
+				"calendar": Day.monthToJson(calendar [date.month - 1]!),
 				"month": date.month
 			}
 		);

@@ -9,10 +9,10 @@ class RemindersBuilderModel with ChangeNotifier {
 	final Schedule _schedule;
 
 	/// The type of reminder the user is building. 
-	ReminderTimeType type;
+	ReminderTimeType? type;
 
 	/// The time this reminder will be displayed.
-	ReminderTime time;
+	ReminderTime? time;
 
 	/// The message for this reminder.
 	String message = "";
@@ -24,17 +24,17 @@ class RemindersBuilderModel with ChangeNotifier {
 	bool shouldRepeat = false;
 
 	/// The name of the day. 
-	String dayName;
+	String? dayName;
 
 	/// The period this reminder should be displayed.
 	/// 
 	/// Only relevant for [PeriodReminderTime].
-	String period;
+	String? period;
 
 	/// The name of the class this reminder should be displayed.
 	/// 
 	/// Only relevant for [SubjectReminderTime].
-	String course;
+	String? course;
 
 	/// All the names of the user's courses. 
 	final List<String> courses;
@@ -43,7 +43,7 @@ class RemindersBuilderModel with ChangeNotifier {
 	/// 
 	/// If [reminder] is not null, then the relevant fields of this 
 	/// class are filled in with the corresponding fields of the reminder. 
-	RemindersBuilderModel(Reminder reminder) : 
+	RemindersBuilderModel([Reminder? reminder]) : 
 		_schedule = Models.instance.schedule,
 		courses = [
 			for (final Subject subject in Models.instance.schedule.subjects.values)
@@ -56,17 +56,16 @@ class RemindersBuilderModel with ChangeNotifier {
 
 		message = reminder.message;
 		time = reminder.time;	
-
-		shouldRepeat = time.repeats;
-		type = time.type;
+		shouldRepeat = time!.repeats;
+		type = time!.type;
 		switch (type) {
 			case ReminderTimeType.period: 
-				final PeriodReminderTime reminderTime = time;
+				final PeriodReminderTime reminderTime = time as PeriodReminderTime;
 				period = reminderTime.period;
 				dayName = reminderTime.dayName;
 				break;
 			case ReminderTimeType.subject:
-				final SubjectReminderTime reminderTime = time;
+				final SubjectReminderTime reminderTime = time as SubjectReminderTime;
 				course = reminderTime.name;
 				break;
 			default: 
@@ -78,7 +77,7 @@ class RemindersBuilderModel with ChangeNotifier {
 	Reminder build() => Reminder (
 		message: message, 
 		time: ReminderTime.fromType(
-			type: type,
+			type: type!,
 			dayName: dayName,
 			period: period,
 			name: course,
@@ -94,23 +93,27 @@ class RemindersBuilderModel with ChangeNotifier {
 	/// - [type] is null,
 	/// - [type] is [ReminderTimeType.period] and [dayName] or [period] is null, or
 	/// - [type] is [ReminderTimeType.subject] and [course] is null.
-	/// 
-	bool get ready => (message?.isNotEmpty ?? false) && 
-		type != null &&
-		(type != ReminderTimeType.period ||
-			(dayName != null && period != null)
-		) && (
-			type != ReminderTimeType.subject || course != null			
-		);
+	bool get ready {
+		if (message.isEmpty) {
+			return false;
+		} 
+		switch (type) {
+			case ReminderTimeType.period: 
+				return dayName != null && period != null;
+			case ReminderTimeType.subject: 
+				return type != ReminderTimeType.subject || course != null;
+			case null: return false;
+		}
+	}
 
 	/// A list of all the periods in [dayName].
 	/// 
 	/// Make sure this field is only accessed *after* setting [dayName].
-	List<String> get periods {
+	List<String>? get periods {
 		if (dayName == null) {
 			return null;
 		}
-		final List<PeriodData> schedule = _schedule.user.schedule [dayName];
+		final List<PeriodData?> schedule = _schedule.user.schedule [dayName]!;
 		return [
 			for (int index = 0; index < schedule.length; index++) 
 				(index + 1).toString() 

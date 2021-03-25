@@ -11,16 +11,18 @@ class DayBuilderModel with ChangeNotifier {
 	/// This is used to create [userSpecials].
 	final UserModel admin;
 
-	String _name;
-	Special _special;
 	bool _hasSchool;
+	String? _name;
+	Special? _special;
 
 	/// Creates a view model for modifying a [Day].
-	DayBuilderModel(Day day) : admin = Models.instance.user {
+	DayBuilderModel(Day? day) : 
+		admin = Models.instance.user,
+		_name = day?.name,
+		_special = day?.special,
+		_hasSchool = day == null
+	{
 		admin.addListener(notifyListeners);
-		_name = day?.name;
-		_special = day?.special;
-		_hasSchool = day?.school;
 	}
 
 	@override 
@@ -30,15 +32,15 @@ class DayBuilderModel with ChangeNotifier {
 	}
 
 	/// The name for this day. 
-	String get name => _name;
-	set name (String value) {
+	String? get name => _name;
+	set name (String? value) {
 		_name = value;
 		notifyListeners();
 	}
 
 	/// The special for this day. 
-	Special get special => _special;
-	set special (Special value) {
+	Special? get special => _special;
+	set special (Special? value) {
 		if (value == null) {
 			return;
 		}
@@ -57,9 +59,6 @@ class DayBuilderModel with ChangeNotifier {
 	}
 
 	/// If this day has school. 
-	/// 
-	/// This is different than [Day.school] because it doesn't belong to [day],
-	/// it dictates whether [name] and [special] is used in [day].
 	bool get hasSchool => _hasSchool;
 	set hasSchool(bool value) {
 		_hasSchool = value;
@@ -69,15 +68,14 @@ class DayBuilderModel with ChangeNotifier {
 	/// The day being created (in present state). 
 	/// 
 	/// The model uses [name] and [special]. 
-	Day get day => hasSchool
-		? Day(name: name, special: special)
-		: Day(name: null, special: presetSpecials [0]);
+	Day? get day => !hasSchool ? null : 
+		Day(name: name ?? "", special: presetSpecials.first);
 
 	/// The built-in specials.  
 	List<Special> get presetSpecials => Special.specials;
 
 	/// Custom user-created specials. 
-	List<Special> get userSpecials => admin.admin.specials;
+	List<Special> get userSpecials => admin.admin!.specials;
 
 	/// Whether this day is ready to be created. 
 	bool get ready => name != null && special != null;
