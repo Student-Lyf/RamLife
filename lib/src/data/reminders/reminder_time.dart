@@ -78,18 +78,18 @@ abstract class ReminderTime {
 	/// such as a UI reminder builder. 
 	factory ReminderTime.fromType({
 		required ReminderTimeType type,
-		required String dayName,
-		required String period,
-		required String name,
+		required String? dayName,
+		required String? period,
+		required String? name,
 		required bool repeats,
 	}) {
 		switch (type) {
 			case ReminderTimeType.period: return PeriodReminderTime(
-				period: period,
-				dayName: dayName,
+				period: period!,
+				dayName: dayName!,
 				repeats: repeats,
 			); case ReminderTimeType.subject: return SubjectReminderTime(
-				name: name,
+				name: name!,
 				repeats: repeats,
 			); default: throw ArgumentError.notNull("type");
 		}

@@ -10,7 +10,7 @@ class ScheduleModel with ChangeNotifier {
 	static const Special defaultSpecial = Special.covid;
 
 	/// The default [Day] for the UI.
-	Day defaultDay;
+	late Day defaultDay;
 
 	/// The schedule data model.
 	/// 
@@ -18,7 +18,7 @@ class ScheduleModel with ChangeNotifier {
 	final Schedule schedule;
 
 	/// The day whose schedule is being shown in the UI.
-	Day day;
+	Day? day;
 
 	/// The selected date from the calendar. 
 	/// 
@@ -32,13 +32,13 @@ class ScheduleModel with ChangeNotifier {
 	/// If today is a school day, then use that. Otherwise, use the 
 	/// defaults (see [defaultSpecial]).
 	ScheduleModel () : schedule = Models.instance.schedule {
-		day = schedule.hasSchool
-			? schedule.today
-			: defaultDay;
 		defaultDay = Day(
 			name: schedule.user.schedule.keys.first, 
 			special: defaultSpecial
 		);
+		day = schedule.hasSchool
+			? schedule.today
+			: defaultDay;
 	}
 
 	/// Attempts to set the UI to the schedule of the given day. 
@@ -51,8 +51,8 @@ class ScheduleModel with ChangeNotifier {
 			date.month,
 			date.day
 		);
-		final Day selected = Day.getDate(schedule.calendar, justDate);
-		if (!selected.school) {
+		final Day? selected = Day.getDate(schedule.calendar, justDate);
+		if (selected == null) {
 			throw Exception("No School");
 		}
 		day = selected;
@@ -67,26 +67,20 @@ class ScheduleModel with ChangeNotifier {
 	/// 
 	/// If the dayName is non-null, the special defaults to [defaultSpecial].
 	void update({
-		String newName, 
-		Special newSpecial, 
-		void Function() onInvalidSchedule,
+		String? newName, 
+		Special? newSpecial, 
+		void Function()? onInvalidSchedule,
 	}) {
-		String name  = day.name;
-		if (newName != null) {
-			name = newName;
-			day = Day(name: name, special: defaultSpecial);
-			notifyListeners();
-		} 
-		if (newSpecial != null) {
-			day = Day (name: name, special: newSpecial);
-			notifyListeners();
-		}
+		final String name = newName ?? day?.name ?? defaultDay.name;
+		final Special special = newSpecial ?? day?.special ?? defaultSpecial;
+		day = Day(name: name, special: special);
+		notifyListeners();
 		try {
 			// Just to see if the computation is possible. 
 			// TODO: Move the logic from ClassList here. 
-			Models.instance.schedule.user.getPeriods(day);
+			Models.instance.schedule.user.getPeriods(day!);
 		} on RangeError { // ignore: avoid_catching_errors
-			day = Day(name: day.name, special: defaultSpecial);
+			day = Day(name: day!.name, special: defaultSpecial);
 			if (onInvalidSchedule != null) {
 				onInvalidSchedule();
 			}

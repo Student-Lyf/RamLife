@@ -6,17 +6,17 @@ import "package:ramaz/services.dart";
 /// A view model for the feedback page. 
 // ignore: prefer_mixin
 class FeedbackModel with ChangeNotifier {
-	String _message;
+	String? _message;
 	bool _anonymous = true;
 
 	/// Whether the user is ready to submit
 	/// 
 	/// Is true if the [message] is non-null and not empty. 
-	bool get ready => message != null && message.trim().isNotEmpty;
+	bool get ready => message != null && message!.trim().isNotEmpty;
 
 	/// The message that will be sent along with the feedback.
-	String get message => _message;
-	set message (String value) {
+	String? get message => _message;
+	set message (String? value) {
 		_message = value;
 		notifyListeners();
 	}
@@ -37,7 +37,7 @@ class FeedbackModel with ChangeNotifier {
 		.cloudDatabase
 		.sendFeedback(
 			Feedback (
-				message: message,
+				message: message!,
 				timestamp: DateTime.now(),
 				anonymous: anonymous,
 				name: anonymous ? null : Auth.name,

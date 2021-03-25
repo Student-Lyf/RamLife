@@ -6,7 +6,7 @@ import "package:ramaz/data.dart";
 // ignore: prefer_mixin
 class SpecialBuilderModel with ChangeNotifier {
 	/// The special that this special is based on. 
-	Special preset;
+	Special? preset;
 
 	/// Numbers for the periods.
 	/// 
@@ -14,8 +14,9 @@ class SpecialBuilderModel with ChangeNotifier {
 	List<String> periods = [];
 	List<Range> _times = [];
 	List<int> _skips = [];
-	String _name;
-	int _numPeriods = 0, _mincha, _homeroom;
+	String? _name;
+	int _numPeriods = 0;
+	int? _mincha, _homeroom;
 
 	/// The times for the periods. 
 	/// 
@@ -38,8 +39,8 @@ class SpecialBuilderModel with ChangeNotifier {
 	/// The name of this special.
 	/// 
 	/// See [Special.name].
-	String get name => _name;
-	set name (String value) {
+	String? get name => _name;
+	set name (String? value) {
 		_name = value;
 		notifyListeners();
 	}
@@ -88,8 +89,8 @@ class SpecialBuilderModel with ChangeNotifier {
 	/// The index of Mincha in [times]. 
 	/// 
 	/// See [Special.mincha].
-	int get mincha => _mincha;
-	set mincha (int value) {
+	int? get mincha => _mincha;
+	set mincha (int? value) {
 		_mincha = value;
 		periods = getIndices();
 		notifyListeners();
@@ -98,24 +99,23 @@ class SpecialBuilderModel with ChangeNotifier {
 	/// The index of homeroom in [times].
 	/// 
 	/// See [Special.homeroom].
-	int get homeroom => _homeroom;
-	set homeroom (int value) {
+	int? get homeroom => _homeroom;
+	set homeroom (int? value) {
 		_homeroom = value;
 		periods = getIndices();
 		notifyListeners();
 	}
 
 	/// Whether this special is ready to be built. 
-	bool get ready => numPeriods != null && 
-		numPeriods > 0 && 
-		times.isNotEmpty &&
-		name != null && name.isNotEmpty && 
-		!Special.specials.any((Special special) => special.name == name) &&
-		(preset == null || special != preset);
+	bool get ready => numPeriods > 0  
+		&& times.isNotEmpty
+		&& name != null && name!.isNotEmpty 
+		&& !Special.specials.any((Special special) => special.name == name)
+		&& (preset == null || special != preset);
 
 	/// The special being built. 
 	Special get special => Special(
-		name, times, 
+		name!, times, 
 		homeroom: homeroom,
 		mincha: mincha,
 		skip: skips
@@ -138,13 +138,13 @@ class SpecialBuilderModel with ChangeNotifier {
 	/// Sets properties of this special based on an existing special. 
 	/// 
 	/// The special can then be fine-tuned afterwards. 
-	void usePreset(Special special) {
+	void usePreset(Special? special) {
 		if (special == null) {
 			return;
 		}
 		preset = special;
 		_times = List.of(special.periods);
-		_skips = special.skip ?? [];
+		_skips = special.skip;
 		_name = special.name;
 		_numPeriods = special.periods.length;
 		_mincha = special.mincha;

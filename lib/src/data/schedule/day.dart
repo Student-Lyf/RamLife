@@ -33,9 +33,9 @@ class Day {
 	/// Converts a month in the calendar to JSON. 
 	/// 
 	/// This is how it is currently stored in the database. 
-	static List<Map<String, dynamic>> monthToJson(List<Day> month) => [
-		for (final Day day in month)
-			day.toJson()
+	static List<Map<String, dynamic>?> monthToJson(List<Day?> month) => [
+		for (final Day? day in month)
+			day?.toJson()
 	];
 
 	/// Gets the Day for [date] in the [calendar].

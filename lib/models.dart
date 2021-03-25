@@ -62,42 +62,37 @@ class Models extends Model {
 	static Models instance = Models();
 
 	/// The reminders data model. 
-	Reminders reminders;
+	Reminders reminders = Reminders();
 
 	/// The schedule data model. 
-	Schedule schedule;
+	Schedule schedule = Schedule();
 
 	/// The sports data model. 
-	Sports sports;
+	Sports sports = Sports();
 
 	/// The user data model. 
-	UserModel user;
+	UserModel user = UserModel();
+
+	/// Whether the data models have been initialized.
+	bool isReady = false;
 
 	@override
 	Future<void> init() async {
-		user  = UserModel();
-		reminders = Reminders();
-		schedule = Schedule();
-		sports = Sports();
-
 		await user.init();
 		await reminders.init();
 		await schedule.init();
 		await sports.init(refresh: true);
+		isReady = true;
 	}
 
 	@override
 	// This object can be revived using [init].
 	// ignore: must_call_super
 	void dispose() {
-		schedule?.dispose();
-		reminders?.dispose();
-		sports?.dispose();
-		user?.dispose();
-
-		reminders = null;
-		schedule = null;
-		sports = null;
-		user = null;
+		schedule.dispose();
+		reminders.dispose();
+		sports.dispose();
+		user.dispose();
+		isReady = false;
 	}
 }
