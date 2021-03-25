@@ -1,5 +1,3 @@
-import "package:meta/meta.dart";
-
 /// Holds personal information about the user. 
 /// 
 /// While [name] and [email] can be read from the authentication service, 
@@ -21,9 +19,9 @@ class ContactInfo {
 
 	/// Bundles personal info about the user. 
 	ContactInfo({
-		@required this.name,
-		@required this.email,
-		@required this.phoneNumber,
+		required this.name,
+		required this.email,
+		required this.phoneNumber,
 	});
 
 	/// Creates a contact from JSON. 
