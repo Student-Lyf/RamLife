@@ -16,7 +16,7 @@ class Day {
 	/// 
 	/// Each element of [data]'s months should be a JSON representation of a [Day].
 	/// See [Day.fromJson] for how to represent a Day in JSON. 
-	static List<List<Day>> getCalendar(List<List<Map<String, dynamic>>> data) => [
+	static List<List<Day?>> getCalendar(List<List<Map<String, dynamic>>> data) => [
 		for (final List<Map<String, dynamic>> month in data)
 			getMonth(month)
 	];
@@ -24,9 +24,10 @@ class Day {
 	/// Parses a particular month from JSON. 
 	/// 
 	/// See [Day.getCalendar] for details.
-	static List<Day> getMonth(List<Map<String, dynamic>> data) => [
-		for (final Map<String, dynamic> json in data)
-			Day.fromJson(json)
+	static List<Day?> getMonth(List<Map<String, dynamic>?> data) => [
+		for (final Map<String, dynamic>? json in data)
+			if (json == null) null
+			else Day.fromJson(json)
 	];
 
 	/// Converts a month in the calendar to JSON. 
@@ -38,7 +39,7 @@ class Day {
 	];
 
 	/// Gets the Day for [date] in the [calendar].
-	static Day getDate(List<List<Day>> calendar, DateTime date) => 
+	static Day? getDate(List<List<Day?>> calendar, DateTime date) => 
 		calendar [date.month - 1] [date.day - 1];
 
 	/// The name of this day. 

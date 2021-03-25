@@ -43,9 +43,9 @@ class PeriodReminderTime extends ReminderTime {
 	/// Returns true if [dayName] and [period] match this instance's fields.
 	@override
 	bool doesApply({
-		required String dayName, 
-		required String subject, 
-		required String period,
+		required String? dayName, 
+		required String? subject, 
+		required String? period,
 	}) => dayName == this.dayName && period == this.period;
 
 	@override

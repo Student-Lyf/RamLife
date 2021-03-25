@@ -15,16 +15,16 @@ class Sports extends Model {
 	static const Duration _minute = Duration(minutes: 1);
 
 	/// A timer to refresh [todayGames].
-	Timer timer; 
+	late Timer timer; 
 
 	/// Helps partition [games] by past and future. 
-	DateTime now;
+	DateTime now = DateTime.now();
 
 	/// A list of all the games taking place. 
-	List<SportsGame> games;
+	List<SportsGame> games = [];
 
 	/// A list of games being played today to be showed on the home screen. 
-	List<int> todayGames;
+	List<int> todayGames = [];
 
 	/// Loads data from the device and 
 	@override
@@ -54,7 +54,7 @@ class Sports extends Model {
 	];
 
 	/// Adds a game to the database. 
-	Future<void> addGame(SportsGame game) async {
+	Future<void> addGame(SportsGame? game) async {
 		if (game == null) {
 			return;
 		}
@@ -66,7 +66,7 @@ class Sports extends Model {
 	/// 
 	/// Since [SportsGame] objects are immutable, they cannot be changed in place. 
 	/// Instead, they are replaced with a new one. 
-	Future<void> replace(int index, SportsGame newGame) async {
+	Future<void> replace(int index, SportsGame? newGame) async {
 		if (newGame == null) {
 			return;
 		}

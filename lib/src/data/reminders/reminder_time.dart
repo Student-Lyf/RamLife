@@ -102,9 +102,9 @@ abstract class ReminderTime {
 	/// 
 	/// All possible parameters are required. 
 	bool doesApply({
-		required String dayName, 
-		required String subject, 
-		required String period,
+		required String? dayName, 
+		required String? subject, 
+		required String? period,
 	});
 
 	/// Returns a String representation of this [ReminderTime].
