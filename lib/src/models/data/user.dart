@@ -11,18 +11,18 @@ import "model.dart";
 /// UI is in one place. 
 class UserModel extends Model {
 	/// The user object. 
-	User data;
+	late User data;
 
 	/// The admin object. 
 	/// 
 	/// If the user is not an admin ([Auth.isAdmin]) is false, this will be null. 
-	Admin admin;
+	Admin? admin;
 
 	/// The subjects this user has. 
 	/// 
 	/// For students this will be the courses they attend. For teachers, this 
 	/// will be the courses they teach. 
-	Map<String, Subject> subjects;
+	late Map<String, Subject> subjects;
 
 	/// Whether this user is an admin. 
 	/// 
@@ -46,31 +46,31 @@ class UserModel extends Model {
 
 	/// Saves the admin data to the database. 
 	Future<void> saveAdmin() async {
-		await Services.instance.database.setAdmin(admin.toJson());
+		await Services.instance.database.setAdmin(admin!.toJson());
 		notifyListeners();
 	}
 
 	/// Adds a custom [Special] to the admin's profile. 
-	Future<void> addSpecialToAdmin(Special special) async {
+	Future<void> addSpecialToAdmin(Special? special) async {
 		if (special == null) {
 			return;
 		}
-		admin.specials.add(special);
+		admin!.specials.add(special);
 		return saveAdmin();
 	}
 
 	/// Replaces the custom [Special] at the given index in the user's profile. 
-	Future<void> replaceAdminSpecial(int index, Special special) async {
+	Future<void> replaceAdminSpecial(int index, Special? special) async {
 		if (special == null) {
 			return;
 		}
-		admin.specials [index] = special;
+		admin?.specials [index] = special;
 		return saveAdmin();
 	}
 
 	/// Removes a custom [Special] at a given index from the user's profile.
 	Future<void> removeSpecialFromAdmin(int index) {
-		admin.specials.removeAt(index);
+		admin!.specials.removeAt(index);
 		return saveAdmin();
 	}
 }

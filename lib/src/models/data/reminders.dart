@@ -1,5 +1,3 @@
-import "package:meta/meta.dart";
-
 import "package:ramaz/data.dart";
 import "package:ramaz/services.dart";
 
@@ -13,22 +11,22 @@ import "model.dart";
 // ignore: prefer_mixin
 class Reminders extends Model {
 	/// The reminders for the user.
-	List<Reminder> reminders;
+	late final List<Reminder> reminders;
 
 	/// The reminders that apply for this period. 
 	/// 
 	/// This is managed by the Schedule data model.
-	List<int> currentReminders;
+	List<int> currentReminders = [];
 
 	/// The reminders that apply for next period.
 	/// 
 	/// This is managed by the Schedule data model.
-	List<int> nextReminders;
+	List<int> nextReminders = [];
 
 	/// Reminders that applied for previous periods. 
 	/// 
 	/// These reminders will be marked for deletion if they do not repeat.
-	List<int> readReminders;
+	final List<int> readReminders = [];
 
 	@override
 	Future<void> init() async {
@@ -39,7 +37,6 @@ class Reminders extends Model {
 			)
 				Reminder.fromJson(json)
 		];
-		readReminders = [];
 	}
 
 	/// Whether any reminder applies to the current period.
@@ -65,9 +62,9 @@ class Reminders extends Model {
 	/// This method is a wrapper around [Reminder.getReminders], and should only
 	/// be called by an object with access to the relevant period. 
 	List<int> getReminders({
-		@required String subject,
-		@required String period,
-		@required String dayName,
+		required String? subject,
+		required String? period,
+		required String? dayName,
 	}) => Reminder.getReminders(
 		reminders: reminders,
 		subject: subject,
@@ -86,21 +83,15 @@ class Reminders extends Model {
 			readReminders
 		];
 		for (final List<int> remindersList in reminderLists) {
-			int toRemove;
-			for (final int index in remindersList ?? []) {
-				if (index == changedIndex) {
-					toRemove = index;
-					break;
-				}
-			}
-			if (toRemove != null) {
-				remindersList.remove(toRemove);
+			final int removeIndex = remindersList.indexOf(changedIndex);
+			if (removeIndex != -1) {
+				remindersList.removeAt(removeIndex);
 			}
 		}
 	}
 
 	/// Replaces a reminder at a given index. 
-	void replaceReminder(int index, Reminder reminder) {
+	void replaceReminder(int index, Reminder? reminder) {
 		if (reminder == null) {
 			return;
 		}
@@ -112,7 +103,7 @@ class Reminders extends Model {
 	}
 
 	/// Creates a new reminder. 
-	void addReminder(Reminder reminder) {
+	void addReminder(Reminder? reminder) {
 		if (reminder == null) {
 			return;
 		}

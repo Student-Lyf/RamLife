@@ -15,9 +15,9 @@ class Reminder {
 	/// This function delegates logic to [ReminderTime.doesApply]
 	static List<int> getReminders({
 		required List<Reminder> reminders,
-		required String dayName,
-		required String period,
-		required String subject,
+		required String? dayName,
+		required String? period,
+		required String? subject,
 	}) => [
 		for (int index = 0; index < reminders.length; index++)
 			if (reminders [index].time.doesApply(

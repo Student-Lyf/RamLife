@@ -32,9 +32,9 @@ class SubjectReminderTime extends ReminderTime {
 	/// matches the `subject` parameter.
 	@override
 	bool doesApply({
-		required String dayName, 
-		required String subject, 
-		required String period,
+		required String? dayName, 
+		required String? subject, 
+		required String? period,
 	}) => subject == name;
 
 	@override

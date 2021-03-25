@@ -65,10 +65,7 @@ class PeriodData {
 @immutable
 class Period {
 	/// The time this period takes place. 
-	/// 
-	/// If the time is not known (ie, the schedule is [Special.modified]), 
-	/// then this will be null. 
-	final Range? time;
+	final Range time;
 
 	/// A String representation of this period. 
 	/// 
@@ -151,7 +148,7 @@ class Period {
 	/// 3. If `data.room` is not null, will display the room.
 	/// 4. If `data.id` is valid, will return the name of the [Subject].
 	List <String> getInfo (Subject? subject) => [
-		if (time != null) "Time: $time",
+		"Time: $time",
 		if (int.tryParse(period) != null) "Period: $period",
 		if (data != null) "Room: ${data!.room}",
 		if (subject != null) "Teacher: ${subject.teacher}",
