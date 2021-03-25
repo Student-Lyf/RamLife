@@ -1,10 +1,3 @@
-/// This library holds data classes for various schedule-related data.
-/// 
-/// Classes here are used to abstract the weird schedule details 
-/// to make the code a whole lot simpler. 
-library schedule_dataclasses;
-
-import "dart:convert" show JsonUnsupportedObjectError;
 import "package:flutter/foundation.dart";
 
 /// A subject, or class, that a student can take.
@@ -37,8 +30,8 @@ class Subject {
 
 	/// A const constructor for a [Subject].
 	const Subject ({
-		@required this.name,
-		@required this.teacher
+		required this.name,
+		required this.teacher
 	});
 
 	/// Returns a [Subject] instance from a JSON object. 
@@ -46,12 +39,7 @@ class Subject {
 	/// The JSON map must have a `teacher` and `name` field.
 	Subject.fromJson(Map<String, dynamic> json) :
 		name = json ["name"], 
-		teacher = json ["teacher"] 
-	{
-		if (name == null || teacher == null) {
-			throw JsonUnsupportedObjectError (json.toString());
-		}
-	}
+		teacher = json ["teacher"];
 
 	@override 
 	String toString() => "$name ($teacher)";
