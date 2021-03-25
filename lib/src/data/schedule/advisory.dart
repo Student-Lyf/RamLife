@@ -14,8 +14,8 @@ class Advisory {
 
 	/// Holds advisory data. 
 	const Advisory({
-		@required this.id,
-		@required this.room,
+		required this.id,
+		required this.room,
 	});
 
 	/// Creates an advisory object from JSON. 

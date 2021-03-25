@@ -16,7 +16,7 @@ class Special {
 	final String name;
 	
 	/// The time allotments for the periods. 
-	final List <Range> periods;
+	final List<Range> periods;
 
 	/// The indices of periods to skip. 
 	/// 
@@ -25,23 +25,23 @@ class Special {
 	final List<int> skip;
 
 	/// The index in [periods] that represents Mincha.
-	final int mincha;
+	final int? mincha;
 	
 	/// The index in [periods] that represents homeroom.
-	final int homeroom;
+	final int? homeroom;
 
 	/// Maps activities to the periods.  
 	final Map<String, Activity> activities;
 
 	/// A const constructor.
 	const Special (
-		this.name, 
+		this.name,
 		this.periods, 
 		{
 			this.homeroom, 
 			this.mincha,
-			this.skip,
-			this.activities,
+			this.skip = const [],
+			this.activities = const {}
 		}
 	);
 
@@ -49,25 +49,23 @@ class Special {
 	/// 
 	/// The value must either be: 
 	/// 
-	/// - `null`, in which case, `null` will be returned. 
 	/// - a string, in which case it should be in the [specials] list, or
 	/// - a map, in which case it will be interpreted as JSON. The JSON must have: 
 	/// 	- a "name" field, which should be a string. See [name].
 	/// 	- a "periods" field, which should be a list of [Range] JSON objects. 
 	/// 	- a "homeroom" field, which should be an integer. See [homeroom].
 	/// 	- a "skip" field, which should be a list of integers. See [skip].
-	factory Special.fromJson(dynamic value) {
-		if (value == null) {
-			return null;
-		} else if (value is String) {
-			if (!stringToSpecial.containsKey(value)) {
+	factory Special.fromJson(Object value) {
+		if (value is String) {
+			final Special? builtInSpecial = stringToSpecial [value];
+			if (builtInSpecial != null) {
+				return builtInSpecial;
+			} else {
 				throw ArgumentError.value(
 					value, 
 					"Special.fromJson: value",
 					"'$value' needs to be one of ${stringToSpecial.keys.join(", ")}"
-				);				
-			} else {
-				return stringToSpecial [value];
+				);
 			}
 		} else if (value is Map) {
 			final Map<String, dynamic> json = Map<String, dynamic>.from(value);
@@ -96,7 +94,7 @@ class Special {
 	/// Determines whether to use a Winter Friday or regular Friday schedule. 
 	/// 
 	/// Winter Fridays mean shorter periods, with an ultimately shorter dismissal.
-	static Special getWinterFriday([DateTime today]) {
+	static Special getWinterFriday([DateTime? today]) {
 		final DateTime date = today ?? DateTime.now();
 		final int month = date.month, day = date.day;
 		if (month >= Times.schoolStart && month < Times.winterFridayMonthStart) {
@@ -124,10 +122,9 @@ class Special {
 	/// 
 	/// This function is used to compare the [periods] property of two Specials. 
 	static bool deepEquals<E>(List<E> a, List<E> b) => 
-		(a == null) == (b == null) && 
-		a?.length == b?.length &&
+		a.length == b.length &&
 		<int>[
-			for (int index = 0; index < (a?.length ?? 0); index++) 
+			for (int index = 0; index < (a.length); index++) 
 				index
 		].every(
 			(int index) => a [index] == b [index]
@@ -143,7 +140,7 @@ class Special {
 	bool operator == (dynamic other) => other is Special && 
 		other.name == name &&
 		deepEquals<Range>(other.periods, periods) &&
-		deepEquals<int>(other.skip ?? const [], skip ?? const []) &&
+		deepEquals<int>(other.skip, skip) &&
 		other.mincha == mincha &&
 		other.homeroom == homeroom;
 
@@ -391,12 +388,6 @@ class Special {
 		mincha: 10
 	);
 
-	/// A day where the schedule is not known.
-	static const Special modified = Special (
-		"Modified", 
-		null,
-	);
-
 	/// A collection of all the [Special]s
 	/// 
 	/// Used in the UI
@@ -412,7 +403,6 @@ class Special {
 		pmAssembly,
 		rotate,
 		early,
-		modified,
 		covid, 
 	];
 

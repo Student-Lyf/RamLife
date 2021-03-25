@@ -4,23 +4,23 @@ import "package:meta/meta.dart";
 @immutable
 class GradeActivity {
 	/// The activity for freshmen.
-	final Activity freshmen;
+	final Activity? freshmen;
 
 	/// The activity for sophomores.
-	final Activity sophomores;
+	final Activity? sophomores;
 
 	/// The activity for juniors.
-	final Activity juniors;
+	final Activity? juniors;
 
 	/// The activity for seniors.
-	final Activity seniors; 
+	final Activity? seniors; 
 
 	/// Creates a container for activities by grade. 
 	const GradeActivity({
-		@required this.freshmen,
-		@required this.sophomores,
-		@required this.juniors,
-		@required this.seniors,
+		required this.freshmen,
+		required this.sophomores,
+		required this.juniors,
+		required this.seniors,
 	});
 
 	/// Creates a container for activities from a JSON object.
@@ -100,10 +100,9 @@ class Activity {
 
 	/// Creates an activity.
 	const Activity({
-		@required this.type, 
-		@required this.message, 
-	}) : 
-		assert(type != null, "Type cannot be null");
+		required this.type, 
+		required this.message, 
+	});
 
 	/// Creates an activity for each grade
 	Activity.grade(GradeActivity gradeActivty) : 
@@ -116,7 +115,7 @@ class Activity {
 			GradeActivity.fromJson(Map<String, dynamic>.from(json ["message"]))
 		)
 		: Activity(
-			type: stringToActivityType[json ["type"]],
+			type: stringToActivityType[json ["type"]!]!,
 			message: json ["message"]
 		);
 
@@ -124,11 +123,9 @@ class Activity {
 	String toString() {
 		switch (type) {
 			case ActivityType.misc: return message;
-			case ActivityType.advisory: 
-				return "Advisory${message != null ? ' -- $message' : ''}";
+			case ActivityType.advisory: return "Advisory -- $message";
 			case ActivityType.room: return message;
 			default: return "Activity";
 		}
 	}
 }
-

@@ -53,8 +53,8 @@ class Day {
 
 	/// Returns a new Day from a [name] and [Special].
 	const Day({
-		@required this.name,
-		@required this.special
+		required this.name,
+		required this.special
 	});
 
 	/// Returns a Day from a JSON object.
@@ -105,25 +105,15 @@ class Day {
 	/// If [name] is null, returns null. 
 	/// Otherwise, returns [name] and [special].
 	/// If [special] was left as the default, will only return the [name].
-	String get displayName => name == null
-		? "No School"
-		: "$name${
-			special == Special.regular || special == Special.rotate 
-				? '' : ' ${special.name}'
-		}";
+	String get displayName => "$name ${special.name}";
 
 	/// Whether to say "a" or "an".
 	/// 
 	/// Remember, [name] can be a letter and not a word. 
 	/// So a letter like "R" might need "an" while "B" would need "a".
-	String get n => {"A", "E", "I", "O", "U"}.contains(name [0])
+	String get n => 
+		{"A", "E", "I", "O", "U"}.contains(name [0])
 		|| {"A", "M", "R", "E", "F"}.contains(name) ? "n" : "";
-
-	/// Whether there is school on this day.
-	bool get school => name != null;
-
-	/// Whether the times for this day are known.
-	bool get isModified => special == Special.modified;
 
 	/// The period right now. 
 	/// 
@@ -131,9 +121,9 @@ class Day {
 	/// and uses [DateTime.now()] to look up what period it is right now. 
 	/// 
 	/// See [Time] and [Range] for implementation details.
-	int get period {
+	int? get period {
 		final Time time = Time.fromDateTime (DateTime.now());
-		for (int index = 0; index < (special.periods?.length ?? 0); index++) {
+		for (int index = 0; index < (special.periods.length); index++) {
 			final Range range = special.periods [index];
 			if (
 				range.contains(time) ||  // during class

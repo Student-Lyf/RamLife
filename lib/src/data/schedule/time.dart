@@ -13,7 +13,7 @@ class Time {
 	final int minutes;
 
 	/// A const constructor.
-	const Time (this.hour, this.minutes);
+	const Time(this.hour, this.minutes);
 
 	/// Simplifies a [DateTime] object to a [Time].
 	Time.fromDateTime (DateTime date) :
@@ -100,7 +100,7 @@ class Range {
 	/// Returns whether [other] is in this range. 
 	bool contains (Time other) => start <= other && other <= end;
 
-	@override String toString() => "${start ?? ''}-${end ?? ''}";
+	@override String toString() => "$start-$end";
 
 	@override bool operator == (dynamic other) => other is Range && 
 		other.start == start && other.end == end;
