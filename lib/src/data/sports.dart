@@ -65,7 +65,11 @@ class Scores {
   final bool isHome;
 
   /// Holds the scores for a [SportsGame].
-  const Scores(this.ramazScore, this.otherScore, {@required this.isHome});
+  const Scores({
+  	required this.ramazScore, 
+  	required this.otherScore,
+  	required this.isHome
+	});
 
   /// Creates a [Scores] object from a JSON entry. 
   /// 
@@ -99,7 +103,7 @@ class Scores {
   bool get didWin => ramazScore > otherScore;
 
   /// Gets the score for either the home team or the away team.
-  int getScore({bool home}) => home == isHome 
+  int getScore({required bool home}) => home == isHome 
 	  ? ramazScore : otherScore;
 }
 
@@ -110,7 +114,8 @@ class SportsGame {
 	/// 
 	/// Useful for the [Sport] enum. 
 	static String capitalize(Sport sport) => 
-		sportToString [sport] [0].toUpperCase() + sportToString [sport].substring(1);
+		sportToString [sport]! [0].toUpperCase() 
+		+ sportToString [sport]!.substring(1);
 
 	/// Converts a list of JSON entries into a list of [SportsGame]s. 
 	/// 
@@ -151,22 +156,22 @@ class SportsGame {
 	/// Whether the game is being played at home or somewhere else. 
 	/// 
 	/// This affects the UI representation of the game, as well as [Scores.isHome].
-	final bool home;
+	final bool isHome;
 
 	/// The scores for this game. 
 	/// 
 	/// The [Scores] dataclass holds helper methods to simplify logic about who 
-	/// won, and which score to get depending on [home].
-	final Scores scores;
+	/// won, and which score to get depending on [isHome].
+	final Scores? scores;
 
 	/// Creates a game dataclass.
 	const SportsGame({
-		@required this.sport,
-		@required this.date,
-		@required this.times,
-		@required this.team,
-		@required this.opponent,
-		@required this.home,
+		required this.sport,
+		required this.date,
+		required this.times,
+		required this.team,
+		required this.opponent,
+		required this.isHome,
 		this.scores,
 	});
 
@@ -182,11 +187,11 @@ class SportsGame {
 	/// - an "opponent" field (String)
 	/// - a "scores" field. See [Scores.fromJson] for format.
 	SportsGame.fromJson(Map<String, dynamic> json) :
-		sport = stringToSport [json ["sport"]],
+		sport = stringToSport [json ["sport"]]!,
 		date = DateTime.parse(json ["date"]),
 		times = Range.fromJson(json ["times"]),
 		team = json ["team"],
-		home = json ["home"],
+		isHome = json ["isHome"],
 		opponent = json ["opponent"],
 		scores = json ["scores"] == null ? null : Scores.fromJson(
 			Map<String, dynamic>.from(json ["scores"])
@@ -198,13 +203,13 @@ class SportsGame {
 	bool operator == (dynamic other) => other is SportsGame && 
 		other.sport == sport && 
 		other.opponent == opponent && 
-		other.home == home && 
+		other.isHome == isHome && 
 		other.team == team && 
 		other.date.isSameDay(date) && 
 		other.times == times;
 
 	@override 
-	int get hashCode => "$home-$opponent-$sport-$team-$date-$times".hashCode;
+	int get hashCode => "$isHome-$opponent-$sport-$team-$date-$times".hashCode;
 
 	/// Converts this game to JSON.
 	/// 
@@ -215,7 +220,7 @@ class SportsGame {
 		"date": date.toString(),
 		"times": times.toJson(),
 		"team": team, 
-		"home": home, 
+		"isHome": isHome, 
 		"opponent": opponent,
 		"scores": scores?.toJson(),
 	};
@@ -237,7 +242,7 @@ class SportsGame {
 	SportsGame replaceScores(Scores newScores) => SportsGame(
 		sport: sport,
 		team: team,
-		home: home,
+		isHome: isHome,
 		date: date, 
 		opponent: opponent,
 		times: times, 
@@ -245,10 +250,10 @@ class SportsGame {
 	);
 
 	/// The name of the home team.
-	String get homeTeam => home ? "Ramaz" : opponent;
+	String get homeTeam => isHome ? "Ramaz" : opponent;
 
 	/// The name of the away team.
-	String get awayTeam => home ? opponent : "Ramaz";
+	String get awayTeam => isHome ? opponent : "Ramaz";
 
 	/// Specifies which team is away and which team is home.
 	String get description => "$awayTeam @ $homeTeam";

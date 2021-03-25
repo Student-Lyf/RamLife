@@ -47,16 +47,16 @@ class Admin {
 
 	/// Creates a user with administrative privileges. 
 	const Admin ({
-		this.scopes, 
-		this.specials,
-		this.email,
+		required this.scopes, 
+		required this.specials,
+		required this.email,
 	});
 
 	/// Creates an admin from a JSON entry. 
 	Admin.fromJson(Map<String, dynamic> json, List<String> _scopes) :
 		scopes = [
 			for (String scope in _scopes)
-				stringToScope [scope]
+				stringToScope [scope]!
 		],
 		email = json ["email"],
 		specials = [

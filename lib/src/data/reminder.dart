@@ -14,10 +14,10 @@ class Reminder {
 	/// All possible parameters are required. 
 	/// This function delegates logic to [ReminderTime.doesApply]
 	static List<int> getReminders({
-		@required List<Reminder> reminders,
-		@required String dayName,
-		@required String period,
-		@required String subject,
+		required List<Reminder> reminders,
+		required String dayName,
+		required String period,
+		required String subject,
 	}) => [
 		for (int index = 0; index < reminders.length; index++)
 			if (reminders [index].time.doesApply(
@@ -43,8 +43,8 @@ class Reminder {
 
 	/// Creates a new reminder.
 	const Reminder({
-		@required this.message,
-		this.time,
+		required this.message,
+		required this.time,
 	});
 
 	/// Creates a new [Reminder] from a JSON object.

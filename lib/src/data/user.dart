@@ -49,10 +49,10 @@ class User {
 	/// 
 	/// Periods may be null to indicate free periods (or, in the case of faculty,
 	/// periods where they don't teach).
-	final Map<String, List<PeriodData>> schedule;
+	final Map<String, List<PeriodData?>> schedule;
 
 	/// The advisory for this user. 
-	final Advisory advisory;
+	final Advisory? advisory;
 
 	/// This user's contact information. 
 	final ContactInfo contactInfo;
@@ -60,7 +60,7 @@ class User {
 	/// The grade this user is in. 
 	/// 
 	/// This property is null for faculty. 
-	final Grade grade;
+	final Grade? grade;
 
 	/// The IDs of the clubs this user attends.
 	/// 
@@ -74,12 +74,12 @@ class User {
 
 	/// Creates a new user.
 	const User({
-		@required this.schedule,
-		@required this.advisory,
-		@required this.contactInfo,
-		@required this.grade,
-		@required this.registeredClubs,
-		@required this.dayNames,
+		required this.schedule,
+		required this.contactInfo,
+		required this.registeredClubs,
+		required this.dayNames,
+		this.grade,
+		this.advisory,
 	});
 
 	/// Creates a new user from JSON. 
@@ -97,15 +97,15 @@ class User {
 		),
 		grade = intToGrade [json ["grade"]],
 		registeredClubs = json ["registeredClubs"] == null 
-			? null : List<String>.from(json ["registeredClubs"]);
+			? [] : List<String>.from(json ["registeredClubs"]);
 
 	/// Gets the unique section IDs for the courses this user is enrolled in.
 	/// 
 	/// For teachers, these will be the courses they teach. 
 	Set<String> get sectionIDs => {
-		for (final List<PeriodData> daySchedule in schedule.values)
-			for (final PeriodData period in daySchedule)
-				if (period?.id != null)
+		for (final List<PeriodData?> daySchedule in schedule.values)
+			for (final PeriodData? period in daySchedule)
+				if (period != null)
 					period.id
 	};
 
@@ -117,44 +117,31 @@ class User {
 	/// 
 	/// See [Special] for an explanation of the different factors this method
 	/// takes into account. 
-	/// 
-	/// TODO: consolidate behavior on no school. 
 	List<Period> getPeriods(Day day) {
-		if (!day.school) {
-			return [];
-		}
-
 		final Special special = day.special;
+		final int periodCount = special.periods.length;
 		int periodIndex = 0;
-
-		Range getTime(int index) => day.isModified 
-			? null : special.periods [index];
-
-		final int periodCount = day.isModified
-			? schedule [day.name].length
-			: special.periods.length;
-
 		return [
 			for (int index = 0; index < periodCount; index++)
 				if (special.homeroom == index) Period(
 					data: null,		
 					period: "Homeroom",
-					time: getTime(index),
+					time: special.periods [index],
 					activity: null,
 				) else if (special.mincha == index) Period(
 					data: null,
 					period: "Mincha",
-					time: getTime(index),
+					time: special.periods [index],
 					activity: null,
-				) else if (special.skip?.contains(index) ?? false) Period(
+				) else if (special.skip.contains(index)) Period(
 					data: null,
 					period: "Free period",
-					time: getTime(index),
+					time: special.periods [index],
 					activity: null,
 				) else Period(
-					data: schedule [day.name] [periodIndex],
+					data: schedule [day.name]! [periodIndex],
 					period: (++periodIndex).toString(),
-					time: getTime(index),
+					time: special.periods [index],
 					activity: null,
 				)
 		];
