@@ -15,21 +15,24 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+
+  # ------------- Services -------------
   # Firebase/Google
-  cloud_firestore: ^0.14.1+3
-  firebase_auth: ^0.18.1+2
-  firebase_crashlytics: ^0.2.1+1
-  firebase_messaging: ^7.0.3
-  google_sign_in: ^4.5.1
-  # Misc
-  flutter_local_notifications: ^2.0.0
-  idb_shim: ^1.12.0
+  cloud_firestore: ^1.0.2
+  firebase_auth: ^1.0.1
+  firebase_crashlytics: ^1.0.0
+  firebase_messaging: ^9.0.1
+  google_sign_in: ^5.0.1
+
+  flutter_local_notifications: ^5.0.0
+  idb_shim: ^2.0.0
   path_provider: ^2.0.1
   shared_preferences: ^2.0.5
-  url_launcher: ^5.2.5
-  flutter_native_timezone: ^1.0.4
+
+  # ------------- Misc -------------
   breakpoint_scaffold: ^0.0.2
-  adaptive_components: any
+  flutter_native_timezone: ^1.0.10
+  url_launcher: ^6.0.3
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -39,8 +42,8 @@ dev_dependencies:
   flutter_test: 
     sdk: flutter
   matcher: any
-  # pedantic: ^1.4.0
   flutter_launcher_icons: ^0.7.0
+  # pedantic: ^1.4.0
 
 flutter_icons:
   android: false  # overwrite
