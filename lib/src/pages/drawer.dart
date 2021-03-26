@@ -12,6 +12,9 @@ class NavigationDrawer extends StatelessWidget {
 	static Future<void> Function() pushRoute(BuildContext context, String name) => 
 		() => Navigator.of(context).pushReplacementNamed(name);
 
+	final bool isOnHomePage;
+	const NavigationDrawer({this.isOnHomePage = false});
+
 	@override Widget build (BuildContext context) => Drawer (
 		child: LayoutBuilder(
 			builder: (
@@ -26,21 +29,23 @@ class NavigationDrawer extends StatelessWidget {
 						child: Column(
 							children: [
 								DrawerHeader (child: RamazLogos.ramSquare),
-								ListTile (
-									title: const Text ("Home"),
-									leading: Icon (Icons.home),
-									onTap: pushRoute(context, Routes.home),
-								),
-								ListTile (
-									title: const Text ("Schedule"),
-									leading: Icon (Icons.schedule),
-									onTap: pushRoute(context, Routes.schedule),
-								),
-								ListTile (
-									title: const Text ("Reminders"),
-									leading: Icon (Icons.note),
-									onTap: pushRoute(context, Routes.reminders),
-								),
+								if (!isOnHomePage) ...[
+									ListTile (
+										title: const Text ("Dashboard"),
+										leading: Icon (Icons.dashboard),
+										onTap: pushRoute(context, Routes.home),
+									),
+									ListTile (
+										title: const Text ("Schedule"),
+										leading: Icon (Icons.schedule),
+										onTap: pushRoute(context, Routes.schedule),
+									),
+									ListTile (
+										title: const Text ("Reminders"),
+										leading: Icon (Icons.note),
+										onTap: pushRoute(context, Routes.reminders),
+									),
+								],
 								// ListTile (
 								// 	title: Text ("Sports"),
 								// 	leading: Icon (Icons.directions_run),
