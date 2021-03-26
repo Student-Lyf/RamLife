@@ -13,7 +13,7 @@ enum Scope {
 	/// The admin can access and modify student schedules.
 	schedule,
 
-	// THe admin can create and update sports games.
+	/// The admin can create and update sports games.
 	sports,
 }
 
@@ -61,7 +61,8 @@ class Admin {
 	Admin.fromJson(Map<String, dynamic> json, List<String> _scopes) :
 		scopes = [
 			for (String scope in _scopes)
-				stringToScope [scope]!
+				if (stringToScope.containsKey(scope))
+					stringToScope [scope]!
 		],
 		email = json ["email"],
 		specials = [

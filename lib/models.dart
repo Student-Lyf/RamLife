@@ -24,6 +24,8 @@
 /// 	state should depend on their corresponding view model.
 library models;
 
+import "package:ramaz/services.dart";
+
 import "src/models/data/model.dart";
 import "src/models/data/reminders.dart";
 import "src/models/data/schedule.dart";
@@ -61,27 +63,40 @@ class Models extends Model {
 	/// The singleton instance of this class.
 	static Models instance = Models();
 
+	Reminders? _reminders;
+	Schedule? _schedule;
+	Sports? _sports;
+	UserModel? _user;
+
 	/// The reminders data model. 
-	Reminders reminders = Reminders();
+	Reminders get reminders => _reminders ??= Reminders();
 
 	/// The schedule data model. 
-	Schedule schedule = Schedule();
+	Schedule get schedule => _schedule ??= Schedule();
 
 	/// The sports data model. 
-	Sports sports = Sports();
+	Sports get sports => _sports ??= Sports();
 
 	/// The user data model. 
-	UserModel user = UserModel();
+	UserModel get user => _user ??= UserModel();
 
 	/// Whether the data models have been initialized.
 	bool isReady = false;
 
 	@override
 	Future<void> init() async {
+		if (isReady) {
+			return;
+		}
+		final Crashlytics crashlytics = Services.instance.crashlytics;
+		await crashlytics.log("Initializing user model");
 		await user.init();
+		await crashlytics.log("Initializing reminders model");
 		await reminders.init();
+		await crashlytics.log("Initializing schedule model");
 		await schedule.init();
-		await sports.init(refresh: true);
+		await crashlytics.log("Initializing sports model");
+		await sports.init();
 		isReady = true;
 	}
 
@@ -89,10 +104,15 @@ class Models extends Model {
 	// This object can be revived using [init].
 	// ignore: must_call_super
 	void dispose() {
-		schedule.dispose();
-		reminders.dispose();
-		sports.dispose();
-		user.dispose();
+		_schedule?.dispose();
+		_reminders?.dispose();
+		_sports?.dispose();
+		_user?.dispose();
+		// These data models have been disposed and cannot be used again
+		_reminders = null;
+		_schedule = null;
+		_sports = null;
+		_user = null;
 		isReady = false;
 	}
 }

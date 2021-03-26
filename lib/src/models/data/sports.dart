@@ -28,20 +28,13 @@ class Sports extends Model {
 
 	/// Loads data from the device and 
 	@override
-	Future<void> init({bool refresh = false}) async {
+	Future<void> init() async {
+		print("Creating sports model");
 		timer = Timer.periodic(_minute, (_) => todayGames = getTodayGames());
-		if (refresh) {
-			games = SportsGame.fromList(await Services.instance.database.sports);
-			todayGames = getTodayGames();
-			now = DateTime.now();
-		} else {		
-			final DateTime newDate = DateTime.now();
-			if (!newDate.isSameDay(now)) {
-				todayGames = getTodayGames();
-				now = newDate;
-			}
-		}
-		notifyListeners();
+		games = SportsGame.fromList(await Services.instance.database.sports);
+		todayGames = getTodayGames();
+		now = DateTime.now();
+		print("Finished sports model");
 	}
 
 	/// Returns a list of all the games taking place today.
