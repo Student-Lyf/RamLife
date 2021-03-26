@@ -18,7 +18,7 @@ class RouteInitializer extends StatefulWidget {
 	final String onFailure;
 	
 	/// The route to navigate to if there is an error.
-	final String onError;
+	final String? onError;
 
 	/// Navigation with authorization and error-handling.
 	const RouteInitializer({
@@ -49,15 +49,16 @@ class RouteInitializerState extends State<RouteInitializer> {
 	Future<void> init() async {
 		final NavigatorState nav = Navigator.of(context);
 		try {
-			if (Models.instance.isReady) {
-				return;
-			} 
 			await Services.instance.init();
-			if (Auth.isSignedIn) {
+			if (Auth.isSignedIn && !Models.instance.isReady) {
 				await Models.instance.init();
 			}				
 		} catch (error) {
-			await nav.pushReplacementNamed(widget.onError);
+			await Services.instance.crashlytics.log("Error. Disposing models");
+			Models.instance.dispose();
+			if (widget.onError != null) {
+				await nav.pushReplacementNamed(widget.onError!);
+			}
 		}
 		if (!widget.isAllowed()) {
 			await nav.pushReplacementNamed(widget.onFailure);

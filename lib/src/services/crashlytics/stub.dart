@@ -20,7 +20,7 @@ class CrashlyticsStub extends Crashlytics {
 		dynamic exception,
 		StackTrace stack,
 		{dynamic context}
-	) async => throw exception;
+	) => Future.error(exception, stack);  // keeps the stack trace
 
 	@override
 	Future<void> recordFlutterError (
@@ -32,7 +32,8 @@ class CrashlyticsStub extends Crashlytics {
 	Future<void> setEmail(String email) async {}
 
 	@override
-	Future<void> log(String message) async {}
+	// ignore: avoid_print
+	Future<void> log(String message) async => print(message);
 
 	@override
 	Future<void> toggle(bool value) async {}

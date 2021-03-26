@@ -82,22 +82,34 @@ class User {
 		this.advisory,
 	});
 
+	/// Gets a value from JSON, throwing if null.
+	/// 
+	/// This function is needed since null checks don't run on dynamic values.
+	static dynamic safeJson(Map<String, dynamic> json, String key) {
+		final dynamic value = json [key];
+		if (value == null) {
+			throw ArgumentError.notNull(key);
+		} else {
+			return value;
+		}
+	}
+
 	/// Creates a new user from JSON. 
 	User.fromJson(Map<String, dynamic> json) : 
-		dayNames = List<String>.from(json ["dayNames"]),
+		// dayNames = List<String>.from(json ["dayNames"]),
+		dayNames = List<String>.from(safeJson(json, "dayNames")),
 		schedule = {
-			for (final String dayName in <String>[...json ["dayNames"]])
+			for (final String dayName in safeJson(json, "dayNames"))
 				dayName: PeriodData.getList(json [dayName])
 		},
 		advisory = json ["advisory"] == null ? null : Advisory.fromJson(
-			Map<String, dynamic>.from(json ["advisory"])
+			Map<String, dynamic>.from(safeJson(json, "advisory"))
 		),
 		contactInfo = ContactInfo.fromJson(
-			Map<String, dynamic>.from(json ["contactInfo"])
+			Map<String, dynamic>.from(safeJson(json, "contactInfo"))
 		),
-		grade = intToGrade [json ["grade"]],
-		registeredClubs = json ["registeredClubs"] == null 
-			? [] : List<String>.from(json ["registeredClubs"]);
+		grade = intToGrade [safeJson(json, "grade")],
+		registeredClubs = List<String>.from(json ["registeredClubs"] ?? []);
 
 	/// Gets the unique section IDs for the courses this user is enrolled in.
 	/// 

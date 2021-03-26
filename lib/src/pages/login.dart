@@ -24,7 +24,7 @@ class Login extends StatefulWidget {
 	final String destination;
 
 	/// Builds the login page
-	const Login({this.destination = Routes.home});
+	Login({this.destination = Routes.home});
 
 	@override 
 	LoginState createState() => LoginState();
@@ -90,7 +90,7 @@ class LoginState extends State<Login> {
 	Future<void> onError(dynamic error, StackTrace stack) async {
 		setState(() => isLoading = false);
 		final Crashlytics crashlytics = Services.instance.crashlytics;
-		await crashlytics.log("Attempted to log in");
+		await crashlytics.log("Login failed");
 		final String? email = Auth.email;
 		if (email != null) {
 			await crashlytics.setEmail(email);

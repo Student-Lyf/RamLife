@@ -15,13 +15,13 @@ class ContactInfo {
 	/// 
 	/// This is filled in voluntary by the user, and cannot be retrieved from the 
 	/// database. So this field will start off null, and be populated over time. 
-	final String phoneNumber;
+	final String? phoneNumber;
 
 	/// Bundles personal info about the user. 
 	ContactInfo({
 		required this.name,
 		required this.email,
-		required this.phoneNumber,
+		this.phoneNumber,
 	});
 
 	/// Creates a contact from JSON. 

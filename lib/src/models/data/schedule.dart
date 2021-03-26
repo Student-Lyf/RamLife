@@ -112,7 +112,8 @@ class Schedule extends Model {
 
 	/// Updates the current period.
 	void onNewPeriod({bool first = false}) {
-		final DateTime newDate = DateTime.now();
+		// final DateTime newDate = DateTime.now();
+		final DateTime newDate = DateTime(2021, 03, 27);
 
 		// Day changed. Probably midnight.
 		if (newDate.day != now.day) {

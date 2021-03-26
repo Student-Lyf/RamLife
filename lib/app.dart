@@ -6,16 +6,10 @@ import "package:ramaz/widgets.dart";
 import "package:ramaz/services.dart";
 
 /// The main app widget. 
-class RamLife extends StatefulWidget {
-	/// Creates the main app widget.
+class RamLife extends StatelessWidget {
+	/// Provides a const constructor.
 	const RamLife();
 
-	@override
-	RamLifeState createState() => RamLifeState();
-}
-
-/// The state for the app.
-class RamLifeState extends State<RamLife> {
 	@override 
 	Widget build (BuildContext context) => ThemeChanger(
 		defaultBrightness: Brightness.light,
@@ -84,7 +78,10 @@ class RamLifeState extends State<RamLife> {
 			color: RamazColors.blue,
 			theme: theme,
 			routes: {
-				Routes.login: (_) => const Login(),
+				Routes.login: (_) => RouteInitializer(
+					builder: (_) => Login(), 
+					onError: null,  // the default IS the login page
+				),
 				Routes.home: enforceLogin((_) => HomePage()),
 				Routes.schedule: enforceLogin((_) => SchedulePage()),
 				Routes.reminders: enforceLogin((_) => RemindersPage()),
