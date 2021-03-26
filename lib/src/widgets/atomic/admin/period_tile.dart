@@ -16,7 +16,7 @@ class PeriodTile extends StatelessWidget {
 	final TimeOfDay start, end;
 
 	/// The [Activity] for this period. 
-	final Activity activity;
+	final Activity? activity;
 
 	/// Whether this period is skipped. 
 	final bool skipped;
@@ -26,9 +26,9 @@ class PeriodTile extends StatelessWidget {
 
 	/// Creates a widget to edit a period in a [Special].
 	PeriodTile({
-		@required this.model,
-		@required this.range,
-		@required this.index,
+		required this.model,
+		required this.range,
+		required this.index,
 	}) : 
 		skipped = model.skips.contains(index),
 		activity = null,
@@ -67,7 +67,7 @@ class PeriodTile extends StatelessWidget {
 												await showTimePicker(
 													context: context,
 													initialTime: start,
-												),
+												) ?? start,
 												start: true,
 											)
 										),
@@ -86,7 +86,7 @@ class PeriodTile extends StatelessWidget {
 												await showTimePicker(
 													context: context,
 													initialTime: end,
-												),
+												) ?? end,
 												start: false,
 											)
 										),
@@ -107,7 +107,7 @@ class PeriodTile extends StatelessWidget {
 	/// Creates a [Range] from a [TimeOfDay]. 
 	/// 
 	/// [start] determines if the range starts with [time] or not.
-	Range getRange(TimeOfDay time, {bool start}) => Range(
+	Range getRange(TimeOfDay time, {required bool start}) => Range(
 		start ? time.asTime : range.start,
 		start ? range.end : time.asTime,
 	);

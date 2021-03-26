@@ -2,7 +2,7 @@ import "package:flutter/material.dart";
 
 /// A function to build a widget with a [ChangeNotifier] subclass. 
 typedef ModelBuilder<T extends ChangeNotifier> = 
-  Widget Function(BuildContext context, T model, Widget child);
+  Widget Function(BuildContext context, T model, Widget? child);
 
 /// A widget that listens to a [ChangeNotifier] and rebuilds the widget tree
 /// when [ChangeNotifier.notifyListeners].
@@ -23,7 +23,7 @@ class ModelListener<Model extends ChangeNotifier> extends StatefulWidget {
   /// This child is never re-built, so if there is an expensive widget that
   /// does not depend on [model], it would go here and can be 
   /// re-used in [builder]. 
-  final Widget child;
+  final Widget? child;
 
   /// Whether or not to dispose the [model].
   /// 
@@ -33,8 +33,8 @@ class ModelListener<Model extends ChangeNotifier> extends StatefulWidget {
 
   /// Creates a widget that listens to a [ChangeNotifier].
   const ModelListener ({
-    @required this.model,
-    @required this.builder,
+    required this.model,
+    required this.builder,
     this.child,
     this.dispose = true
   });
@@ -52,14 +52,16 @@ class ModelListenerState<Model extends ChangeNotifier>
   /// This is different than [ModelListener.model], which is a function that is
   /// called to create the model. Here is where the result of that function is 
   /// actually stored. 
-  Model model;
+  late final Model model;
 
-  @override void initState() {
+  @override 
+  void initState() {
     super.initState();
     model = widget.model()..addListener(listener);
   }
 
-  @override void dispose() {
+  @override 
+  void dispose() {
     try {
       model.removeListener(listener);
     } catch(_) {  // ignore: avoid_catches_without_on_clauses
@@ -71,7 +73,8 @@ class ModelListenerState<Model extends ChangeNotifier>
     super.dispose();
   }
 
-  @override Widget build (BuildContext context) => widget.builder (
+  @override 
+  Widget build (BuildContext context) => widget.builder (
     context, model, widget.child
   );
 

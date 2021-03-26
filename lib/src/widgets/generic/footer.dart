@@ -15,7 +15,8 @@ class Footer extends StatelessWidget {
 	/// A scale factor for the footer text. 
 	static const double textScale = 1.25;
 
-	@override Widget build (BuildContext context) => ModelListener<Schedule>(
+	@override 
+	Widget build (BuildContext context) => ModelListener<Schedule>(
 		model: () => Models.instance.schedule,
 		dispose: false,
 		// ignore: sort_child_properties_last
@@ -40,11 +41,13 @@ class Footer extends StatelessWidget {
 								mainAxisAlignment: MainAxisAlignment.center,
 								children: [
 									Text (
-										"Next: ${schedule.nextPeriod.getName(schedule.nextSubject)}",
+										// ternary already checked for schedule.nextPeriod == null
+										"Next: ${schedule.nextPeriod!.getName(schedule.nextSubject)}",
 										textScaleFactor: textScale
 									),
 									Text (
-										(schedule.nextPeriod
+										// ternary already checked for schedule.nextPeriod == null
+										(schedule.nextPeriod!
 											.getInfo(schedule.nextSubject)
 											..removeWhere(
 												(String str) => (

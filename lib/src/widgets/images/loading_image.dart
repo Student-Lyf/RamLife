@@ -27,16 +27,16 @@ class LoadingImage extends StatefulWidget {
 	/// 
 	/// This is used to size the [CircularProgressIndicator] so that it is 
 	/// roughly the same size as the image will be when it loads. 
-	final double aspectRatio;
+	final double? aspectRatio;
 
 	/// The image being loaded. 
 	final ImageProvider image;
 
 	/// Creates an image with a placeholder while it loads. 
-	const LoadingImage(
-		this.image,
-		{this.aspectRatio}
-	);
+	const LoadingImage({
+		required this.image,
+		required this.aspectRatio
+	});
 
 	@override 
 	LoadingImageState createState() => LoadingImageState();
@@ -48,16 +48,16 @@ class LoadingImage extends StatefulWidget {
 /// out the placeholder animation with the actual image when it loads. 
 class LoadingImageState extends State<LoadingImage> {
 	/// A listener that will notify when the image has loaded. 
-	ImageStreamListener listener;
+	late ImageStreamListener listener;
 
 	/// The stream of bytes in the image. 
-	ImageStream stream;
+	late ImageStream stream;
 
 	/// Whether the image is still loading. 
 	bool loading = true;
 
 	/// The aspect ratio of the image. 
-	double aspectRatio;
+	late double aspectRatio;
 
 	@override void initState() {
 		super.initState();
@@ -73,7 +73,6 @@ class LoadingImageState extends State<LoadingImage> {
 	// BUG: Check if this actually works.
 	// ignore: avoid_positional_boolean_parameters
 	void onLoad (ImageInfo info, bool _) {
-		setState(() => loading = false);
 		aspectRatio = Size (
 			info.image.width.toDouble(), 
 			info.image.height.toDouble()
@@ -81,6 +80,7 @@ class LoadingImageState extends State<LoadingImage> {
 		if (widget.aspectRatio == null) {
 			debugPrint("LoadingImage: Aspect ratio for ${widget.image} is $aspectRatio");
 		}
+		setState(() => loading = false);
 	}
 
 	@override Widget build(BuildContext context) => loading

@@ -16,13 +16,16 @@ class ReminderTile extends StatelessWidget {
 
 	/// Creates a reminder tile.
 	const ReminderTile({
-		@required this.index,
+		required this.index,
 		this.height = 65,
 	});
 
 	@override 
 	Widget build (BuildContext context) {
+		// The data model.
 		final Reminders reminders = Models.instance.reminders;
+
+		// The reminder being represented
 		final Reminder reminder = reminders.reminders [index];
 		
 		return SizedBox (
@@ -30,11 +33,11 @@ class ReminderTile extends StatelessWidget {
 			child: Center (
 				child: ListTile(
 					title: Text (reminder.message),
-					subtitle: Text (reminder.time.toString() ?? ""),
+					subtitle: Text(reminder.time.toString()),
 					onTap: () async {
 						if (!Models.instance.schedule.isValidReminder(reminder)) {
 							reminders.deleteReminder(index);
-							Scaffold.of(context).showSnackBar(
+							ScaffoldMessenger.of(context).showSnackBar(
 								const SnackBar(content: Text("Deleted outdated reminder"))
 							);
 							return;

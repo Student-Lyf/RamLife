@@ -13,16 +13,13 @@ class CalendarTile extends StatelessWidget{
 	static const CalendarTile blank = CalendarTile(date: null, day: null);
 
 	/// The date for this tile. 
-	final int date;
+	final int? date;
 	
 	/// The [Day] represented by this tile. 
-	final Day day;
+	final Day? day;
 
 	/// Creates a widget to update a day in the calendar
-	const CalendarTile({
-		@required this.date,
-		@required this.day,
-	});
+	const CalendarTile({this.date, this.day});
 
 	@override
 	Widget build(BuildContext context) => Container(
@@ -32,19 +29,19 @@ class CalendarTile extends StatelessWidget{
 				if (date != null) ...[ 
 					Align (
 						alignment: Alignment.topLeft,
-						child: Text ((date + 1).toString()),
+						child: Text ((date! + 1).toString()),
 					),
-					if (day?.name != null)
+					if (day != null)
 						Center (
 							child: Text (
-								day.name, 
+								day!.name, 
 								textScaleFactor: 1.5
 							),
 						),
 					if (
-						day?.name != null &&
+						day != null &&
 						!<String>[Special.rotate.name, Special.regular.name]
-							.contains(day.special?.name)
+							.contains(day!.special.name)
 					) const Align(
 						alignment: Alignment.bottomCenter,
 						child: Text ("•", textScaleFactor: 0.8),

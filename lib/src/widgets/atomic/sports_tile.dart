@@ -18,13 +18,13 @@ class SportsStats extends StatelessWidget {
   final String dateTime;
 
   /// The score for [team].
-  final int score;
+  final int? score;
   
   /// Creates a row to represent some stats in a [SportsTile].
   const SportsStats({
-    @required this.team,
-    @required this.dateTime,
-    @required this.score,
+    required this.team,
+    required this.dateTime,
+    this.score,
   });
   
   @override
@@ -48,7 +48,7 @@ class SportsScoreUpdater extends StatefulWidget {
   /// Opens a dialog to prompt the user for the scores of the game. 
   /// 
   /// Returns the scores as inputted.
-  static Future<Scores> updateScores(
+  static Future<Scores?> updateScores(
   	BuildContext context,
   	SportsGame game
 	) => showDialog<Scores>(
@@ -58,7 +58,7 @@ class SportsScoreUpdater extends StatefulWidget {
   
   /// The game being edited. 
   /// 
-  /// [SportsGame.home] is used to fill [Scores.isHome].
+  /// [SportsGame.isHome] is used to fill [Scores.isHome].
   final SportsGame game;
 
   /// Creates a widget to get the scores for [game] from the user.
@@ -79,13 +79,17 @@ class ScoreUpdaterState extends State<SportsScoreUpdater> {
   final TextEditingController otherController = TextEditingController();
 
   /// The value of [ramazController] as a number.
-  int ramazScore;
+  int? ramazScore;
 
   /// The value of [otherController] as a number.
-  int otherScore;
+  int? otherScore;
 
   /// The [Scores] object represented by this widget. 
-  Scores get scores => Scores(ramazScore, otherScore, isHome: widget.game.home);
+  Scores get scores => Scores(
+    ramazScore: ramazScore!,  // only called if [ready] == true
+    otherScore: otherScore!,  // only called if [ready] == true
+    isHome: widget.game.isHome
+  );
 
   /// Whether [scores] is valid and ready to submit.
   bool get ready => ramazController.text.isNotEmpty &&
@@ -96,8 +100,8 @@ class ScoreUpdaterState extends State<SportsScoreUpdater> {
   @override
   void initState() {
     super.initState();
-    ramazController.text = widget.game.scores?.ramazScore?.toString();
-    otherController.text = widget.game.scores?.otherScore?.toString();
+    ramazController.text = widget.game.scores?.ramazScore.toString() ?? "";
+    otherController.text = widget.game.scores?.otherScore.toString() ?? "";
     ramazScore = int.tryParse(ramazController.text);
     otherScore = int.tryParse(otherController.text);
   }
@@ -146,11 +150,11 @@ class ScoreUpdaterState extends State<SportsScoreUpdater> {
       ]
     ),
     actions: [
-      FlatButton(
+      TextButton(
         onPressed: () => Navigator.of(context).pop(),
         child: const Text("Cancel"),
       ),
-      RaisedButton(
+      ElevatedButton(
         onPressed: !ready ? null : () => Navigator.of(context).pop(scores),
         child: const Text("Save"),
       )
@@ -168,9 +172,8 @@ class ScoreUpdaterState extends State<SportsScoreUpdater> {
 /// Instead, a pass [onTap] to [SportsTile()].  
 class SportsTile extends StatelessWidget {
   /// Formats [date] into month-day-year form.
-  static String formatDate(DateTime date, {bool noNull = false}) => 
-    noNull && date == null ? null : 
-      "${date?.month ?? ' '}-${date?.day ?? ' '}-${date?.year ?? ' '}";
+  static String formatDate(DateTime? date) => 
+    "${date?.month ?? ' '}-${date?.day ?? ' '}-${date?.year ?? ' '}";
 
   /// The game for this widget to represent. 
   final SportsGame game;
@@ -182,7 +185,7 @@ class SportsTile extends StatelessWidget {
   /// [game] depends on the context, so is left to the parent widget. 
   /// 
   /// If this is non-null, an edit icon will be shown on this widget. 
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
 
   /// Creates a widget to display a [SportsGame].
   const SportsTile(this.game, {this.onTap});
@@ -203,7 +206,6 @@ class SportsTile extends StatelessWidget {
 			case Sport.tennis: return SportsIcons.tennis;
 			case Sport.volleyball: return SportsIcons.volleyball;
 		}
-		return null;
 	}
   
   /// The color of this widget. 
@@ -213,11 +215,10 @@ class SportsTile extends StatelessWidget {
   /// If the game was tied, it's a light gray. 
   /// 
   /// This is a great example of why the helper class [Scores] exists.
-  Color get cardColor => game.scores != null
-	  ? (game.scores.didDraw
+  Color? get cardColor => game.scores == null ? null : 
+    game.scores!.didDraw
 			? Colors.blueGrey
-			: (game.scores.didWin ? Colors.lightGreen : Colors.red [400])
-		) : null;
+			: (game.scores!.didWin ? Colors.lightGreen : Colors.red [400]);
 
   /// Determines how long to pad the team names so they align.
   int get padLength => game.opponent.length > "Ramaz".length
@@ -239,8 +240,8 @@ class SportsTile extends StatelessWidget {
                   backgroundImage: icon,
                   backgroundColor: cardColor ?? Theme.of(context).cardColor,
                 ),
-                title: Text(game?.team ?? ""),
-                subtitle: Text(game.home
+                title: Text(game.team),
+                subtitle: Text(game.isHome
                 	? "${game.opponent} @ Ramaz"
                 	: "Ramaz @ ${game.opponent}"
               	),
