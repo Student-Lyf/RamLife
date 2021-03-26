@@ -24,7 +24,7 @@ class CalendarPage extends StatelessWidget {
 	];
 
 	@override
-	Widget build(BuildContext context) => AdaptiveScaffold(
+	Widget build(BuildContext context) => Scaffold(
 		appBar: AppBar(title: const Text("Calendar")),
 		body: SingleChildScrollView(
 			padding: const EdgeInsets.symmetric(horizontal: 5),
@@ -54,8 +54,9 @@ class CalendarPage extends StatelessWidget {
 												for (int _ = 0; _ < (model.paddings [month] ?? [0]) [0]; _++)
 													CalendarTile.blank,
 												for (
-													final MapEntry<int, Day> entry in 
-													model.calendar [month].asMap().entries
+													final MapEntry<int, Day?> entry in 
+													// ExpansionPanelRadio.body checks for nulls
+													model.calendar [month]!.asMap().entries
 												) GestureDetector(
 													onTap: () async => model.updateDay(
 														DateTime(model.years [month], month + 1, entry.key + 1),
@@ -66,8 +67,8 @@ class CalendarPage extends StatelessWidget {
 														)
 													),
 													child: CalendarTile(
-														date: entry?.key,
-														day: entry?.value,
+														date: entry.key,
+														day: entry.value,
 													)
 												),
 												for (int _ = 0; _ < (model.paddings [month] ?? [0]) [1]; _++)

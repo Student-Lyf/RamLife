@@ -10,19 +10,19 @@ import "package:ramaz/widgets.dart";
 /// an existing [Special] by passing it as a parameter to [SpecialBuilder()]. 
 class SpecialBuilder extends StatefulWidget {
 	/// Returns the [Special] created by this widget. 
-	static Future<Special> buildSpecial(
+	static Future<Special?> buildSpecial(
 		BuildContext context,
-		[Special preset]
+		[Special? preset]
 	) => showDialog(
 		context: context, 
-		builder: (_) => SpecialBuilder(preset: preset),
+		builder: (_) => SpecialBuilder(preset),
 	);
 
 	/// The [Special] to base this [Special] on.
-	final Special preset;
+	final Special? preset;
 
 	/// Creates a widget to guide the user in creating a [Special].
-	const SpecialBuilder({this.preset});
+	const SpecialBuilder([this.preset]);
 
 	@override
 	SpecialBuilderState createState() => SpecialBuilderState();
@@ -47,13 +47,13 @@ class SpecialBuilderState extends State<SpecialBuilder> {
 	@override
 	void initState() {
 		super.initState();
-		controller.text = widget.preset?.name;
+		controller.text = widget.preset?.name ?? "";
 	}
 
 	@override 
 	Widget build(BuildContext context) => ModelListener<SpecialBuilderModel>(
 		model: () => SpecialBuilderModel()..usePreset(widget.preset),
-		builder: (_, SpecialBuilderModel model, Widget cancel) => Scaffold(
+		builder: (_, SpecialBuilderModel model, Widget? cancel) => Scaffold(
 			appBar: AppBar(
 				title: const Text("Make new schedule"),
 				actions: [
@@ -61,7 +61,7 @@ class SpecialBuilderState extends State<SpecialBuilder> {
 						icon: const Icon(Icons.sync),
 						tooltip: "Use preset",
 						onPressed: () async {
-							final Special special = await showModalBottomSheet<Special>(
+							final Special? special = await showModalBottomSheet<Special?>(
 								context: context,
 								builder: (BuildContext context) => ListView(
 									children: [
@@ -80,7 +80,8 @@ class SpecialBuilderState extends State<SpecialBuilder> {
 										const Divider(),
 										for (
 											final Special special in 
-											Models.instance.user.admin.specials
+											// only admins can access this scren
+											Models.instance.user.admin!.specials  
 										) ListTile(
 											title: Text (special.name),
 											onTap: () => Navigator.of(context).pop(special),
@@ -88,8 +89,10 @@ class SpecialBuilderState extends State<SpecialBuilder> {
 									]
 								)
 							);
-							controller.text = special.name;
-							model.usePreset(special);
+							if (special != null) {
+								controller.text = special.name;
+								model.usePreset(special);
+							}
 						}
 					),
 				]
@@ -132,7 +135,7 @@ class SpecialBuilderState extends State<SpecialBuilder> {
 						title: const Text("Homeroom"),
 						trailing: DropdownButton<int>(
 							value: model.homeroom,
-							onChanged: (int index) => model.homeroom = index,
+							onChanged: (int? index) => model.homeroom = index,
 							items: [
 								const DropdownMenuItem(
 									value: null,
@@ -150,7 +153,7 @@ class SpecialBuilderState extends State<SpecialBuilder> {
 						title: const Text("Mincha"),
 						trailing: DropdownButton<int>(
 							value: model.mincha,
-							onChanged: (int index) => model.mincha = index,
+							onChanged: (int? index) => model.mincha = index,
 							items: [
 								const DropdownMenuItem(
 									value: null,
@@ -173,13 +176,13 @@ class SpecialBuilderState extends State<SpecialBuilder> {
 						),
 					Row(
 						children: [
-							FlatButton.icon(
+							TextButton.icon(
 								icon: const Icon (Icons.add),
 								label: const Text("Add"),
 								onPressed: () => model.numPeriods++,
 							),
 							if (model.numPeriods > 0) 
-								FlatButton.icon(
+								TextButton.icon(
 									icon: const Icon(Icons.remove),
 									label: const Text("Remove"),
 									onPressed: () => model.numPeriods--

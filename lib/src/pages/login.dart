@@ -20,11 +20,14 @@ import "package:ramaz/widgets.dart";
 /// This page holds methods that can safely clean the errors away before
 /// prompting the user to try again. 
 class Login extends StatefulWidget {
-	final WidgetBuilder destinationPage;
+	/// The page to navigate to after a successful login.
+	final String destination;
 
-	const Login([this.destinationPage]);
+	/// Builds the login page
+	const Login({this.destination = Routes.home});
 
-	@override LoginState createState() => LoginState();
+	@override 
+	LoginState createState() => LoginState();
 }
 
 /// A state for the login page.
@@ -67,7 +70,7 @@ class LoginState extends State<Login> {
 					),
 					// const SizedBox(height: 100),
 					const Spacer(flex: 1),
-					FlatButton.icon(
+					TextButton.icon(
 						icon: Logos.google,
 						label: const Text("Sign in with Google"),
 						onPressed: () => signIn(context),
@@ -88,7 +91,10 @@ class LoginState extends State<Login> {
 		setState(() => isLoading = false);
 		final Crashlytics crashlytics = Services.instance.crashlytics;
 		await crashlytics.log("Attempted to log in");
-		await crashlytics.setEmail(Auth.email);
+		final String? email = Auth.email;
+		if (email != null) {
+			await crashlytics.setEmail(email);
+		}
 		// ignore: unawaited_futures
 		showDialog (
 			context: context,
@@ -100,13 +106,12 @@ class LoginState extends State<Login> {
 					"(class of '21) for help" 
 				),
 				actions: [
-					FlatButton (
+					TextButton(
 						onPressed: () => Navigator.of(dialogContext).pop(),
 						child: const Text ("Cancel"),
 					),
-					RaisedButton (
-						onPressed: () => launch ("mailto:leschesl@ramaz.org"),
-						color: Theme.of(dialogContext).primaryColorLight,
+					ElevatedButton(
+						onPressed: () => launch("mailto:leschesl@ramaz.org"),
 						child: const Text ("leschesl@ramaz.org"),
 					)
 				]
@@ -124,14 +129,14 @@ class LoginState extends State<Login> {
 	/// errors. If a network error occurs, a simple [SnackBar] is shown. 
 	/// Otherwise, the error pop-up is shown (see [onError]).
 	Future<void> safely({
-		@required Future<void> Function() function, 
-		@required void Function() onSuccess,
-		@required BuildContext scaffoldContext,
+		required Future<void> Function() function, 
+		required void Function() onSuccess,
+		required BuildContext scaffoldContext,
 	}) async {
 		try {await function();} 
 		on PlatformException catch (error, stack) {
 			if (error.code == "ERROR_NETWORK_REQUEST_FAILED") {
-				Scaffold.of(scaffoldContext).showSnackBar (
+				ScaffoldMessenger.of(scaffoldContext).showSnackBar(
 					const SnackBar (content: Text ("No Internet")),
 				);
 				return setState(() => isLoading = false);
@@ -158,13 +163,7 @@ class LoginState extends State<Login> {
 		},
 		onSuccess: () {
 			setState(() => isLoading = false);
-			if (widget.destinationPage == null) {
-				Navigator.of(context).pushReplacementNamed(Routes.home);
-			} else {
-				Navigator.of(context).pushReplacement(MaterialPageRoute(
-					builder: widget.destinationPage
-				));
-			}
+			Navigator.of(context).pushReplacementNamed(widget.destination);
 		},
 	);
 }

@@ -11,19 +11,24 @@ enum Scope {
 	calendar, 
 
 	/// The admin can access and modify student schedules.
-	schedule
+	schedule,
+
+	// THe admin can create and update sports games.
+	sports,
 }
 
 /// Maps Strings to their respective [Scope]s.
 const Map<String, Scope> stringToScope = {
 	"calendar": Scope.calendar,
 	"schedule": Scope.schedule,
+	"sports": Scope.sports,
 };
 
 /// Maps [Scope]s to Strings. 
 const Map<Scope, String> scopeToString = {
 	Scope.calendar: "calendar",
 	Scope.schedule: "schedule",
+	Scope.sports: "sports",
 };
 
 /// A system administrator. 

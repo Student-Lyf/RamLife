@@ -21,8 +21,8 @@ class Footer extends StatelessWidget {
 		dispose: false,
 		// ignore: sort_child_properties_last
 		child: Container(height: 0, width: 0),
-		builder: (BuildContext context, Schedule schedule, Widget blank) =>
-			schedule.nextPeriod == null ? blank : BottomSheet (
+		builder: (_, Schedule schedule, Widget? blank) =>
+			schedule.nextPeriod == null ? blank! : BottomSheet (
 				enableDrag: false,
 				onClosing: () {},
 				builder: (BuildContext context) => GestureDetector(

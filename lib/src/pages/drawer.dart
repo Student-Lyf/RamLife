@@ -2,7 +2,6 @@
 import "package:flutter/material.dart";
 
 import "package:ramaz/pages.dart";
-import "package:ramaz/constants.dart";  // for route names
 import "package:ramaz/models.dart";
 import "package:ramaz/services.dart";
 import "package:ramaz/widgets.dart";

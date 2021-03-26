@@ -6,6 +6,8 @@ import "package:ramaz/widgets.dart";
 
 /// A page to show the admin's custom specials. 
 class SpecialPage extends StatelessWidget {
+	// If the user is on this page, they are an admin.
+	// So, model.admin != null
 	@override
 	Widget build(BuildContext context) => ModelListener<UserModel>(
 		model: () => Models.instance.user,
@@ -22,7 +24,7 @@ class SpecialPage extends StatelessWidget {
 			),
 			body: Padding(
 				padding: const EdgeInsets.all(20), 
-				child: model.admin.specials.isEmpty
+				child: model.admin!.specials.isEmpty
 					? const Center (
 						child: Text (
 							"You don't have any schedules yet, but you can make one!",
@@ -32,9 +34,9 @@ class SpecialPage extends StatelessWidget {
 					)
 					: ListView(
 						children: [
-							for (int index = 0; index < model.admin.specials.length; index++)
+							for (int index = 0; index < model.admin!.specials.length; index++)
 								ListTile(
-									title: Text (model.admin.specials [index].name),
+									title: Text (model.admin!.specials [index].name),
 									trailing: IconButton(
 										icon: const Icon(Icons.remove_circle),
 										onPressed: () => model.removeSpecialFromAdmin(index),
@@ -43,7 +45,7 @@ class SpecialPage extends StatelessWidget {
 										index, 
 										await SpecialBuilder.buildSpecial(
 											context, 
-											model.admin.specials [index]
+											model.admin!.specials [index]
 										),
 									)
 								)

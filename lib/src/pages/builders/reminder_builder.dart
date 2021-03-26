@@ -9,9 +9,9 @@ import "package:ramaz/widgets.dart";
 /// This widget must be a [StatefulWidget] in order to avoid recreating a 
 /// [TextEditingController] every time the widget tree is rebuilt. 
 class ReminderBuilder extends StatefulWidget {	
-	static void _noop(){}
-	static final Color _disabledColor = const RaisedButton(onPressed: _noop)
-		.disabledTextColor;
+	// static void _noop(){}
+	// static final Color _disabledColor = const RaisedButton(onPressed: _noop)
+	// 	.disabledTextColor;
 
 	/// Trims a string down to a certain length.
 	/// 
@@ -20,49 +20,22 @@ class ReminderBuilder extends StatefulWidget {
 	static String trimString (String text, int length) => text.length > length
 		? text.substring(0, length) : text;
 
-	/// Gets the text color for a [MaterialButton].
-	/// 
-	/// Due to a bug in Flutter v1.9, [RaisedButton]s in [ButtonBar]s in 
-	/// [AlertDialog]s do not respect [MaterialApp.theme.buttonTheme.textTheme]. 
-	/// This function creates a new [RaisedButton] (outside of an [AlertDialog])
-	/// and returns its text color. 
-	static Color getButtonTextColor(
-		BuildContext context, 
-		Brightness brightness,
-		{bool enabled}
-	) {
-		if (!enabled) {
-			return _disabledColor;
-		}
-		switch (Theme.of(context).buttonTheme.textTheme) {
-			case ButtonTextTheme.normal: return brightness == Brightness.dark
-				? Colors.white : Colors.black87;
-			case ButtonTextTheme.accent: return Theme.of(context).accentColor;
-			case ButtonTextTheme.primary: return Theme.of(context).primaryColor;
-			default: throw ArgumentError.notNull(
-				"MaterialApp.theme.buttonTheme.textTheme"
-			);
-		}
-	}
-
 	/// Opens a [ReminderBuilder] pop-up to create or modify a [Reminder]. 
-	static Future<Reminder> buildReminder(
-		BuildContext context, [Reminder reminder]
-	) => showDialog<Reminder>(
+	static Future<Reminder?> buildReminder(
+		BuildContext context, [Reminder? reminder]
+	) => showDialog(
 		context: context, 
-		builder: (_) => ReminderBuilder(reminder: reminder),
+		builder: (_) => ReminderBuilder(reminder),
 	);
 
 	/// A reminder to modify. 
 	/// 
 	/// A [ReminderBuilder] can either create a new [Reminder] from scratch or 
 	/// modify an existing reminder (auto-fill its properties). 
-	final Reminder reminder;
+	final Reminder? reminder;
 
 	/// Creates a widget to create or modify a [Reminder].
-	const ReminderBuilder({
-		this.reminder
-	}); 
+	const ReminderBuilder(this.reminder); 
 
 	@override 
 	ReminderBuilderState createState() => ReminderBuilderState();
@@ -79,7 +52,7 @@ class ReminderBuilderState extends State<ReminderBuilder> {
 	@override 
 	void initState() {
 		super.initState();
-		controller.text = widget.reminder?.message;
+		controller.text = widget.reminder?.message ?? "";
 	}
 
 	@override
@@ -88,38 +61,18 @@ class ReminderBuilderState extends State<ReminderBuilder> {
 		// ignore: sort_child_properties_last
 		child: TextButton(
 			onPressed: Navigator.of(context).pop,
-			child: Text (
-				"Cancel", 
-				style: TextStyle (
-					color: ReminderBuilder.getButtonTextColor(
-						context, 
-						Theme.of(context).brightness,
-						enabled: true
-					),
-				)
-			),
+			child: const Text("Cancel"),
 		),
-		builder: (BuildContext context, RemindersBuilderModel model, Widget back) =>
+		builder: (BuildContext context, RemindersBuilderModel model, Widget? back) =>
 			AlertDialog(
 				title: Text (widget.reminder == null ? "Create reminder" : "Edit reminder"),
 				actions: [
-					back,
+					back!,
 					ElevatedButton(
 						onPressed: model.ready
 							? () => Navigator.of(context).pop(model.build())
 							: null,
-						child: Text (
-							"Save", 
-							style: TextStyle (
-								color: ReminderBuilder.getButtonTextColor(
-									context, 
-									ThemeData.estimateBrightnessForColor(
-										Theme.of(context).buttonColor
-									),
-									enabled: model.ready,
-								),
-							)
-						),
+						child: const Text("Save"),
 					)
 				],
 				content: Column (
@@ -134,7 +87,8 @@ class ReminderBuilderState extends State<ReminderBuilder> {
 						RadioListTile<ReminderTimeType> (
 							value: ReminderTimeType.period,
 							groupValue: model.type,
-							onChanged: model.toggleRepeatType,
+							// if toggleable is false (default), the value can never be null
+							onChanged: (value) => model.toggleRepeatType(value!),  
 							title: Text (
 								"${model.shouldRepeat ? 'Repeats every' : 'On'} period"
 							),
@@ -142,7 +96,8 @@ class ReminderBuilderState extends State<ReminderBuilder> {
 						RadioListTile<ReminderTimeType> (
 							value: ReminderTimeType.subject,
 							groupValue: model.type,
-							onChanged: model.toggleRepeatType,
+							// if toggleable is false (default), the value can never be null
+							onChanged: (value) => model.toggleRepeatType(value!),
 							title: Text (
 								"${model.shouldRepeat ? 'Repeats every' : 'On'} subject"
 							),
@@ -159,7 +114,11 @@ class ReminderBuilderState extends State<ReminderBuilder> {
 												child: Text(dayName),
 											),
 									],
-									onChanged: model.changeDay,
+									onChanged: (String? value) {
+										if (value != null) {
+											model.changeDay(value);
+										}
+									},
 									value: model.dayName,
 									hint: const Text("Day"),
 								),
@@ -174,7 +133,11 @@ class ReminderBuilderState extends State<ReminderBuilder> {
 												child: Text (period),
 											)
 									],
-									onChanged: model.changePeriod,
+									onChanged: (String? value) {
+										if (value != null) {
+											model.changePeriod(value);
+										}
+									},
 									value: model.period,
 									hint: const Text ("Period"),
 								)
@@ -190,7 +153,11 @@ class ReminderBuilderState extends State<ReminderBuilder> {
 												child: Text("${ReminderBuilder.trimString(course, 14)}..."),
 											)
 									],
-									onChanged: model.changeCourse,
+									onChanged: (String? value) {
+										if (value != null) {
+											model.changeCourse(value);
+										}
+									},
 									value: model.course,
 									isDense: true,
 									hint: const Text ("Class"),

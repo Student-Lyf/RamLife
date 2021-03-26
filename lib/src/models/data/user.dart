@@ -39,7 +39,8 @@ class UserModel extends Model {
 		if (await Auth.isAdmin) {
 			admin = Admin.fromJson(
 				await Services.instance.database.admin,
-				await Auth.adminScopes,
+				// if this object is created, the user is an admin
+				(await Auth.adminScopes)!,  
 			);
 		}
 	}

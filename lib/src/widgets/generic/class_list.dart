@@ -85,7 +85,7 @@ class ClassList extends StatelessWidget {
 	/// A list of periods for today. 
 	/// 
 	/// Comes from using [day] with [User.getPeriods].
-	final Iterable<Period>? periods;
+	final Iterable<Period> periods;
 
 	/// The header for this list. May be null.
 	final String? headerText;
@@ -93,12 +93,9 @@ class ClassList extends StatelessWidget {
 	/// Creates a list of [ClassPanel] widgets to represent periods in a day.
 	const ClassList ({
 		required this.day, 
-		this.periods,
+		required this.periods,
 		this.headerText,
 	});
-
-	Iterable<Period> _getPeriods(BuildContext context) =>
-		periods ?? Models.instance.schedule.user.getPeriods(day);
 
 	@override 
 	Widget build(BuildContext context) => ModelListener<Reminders>(
@@ -114,12 +111,12 @@ class ClassList extends StatelessWidget {
 				)
 			)
 		),
-		builder: (_, __, Widget header) => ListView(
+		builder: (_, __, Widget? header) => ListView(
 			shrinkWrap: true,
 			children: [
-				if (headerText != null) header,
+				if (headerText != null) header!,  // child is supplied
 				...[
-					for (final Period period in _getPeriods(context)) 
+					for (final Period period in periods) 
 						getPanel(period)
 				],
 			]

@@ -1,7 +1,6 @@
 // ignore_for_file: prefer_const_constructors_in_immutables
 import "package:flutter/material.dart";
 
-import "package:ramaz/constants.dart";
 import "package:ramaz/data.dart";
 import "package:ramaz/models.dart";
 import "package:ramaz/pages.dart";
@@ -10,8 +9,8 @@ import "package:ramaz/widgets.dart";
 /// A page to allow the user to explore their schedule. 
 class SchedulePage extends StatelessWidget {
 	/// Lets the user know that they chose an invalid schedule combination. 
-	void handleInvalidSchedule(BuildContext context) => Scaffold.of(context)
-		.showSnackBar(
+	void handleInvalidSchedule(BuildContext context) => 
+		ScaffoldMessenger.of(context).showSnackBar(
 			const SnackBar(content: Text("Invalid schedule"))
 		);
 
@@ -19,22 +18,8 @@ class SchedulePage extends StatelessWidget {
 	Widget build (BuildContext context) => ModelListener<ScheduleModel>(
 		model: () => ScheduleModel(),
 		// ignore: sort_child_properties_last
-		builder: (
-			BuildContext context, 
-			ScheduleModel model, 
-			Widget _
-		) => AdaptiveScaffold(
-			appBar: AppBar (
-				title: const Text ("Schedule"),
-				actions: [
-					if (ModalRoute.of(context).isFirst)
-						IconButton (
-							icon: const Icon(Icons.home),
-							onPressed: () => Navigator.of(context)
-								.pushReplacementNamed(Routes.home)
-						)
-				],
-			),
+		builder: (_, ScheduleModel model, __) => Scaffold(
+			appBar: AppBar (title: const Text ("Schedule")),
 			bottomNavigationBar: Footer(),
 			floatingActionButton: Builder(
 				builder: (BuildContext context) => FloatingActionButton(
@@ -42,7 +27,7 @@ class SchedulePage extends StatelessWidget {
 					child: const Icon (Icons.calendar_today),
 				)
 			),
-			drawer: ModalRoute.of(context).isFirst ? NavigationDrawer() : null,
+			drawer: Navigator.of(context).canPop() ? null : NavigationDrawer(),
 			body: Builder(
 				builder: (BuildContext context) => Column(
 					children: [
@@ -50,7 +35,7 @@ class SchedulePage extends StatelessWidget {
 							title: const Text ("Day"),
 							trailing: DropdownButton<String> (
 								value: model.day.name, 
-								onChanged: (String value) => model.update(
+								onChanged: (String? value) => model.update(
 									newName: value,
 									onInvalidSchedule: () => handleInvalidSchedule(context),
 								),
@@ -67,7 +52,7 @@ class SchedulePage extends StatelessWidget {
 							title: const Text ("Schedule"),
 							trailing: DropdownButton<Special> (
 								value: model.day.special,
-								onChanged: (Special special) => model.update(
+								onChanged: (Special? special) => model.update(
 									newSpecial: special,
 									onInvalidSchedule: () => handleInvalidSchedule(context),
 								),
@@ -88,7 +73,12 @@ class SchedulePage extends StatelessWidget {
 						const SizedBox (height: 20),
 						const Divider(),
 						const SizedBox (height: 20),
-						Expanded (child: ClassList(day: model.day)),
+						Expanded(
+							child: ClassList(
+								day: model.day, 
+								periods: Models.instance.user.data.getPeriods(model.day)
+							)
+						),
 					]
 				)
 			)
@@ -99,16 +89,17 @@ class SchedulePage extends StatelessWidget {
 	/// 
 	/// If there is no school on that day, a [SnackBar] will be shown. 
 	Future<void> viewDay(ScheduleModel model, BuildContext context) async {
-		final DateTime selected = await pickDate (
+		final DateTime? selected = await pickDate(
 			context: context,
 			initialDate: model.date,
 		);
 		if (selected == null) {
 			return;
 		}
-		try {model.date = selected;}
-		on Exception {
-			Scaffold.of(context).showSnackBar(
+		try {
+			model.date = selected;
+		} on Exception {  // user picked a day with no school
+			ScaffoldMessenger.of(context).showSnackBar(
 				const SnackBar (
 					content: Text ("There is no school on this day")
 				)

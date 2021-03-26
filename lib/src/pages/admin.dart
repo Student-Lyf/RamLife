@@ -1,9 +1,9 @@
 import "package:flutter/material.dart";
 
-import "package:ramaz/constants.dart";
+import "package:ramaz/data.dart";
 import "package:ramaz/pages.dart";
 import "package:ramaz/services.dart";
-import "package:ramaz/widgets.dart";
+import "package:ramaz/models.dart";
 
 /// A widget to represent a calendar icon.
 /// 
@@ -72,10 +72,10 @@ class AdminMenuItem extends StatelessWidget {
 
   /// Creates a menu item for the admin console.
   const AdminMenuItem({
-  	@required this.icon, 
-  	@required this.label, 
-    @required this.description,
-  	@required this.routeName
+  	required this.icon, 
+  	required this.label, 
+    required this.description,
+  	required this.routeName
 	});
   
   @override
@@ -103,21 +103,19 @@ class AdminHomePage extends StatefulWidget {
 /// This state takes care of loading [Auth.isCalendarAdmin] and 
 /// [Auth.isSportsAdmin] and then displaying the appropriate [AdminMenuItem]s.
 class AdminHomePageState extends State<AdminHomePage> {
-  bool _isCalendarAdmin, _isSportsAdmin;
+  /// The scopes this admin is allowed to access.
+  late final List<Scope> scopes;
 
   @override
   void initState() {
     super.initState();
-    Auth.isCalendarAdmin.then(
-      (bool value) => setState(() => _isCalendarAdmin = value)
-    );
-    Auth.isSportsAdmin.then(
-      (bool value) => setState(() => _isSportsAdmin = value)
-    );
+    // If the user is on this page, they are an admin
+    // And if they are an admin, UserModel.admin != null
+    scopes = Models.instance.user.admin!.scopes;
   }
 
 	@override
-	Widget build(BuildContext context) => AdaptiveScaffold(
+	Widget build(BuildContext context) => Scaffold(
 		drawer: NavigationDrawer(),
 		appBar: AppBar(
       title: const Text("Admin Console"),
@@ -137,19 +135,19 @@ class AdminHomePageState extends State<AdminHomePage> {
           style: Theme.of(context).textTheme.headline5,
         ),
         const SizedBox(height: 20),
-        if (_isCalendarAdmin ?? false) const AdminMenuItem(
+        if (scopes.contains(Scope.calendar)) const AdminMenuItem(
           label: "Calendar",
           icon: Icons.today,
           description: "Modify the calendar",
           routeName: Routes.calendar,
         ),
-        if (_isCalendarAdmin ?? false) const AdminMenuItem(
+        if (scopes.contains(Scope.calendar)) const AdminMenuItem(
         	label: "Schedules",
         	icon: Icons.schedule,
           description: "Manage your custom schedules",
         	routeName: Routes.specials, 
       	),
-        if (_isSportsAdmin ?? false) const AdminMenuItem(
+        if (scopes.contains(Scope.sports)) const AdminMenuItem(
           icon: Icons.directions_run,
           label: "Sports",
           description: "Add new sports games and record scores",
