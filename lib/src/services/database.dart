@@ -51,7 +51,7 @@ abstract class Database extends Service {
 	Future<Map<String, dynamic>> getSection(String id);
 
 	/// The different classes (sections, not courses) for a schedule.
-	Future<Map<String, Map<String, dynamic>>> getSections(
+	Future<Map<String, Map<String, dynamic>>?> getSections(
 		Iterable<String> ids
 	) async => {
 		for (final String id in ids)
@@ -64,10 +64,10 @@ abstract class Database extends Service {
 	/// The calendar in JSON form. 
 	/// 
 	/// Admins can change this with [setCalendar]. 
-	Future<List<List<Map<String, dynamic>>>> get calendar async => [
+	Future<List<List<Map<String, dynamic>?>>> get calendar async => [
 		for (int month = 1; month <= 12; month++) [
-			for (final dynamic day in (await getCalendarMonth(month)) [calendarKey])
-				Map<String, dynamic>.from(day)
+			for (final Map? day in (await getCalendarMonth(month)) [calendarKey])
+				day == null ? null : Map<String, dynamic>.from(day)
 		]
 	];
 
@@ -95,7 +95,7 @@ abstract class Database extends Service {
 	/// 
 	/// This function queries the database for a reminder with the same hash and 
 	/// updates it. 
-	Future<void> updateReminder(String oldHash, Map<String, dynamic> json);
+	Future<void> updateReminder(String? oldHash, Map<String, dynamic> json);
 
 	/// Deletes a reminder at the given index. 
 	/// 
@@ -104,7 +104,7 @@ abstract class Database extends Service {
 	Future<void> deleteReminder(String oldHash);
 
 	/// The admin object (or null).
-	Future<Map<String, dynamic>> get admin;
+	Future<Map<String, dynamic>?> get admin;
 
 	/// Sets the admin object for this user.
 	Future<void> setAdmin(Map<String, dynamic> json);

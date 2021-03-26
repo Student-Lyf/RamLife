@@ -1,14 +1,12 @@
-import "package:meta/meta.dart";
-
 import "../notifications.dart";
 
 /// The web implementation of a reminders notification. 
 /// 
 /// Notifications are not yet supported on web. 
 Notification getReminderNotification({
-	@required String title, 
-	@required String message,
-}) => null;
+	required String title, 
+	required String message,
+}) => Notification(title: title, message: message);
 
 /// The web implementation of the [Notifications] service. 
 /// 
@@ -29,7 +27,10 @@ class StubNotifications extends Notifications {
 	void sendNotification(Notification notification) {}
 
 	@override
-	void scheduleNotification({Notification notification, DateTime date}) {}
+	void scheduleNotification({
+		required Notification notification, 
+		required DateTime date
+	}) {}
 
 	@override
 	void cancelAll() {}

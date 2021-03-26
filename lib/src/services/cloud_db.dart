@@ -15,6 +15,19 @@ extension DocumentFinder on CollectionReference {
 	}
 }
 
+/// Convenience methods on [DocumentReference].
+extension NonNullData on DocumentReference {
+	/// Gets data from a document, throwing if null.
+	Future<Map<String, dynamic>> throwIfNull(String message) async {
+		final Map<String, dynamic>? value = (await get()).data();
+		if (value == null) {
+			throw StateError(message);
+		} else {
+			return value;
+		}
+	} 
+}
+
 /// A wrapper around Cloud Firestore. 
 class CloudDatabase extends Database {
 	static final DateTime _now = DateTime.now();
@@ -138,14 +151,8 @@ class CloudDatabase extends Database {
 	Future<void> signOut() => Auth.signOut();
 
 	@override
-	Future<Map<String, dynamic>> get user async {
-		final DocumentSnapshot snapshot = await userDocument.get();
-		if (!snapshot.exists) {
-			throw StateError("User ${Auth.email} does not exist in the database");
-		} else {
-			return snapshot.data();
-		}
-	}
+	Future<Map<String, dynamic>> get user => 
+		userDocument.throwIfNull("User ${Auth.email} does not exist in the database");
 
 	/// No-op -- The user cannot edit their own profile. 
 	/// 
@@ -155,8 +162,8 @@ class CloudDatabase extends Database {
 	Future<void> setUser(Map<String, dynamic> json) async {}
 
 	@override
-	Future<Map<String, dynamic>> getSection(String id) async => 
-		(await sectionCollection.doc(id).get()).data();
+	Future<Map<String, dynamic>> getSection(String id) =>
+		sectionCollection.doc(id).throwIfNull("Cannot find section: $id");
 
 	/// No-op -- The user cannot edit the courses list. 
 	/// 
@@ -167,9 +174,7 @@ class CloudDatabase extends Database {
 	@override
 	Future<Map<String, dynamic>> getCalendarMonth(int month) async {
 		final DocumentReference document = calendarCollection.doc(month.toString());
-		final DocumentSnapshot snapshot = await document.get();
-		final Map<String, dynamic> data = snapshot.data();
-		return data;
+		return document.throwIfNull("No entry in calendar for $month");
 	}
 
 	@override 
@@ -183,31 +188,39 @@ class CloudDatabase extends Database {
 		final List<QueryDocumentSnapshot> documents = snapshot.docs;
 		return [
 			for (final QueryDocumentSnapshot document in documents)
-				document.data()
+				// QueryDocumentSnapshot.data() is never null. 
+				// I opened a PR to make the type non-nullable: 
+				// https://github.com/FirebaseExtended/flutterfire/pull/5476
+				document.data()!
 		];
 	}
 
 	@override
-	Future<void> updateReminder(String oldHash, Map<String, dynamic> json) async =>
-		oldHash == null
-			? remindersCollection.add(json)
-			: (await remindersCollection.findDocument("hash", oldHash)).set(json);
+	Future<void> updateReminder(String? oldHash, Map<String, dynamic> json) async {
+		if (oldHash == null) {
+			await remindersCollection.add(json);
+		} else {
+			final DocumentReference document = await remindersCollection
+				.findDocument("hash", oldHash);
+			await document.set(json);
+		}
+	}
 
 	@override
 	Future<void> deleteReminder(String oldHash) async =>
 		(await remindersCollection.findDocument("hash", oldHash)).delete();
 
 	@override
-	Future<Map<String, dynamic>> get admin async => 
-		(await adminDocument.get()).data();
+	Future<Map<String, dynamic>> get admin => 
+		adminDocument.throwIfNull("User is not admin");
 
 	@override
 	Future<void> setAdmin(Map<String, dynamic> json) => adminDocument.set(json);
 
 	@override
 	Future<List<Map<String, dynamic>>> get sports async {
-		final DocumentSnapshot snapshot = await sportsDocument.get();
-		final Map<String, dynamic> data = snapshot.data();
+		final Map<String, dynamic> data = await sportsDocument
+			.throwIfNull("No sports data found");
 		return [
 			for (final dynamic json in data [sportsKey])
 				Map<String, dynamic>.from(json)
@@ -224,10 +237,10 @@ class CloudDatabase extends Database {
 	) => feedbackCollection.doc().set(json);
 
 	/// Listens to a month for changes in the calendar. 
-	Stream<List<Map<String, dynamic>>> getCalendarStream(int month) => 
+	Stream<List<Map<String, dynamic>?>> getCalendarStream(int month) => 
 		calendarCollection.doc(month.toString()).snapshots().map(
 			(DocumentSnapshot snapshot) => [
-				for (final dynamic entry in snapshot.data() ["calendar"])
+				for (final dynamic entry in snapshot.data()! ["calendar"])
 					Map<String, dynamic>.from(entry)
 				]
 		);

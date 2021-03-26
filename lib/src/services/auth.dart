@@ -32,15 +32,15 @@ class Auth {
 	/// This getter returns a [User], which should not be used 
 	/// outside this library. This method should only be called by 
 	/// methods that provide higher level functionality, such as [isSignedIn].
-	static User get _currentUser => auth.currentUser;
+	static User? get _currentUser => auth.currentUser;
 
 	/// The user's email.
 	/// 
 	/// Since the database is case-sensitive, we standardize the lower case. 
-	static String get email => _currentUser?.email?.toLowerCase();
+	static String? get email => _currentUser?.email?.toLowerCase();
 
 	/// The user's full name.
-	static String get name => _currentUser?.displayName;
+	static String? get name => _currentUser?.displayName;
 
 	/// Determines whether the user is currently logged
 	static bool get isSignedIn => _currentUser != null;
@@ -48,23 +48,27 @@ class Auth {
 	/// Gets the user's custom claims. 
 	/// 
 	/// See the official [Firebase docs](https://firebase.google.com/docs/auth/admin/custom-claims). 
-	static Future<Map> get claims async => (
-		await _currentUser.getIdTokenResult()
-	).claims;
+	static Future<Map<String, dynamic>?> get claims async => !isSignedIn ? null
+		: (await _currentUser!.getIdTokenResult()).claims;
 
 	/// Whether the user is an admin. 
 	/// 
 	/// This works by checking for an "isAdmin" flag in the user's custom [claims].
-	static Future<bool> get isAdmin async => (await claims) ["isAdmin"] ?? false;
+	static Future<bool> get isAdmin async {
+		final Map? customClaims = await claims;
+		return customClaims != null && (customClaims ["isAdmin"] ?? false);
+	}
 
 	/// The scopes of an admin. 
 	/// 
 	/// Returns null if the user is not an admin (ie, [isAdmin] returns false).
-	static Future<List<String>> get adminScopes async => !(await isAdmin) 
-		? null : [
-			for (final scope in (await claims) ["scopes"])
+	static Future<List<String>?> get adminScopes async {
+		final Map? customClaims = await claims;
+		return customClaims == null ? null : [
+			for (final String scope in customClaims ["scopes"])
 				scope.toString()
 		];
+	}
 
 	/// Whether the user is an admin for the calendar. 
 	static Future<bool> get isCalendarAdmin async => 
@@ -82,7 +86,7 @@ class Auth {
 
 	/// Signs the user in using Google as a provider. 
 	static Future<void> signIn() async {
-		final GoogleSignInAccount googleAccount = await google.signIn();
+		final GoogleSignInAccount? googleAccount = await google.signIn();
 		if (googleAccount == null) {
 			throw NoAccountException();
 		}

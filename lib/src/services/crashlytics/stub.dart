@@ -25,7 +25,8 @@ class CrashlyticsStub extends Crashlytics {
 	@override
 	Future<void> recordFlutterError (
 		FlutterErrorDetails details
-	) async => throw details.exception;
+	) async => throw details.exception;  // ignore: only_throw_errors
+	// [FlutterErrorDetails.exception] is an [Object], and can be any value. 
 
 	@override
 	Future<void> setEmail(String email) async {}

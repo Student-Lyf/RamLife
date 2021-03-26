@@ -1,5 +1,4 @@
 import "package:flutter_local_notifications/flutter_local_notifications.dart";
-import "package:meta/meta.dart";
 import "package:timezone/timezone.dart";
 import "package:timezone/data/latest.dart";
 import "package:flutter_native_timezone/flutter_native_timezone.dart";
@@ -10,8 +9,8 @@ import "../notifications.dart";
 
 /// Creates a reminders notification using [MobileNotification.reminder].
 Notification getReminderNotification({
-	@required String title, 
-	@required String message,
+	required String title, 
+	required String message,
 }) => MobileNotification.reminder(title: title, message: message);
 
 /// The mobile implementation of the [Notifications] service. 
@@ -51,15 +50,15 @@ class MobileNotification extends Notification {
 
 	/// Creates a new [Notification]. 
 	const MobileNotification({
-		@required String title,
-		@required String message,
-		@required this.details,
+		required String title,
+		required String message,
+		required this.details,
 	}) : super(title: title, message: message);
 
 	/// The optimal configuration for a reminder notification.
 	MobileNotification.reminder({
-		@required String title,
-		@required String message,
+		required String title,
+		required String message,
 	}) : 
 		details = reminderDetails, 
 		super(title: title, message: message);
@@ -71,10 +70,10 @@ class MobileNotifications extends Notifications {
 	final plugin = FlutterLocalNotificationsPlugin();
 
 	/// The location this device is in. 
-	String timezoneName;
+	late String timezoneName;
 
 	/// The location (and timezones) this device is in.
-	Location location;
+	late Location location;
 
 	@override
 	Future<void> init() async {
@@ -95,10 +94,8 @@ class MobileNotifications extends Notifications {
 	Future<void> signIn() async {}
 
 	@override
-	void sendNotification(
-		covariant MobileNotification notification
-	) => plugin.show(
-		notification.id, 
+	void sendNotification(MobileNotification notification) => plugin.show(
+		Notification.id, 
 		notification.title, 
 		notification.message, 
 		notification.details,
@@ -106,10 +103,10 @@ class MobileNotifications extends Notifications {
 
 	@override
 	void scheduleNotification({
-		@required covariant MobileNotification notification,
-		@required DateTime date, 
+		required MobileNotification notification,
+		required DateTime date, 
 	}) => plugin.zonedSchedule(
-		notification.id,
+		Notification.id,
 		notification.title,
 		notification.message,
 		TZDateTime.from(date, location),
@@ -128,6 +125,6 @@ class MobileNotifications extends Notifications {
 			final PendingNotificationRequest request in 
 			await plugin.pendingNotificationRequests()
 		) 
-			request.title
+			request.title!
 	];
 }

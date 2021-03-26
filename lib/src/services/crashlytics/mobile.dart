@@ -18,7 +18,7 @@ class CrashlyticsImplementation extends Crashlytics {
 	@override
 	Future<void> init() async {
 		await FirebaseCore.init();
-		didCrashLastTime = await firebase.didCrashOnPreviousExecution();
+		final bool didCrashLastTime = await firebase.didCrashOnPreviousExecution();
 		if (didCrashLastTime) {
 			await log("App crashed on last run");
 		}

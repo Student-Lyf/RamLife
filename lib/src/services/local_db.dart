@@ -1,5 +1,4 @@
 import "package:idb_shim/idb_shim.dart" as idb;
-import "package:meta/meta.dart";
 
 import "auth.dart";
 import "database.dart";
@@ -7,12 +6,23 @@ import "local_db/idb_factory_stub.dart"
 	if (dart.library.io) "local_db/idb_factory_io.dart"
 	if (dart.library.html) "local_db/idb_factory_web.dart";
 
+extension <T> on Stream<T> {
+  Future<T?> firstWhereOrNull(bool Function(T) test) async {
+    await for (final T element in this) {
+    	if (test(element)) {
+	      return element;
+	    }
+    }
+    return null;
+  }
+}
+
 /// Provides convenience methods around an [idb.ObjectStore].
-extension ObjectStoreExtension on idb.ObjectStore {
+extension on idb.ObjectStore {
 	/// Gets the data at the key in this object store. 
 	/// 
 	/// This extension provides type safety. 
-	Future<Map<String, dynamic>> get(dynamic key) async {
+	Future<Map<String, dynamic>?> get(Object key) async {
 		final dynamic result = await getObject(key);
 		return result == null ? null : 
 			Map<String, dynamic>.from(result); 
@@ -20,19 +30,32 @@ extension ObjectStoreExtension on idb.ObjectStore {
 }
 
 /// Provides convenience methods on a [Database]. 
-extension DatabaseExtension on idb.Database {
+extension on idb.Database {
 	/// Gets data at a key in an object store. 
 	/// 
 	/// This code handles transactions so other code doesn't have to. 
-	Future<Map<String, dynamic>> get(String storeName, dynamic key) => 
+	Future<Map<String, dynamic>?> get(String storeName, Object key) => 
 		transaction(storeName, idb.idbModeReadOnly)
 		.objectStore(storeName)
 		.get(key);
 
+	Future<Map<String, dynamic>> throwIfNull({
+		required String storeName, 
+		required Object key, 
+		required String message,
+	}) async {
+		final Map<String, dynamic>? result = await get(storeName, key);
+		if (result == null) {
+			throw StateError(message);
+		} else {
+			return result;
+		}
+	}
+
 	/// Adds data at a key to an object store. 
 	/// 
 	/// This code handles transactions so other code doesn't have to. 
-	Future<void> add<T>(String storeName, T value) => 
+	Future<void> add(String storeName, Object value) => 
 		transaction(storeName, idb.idbModeReadWrite)
 		.objectStore(storeName)
 		.add(value);
@@ -46,7 +69,7 @@ extension DatabaseExtension on idb.Database {
 	/// have a key. 
 	/// 
 	/// This code handles transactions so other code doesn't have to. 
-	Future<void> update<T>(String storeName, T value, [dynamic key]) => 
+	Future<void> update(String storeName, Object value, [Object? key]) => 
 		transaction(storeName, idb.idbModeReadWrite)
 		.objectStore(storeName)
 		.put(value, key);
@@ -63,27 +86,25 @@ extension DatabaseExtension on idb.Database {
 		)	Map<String, dynamic>.from(entry)
 	];
 
-	/// Deletes a data from an object store. 
-	/// 
-	/// This code handles transactions so other code doesn't have to. 
-	Future<void> delete(String storeName, dynamic key) async => 
-		transaction(storeName, idb.idbModeReadWrite)
-		.objectStore(storeName)
-		.delete(key);
-
 	/// Finds an entry in an object store by a field and value. 
-	Future<idb.CursorWithValue> findEntry({
-		@required String storeName, 
-		@required String key, 
-		@required String path
+	/// 
+	/// Returns null if no key is given. 
+	Future<idb.CursorWithValue?> findEntry({
+		required String storeName, 
+		required String? key, 
+		required String path
 	}) async => key == null ? null : transaction(storeName, idb.idbModeReadWrite)
 		.objectStore(storeName)
 		.index(path)
 		.openCursor(range: idb.KeyRange.only(key), autoAdvance: true)
-		.firstWhere(
+		.firstWhereOrNull(
 			(idb.CursorWithValue cursor) => cursor.key == key,
-			orElse: () => null
 		);
+
+	Future<int> objectCount(String storeName) => 
+		transaction(storeName, idb.idbModeReadOnly)
+		.objectStore(storeName)
+		.count();
 }
 
 /// A database that's hosted on the user's device. 
@@ -97,7 +118,7 @@ extension DatabaseExtension on idb.Database {
 /// value. The choice should be made based on the data in that object store. 
 /// 
 /// Reading and writing data is done with transactions. This process is 
-/// abstracted by [ObjectStoreExtension] and [DatabaseExtension]. 
+/// abstracted by extensions on [idb.ObjectStore] and [idb.Database]. 
 /// 
 /// Another quirk of idb is that object stores can only be created on startup. 
 /// One way this is relevant is in [isSignedIn]. If it turns out that the user 
@@ -143,7 +164,7 @@ class LocalDatabase extends Database {
 	/// The idb database itself. 
 	/// 
 	/// Not to be confused with a RamLife [Database]. 
-	idb.Database database;
+	late idb.Database database;
 
 	@override 
 	Future<void> init() async {
@@ -190,16 +211,28 @@ class LocalDatabase extends Database {
 	}
 
 	@override
-	Future<Map<String, dynamic>> get user async => 
-		Map<String, dynamic>.from(await database.get(userStoreName, Auth.email));
+	Future<Map<String, dynamic>> get user => database.throwIfNull(
+		storeName: userStoreName, 
+		key: Auth.email!, 
+		message: "User has not been signed in"
+	);
 
 	@override
 	Future<void> setUser(Map<String, dynamic> json) => 
 		database.add(userStoreName, json);
 
 	@override
-	Future<Map<String, dynamic>> getSection(String id) => 
-		database.get(sectionStoreName, id);
+	Future<Map<String, dynamic>> getSection(String id) => database.throwIfNull(
+		storeName: sectionStoreName, 
+		key: id,
+		message: "Section $id is not recognized",
+	);
+
+	@override
+	Future<Map<String, Map<String, dynamic>>?> getSections(
+		Iterable<String> ids
+	) async => await database.objectCount(sectionStoreName) == 0 ? null 
+		: super.getSections(ids);
 
 	@override
 	Future<void> setSections(Map<String, Map<String, dynamic>> json) async {
@@ -209,8 +242,12 @@ class LocalDatabase extends Database {
 	} 
 
 	@override
-	Future<Map<String, dynamic>> getCalendarMonth(int month) async =>
-		Map<String, dynamic>.from(await database.get(calendarStoreName, month));
+	Future<Map<String, dynamic>> getCalendarMonth(int month) => 
+		database.throwIfNull(
+			storeName: calendarStoreName, 
+			key: month, 
+			message: "Cannot find $month in calendar"
+		);
 
 	@override
 	Future<void> setCalendar(int month, Map<String, dynamic> json) async {
@@ -222,8 +259,8 @@ class LocalDatabase extends Database {
 		database.getAll(reminderStoreName);
 
 	@override
-	Future<void> updateReminder(String oldHash, Map<String, dynamic> json) async {
-		final idb.CursorWithValue cursor = await database.findEntry(
+	Future<void> updateReminder(String? oldHash, Map<String, dynamic> json) async {
+		final idb.CursorWithValue? cursor = await database.findEntry(
 			storeName: reminderStoreName, 
 			key: oldHash, 
 			path: "hash"
@@ -244,8 +281,11 @@ class LocalDatabase extends Database {
 	)?.delete();
 
 	@override
-	Future<Map<String, dynamic>> get admin async => 
-		Map<String, dynamic>.from(await database.get(adminStoreName, Auth.email));
+	Future<Map<String, dynamic>> get admin async => database.throwIfNull(
+		storeName: adminStoreName, 
+		key: Auth.email!,
+		message: "Admin data not found",
+	);
 
 	@override
 	Future<void> setAdmin(Map<String, dynamic> json) => 

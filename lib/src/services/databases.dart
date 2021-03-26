@@ -85,7 +85,7 @@ class Databases extends Database {
 	/// this function is left blank and [getSections] uses other 
 	/// [Database.getSections] to work.
 	@override
-	Future<Map<String, dynamic>> getSection(String id) async => null;
+	Future<Map<String, dynamic>> getSection(String id) async => {};
 
 	/// Gets section data. 
 	/// 
@@ -94,10 +94,10 @@ class Databases extends Database {
 	Future<Map<String, Map<String, dynamic>>> getSections(
 		Iterable<String> ids
 	) async {
-		Map<String, Map<String, dynamic>> result = 
+		Map<String, Map<String, dynamic>>? result = 
 			await localDatabase.getSections(ids);
-		if (result.values.every((value) => value == null)) {
-			result = await cloudDatabase.getSections(ids);
+		if (result == null) {
+			result = (await cloudDatabase.getSections(ids))!;
 			await localDatabase.setSections(result);
 		}
 		return result;
