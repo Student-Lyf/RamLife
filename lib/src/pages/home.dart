@@ -2,11 +2,16 @@ import "package:flutter/material.dart";
 import "package:breakpoint_scaffold/breakpoint_scaffold.dart";
 
 import "package:ramaz/models.dart";
-import "package:ramaz/pages.dart";
 import "package:ramaz/widgets.dart";
 
-/// The homepage of the app. 
-class HomePage extends StatelessWidget {
+import "responsive_page.dart";
+
+const List<String> weekdayNames = [
+	"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"
+];
+
+/// A page to show all relevant info at a glance.
+class DashboardPage extends StatelessWidget {
 	/// The reminders data model. 
 	final Reminders remindersModel; 
 
@@ -19,7 +24,7 @@ class HomePage extends StatelessWidget {
 	/// The home page. 
 	/// 
 	/// Listens to [Schedule] (and by extension, [Reminders]) and [Sports]. 
-	HomePage() : 
+	DashboardPage() : 
 		scheduleModel = Models.instance.schedule,
 		remindersModel = Models.instance.reminders,
 		sportsModel = Models.instance.sports;
@@ -43,78 +48,36 @@ class HomePage extends StatelessWidget {
 	);
 
 	@override 
-	Widget build (BuildContext context) => ModelListener<HomeModel>(
+	Widget build (BuildContext context) => ModelListener(
 		model: () => HomeModel(),
-		builder: (_, HomeModel model, __) => ResponsiveBuilder(
-			builder: (_, LayoutInfo layout, __) => ResponsiveScaffold.navBar(
-				appBar: AppBar(
-					title: const Text ("Home"),
-					actions: [
-						if (scheduleModel.hasSchool && !layout.hasStandardSideSheet)
-							TextButton(
-								onPressed: () => Scaffold.of(context).openEndDrawer(),
-								child: const Text ("Tap for schedule"),
-							)
-					],
-				),
-				drawer: layout.hasStandardDrawer 
-					? SizedBox(width: 256, child: NavigationDrawer()) 
-					: NavigationDrawer(),
-				sideSheet: !scheduleModel.hasSchool || layout.hasStandardSideSheet 
-					? null
-					: Drawer(
-						child: ClassList(
-							// if there is school, then:
-							// 	scheduleModel.today != null
-							// 	scheduleModel.periods != null
-							day: scheduleModel.today!,  
-							periods: scheduleModel.nextPeriod == null 
-								? scheduleModel.periods!
-								: scheduleModel.periods!.getRange (
-									(scheduleModel.periodIndex ?? -1) + 1, 
-									scheduleModel.periods!.length
-								),
-							headerText: scheduleModel.period == null 
-								? "Today's Schedule" 
-								: "Upcoming Classes"
-						),
+		builder: (BuildContext context, HomeModel model, _) => RefreshIndicator(
+			onRefresh: () => refresh(context, model),
+			child: ListView(
+				padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+				children: [
+					Text (
+						scheduleModel.today == null
+							? "There is no school today"
+							: "Today is ${scheduleModel.today!.name}",
+						style: Theme.of(context).textTheme.headline3,
+						textAlign: TextAlign.center
 					),
-				navItems: const [
-					NavigationItem(icon: Icon(Icons.calendar_today), label: "Today"),
-					NavigationItem(icon: Icon(Icons.schedule), label: "Schedule"),
-					NavigationItem(icon: Icon(Icons.notifications), label: "Reminders"),
-				],
-				secondaryDrawer: NavigationDrawer(),
-				navIndex: 0,
-				onNavIndexChanged: (int value) {},
-				body: Builder(
-					builder: (BuildContext context) => RefreshIndicator(
-						onRefresh: () => refresh(context, model),
-						child: ListView(
-							padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-							children: [
-								Text (
-									"Today is XXX",
-									style: Theme.of(context).textTheme.headline3,
-									textAlign: TextAlign.center
-								),
-								const SizedBox (height: 20),
-								ScheduleSlot(),
-								const SizedBox(height: 10),
-								if (sportsModel.todayGames.isNotEmpty) ...[
-									Text(
-										"Sports games",
-										textAlign: TextAlign.center,
-										style: Theme.of(context).textTheme.headline5,
-									),
-									const SizedBox(height: 10),
-									for (final int index in sportsModel.todayGames)
-										SportsTile(sportsModel.games [index])
-								]
-							]
-						)
-					)
-				)
+					const SizedBox (height: 20),
+					if (scheduleModel.hasSchool) ...[
+						ScheduleSlot(),
+						const SizedBox(height: 10),
+					],
+					if (sportsModel.todayGames.isNotEmpty) ...[
+						Text(
+							"Sports games",
+							textAlign: TextAlign.center,
+							style: Theme.of(context).textTheme.headline5,
+						),
+						const SizedBox(height: 10),
+						for (final int index in sportsModel.todayGames)
+							SportsTile(sportsModel.games [index])
+					]
+				]
 			)
 		)
 	);
@@ -172,4 +135,43 @@ class ScheduleSlot extends StatelessWidget {
 			]
 		)
 	);
+}
+
+class Dashboard extends ResponsivePage {
+	final Schedule model;
+	Dashboard() : model = Models.instance.schedule;
+
+	@override
+	AppBar get appBar => AppBar(
+		title: const Text("Dashboard"),
+		actions: [
+		if (model.hasSchool)
+			Builder(
+				builder: (BuildContext context) => TextButton(
+					onPressed: () => Scaffold.of(context).openEndDrawer(),
+					child: const Text ("Tap for schedule"),
+				)
+			)
+		]
+	);
+
+	@override
+	Widget? get sideSheet => !model.hasSchool ? null : ClassList(
+		// if there is school, then:
+		// 	scheduleModel.today != null
+		// 	scheduleModel.periods != null
+		day: model.today!,  
+		periods: model.nextPeriod == null 
+			? model.periods!
+			: model.periods!.getRange (
+				(model.periodIndex ?? -1) + 1, 
+				model.periods!.length
+			),
+		headerText: model.period == null 
+			? "Today's Schedule" 
+			: "Upcoming Classes"
+	);
+
+	@override
+	WidgetBuilder get builder => (_) => DashboardPage();
 }

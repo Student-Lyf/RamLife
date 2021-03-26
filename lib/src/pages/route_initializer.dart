@@ -5,14 +5,16 @@ import "package:ramaz/services.dart";
 
 /// A route that performs initialization logic first.
 class RouteInitializer extends StatefulWidget {
-	/// A dummy predicate that always returns true.
-	static bool alwaysTrue() => true;
+	/// Checks to see if the user is signed in.
+	/// 
+	/// This is the default logic to determine if the user can access a page.
+	static bool isSignedIn() => Auth.isSignedIn;
 
 	/// Determines if the user is allowed to be on the given page.
 	final bool Function() isAllowed;
 
-	/// Builds the contents of the page. 
-	final WidgetBuilder builder;
+	/// The contents of the page. 
+	final Widget child;
 
 	/// The route to navigate to if the user is not authorized.
 	final String onFailure;
@@ -22,10 +24,10 @@ class RouteInitializer extends StatefulWidget {
 
 	/// Navigation with authorization and error-handling.
 	const RouteInitializer({
-		required this.builder,
+		required this.child,
 		this.onFailure = Routes.login,
 		this.onError = Routes.login,
-		this.isAllowed = alwaysTrue,
+		this.isAllowed = isSignedIn,
 	});
 
 	@override 
@@ -70,7 +72,7 @@ class RouteInitializerState extends State<RouteInitializer> {
 		future: initFuture,
 		builder: (_, AsyncSnapshot snapshot) => 
 			snapshot.connectionState == ConnectionState.done
-				? widget.builder(context) 
+				? widget.child
 				: const Center(child: CircularProgressIndicator())
 	);
 }

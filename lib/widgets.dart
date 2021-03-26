@@ -25,7 +25,6 @@ export "src/widgets/atomic/reminder_tile.dart";
 export "src/widgets/atomic/sports_tile.dart";
 
 // Generic widgets are used in all sorts of situations.
-export "src/widgets/generic/adaptive_scaffold.dart";
 export "src/widgets/generic/class_list.dart";
 export "src/widgets/generic/date_picker.dart";
 export "src/widgets/generic/footer.dart";

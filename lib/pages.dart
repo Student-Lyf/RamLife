@@ -8,13 +8,13 @@ export "src/pages/builders/sports_builder.dart";
 export "src/pages/calendar.dart";
 export "src/pages/drawer.dart";
 export "src/pages/feedback.dart";
+export "src/pages/new_home.dart";
 export "src/pages/home.dart";
 export "src/pages/login.dart";
 export "src/pages/reminders.dart";
 export "src/pages/route_initializer.dart";
 export "src/pages/schedule.dart";
 export "src/pages/specials.dart";
-export "src/pages/splash.dart";
 export "src/pages/sports.dart";
 
 /// Route names for each page in the app.

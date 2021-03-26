@@ -3,10 +3,22 @@ import "package:flutter/material.dart";
 import "package:ramaz/constants.dart";
 import "package:ramaz/pages.dart";
 import "package:ramaz/widgets.dart";
-import "package:ramaz/services.dart";
 
 /// The main app widget. 
 class RamLife extends StatelessWidget {
+	/// The routes for this app.
+	static final Map<String, WidgetBuilder> routes = {
+		Routes.login: (_) => Login(),
+		Routes.home: (_) => const HomePage(),
+		Routes.schedule: (_) => const HomePage(pageIndex: 1),
+		Routes.reminders: (_) => const HomePage(pageIndex: 2),
+		Routes.feedback: (_) => FeedbackPage(),
+		Routes.calendar: (_) => CalendarPage(),
+		Routes.specials: (_) => SpecialPage(),
+		Routes.admin: (_) => AdminHomePage(),
+		Routes.sports: (_) => SportsPage(),
+	};
+
 	/// Provides a const constructor.
 	const RamLife();
 
@@ -77,27 +89,25 @@ class RamLife extends StatelessWidget {
 			title: "Ram Life",
 			color: RamazColors.blue,
 			theme: theme,
-			routes: {
-				Routes.login: (_) => RouteInitializer(
-					builder: (_) => Login(), 
-					onError: null,  // the default IS the login page
-				),
-				Routes.home: enforceLogin((_) => HomePage()),
-				Routes.schedule: enforceLogin((_) => SchedulePage()),
-				Routes.reminders: enforceLogin((_) => RemindersPage()),
-				Routes.feedback: enforceLogin((_) => FeedbackPage()),
-				Routes.calendar: enforceLogin((_) => CalendarPage()),
-				Routes.specials: enforceLogin((_) => SpecialPage()),
-				Routes.admin: enforceLogin((_) => AdminHomePage()),
-				Routes.sports: enforceLogin((_) => SportsPage()),
-			}
+			onGenerateRoute: (RouteSettings settings) => PageRouteBuilder(
+        settings: settings, 
+        transitionDuration: Duration.zero,
+        pageBuilder: (BuildContext context, __, ___) {
+        	final String routeName = 
+        		(settings.name == null || !routes.containsKey(settings.name))
+	        		? Routes.home : settings.name!;
+	        return settings.name == Routes.login 
+	        	? RouteInitializer(
+	        		// If this page is Routes.login, don't set an error handler.
+	        		onError: null ,
+	        		isAllowed: () => true,
+	        		child: routes [routeName]! (context),
+        		)
+        		: RouteInitializer(
+        			child: routes [routeName]! (context),
+      			);
+        },
+      )
 		)
 	);
-
-	/// Enforces the user be signed in.
-	WidgetBuilder enforceLogin(WidgetBuilder builder) => 
-		(_) => RouteInitializer(
-			isAllowed: () => Auth.isSignedIn,
-			builder: builder,
-		);
 }

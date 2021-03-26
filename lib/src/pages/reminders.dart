@@ -4,6 +4,27 @@ import "package:ramaz/models.dart";
 import "package:ramaz/pages.dart";
 import "package:ramaz/widgets.dart";
 
+import "responsive_page.dart";
+
+class ResponsiveReminders extends ResponsivePage {
+	final Reminders model = Models.instance.reminders;
+
+	@override
+	AppBar get appBar => AppBar(title: const Text ("Reminders"));
+
+	@override
+	Widget get floatingActionButton => Builder(
+		builder: (BuildContext context) => FloatingActionButton(
+			onPressed: () async => model
+				.addReminder(await ReminderBuilder.buildReminder(context)),
+			child: const Icon (Icons.note_add),
+		)
+	);
+
+	@override
+	WidgetBuilder get builder => (_) => RemindersPage();
+}
+
 /// A page to display the user's reminders. 
 class RemindersPage extends StatelessWidget {
 	@override 
@@ -18,31 +39,13 @@ class RemindersPage extends StatelessWidget {
 				textAlign: TextAlign.center,
 			),
 		),
-		builder: (_, Reminders model, Widget? empty) => Scaffold(
-			bottomNavigationBar: Footer(),
-			drawer: NavigationDrawer(),
-			appBar: AppBar(
-				title: const Text ("Reminders"),
-				actions: [
-					IconButton(
-						icon: const Icon(Icons.home),
-						onPressed: () => Navigator.of(context).pushReplacementNamed(Routes.home)
-					)
-				]
-			),
-			floatingActionButton: FloatingActionButton(
-				onPressed: () async => 
-					model.addReminder(await ReminderBuilder.buildReminder(context)),
-				child: const Icon (Icons.note_add),
-			),
-			body: model.reminders.isEmpty
-				? empty 
-				: ListView.separated (
-					itemCount: model.reminders.length,
-					separatorBuilder: (_, __) => const Divider(),
-					itemBuilder: (BuildContext context, int index) => 
-						ReminderTile(index: index),
-				)
-		)
+		builder: (_, Reminders model, Widget? empty) => model.reminders.isEmpty
+			? empty!  // widget is supplied above
+			: ListView.separated (
+				itemCount: model.reminders.length,
+				separatorBuilder: (_, __) => const Divider(),
+				itemBuilder: (BuildContext context, int index) => 
+					ReminderTile(index: index),
+			)
 	);
 }
