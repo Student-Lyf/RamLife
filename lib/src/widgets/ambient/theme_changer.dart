@@ -1,6 +1,7 @@
 import "package:flutter/material.dart";
 
-typedef ThemeBuilder = Widget Function (BuildContext, ThemeData);
+/// Builds a widget with the given theme.
+typedef ThemeBuilder = Widget Function(BuildContext, ThemeData);
 
 /// A widget to change the theme. 
 /// 
@@ -43,37 +44,45 @@ class ThemeChanger extends StatefulWidget {
 
 	/// Creates a widget to change the theme. 
 	const ThemeChanger ({
-		@required this.builder,
-		@required this.defaultBrightness,
-		@required this.light, 
-		@required this.dark,
-		this.themes,
+		required this.builder,
+		required this.defaultBrightness,
+		required this.light, 
+		required this.dark,
+		this.themes = const {},
 	});
 
-	@override ThemeChangerState createState() => ThemeChangerState();
+	@override 
+	ThemeChangerState createState() => ThemeChangerState();
 
 	/// Gets the [ThemeChangerState] from a [BuildContext]. 
 	/// 
 	/// Use this function to switch the theme. 
-	static ThemeChangerState of(BuildContext context) => 
-		context.findAncestorStateOfType<ThemeChangerState>();
+	static ThemeChangerState of(BuildContext context) {
+		final state = context.findAncestorStateOfType<ThemeChangerState>();
+		if (state == null) {
+			throw StateError("No theme changer found in the widget tree");
+		} else {
+			return state;
+		}
+	}
 }
 
 /// The state for a [ThemeChanger]. 
 /// 
 /// This class has properties that control the theme. 
 class ThemeChangerState extends State<ThemeChanger> {
-	ThemeData _theme;
-	Brightness _brightness;
-	String _key;
+	late ThemeData _theme;
+	late Brightness _brightness;
+	String? _key;
 
-	@override void initState() {
+	@override 
+	void initState() {
 		super.initState();
 		brightness = widget.defaultBrightness;
 	}
 
-	@override Widget build (BuildContext context) =>
-		widget.builder (context, _theme);
+	@override 
+	Widget build (BuildContext context) => widget.builder (context, _theme);
 
 	/// The current brightness. 
 	/// 
@@ -81,17 +90,22 @@ class ThemeChangerState extends State<ThemeChanger> {
 	/// [ThemeChanger.light] and [ThemeChanger.dark]).
 	Brightness get brightness => _brightness;
 	set brightness(Brightness value) {
-		setState(() => _theme = value == Brightness.light
+		_key = null;
+		_brightness = value;
+		setState(() => _theme = value == Brightness.light 
 			? widget.light : widget.dark
 		);
-		_brightness = value;
 	}
 
 	/// The current theme. 
 	/// 
 	/// Changing this will rebuild the widget tree.
 	ThemeData get theme => _theme;
-	set theme(ThemeData data) => setState(() => _theme = data);
+	set theme(ThemeData data) {
+		_brightness = data.brightness;
+		_key = null;
+		setState(() => _theme = data);
+	}
 
 	/// The name of the theme. 
 	/// 
@@ -101,9 +115,10 @@ class ThemeChangerState extends State<ThemeChanger> {
 	/// 
 	/// When [brightness] or [theme] are changed, [theme] may not exist in 
 	/// [ThemeChanger.themes], in which case `themeName` will equal null. 
-	String get themeName => _key; 
-	set themeName (String key) => setState(() {
-		_theme = (widget.themes ?? {}) [key];
+	String? get themeName => _key; 
+	set themeName (String? key) {
+		setState(() => _theme = (widget.themes) [key] ?? _theme);
 		_key = key;
-	});
+		_brightness = _theme.brightness;
+	}
 }

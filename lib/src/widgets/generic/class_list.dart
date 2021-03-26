@@ -19,22 +19,23 @@ class ClassPanel extends StatelessWidget {
 
 	/// A list of reminders for this period. 
 	/// 
-	/// This list holds th indices of the reminders for this period in 
+	/// This list holds the indices of the reminders for this period in 
 	/// [Reminders.reminders].
 	final List<int> reminders;
 
 	/// An activity for this period. 
-	final Activity activity;
+	final Activity? activity;
 
 	/// Creates a widget to represent a period. 
 	const ClassPanel ({
-		@required this.title,
-		@required this.children,
-		@required this.reminders,
-		@required this.activity,
+		required this.title,
+		required this.children,
+		required this.reminders,
+		this.activity,
 	});
 
-	@override Widget build (BuildContext context) => ExpansionTile (
+	@override 
+	Widget build (BuildContext context) => ExpansionTile (
 		title: SizedBox (
 			height: 50,
 			child: Center (
@@ -60,7 +61,7 @@ class ClassPanel extends StatelessWidget {
 									child: Text (label)
 								),
 							if (activity != null)
-								ActivityTile(activity),
+								ActivityTile(activity!),  // already checked for null
 							for (final int index in reminders)
 								ReminderTile (
 									index: index,
@@ -84,34 +85,23 @@ class ClassList extends StatelessWidget {
 	/// A list of periods for today. 
 	/// 
 	/// Comes from using [day] with [User.getPeriods].
-	final Iterable<Period> periods;
+	final Iterable<Period>? periods;
 
 	/// The header for this list. May be null.
-	final String headerText;
+	final String? headerText;
 
 	/// Creates a list of [ClassPanel] widgets to represent periods in a day.
 	const ClassList ({
-		@required this.day, 
-		this.headerText,
+		required this.day, 
 		this.periods,
+		this.headerText,
 	});
 
-	Iterable<Period> _getPeriods(BuildContext context) {
-		try {
-			return periods ?? Models.instance.schedule.user.getPeriods(day);
-		} on RangeError { // ignore: avoid_catching_errors
-			Future(  // cannot show snackbar on build, so wait for next frame
-				() => Scaffold.of(context).showSnackBar(
-					const SnackBar(content: Text("Invalid schedule"))
-				)
-			);
-			return Models.instance.schedule.user.getPeriods(
-				Models.instance.schedule.today
-			);
-		}
-	}
+	Iterable<Period> _getPeriods(BuildContext context) =>
+		periods ?? Models.instance.schedule.user.getPeriods(day);
 
-	@override Widget build(BuildContext context) => ModelListener<Reminders>(
+	@override 
+	Widget build(BuildContext context) => ModelListener<Reminders>(
 		model: () => Models.instance.reminders,
 		dispose: false,
 		// ignore: sort_child_properties_last
@@ -138,7 +128,7 @@ class ClassList extends StatelessWidget {
 
 	/// Creates a [ClassPanel] for a given period. 
 	Widget getPanel(Period period) {
-		final Subject subject = Models.instance.schedule.subjects[period.id];
+		final Subject? subject = Models.instance.schedule.subjects[period.id];
 		return ClassPanel (
 			children: [
 				for (final String description in period.getInfo(subject))
@@ -155,7 +145,7 @@ class ClassList extends StatelessWidget {
 				dayName: day.name,
 				subject: subject?.name,
 			),
-			activity: period?.activity,
+			activity: period.activity,
 		);
 	}
 }

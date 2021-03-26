@@ -11,7 +11,7 @@ class LinkIcon extends StatelessWidget {
 	final String url;
 
 	/// Creates an icon that opens a web page. 
-	const LinkIcon ({@required this.path, @required this.url});
+	const LinkIcon ({required this.path, required this.url});
 
 	@override Widget build(BuildContext context) => IconButton (
 		iconSize: 45,

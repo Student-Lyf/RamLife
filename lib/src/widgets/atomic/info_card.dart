@@ -14,7 +14,7 @@ class InfoCard extends StatelessWidget {
 	/// The text passed to [ListTile.subtitle]. 
 	/// 
 	/// Every string in the iterable is put on it's own line. 
-	final Iterable<String> children;
+	final Iterable<String>? children;
 
 	/// The heading of the tile. 
 	final String title;
@@ -24,10 +24,10 @@ class InfoCard extends StatelessWidget {
 
 	/// Creates an info tile. 
 	const InfoCard ({
-		@required this.title,
-		@required this.icon, 
-		@required this.children, 
-		this.page,
+		required this.title,
+		required this.icon, 
+		required this.page,
+		this.children, 
 	});
 
 	@override Widget build (BuildContext context) => Card (
@@ -42,7 +42,7 @@ class InfoCard extends StatelessWidget {
 					children: [
 						const SizedBox (height: 5),
 						...[
-							for (final String text in children) ...[
+							for (final String text in children!) ...[
 								const SizedBox(height: 2.5),
 								Text(text, textScaleFactor: 1.25),
 								const SizedBox(height: 2.5),

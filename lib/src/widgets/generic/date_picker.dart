@@ -3,9 +3,9 @@ import "package:flutter/material.dart";
 /// Prompts the user to pick a date from the calendar.
 /// 
 /// The calendar will show the days of the school year. 
-Future<DateTime> pickDate({
-	@required BuildContext context,
-	@required DateTime initialDate
+Future<DateTime?> pickDate({
+	required BuildContext context,
+	required DateTime initialDate
 }) async {
 	final DateTime now = DateTime.now();
 	final DateTime beginningOfYear = DateTime(

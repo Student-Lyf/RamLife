@@ -7,20 +7,18 @@ import "package:ramaz/services.dart";
 
 /// The main app widget. 
 class RamLife extends StatefulWidget {
-	/// Whether the user is already signed in. 
-	final bool isSignedIn;
-
 	/// Creates the main app widget.
-	const RamLife ({this.isSignedIn});
+	const RamLife();
 
 	@override
 	RamLifeState createState() => RamLifeState();
 }
 
+/// The state for the app.
 class RamLifeState extends State<RamLife> {
 	@override 
 	Widget build (BuildContext context) => ThemeChanger(
-		defaultBrightness: null,
+		defaultBrightness: Brightness.light,
 		light: ThemeData (
 			brightness: Brightness.light,
 			primarySwatch: Colors.blue,
@@ -30,8 +28,10 @@ class RamLifeState extends State<RamLife> {
 			primaryColorDark: RamazColors.blueDark,
 			accentColor: RamazColors.gold,
 			accentColorBrightness: Brightness.light,
-			cursorColor: RamazColors.blueLight,
-			textSelectionHandleColor: RamazColors.blueLight,
+			textSelectionTheme: const TextSelectionThemeData(
+				cursorColor: RamazColors.blueLight,
+				selectionHandleColor: RamazColors.blueLight,
+			),
 			buttonColor: RamazColors.gold,
 			buttonTheme: const ButtonThemeData (
 				buttonColor: RamazColors.gold,
@@ -59,8 +59,10 @@ class RamLifeState extends State<RamLife> {
 				backgroundColor: RamazColors.goldDark,
 				foregroundColor: RamazColors.blue
 			),
-			cursorColor: RamazColors.blueLight,
-			textSelectionHandleColor: RamazColors.blueLight,
+			textSelectionTheme: const TextSelectionThemeData(
+				cursorColor: RamazColors.blueLight,
+				selectionHandleColor: RamazColors.blueLight,
+			),
 			cardTheme: CardTheme (
 				color: Colors.grey[820]
 			),
@@ -82,10 +84,6 @@ class RamLifeState extends State<RamLife> {
 			color: RamazColors.blue,
 			theme: theme,
 			routes: {
-				Routes.splash: (_) => RouteInitializer(
-					isAllowed: () => Auth.isSignedIn,
-					builder: (_) => HomePage(),
-				),
 				Routes.login: (_) => const Login(),
 				Routes.home: enforceLogin((_) => HomePage()),
 				Routes.schedule: enforceLogin((_) => SchedulePage()),
@@ -99,40 +97,10 @@ class RamLifeState extends State<RamLife> {
 		)
 	);
 
+	/// Enforces the user be signed in.
 	WidgetBuilder enforceLogin(WidgetBuilder builder) => 
 		(_) => RouteInitializer(
 			isAllowed: () => Auth.isSignedIn,
 			builder: builder,
 		);
-
-	// WidgetBuilder enforceLogin(WidgetBuilder builder) => 
-	// 	(_) {
-	// 		if (widget.isSignedIn == null) {
-	// 			return SplashScreen();
-	// 		} else if (!Services.instance.database.isSignedIn) {
-	// 			return Login(builder);
-	// 		} else {
-	// 			return builder(_);
-	// 		}
-	// 	};
 }
-
-
-
-// logic
-// initialRoute => route with/out login
-// routes: map with custom RouteInitializer
-// routeInitializer: 
-//  - Route onSuccess
-// 	- Route onDeny
-// 	- Route onError
-// onGenerateRoute: for complex URL logic (not needed yet)
-
-
-/// Some routeInitializers: 
-/// - home: RouteInitializer(
-/// 	- isAllowed: isSignedIn
-/// 	- onSuccess: Routes.home
-/// 	- onDeny: Routes.login
-/// 	- onError: reset(); Routes.login
-/// )

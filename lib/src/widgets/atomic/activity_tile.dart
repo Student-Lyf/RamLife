@@ -18,9 +18,7 @@ class ActivityTile extends StatelessWidget {
 	final Activity activity;
 	
 	/// Creates an ActivityTile widget. 
-	const ActivityTile(
-		this.activity,
-	);
+	const ActivityTile(this.activity);
 
 	@override
 	Widget build(BuildContext context) => SizedBox(
@@ -37,7 +35,7 @@ class ActivityTile extends StatelessWidget {
 						? "Tap to see details"
 						: activity.toString(),
 				),
-				onTap: activity.message == null ? null : () => showDialog(
+				onTap: () => showDialog(
 					context: context,
 					builder: (_) => AlertDialog(
 						title: const Text("Activity"),
