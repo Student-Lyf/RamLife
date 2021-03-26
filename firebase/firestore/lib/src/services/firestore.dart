@@ -121,7 +121,7 @@ class Firestore {
 				"month": month,
 				"calendar": [
 					for (final Day day in calendar)
-						day.json
+						day?.json
 				], 
 			}
 		)

@@ -1,6 +1,7 @@
 targets:
   $default:
     sources:
+      - $package$
       - "lib/**"
       - "node/**" # main.dart MUST be in node folder.
       # - "test/**"

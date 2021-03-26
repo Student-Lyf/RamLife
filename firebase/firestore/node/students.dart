@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import "package:firestore/constants.dart";
 import "package:firestore/data.dart";
 import "package:firestore/helpers.dart";
