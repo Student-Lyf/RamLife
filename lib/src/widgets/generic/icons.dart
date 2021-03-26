@@ -78,8 +78,8 @@ class RamazLogos {
 	/// The light blue, square Ramaz logo.
 	/// 
 	/// https://pbs.twimg.com/profile_images/378800000152983492/5724a8d14e67b53234ed96e3235fe526.jpeg
-	static const Widget teal = LoadingImage (
-		AssetImage("images/logos/ramaz/teal.jpg"),
+	static const Widget teal = LoadingImage(
+		image: AssetImage("images/logos/ramaz/teal.jpg"),
 		aspectRatio: 1
 	);
 
@@ -87,8 +87,8 @@ class RamazLogos {
 	/// 
 	/// Like https://www.the-rampage.org/wp-content/uploads/2019/08/IMG_0432.png,
 	/// but with the word Ramaz underneath. 
-	static const Widget ramSquareWords = LoadingImage (
-		AssetImage("images/logos/ramaz/ram_square_words.png"),
+	static const Widget ramSquareWords = LoadingImage(
+		image: AssetImage("images/logos/ramaz/ram_square_words.png"),
 		aspectRatio: 0.9276218611521418
 	);
 
@@ -96,7 +96,7 @@ class RamazLogos {
 	/// 
 	/// https://www.the-rampage.org/wp-content/uploads/2019/08/IMG_0432.png
 	static const Widget ramSquare = LoadingImage(
-		AssetImage("images/logos/ramaz/ram_square.png"),
+		image: AssetImage("images/logos/ramaz/ram_square.png"),
 		aspectRatio: 1.0666666666666667
 	);
 
@@ -105,8 +105,8 @@ class RamazLogos {
 	/// https://www.the-rampage.org/wp-content/uploads/2019/08/IMG_0432.png
 	/// with https://upload.wikimedia.org/wikipedia/commons/a/aa/RamazNewLogo_BLUE_RGB_Large72dpi.jpg
 	/// next to it. 
-	static const Widget ramRectangle = LoadingImage (
-		AssetImage("images/logos/ramaz/ram_rectangle.png"),
+	static const Widget ramRectangle = LoadingImage(
+		image: AssetImage("images/logos/ramaz/ram_rectangle.png"),
 		aspectRatio: 2.8915864378401004
 	);
 }

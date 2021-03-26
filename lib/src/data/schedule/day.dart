@@ -16,8 +16,10 @@ class Day {
 	/// 
 	/// Each element of [data]'s months should be a JSON representation of a [Day].
 	/// See [Day.fromJson] for how to represent a Day in JSON. 
-	static List<List<Day?>> getCalendar(List<List<Map<String, dynamic>>> data) => [
-		for (final List<Map<String, dynamic>> month in data)
+	static List<List<Day?>> getCalendar(
+		List<List<Map<String, dynamic>?>> data
+	) => [
+		for (final List<Map<String, dynamic>?> month in data)
 			getMonth(month)
 	];
 

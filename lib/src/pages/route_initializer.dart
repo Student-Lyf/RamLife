@@ -3,16 +3,26 @@ import "package:ramaz/pages.dart";
 import "package:ramaz/models.dart";
 import "package:ramaz/services.dart";
 
+/// A route that performs initialization logic first.
 class RouteInitializer extends StatefulWidget {
-	static bool alwaysTrue () => true;
+	/// A dummy predicate that always returns true.
+	static bool alwaysTrue() => true;
 
+	/// Determines if the user is allowed to be on the given page.
 	final bool Function() isAllowed;
+
+	/// Builds the contents of the page. 
 	final WidgetBuilder builder;
+
+	/// The route to navigate to if the user is not authorized.
 	final String onFailure;
+	
+	/// The route to navigate to if there is an error.
 	final String onError;
 
+	/// Navigation with authorization and error-handling.
 	const RouteInitializer({
-		@required this.builder,
+		required this.builder,
 		this.onFailure = Routes.login,
 		this.onError = Routes.login,
 		this.isAllowed = alwaysTrue,
@@ -22,8 +32,10 @@ class RouteInitializer extends StatefulWidget {
 	RouteInitializerState createState() => RouteInitializerState();
 }
 
+/// The state for a [RouteInitializer].
 class RouteInitializerState extends State<RouteInitializer> {
-	Future initFuture;
+	/// The future for initializing the backend.
+	late Future initFuture;
 
 	@override
 	void initState() {
@@ -31,14 +43,20 @@ class RouteInitializerState extends State<RouteInitializer> {
 		initFuture = init();
 	}
 
+	/// Initializes the app's backends. 
+	/// 
+	/// No-op if the backend is already initialized.
 	Future<void> init() async {
 		final NavigatorState nav = Navigator.of(context);
 		try {
+			if (Models.instance.isReady) {
+				return;
+			} 
 			await Services.instance.init();
 			if (Auth.isSignedIn) {
 				await Models.instance.init();
-			}
-		} catch (error) {  //
+			}				
+		} catch (error) {
 			await nav.pushReplacementNamed(widget.onError);
 		}
 		if (!widget.isAllowed()) {

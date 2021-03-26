@@ -239,7 +239,7 @@ class SportsGame {
 	/// Returns a new [SportsGame] with the scores switched out. 
 	/// 
 	/// This method allows [SportsGame]s to stay immutable. 
-	SportsGame replaceScores(Scores newScores) => SportsGame(
+	SportsGame replaceScores(Scores? newScores) => SportsGame(
 		sport: sport,
 		team: team,
 		isHome: isHome,

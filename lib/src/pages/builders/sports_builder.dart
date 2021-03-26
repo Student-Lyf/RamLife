@@ -35,10 +35,10 @@ class FormRow extends StatelessWidget {
 	/// displayed in a [Text] widget. Both widgets, when tapped, call 
 	/// [setNewValue].
 	FormRow.editable({
-		@required this.title,
-		@required String value,
-		@required VoidCallback setNewValue,
-		@required IconData whenNull,
+		required this.title,
+		required VoidCallback setNewValue,
+		required IconData whenNull,
+		String? value,
 	}) : 
 		sized = false,
 		moreSpace = true,
@@ -85,9 +85,9 @@ class FormRow extends StatelessWidget {
 /// managed by the view model. 
 class SportsBuilder extends StatefulWidget {
 	/// Opens a form for the user to 
-	static Future<SportsGame> createGame(
+	static Future<SportsGame?> createGame(
 		BuildContext context, 
-		[SportsGame parent]
+		[SportsGame? parent]
 	) => Navigator.of(context).push<SportsGame>(
 		MaterialPageRoute(
 			builder: (BuildContext context) => SportsBuilder(parent),
@@ -95,7 +95,7 @@ class SportsBuilder extends StatefulWidget {
 	);
 
 	/// Fills all the properties on this page with the properties of this game.
-	final SportsGame parent;
+	final SportsGame? parent;
 
 	/// Creates a page to build a [SportsGame].
 	/// 
@@ -119,8 +119,8 @@ class SportBuilderState extends State<SportsBuilder> {
 
 	@override
 	void initState() {
-		teamController.text = widget.parent?.team;
-		opponentController.text = widget.parent?.opponent;
+		teamController.text = widget.parent?.team ?? "";
+		opponentController.text = widget.parent?.opponent ?? "";
 		super.initState();
 	}
 
@@ -145,7 +145,7 @@ class SportBuilderState extends State<SportsBuilder> {
 						DropdownButtonFormField<Sport>(
 							hint: const Text("Choose a sport"),
 							value: model.sport,
-							onChanged: (Sport value) => model.sport = value,
+							onChanged: (Sport? value) => model.sport = value,
 							items: [
 								for (final Sport sport in Sport.values) 
 									DropdownMenuItem<Sport>(
@@ -178,12 +178,13 @@ class SportBuilderState extends State<SportsBuilder> {
 						"Away game",
 						Checkbox(
 							value: model.away,
-							onChanged: (bool value) => model.away = value,
+							// If tristate == false (default), value never be null
+							onChanged: (bool? value) => model.away = value!,
 						),
 					),
 					FormRow.editable(
 						title: "Date",
-						value: SportsTile.formatDate(model.date, noNull: true),
+						value: SportsTile.formatDate(model.date),
 						whenNull: Icons.date_range,
 						setNewValue: () async => model.date = await pickDate(
 							initialDate: DateTime.now(),
@@ -216,7 +217,7 @@ class SportBuilderState extends State<SportsBuilder> {
 								"Tap on the card to change the scores", 
 								textScaleFactor: 0.9
 							),
-							FlatButton(
+							TextButton(
 								onPressed: () => model.scores = null,
 								child: const Text("Clear"),
 							)
@@ -231,11 +232,11 @@ class SportBuilderState extends State<SportsBuilder> {
 					),
 					ButtonBar(
 						children: [
-							FlatButton(
+							TextButton(
 								onPressed: () => Navigator.of(context).pop(),
 								child: const Text("Cancel"),
 							),
-							RaisedButton(
+							ElevatedButton(
 								onPressed: !model.ready ? null : 
 									() => Navigator.of(context).pop(model.game),
 								child: const Text("Save"),

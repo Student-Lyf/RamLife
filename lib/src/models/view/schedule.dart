@@ -18,7 +18,7 @@ class ScheduleModel with ChangeNotifier {
 	final Schedule schedule;
 
 	/// The day whose schedule is being shown in the UI.
-	Day? day;
+	late Day day;
 
 	/// The selected date from the calendar. 
 	/// 
@@ -36,15 +36,13 @@ class ScheduleModel with ChangeNotifier {
 			name: schedule.user.schedule.keys.first, 
 			special: defaultSpecial
 		);
-		day = schedule.hasSchool
-			? schedule.today
-			: defaultDay;
+		day = schedule.today ?? defaultDay;
 	}
 
 	/// Attempts to set the UI to the schedule of the given day. 
 	/// 
 	/// If there is no school on that day, then [ArgumentError] is thrown.
-	set date (DateTime date) {
+	set date(DateTime date) {
 		// Get rid of time
 		final DateTime justDate = DateTime.utc (
 			date.year, 
@@ -71,16 +69,16 @@ class ScheduleModel with ChangeNotifier {
 		Special? newSpecial, 
 		void Function()? onInvalidSchedule,
 	}) {
-		final String name = newName ?? day?.name ?? defaultDay.name;
-		final Special special = newSpecial ?? day?.special ?? defaultSpecial;
+		final String name = newName ?? day.name;
+		final Special special = newSpecial ?? day.special;
 		day = Day(name: name, special: special);
 		notifyListeners();
 		try {
 			// Just to see if the computation is possible. 
 			// TODO: Move the logic from ClassList here. 
-			Models.instance.schedule.user.getPeriods(day!);
+			Models.instance.schedule.user.getPeriods(day);
 		} on RangeError { // ignore: avoid_catching_errors
-			day = Day(name: day!.name, special: defaultSpecial);
+			day = Day(name: day.name, special: defaultSpecial);
 			if (onInvalidSchedule != null) {
 				onInvalidSchedule();
 			}

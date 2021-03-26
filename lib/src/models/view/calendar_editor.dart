@@ -66,7 +66,7 @@ class CalendarEditor with ChangeNotifier {
 					.cloudDatabase
 					.getCalendarStream(month + 1)
 					.listen(
-						(List<Map<String, dynamic>> cal) {
+						(List<Map<String, dynamic>?> cal) {
 							calendar [month] = Day.getMonth(cal);
 							calendar [month] = layoutMonth(month);
 							notifyListeners();

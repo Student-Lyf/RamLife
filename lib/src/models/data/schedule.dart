@@ -30,7 +30,7 @@ class Schedule extends Model {
 	/// 
 	/// This timer fires once every [timerInterval], and calls [onNewPeriod]
 	/// when it does. 
-	late Timer? timer;
+	Timer? timer;
 
 	/// The [Day] that represents today.
 	Day? today;

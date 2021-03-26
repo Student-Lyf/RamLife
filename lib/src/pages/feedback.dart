@@ -27,7 +27,8 @@ class FeedbackPage extends StatelessWidget {
 					const SizedBox(height: 20),
 					CheckboxListTile(
 						value: model.anonymous, 
-						onChanged: (bool value) => model.anonymous = value,
+						// If tristate == false (default), value != null
+						onChanged: (bool? value) => model.anonymous = value!,
 						title: const Text("Make anonymous"),
 						subtitle: const Text(
 							"We won't be able to see your name or email. "
@@ -35,7 +36,7 @@ class FeedbackPage extends StatelessWidget {
 						)
 					),
 					const SizedBox(height: 50),
-					RaisedButton.icon(
+					ElevatedButton.icon(
 						label: const Text ("Submit"),
 						icon: const Icon(Icons.send),
 						onPressed: !model.ready 

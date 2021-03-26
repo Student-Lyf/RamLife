@@ -25,7 +25,7 @@ class GenericSportsView<T> extends StatelessWidget {
 	/// 
 	/// This can be any type as long as it can be used in [builder] to build 
 	/// [SportsTile]s. 
-	final Iterable<T> recents;
+	final List<T> recents;
 
 	/// Builds a list of [SportsTile]s using [upcoming] and [recents]. 
 	final Widget Function(T) builder;
@@ -38,11 +38,11 @@ class GenericSportsView<T> extends StatelessWidget {
 
 	/// Creates a list of [SportsTile]s. 
 	const GenericSportsView({
-		@required this.upcoming,
-		@required this.recents, 
-		@required this.builder,
-		@required this.onRefresh,
-		@required this.loading,
+		required this.upcoming,
+		required this.recents, 
+		required this.builder,
+		required this.onRefresh,
+		required this.loading,
 	});
 
 	@override
@@ -71,7 +71,7 @@ class SportsPage extends StatelessWidget {
 		length: 2,
 		child: ModelListener<SportsModel>(
 			model: () => SportsModel(Models.instance.sports),
-			builder: (BuildContext context, SportsModel model, _) => AdaptiveScaffold(
+			builder: (_, SportsModel model, __) => Scaffold(
 				appBar: AppBar(
 					title: const Text("Sports"),
 					bottom: const TabBar(
@@ -159,16 +159,15 @@ class SportsPage extends StatelessWidget {
 					)
 				);
 		}
-		return null;
 	}
 
 	/// Opens a menu with options for the selected game. 
 	/// 
 	/// This menu can only be accessed by administrators. 
 	static void openMenu({
-		@required BuildContext context, 
-		@required int index, 
-		@required SportsModel model
+		required BuildContext context, 
+		required int index, 
+		required SportsModel model
 	}) => showDialog(
 		context: context,
 		builder: (BuildContext newContext) => SimpleDialog(
@@ -177,7 +176,7 @@ class SportsPage extends StatelessWidget {
 				SimpleDialogOption(
 				  onPressed: () async {
 				  	Navigator.of(newContext).pop();
-				  	final Scores scores = await SportsScoreUpdater.updateScores(
+				  	final Scores? scores = await SportsScoreUpdater.updateScores(
 			  			context, model.data.games [index]
 		  			);
 				  	if (scores == null) {
@@ -222,24 +221,24 @@ class SportsPage extends StatelessWidget {
 				SimpleDialogOption(
 				  onPressed: () async {
 				  	Navigator.of(newContext).pop();
-				  	final bool confirm = await showDialog<bool>(
+				  	final bool? confirm = await showDialog(
 				  		context: context,
 				  		builder: (BuildContext context) => AlertDialog(
 				  			title: const Text("Confirm"),
 				  			content: const Text("Are you sure you want to delete this game?"),
 				  			actions: [
-				  				FlatButton(
+				  				TextButton(
 				  					onPressed: () => Navigator.of(context).pop(false),
 				  					child: const Text("Cancel"),
 			  					),
-			  					RaisedButton(
+			  					ElevatedButton(
 			  						onPressed: () => Navigator.of(context).pop(true),
 			  						child: const Text("Confirm"),
 		  						)
 				  			]
 			  			)
 			  		);
-			  		if (confirm) {
+			  		if (confirm ?? false) {
 			  			model.loading = true;
 					  	await Models.instance.sports.delete(index);
 			  			model.loading = false;
