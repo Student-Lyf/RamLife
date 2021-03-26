@@ -12,7 +12,7 @@ class Notification {
 	/// The ID of this notification.
 	/// 
 	/// The ID is used for canceling the notifications. 
-	int get id => 0;
+	static const int id = 0;
 
 	/// The title of this notification.
 	final String title;
@@ -22,14 +22,14 @@ class Notification {
 
 	/// Creates a notification. 
 	const Notification({
-		@required this.title,
-		@required this.message,
+		required this.title,
+		required this.message,
 	});
 
 	/// Creates a notification for a reminder. 
 	factory Notification.reminder({
-		@required String title, 
-		@required String message,
+		required String title, 
+		required String message,
 	}) => getReminderNotification(title: title, message: message);
 }
 
@@ -49,14 +49,14 @@ abstract class Notifications extends Service {
 	static Notifications instance = notifications;
 
 	/// Sends a notification immediately. 
-	void sendNotification(Notification notification);
+	void sendNotification(covariant Notification notification);
 
 	/// Schedules a notification for [date]. 
 	/// 
 	/// [date] must not be in the past. 
 	void scheduleNotification({
-		@required Notification notification,
-		@required DateTime date
+		required covariant Notification notification,
+		required DateTime date
 	});
 
 	/// Cancels all notifications.

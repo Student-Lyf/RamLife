@@ -60,12 +60,12 @@ class Services implements Service {
 	/// All the services in a list. 
 	/// 
 	/// The functions of this service operate on these services. 
-	List<Service> services;
+	late final List<Service> services;
 
 	/// Bundles services together. 
 	/// 
 	/// Also initializes [services].
-	Services() {
+	Services() { 
 		services = [prefs, database, crashlytics, notifications];
 	}
 

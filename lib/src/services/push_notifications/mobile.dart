@@ -35,10 +35,10 @@ class FCM extends PushNotifications {
 	static const List<String> topics = ["calendar", "sports"];
 
 	/// Provides the connection to Firebase Messaging. 
-	static final FirebaseMessaging firebase = FirebaseMessaging();
+	static final FirebaseMessaging firebase = FirebaseMessaging.instance;
 
 	/// Maps command payloads to async functions. 
-	static Map<String, AsyncCallback> callbacks;
+	late Map<String, AsyncCallback> callbacks;
 
 	@override
 	Future<void> init() async {
@@ -54,16 +54,16 @@ class FCM extends PushNotifications {
 	}
 
 	@override
-	Future<void> signIn() async => firebase.requestNotificationPermissions();
+	Future<void> signIn() async => firebase.requestPermission();
 
 	/// A callback to handle any notification. 
 	/// 
 	/// This function uses the `command` field of the notification to find the 
 	/// right [AsyncCallback], and calls it. 
-	static Future<void> callback(
+	Future<void> callback(
 		Map<String, dynamic> message, 
 	) async {
-		final String command = (message["data"] ?? message) ["command"];
+		final String? command = (message["data"] ?? message) ["command"];
 		if (command == null) {
 			throw JsonUnsupportedObjectError(
 				message, 
@@ -71,7 +71,7 @@ class FCM extends PushNotifications {
 				partialResult: message.toString(),
 			);
 		}
-		final AsyncCallback function = callbacks [command];
+		final AsyncCallback? function = callbacks [command];
 		if (function == null) {
 			throw ArgumentError.value(
 				command,
@@ -87,14 +87,15 @@ class FCM extends PushNotifications {
 	Future<void> registerForNotifications(
 		Map<String, AsyncCallback> callbacks
 	) async {
-		FCM.callbacks = callbacks;
+		this.callbacks = callbacks;
 
-		firebase.configure(
-			onMessage: callback,
-			onBackgroundMessage: callback,
-			onLaunch: callback,
-			onResume: callback,
-		);
+		FirebaseMessaging.onBackgroundMessage((message) => callback(message.data));
+		// replace with FirebaseMessaging.onMessage.listen(callback)
+		// firebase.configure( 
+		// 	onMessage: callback,
+		// 	onLaunch: callback,
+		// 	onResume: callback,
+		// );
 	}
 
 	/// Subscribes to all the topics in [topics].

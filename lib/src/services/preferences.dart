@@ -7,7 +7,13 @@ import "service.dart";
 /// The SharedPreferences plugin allows for quick and small key-value based
 /// storage, which can be very useful. 
 class Preferences extends Service {
-	SharedPreferences _prefs;
+	/// The key for if this is the first time or not.
+	static const String firstTimeKey = "firstTime";
+
+	/// The key for the user brightness preference.
+	static const String lightMode = "lightMode";
+
+	late SharedPreferences _prefs;
 
 	@override
 	Future<void> init() async {
@@ -16,12 +22,6 @@ class Preferences extends Service {
 
 	@override 
 	Future<void> signIn() async {}
-
-	/// The key for if this is the first time or not.
-	static const String firstTimeKey = "firstTime";
-
-	/// The key for the user brightness preference.
-	static const String lightMode = "lightMode";
 
 	/// Determines whether this is the first time opening the app.
 	bool get firstTime {
@@ -34,6 +34,8 @@ class Preferences extends Service {
 	/// 
 	/// `true` means light mode, `false` means dark mode, and `null` gets the 
 	/// system preferences (if not supported -- light mode).
-	bool get brightness => _prefs.getBool(lightMode);
-	set brightness (bool value) => _prefs.setBool(lightMode, value); 
+	bool? get brightness => _prefs.getBool(lightMode);
+	set brightness (bool? value) => value == null 
+		? _prefs.remove(lightMode)
+		: _prefs.setBool(lightMode, value); 
 }
