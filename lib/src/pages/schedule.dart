@@ -3,14 +3,13 @@ import "package:flutter/material.dart";
 
 import "package:ramaz/data.dart";
 import "package:ramaz/models.dart";
-// import "package:ramaz/pages.dart";
 import "package:ramaz/widgets.dart";
 
-import "responsive_page.dart";
+class ResponsiveSchedule extends NavigationItem {
+	final ScheduleModel model = ScheduleModel();
 
-class ResponsiveSchedule extends ResponsivePage {
-	final ScheduleModel model;
-	ResponsiveSchedule() : model = ScheduleModel();
+	ResponsiveSchedule() : 
+		super(label: "Schedule", icon: const Icon(Icons.schedule));
 
 	/// Allows the user to select a day in the calendar to view. 
 	/// 
@@ -45,12 +44,6 @@ class ResponsiveSchedule extends ResponsivePage {
 		)
 	);
 
-	@override
-	WidgetBuilder get builder => (_) => SchedulePage();
-}
-
-/// A page to allow the user to explore their schedule. 
-class SchedulePage extends StatelessWidget {
 	/// Lets the user know that they chose an invalid schedule combination. 
 	void handleInvalidSchedule(BuildContext context) => 
 		ScaffoldMessenger.of(context).showSnackBar(

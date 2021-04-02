@@ -5,7 +5,7 @@ import "package:flutter/material.dart";
 /// This class maps to both [BottomNavigationBarItem] and 
 /// [NavigationRailDestination] with an [icon] and [label] property.
 @immutable
-class NavigationItem {
+abstract class NavigationItem extends StatelessWidget {
 	/// The icon for this item.
 	final Widget icon;
 
@@ -24,4 +24,9 @@ class NavigationItem {
 	/// Generates an item for [NavigationRail].
 	NavigationRailDestination get navRail => 
 		NavigationRailDestination(icon: icon, label: Text(label));
+
+	AppBar get appBar;
+	Widget? get sideSheet => null;
+	Widget? get floatingActionButton => null;
+	FloatingActionButtonLocation? get floatingActionButtonLocation => null;
 }
