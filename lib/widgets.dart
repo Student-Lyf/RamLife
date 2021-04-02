@@ -30,6 +30,7 @@ export "src/widgets/generic/date_picker.dart";
 export "src/widgets/generic/footer.dart";
 export "src/widgets/generic/icons.dart";
 export "src/widgets/generic/model_listener.dart";
+export "src/widgets/generic/responsive_scaffold.dart";
 
 // Widgets that help represent images. 
 export "src/widgets/images/link_icon.dart";
