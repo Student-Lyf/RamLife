@@ -19,7 +19,7 @@ class ResponsiveScaffold extends StatelessWidget {
 	final PreferredSizeWidget appBar;
 
 	/// The main body of the scaffold. 
-	final Widget body;
+	final WidgetBuilder bodyBuilder;
 
 	/// The full drawer to show. 
 	/// 
@@ -76,7 +76,7 @@ class ResponsiveScaffold extends StatelessWidget {
 	/// Creates a scaffold that responds to the screen size. 
 	const ResponsiveScaffold({
 		required this.drawer, 
-		required this.body,
+		required this.bodyBuilder,
 		required this.appBar,
 		this.floatingActionButton,
 		this.sideSheet,
@@ -88,25 +88,26 @@ class ResponsiveScaffold extends StatelessWidget {
 		onNavIndexChanged = null;
 
 	/// Creates a responsive layout with primary navigation items. 
-	const ResponsiveScaffold.navBar({
+	ResponsiveScaffold.navBar({
 		required this.drawer,
 		required this.secondaryDrawer,
-		required this.appBar,
-		required this.body,
-		required this.navItems,
-		required this.navIndex,
+		required List<NavigationItem> this.navItems,
+		required int this.navIndex,
 		required this.onNavIndexChanged,
-		this.sideSheet,
-		this.floatingActionButton,
-		this.floatingActionButtonLocation,
-	});
+	}) :
+		appBar = navItems [navIndex].appBar,
+		bodyBuilder = navItems [navIndex].build,
+		floatingActionButton = navItems [navIndex].floatingActionButton,
+		floatingActionButtonLocation = navItems [navIndex]
+			.floatingActionButtonLocation,
+		sideSheet = navItems [navIndex].sideSheet;
 
 	/// Whether this widget is being used with a navigation bar. 
 	bool get hasNavBar => navItems != null;
 
 	@override
 	Widget build(BuildContext context) => ResponsiveBuilder(
-		child: body,  // ignore: sort_child_properties_last
+		child: bodyBuilder(context),  // ignore: sort_child_properties_last
 		builder: (BuildContext context, LayoutInfo info, Widget? child) => Scaffold(
 			appBar: appBar,
 			drawer: info.hasStandardDrawer ? null 

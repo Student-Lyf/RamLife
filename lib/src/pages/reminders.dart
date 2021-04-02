@@ -4,10 +4,11 @@ import "package:ramaz/models.dart";
 import "package:ramaz/pages.dart";
 import "package:ramaz/widgets.dart";
 
-import "responsive_page.dart";
-
-class ResponsiveReminders extends ResponsivePage {
+class ResponsiveReminders extends NavigationItem {
 	final Reminders model = Models.instance.reminders;
+
+	ResponsiveReminders() : 
+		super(label: "Reminders", icon: const Icon(Icons.notifications));
 
 	@override
 	AppBar get appBar => AppBar(title: const Text ("Reminders"));
@@ -21,12 +22,6 @@ class ResponsiveReminders extends ResponsivePage {
 		)
 	);
 
-	@override
-	WidgetBuilder get builder => (_) => RemindersPage();
-}
-
-/// A page to display the user's reminders. 
-class RemindersPage extends StatelessWidget {
 	@override 
 	Widget build(BuildContext context) => ModelListener<Reminders>(
 		model: () => Models.instance.reminders,

@@ -8,7 +8,6 @@ export "src/pages/builders/sports_builder.dart";
 export "src/pages/calendar.dart";
 export "src/pages/drawer.dart";
 export "src/pages/feedback.dart";
-export "src/pages/new_home.dart";
 export "src/pages/home.dart";
 export "src/pages/login.dart";
 export "src/pages/reminders.dart";

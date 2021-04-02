@@ -1,3 +1,3 @@
-export "src/navigation_item.dart";
-export "src/responsive_builder.dart";
-export "src/scaffold.dart";
+export "../responsive_scaffold/navigation_item.dart";
+export "../responsive_scaffold/responsive_builder.dart";
+export "../responsive_scaffold/scaffold.dart";
