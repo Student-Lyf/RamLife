@@ -4,12 +4,15 @@ import "package:flutter/material.dart";
 import "package:ramaz/widgets.dart";
 import "package:ramaz/models.dart";
 
+import "drawer.dart";
+
 /// A page to submit feedback. 
 class FeedbackPage extends StatelessWidget {
 	@override 
-	Widget build (BuildContext context) => Scaffold(
+	Widget build (BuildContext context) => ResponsiveScaffold(
+		drawer: const NavigationDrawer(),
 		appBar: AppBar(title: const Text ("Send Feedback")),
-		body: ModelListener<FeedbackModel>(
+		bodyBuilder: (_) => ModelListener<FeedbackModel>(
 			model: () => FeedbackModel(),
 			builder: (BuildContext context, FeedbackModel model, _) => Center(
 				child: SizedBox(
@@ -29,10 +32,9 @@ class FeedbackPage extends StatelessWidget {
 						value: model.anonymous, 
 						// If tristate == false (default), value != null
 						onChanged: (bool? value) => model.anonymous = value!,
-						title: const Text("Make anonymous"),
+						title: const Text("Anonymous"),
 						subtitle: const Text(
-							"We won't be able to see your name or email. "
-							"To share them with us, keep this unchecked."
+							"To keep your name and email hidden, check this box."
 						)
 					),
 					const SizedBox(height: 50),

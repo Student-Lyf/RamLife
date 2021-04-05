@@ -37,7 +37,7 @@ class HomePageState extends State<HomePage> {
 			navIndex: index,
 			onNavIndexChanged: (int value) => setState(() => index = value),
 			drawer: const NavigationDrawer(),
-			secondaryDrawer: const NavigationDrawer(isOnHomePage: true),
+			secondaryDrawer: const NavigationDrawer(),
 		)
 	);
 }
