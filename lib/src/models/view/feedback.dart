@@ -7,7 +7,7 @@ import "package:ramaz/services.dart";
 // ignore: prefer_mixin
 class FeedbackModel with ChangeNotifier {
 	String? _message;
-	bool _anonymous = true;
+	bool _anonymous = false;
 
 	/// Whether the user is ready to submit
 	/// 

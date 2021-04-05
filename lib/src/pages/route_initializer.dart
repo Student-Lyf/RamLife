@@ -1,7 +1,9 @@
 import "package:flutter/material.dart";
+
 import "package:ramaz/pages.dart";
 import "package:ramaz/models.dart";
 import "package:ramaz/services.dart";
+import "package:ramaz/widgets.dart";
 
 /// A route that performs initialization logic first.
 class RouteInitializer extends StatefulWidget {
@@ -49,21 +51,23 @@ class RouteInitializerState extends State<RouteInitializer> {
 	/// 
 	/// No-op if the backend is already initialized.
 	Future<void> init() async {
-		final NavigatorState nav = Navigator.of(context);
 		try {
-			await Services.instance.init();
+			if (!Services.instance.isReady) {
+				await Services.instance.init();
+			}
 			if (Auth.isSignedIn && !Models.instance.isReady) {
 				await Models.instance.init();
-			}				
+			} else {
+			}
 		} catch (error) {
 			await Services.instance.crashlytics.log("Error. Disposing models");
 			Models.instance.dispose();
 			if (widget.onError != null) {
-				await nav.pushReplacementNamed(widget.onError!);
+				await Navigator.of(context).pushReplacementNamed(widget.onError!);
 			}
 		}
 		if (!widget.isAllowed()) {
-			await nav.pushReplacementNamed(widget.onFailure);
+			await Navigator.of(context).pushReplacementNamed(widget.onFailure);
 		}
 	}
 
@@ -73,6 +77,10 @@ class RouteInitializerState extends State<RouteInitializer> {
 		builder: (_, AsyncSnapshot snapshot) => 
 			snapshot.connectionState == ConnectionState.done
 				? widget.child
-				: const Center(child: CircularProgressIndicator())
+				: ResponsiveScaffold(
+					appBar: AppBar(title: const Text("Loading...")),
+					bodyBuilder: (_) => const Center(child: CircularProgressIndicator()),
+					drawer: const NavigationDrawer(),
+				),
 	);
 }
