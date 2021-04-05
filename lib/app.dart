@@ -13,9 +13,8 @@ class RamLife extends StatelessWidget {
 		Routes.schedule: (_) => const HomePage(pageIndex: 1),
 		Routes.reminders: (_) => const HomePage(pageIndex: 2),
 		Routes.feedback: (_) => FeedbackPage(),
-		Routes.calendar: (_) => CalendarPage(),
-		Routes.specials: (_) => SpecialPage(),
-		Routes.admin: (_) => AdminHomePage(),
+		Routes.calendar: (_) => const AdminCalendarPage(),
+		Routes.specials: (_) => const AdminSpecialsPage(),
 		Routes.sports: (_) => SportsPage(),
 	};
 

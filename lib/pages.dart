@@ -1,11 +1,12 @@
 library pages;
 
-export "src/pages/admin.dart";
+export "src/pages/admin/calendar.dart";
+export "src/pages/admin/specials.dart";
+
 export "src/pages/builders/day_builder.dart";
 export "src/pages/builders/reminder_builder.dart";
 export "src/pages/builders/special_builder.dart";
 export "src/pages/builders/sports_builder.dart";
-export "src/pages/calendar.dart";
 export "src/pages/drawer.dart";
 export "src/pages/feedback.dart";
 export "src/pages/home.dart";
@@ -13,7 +14,6 @@ export "src/pages/login.dart";
 export "src/pages/reminders.dart";
 export "src/pages/route_initializer.dart";
 export "src/pages/schedule.dart";
-export "src/pages/specials.dart";
 export "src/pages/sports.dart";
 
 /// Route names for each page in the app.
@@ -40,9 +40,6 @@ class Routes {
 
 	/// The route name for the specials manager page. 
 	static const String specials = "specials";
-
-	/// The route name for the admin home page. 
-	static const String admin = "admin";
 
 	/// The route name for the sports games page.
 	static const String sports = "sports";
