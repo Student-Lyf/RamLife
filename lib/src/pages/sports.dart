@@ -243,6 +243,8 @@ void openMenu({
 
 /// A page to show recent and upcoming games to the user. 
 class SportsPage extends StatelessWidget {
+	const SportsPage();
+
 	@override 
 	Widget build(BuildContext context) => DefaultTabController(
 		length: 2,

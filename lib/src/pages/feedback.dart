@@ -8,6 +8,8 @@ import "drawer.dart";
 
 /// A page to submit feedback. 
 class FeedbackPage extends StatelessWidget {
+	const FeedbackPage();
+
 	@override 
 	Widget build (BuildContext context) => ResponsiveScaffold(
 		drawer: const NavigationDrawer(),

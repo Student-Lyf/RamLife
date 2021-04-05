@@ -1,21 +1,48 @@
 import "package:flutter/material.dart";
 
 import "package:ramaz/constants.dart";
+import "package:ramaz/data.dart";
 import "package:ramaz/pages.dart";
+import "package:ramaz/models.dart";
+import "package:ramaz/services.dart";
 import "package:ramaz/widgets.dart";
 
 /// The main app widget. 
 class RamLife extends StatelessWidget {
+	static bool hasAdminScope(Scope scope) => Auth.isSignedIn
+		&& Models.instance.user.isAdmin
+		&& Models.instance.user.admin!.scopes.contains(scope);
+
 	/// The routes for this app.
 	static final Map<String, WidgetBuilder> routes = {
-		Routes.login: (_) => Login(),
-		Routes.home: (_) => const HomePage(),
-		Routes.schedule: (_) => const HomePage(pageIndex: 1),
-		Routes.reminders: (_) => const HomePage(pageIndex: 2),
-		Routes.feedback: (_) => FeedbackPage(),
-		Routes.calendar: (_) => const AdminCalendarPage(),
-		Routes.specials: (_) => const AdminSpecialsPage(),
-		Routes.sports: (_) => SportsPage(),
+		Routes.login: (_) => RouteInitializer(
+			onError: null ,
+			isAllowed: () => true,
+			child: const Login(),
+		),
+		Routes.home: (_) => const RouteInitializer(
+			child: HomePage(),
+		),
+		Routes.schedule: (_) => const RouteInitializer(
+			child: HomePage(pageIndex: 1),
+		),
+		Routes.reminders: (_) => const RouteInitializer(
+			child: HomePage(pageIndex: 2),
+		),
+		Routes.feedback: (_) => const RouteInitializer(
+			child: FeedbackPage(),
+		),
+		Routes.calendar: (_) => RouteInitializer(
+			isAllowed: () => hasAdminScope(Scope.calendar),
+			child: AdminCalendarPage(),
+		),
+		Routes.specials: (_) => RouteInitializer(
+			isAllowed: () => hasAdminScope(Scope.calendar),
+			child: AdminSpecialsPage(),
+		),
+		Routes.sports: (_) => const RouteInitializer(
+			child: SportsPage(),
+		),
 	};
 
 	/// Provides a const constructor.
@@ -95,16 +122,7 @@ class RamLife extends StatelessWidget {
         	final String routeName = 
         		(settings.name == null || !routes.containsKey(settings.name))
 	        		? Routes.home : settings.name!;
-	        return settings.name == Routes.login 
-	        	? RouteInitializer(
-	        		// If this page is Routes.login, don't set an error handler.
-	        		onError: null ,
-	        		isAllowed: () => true,
-	        		child: routes [routeName]! (context),
-        		)
-        		: RouteInitializer(
-        			child: routes [routeName]! (context),
-      			);
+	        return routes [routeName]! (context);
         },
       )
 		)

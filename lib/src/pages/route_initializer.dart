@@ -57,7 +57,6 @@ class RouteInitializerState extends State<RouteInitializer> {
 			}
 			if (Auth.isSignedIn && !Models.instance.isReady) {
 				await Models.instance.init();
-			} else {
 			}
 		} catch (error) {
 			await Services.instance.crashlytics.log("Error. Disposing models");
