@@ -24,7 +24,7 @@ class Login extends StatefulWidget {
 	final String destination;
 
 	/// Builds the login page
-	Login({this.destination = Routes.home});
+	const Login({this.destination = Routes.home});
 
 	@override 
 	LoginState createState() => LoginState();
