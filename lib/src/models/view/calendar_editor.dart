@@ -22,17 +22,15 @@ class CalendarEditor with ChangeNotifier {
 	/// The current month.
 	static final int currentMonth = now.month;
 
-	// The raw JSON-filled calendar.
-	// final List<List<Map<String, dynamic>>> data = List.filled(12, null);
-
 	/// The calendar filled with [Day]s.
+	/// 
+	/// Each month is lazy-loaded from the database, so it's null until selected.
 	final List<List<Day?>?> calendar = List.filled(12, null);
 
-	/// A list of callbacks on the Firebase streams.
+	/// A list of streams on the Firebase streams.
 	/// 
-	/// This list is needed so that the model can cancel the listeners
-	/// when the user leaves the page. 
-	final List<StreamSubscription> subscriptions = [];
+	/// 
+	final List<StreamSubscription?> subscriptions = List.filled(12, null);
 
 	/// The year of each month.
 	/// 
@@ -53,33 +51,21 @@ class CalendarEditor with ChangeNotifier {
 	/// days after the month until Saturday. They will be represented by blanks. 
 	final List<List<int>?> paddings = List.filled(12, null);
 
-	/// Creates a data model to hold the calendar.
-	/// 
-	/// Initializing a [CalendarEditor] automatically listens to the calendar in 
-	/// Firebase. 
-	CalendarEditor() {
-		for (int month = 0; month < 12; month++) {
-			subscriptions.add(
-				Services
-					.instance
-					.database
-					.cloudDatabase
-					.getCalendarStream(month + 1)
-					.listen(
-						(List<Map<String, dynamic>?> cal) {
-							calendar [month] = Day.getMonth(cal);
-							calendar [month] = layoutMonth(month);
-							notifyListeners();
-						}
-				)
-			);
-		}
-	}
+	void loadMonth(int month) => subscriptions.add(  // 0-11
+		Services.instance.database.cloudDatabase.getCalendarStream(month + 1)  // 1-12
+			.listen(
+				(List<Map<String, dynamic>?> cal) {
+					calendar [month] = Day.getMonth(cal);
+					calendar [month] = layoutMonth(month);
+					notifyListeners();
+				}
+			)
+	);
 
 	@override
 	void dispose() {
-		for (final StreamSubscription subscription in subscriptions) {
-			subscription.cancel();
+		for (final StreamSubscription? subscription in subscriptions) {
+			subscription?.cancel();
 		}
 		super.dispose();
 	}

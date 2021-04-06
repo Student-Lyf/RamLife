@@ -241,7 +241,8 @@ class CloudDatabase extends Database {
 		calendarCollection.doc(month.toString()).snapshots().map(
 			(DocumentSnapshot snapshot) => [
 				for (final dynamic entry in snapshot.data()! ["calendar"])
-					Map<String, dynamic>.from(entry)
+					if (entry == null) null
+					else Map<String, dynamic>.from(entry)
 				]
 		);
 }
