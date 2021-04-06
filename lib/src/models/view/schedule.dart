@@ -32,7 +32,6 @@ class ScheduleModel with ChangeNotifier {
 	/// If today is a school day, then use that. Otherwise, use the 
 	/// defaults (see [defaultSpecial]).
 	ScheduleModel () : schedule = Models.instance.schedule {
-		print("New model");
 		defaultDay = Day(
 			name: schedule.user.schedule.keys.first, 
 			special: defaultSpecial

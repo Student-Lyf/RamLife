@@ -54,7 +54,14 @@ class OldCalendarWidget extends StatelessWidget {
 }
 
 /// A page for admins to modify the calendar in the database. 
-class AdminCalendarPage extends StatelessWidget {
+class AdminCalendarPage extends StatefulWidget {
+	const AdminCalendarPage();
+
+	@override
+	AdminCalendarState createState() => AdminCalendarState();
+}
+
+class AdminCalendarState extends State<AdminCalendarPage> {
 	/// The months of the year. 
 	/// 
 	/// These will be the headers of all the months. 
@@ -71,66 +78,115 @@ class AdminCalendarPage extends StatelessWidget {
 		"Sun", "Mon", "Tue", "Wed", "Thur", "Fri", "Sat"
 	];
 
-	/// Creates a page for admins to modify the calendar.
-	const AdminCalendarPage();
+	final CalendarEditor model = CalendarEditor();
+
+	void listener() => setState(() {});
+
+	@override
+	void initState() {
+		super.initState();
+		model
+			..addListener(listener)
+			..loadMonth(_currentMonth);
+	}
+
+	@override
+	void dispose() {
+		model
+			..removeListener(listener)
+			..dispose();
+		super.dispose();
+	}
+
+	int _currentMonth = DateTime.now().month - 1;
+	int get currentMonth => _currentMonth;
+	set currentMonth(int value) {
+		_currentMonth = loopMonth(value);
+		model.loadMonth(_currentMonth);  // will update later
+		setState(() {});
+	}
+
+	int loopMonth(int val) {
+		if (val == 12) {
+			return 0;
+		} else if (val == -1) {
+			return 11;
+		} else {
+			return val;
+		}
+	}
 
 	@override
 	Widget build(BuildContext context) => ResponsiveScaffold(
 		drawer: const NavigationDrawer(),
 		appBar: AppBar(title: const Text("Calendar")),
-		bodyBuilder: (_) => SingleChildScrollView(
-			padding: const EdgeInsets.symmetric(horizontal: 5),
-			child: ModelListener<CalendarEditor>(
-				model: () => CalendarEditor(),
-				builder: (_, CalendarEditor model, __) => ExpansionPanelList.radio(
-					children: [
-						for (int month = 0; month < 12; month++)
-							ExpansionPanelRadio(
-								value: month,
-								canTapOnHeader: true,
-								headerBuilder: (_, __) => ListTile(
-									title: Text(months [month]),
-									trailing: Text(model.years [month].toString())
-								),
-								body: model.calendar [month] == null
-									? const CircularProgressIndicator()
-									: SizedBox(
-										height: 400,
-										child: GridView.count(
-											physics: const NeverScrollableScrollPhysics(),
-											shrinkWrap: true,
-											crossAxisCount: 7, 
-											children: [
-												for (final String weekday in weekdays) 
-													Center(child: Text (weekday)),
-												for (int _ = 0; _ < (model.paddings [month] ?? [0]) [0]; _++)
-													CalendarTile.blank,
-												for (
-													final MapEntry<int, Day?> entry in 
-													// ExpansionPanelRadio.body checks for nulls
-													model.calendar [month]!.asMap().entries
-												) GestureDetector(
-													onTap: () async => model.updateDay(
-														DateTime(model.years [month], month + 1, entry.key + 1),
-														await DayBuilder.getDay(
-															context: context, 
-															date: DateTime(model.years [month], month + 1, entry.key + 1),
-															day: entry.value,
-														)
+		bodyBuilder: (_) => Center(
+			child: Column(
+				mainAxisSize: MainAxisSize.min,
+				mainAxisAlignment: MainAxisAlignment.center,
+				children: [
+					const SizedBox(height: 24),
+					Row(
+						children: [
+							const Spacer(flex: 3),
+							TextButton.icon(
+								icon: const Icon(Icons.arrow_back),
+								onPressed: () => currentMonth--,
+								label: Text(months [loopMonth(currentMonth - 1)]),
+							),
+							const Spacer(flex: 2),
+							Text(
+								"${months [currentMonth]} ${model.years [currentMonth]}",
+								style: Theme.of(context).textTheme.headline4,
+							),
+							const Spacer(flex: 2),
+							TextButton.icon(
+								// icon always goes to the left of the label
+								// since they're both widgets, we can swap them
+								label: const Icon(Icons.arrow_forward),
+								icon: Text(months [loopMonth(currentMonth + 1)]),
+								onPressed: () => currentMonth++,
+							),
+							const Spacer(flex: 3),
+						]
+					),
+					const SizedBox(height: 16),
+					Row(
+						mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+						children: [
+							for (final String weekday in weekdays)
+								Text(weekday),
+						]
+					),
+					Flexible(
+						child: model.calendar [currentMonth] == null
+							? const Center(child: CircularProgressIndicator())
+							: GridView.count(
+								padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+								shrinkWrap: true,
+								childAspectRatio: 1.25,
+								crossAxisCount: 7,
+								children: [
+									for (final CalendarDay? day in model.calendar [currentMonth]!)
+										if (day == null) CalendarTile.blank
+										else GestureDetector(
+											onTap: () => showDialog(
+												context: context,
+												builder: (_) => DayBuilder(
+													day: day.schoolDay, 
+													date: day.date,
+													upload: (Day? value) => model.updateDay(
+														day: value, 
+														date: day.date
 													),
-													child: CalendarTile(
-														date: entry.key,
-														day: entry.value,
-													)
-												),
-												for (int _ = 0; _ < (model.paddings [month] ?? [0]) [1]; _++)
-													CalendarTile.blank,
-											]
+												)
+											),
+											child: CalendarTile(day: day.schoolDay, date: day.date),
 										)
-									)
-							)
-					]
-				)
+								]
+							),
+					)
+				]
 			)
 		)
 	);

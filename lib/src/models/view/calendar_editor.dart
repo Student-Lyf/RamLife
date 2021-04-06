@@ -5,13 +5,19 @@ import "package:flutter/foundation.dart" show ChangeNotifier;
 import "package:ramaz/data.dart";
 import "package:ramaz/services.dart";
 
+class CalendarDay {
+	final DateTime date;
+	Day? schoolDay;
+	CalendarDay({required this.date, required this.schoolDay});
+}
+
 /// A model to manage the calendar. 
 /// 
 /// This model listens to the calendar and can modify it in the database. 
 // ignore: prefer_mixin
 class CalendarEditor with ChangeNotifier {
 	/// How many days there are in every month.
-	static const int daysInMonth = 7 * 5;
+	List<int?> daysInMonth = List.filled(12, null);
 
 	/// The current date.
 	static final DateTime now = DateTime.now();
@@ -25,11 +31,9 @@ class CalendarEditor with ChangeNotifier {
 	/// The calendar filled with [Day]s.
 	/// 
 	/// Each month is lazy-loaded from the database, so it's null until selected.
-	final List<List<Day?>?> calendar = List.filled(12, null);
+	final List<List<CalendarDay?>?> calendar = List.filled(12, null);
 
 	/// A list of streams on the Firebase streams.
-	/// 
-	/// 
 	final List<StreamSubscription?> subscriptions = List.filled(12, null);
 
 	/// The year of each month.
@@ -44,23 +48,14 @@ class CalendarEditor with ChangeNotifier {
 				: month > 7 ? currentYear - 1 : currentYear
 	];
 
-	/// A list of calendar paddings for each month. 
-	/// 
-	/// Every entry is a list of two numbers. The first one is the amount of days
-	/// from Sunday before the month starts, and the second one is the amount of 
-	/// days after the month until Saturday. They will be represented by blanks. 
-	final List<List<int>?> paddings = List.filled(12, null);
-
-	void loadMonth(int month) => subscriptions.add(  // 0-11
-		Services.instance.database.cloudDatabase.getCalendarStream(month + 1)  // 1-12
-			.listen(
-				(List<Map<String, dynamic>?> cal) {
-					calendar [month] = Day.getMonth(cal);
-					calendar [month] = layoutMonth(month);
-					notifyListeners();
-				}
-			)
-	);
+	void loadMonth(int month) => subscriptions [month] ??= Services
+		.instance.database.cloudDatabase.getCalendarStream(month + 1)
+		.listen(
+			(List<Map<String, dynamic>?> cal) {
+				calendar [month] = layoutMonth(Day.getMonth(cal), month);
+				notifyListeners();
+			}
+		);
 
 	@override
 	void dispose() {
@@ -70,30 +65,50 @@ class CalendarEditor with ChangeNotifier {
 		super.dispose();
 	}
 
-	/// Fits the calendar to a 5-day week layout. 
+	/// Fits the calendar to a 6-week layout. 
 	/// 
 	/// Adjusts the calendar so that it begins on the correct day of the week 
 	/// (starting on Sunday) instead of defaulting to the first open cell on 
 	/// the calendar grid. This function pads the calendar with the correct 
 	/// amount of empty days before and after the month. 
-	List<Day?> layoutMonth(int month) {
-		final List<Day?> cal = calendar [month]!;
-		final int firstDayOfWeek = DateTime(years [month], month + 1, 1).weekday;
-		final int weekday = firstDayOfWeek == 7 ? 0 : firstDayOfWeek;
-		paddings [month] = [weekday, daysInMonth - (weekday + cal.length)];
-		return cal;
+	List<CalendarDay?> layoutMonth(List<Day?> cal, int month) {
+		final int year = years [month];
+		final int firstDayOfMonth = DateTime(year, month + 1, 1).weekday;
+		final int weekday = firstDayOfMonth == 7 ? 0 : firstDayOfMonth;
+		int weeks = 0;  // the number of sundays (except for the first week)
+		if (firstDayOfMonth != 7) {  // First week doesn't have a sunday
+			weeks++;
+		}
+		for (int date = 0; date < cal.length; date++) {
+			if (DateTime(year, month + 1, date + 1).weekday == 7) {  // Sunday
+				weeks++;
+			}
+		}
+		final int leftPad = weekday;
+		final int rightPad = (weeks * 7) - (weekday + cal.length);
+		return [
+			for (int _ = 0; _ < leftPad; _++) null,
+			for (int date = 0; date < cal.length; date++) CalendarDay(
+				date: DateTime(year, month + 1, date + 1),
+				schoolDay: cal [date],
+			),
+			for (int _ = 0; _ < rightPad; _++) null,
+		];
 	}
 
 	/// Updates the calendar. 
-	Future<void> updateDay(DateTime date, Day? day) async {
-		if (day == null) {
-			return;
-		}
-		calendar [date.month - 1]! [date.day - 1] = day;
+	Future<void> updateDay({required Day? day, required DateTime date}) async {
+		final int index = calendar [date.month - 1]!
+			.indexWhere((CalendarDay? day) => day != null);
+		calendar [date.month - 1]! [index + date.day - 1]!.schoolDay = day;
 		await Services.instance.database.setCalendar(
 			date.month, 
 			{
-				"calendar": Day.monthToJson(calendar [date.month - 1]!),
+				"calendar": Day.monthToJson([
+					for (final CalendarDay? day in calendar [date.month - 1]!)
+						if (day != null)
+							day.schoolDay,
+				]),
 				"month": date.month
 			}
 		);
