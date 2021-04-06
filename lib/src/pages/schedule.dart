@@ -52,7 +52,7 @@ class ResponsiveSchedule extends NavigationItem {
 
 	@override
 	Widget build (BuildContext context) => ModelListener<ScheduleModel>(
-		model: () => ScheduleModel(),
+		model: () => model,
 		builder: (_, ScheduleModel model, __) => Column(
 			children: [
 				ListTile (
