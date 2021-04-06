@@ -4,7 +4,6 @@ import "package:flutter/material.dart";
 import "package:ramaz/data.dart";
 import "package:ramaz/pages.dart";
 import "package:ramaz/models.dart";
-import "package:ramaz/services.dart";
 import "package:ramaz/widgets.dart";
 
 /// A drawer to show throughout the app.
@@ -87,7 +86,7 @@ class NavigationDrawer extends StatelessWidget {
 												)
 										]
 									),
-									BrightnessChanger.dropdown(prefs: Services.instance.prefs),
+									BrightnessChanger.dropdown(),
 									ListTile (
 										title: const Text ("Logout"),
 										leading: Icon (Icons.lock),

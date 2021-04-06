@@ -51,7 +51,7 @@ class LoginState extends State<Login> {
 		appBar: AppBar (
 			title: const Text ("Login"),
 			actions: [
-				BrightnessChanger.iconButton(prefs: Services.instance.prefs),
+				BrightnessChanger.iconButton(),
 			],
 		),
 		body: Center(
