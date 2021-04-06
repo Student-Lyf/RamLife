@@ -6,30 +6,17 @@ import "package:ramaz/models.dart";
 /// A view model for the creating a new [Day].
 // ignore: prefer_mixin
 class DayBuilderModel with ChangeNotifier {
-	/// The admin creating this [Day].
-	/// 
-	/// This is used to create [userSpecials].
-	final UserModel admin;
+	final DateTime date;
 
 	bool _hasSchool;
 	String? _name;
 	Special? _special;
 
 	/// Creates a view model for modifying a [Day].
-	DayBuilderModel(Day? day) : 
-		admin = Models.instance.user,
+	DayBuilderModel({required Day? day, required this.date}) : 
 		_name = day?.name,
 		_special = day?.special,
-		_hasSchool = day == null
-	{
-		admin.addListener(notifyListeners);
-	}
-
-	@override 
-	void dispose() {
-		admin.removeListener(notifyListeners);
-		super.dispose();
-	}
+		_hasSchool = day != null;
 
 	/// The name for this day. 
 	String? get name => _name;
@@ -45,16 +32,6 @@ class DayBuilderModel with ChangeNotifier {
 			return;
 		}
 		_special = value;
-		if(
-			!presetSpecials.any(
-				(Special preset) => preset.name == value.name
-			) && !userSpecials.any(
-				(Special preset) => preset.name == value.name
-			)
-		) {
-			admin.addSpecialToAdmin(value);
-		}
-
 		notifyListeners();
 	}
 
@@ -68,14 +45,16 @@ class DayBuilderModel with ChangeNotifier {
 	/// The day being created (in present state). 
 	/// 
 	/// The model uses [name] and [special]. 
-	Day? get day => !hasSchool ? null : 
-		Day(name: name ?? "", special: presetSpecials.first);
+	Day? get day => !hasSchool ? null : Day(
+		name: name ?? "", 
+		special: special ?? presetSpecials.first,
+	);
 
 	/// The built-in specials.  
 	List<Special> get presetSpecials => Special.specials;
 
 	/// Custom user-created specials. 
-	List<Special> get userSpecials => admin.admin!.specials;
+	List<Special> get userSpecials => Models.instance.user.admin!.specials;
 
 	/// Whether this day is ready to be created. 
 	bool get ready => name != null && special != null;

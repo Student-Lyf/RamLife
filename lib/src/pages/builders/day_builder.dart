@@ -13,31 +13,23 @@ import "package:ramaz/widgets.dart";
 /// [DayBuilderModel.special], are set to `day.name` ([Day.name]) and 
 /// `day.special` ([Day.special]), respectively.  
 class DayBuilder extends StatelessWidget {
-	/// Returns the [Day] created by this widget. 
-	static Future<Day?> getDay({
-		required BuildContext context, 
-		required DateTime date,
-		@required Day? day,
-	}) => showDialog(
-		context: context, 
-		builder: (_) => DayBuilder(date: date, day: day),
-	);
-
-	/// The date to modify. 
 	final DateTime date;
 
 	/// The day to edit, if it already exists. 
 	final Day? day;
 
+	final Future<void> Function(Day?) upload;
+
 	/// Creates a widget to guide the user in creating a [Day] 
 	const DayBuilder({
-		required this.date,
-		this.day,
+		required this.day, 
+		required this.date, 
+		required this.upload
 	});
 
 	@override
 	Widget build(BuildContext context) => ModelListener<DayBuilderModel>(
-		model: () => DayBuilderModel(day),
+		model: () => DayBuilderModel(day: day, date: date),
 		// ignore: sort_child_properties_last
 		child: TextButton(
 			onPressed: () => Navigator.of(context).pop(),
@@ -110,8 +102,10 @@ class DayBuilder extends StatelessWidget {
 			actions: [
 				cancel!,
 				ElevatedButton(
-					onPressed: !model.ready ? null : () => 
-						Navigator.of(context).pop(model.day),
+					onPressed: !model.ready ? null : () async {
+						await upload(model.day);
+						Navigator.of(context).pop();
+					},
 					child: const Text("Save", style: TextStyle(color: Colors.white)),
 				)
 			]
