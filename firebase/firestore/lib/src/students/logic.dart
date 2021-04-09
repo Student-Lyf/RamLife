@@ -63,11 +63,17 @@ class StudentLogic {
 					continue;
 				}
 
+				final Semesters semestersForCourse = semesters [sectionId];
+				if (semestersForCourse == null) {
+					Logger.error(
+						"Section $sectionId was in schedule.csv but not in sections.csv"
+					);
+				}
 				if (
 					semesters != null && 
 					!(isSemester1 
-						? semesters [sectionId].semester1 
-						: semesters [sectionId].semester2
+						? semestersForCourse.semester1 
+						: semestersForCourse.semester2
 					)
 				) {
 					continue;

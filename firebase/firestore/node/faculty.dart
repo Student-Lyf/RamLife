@@ -15,7 +15,7 @@ Future<void> main() async {
 	);
 
 	final Map<String, String> sectionTeachers = await Logger.logValue(
-		"section teachers", () => SectionReader.getSectionTeachers(id: true)
+		"section teachers", SectionReader.getSectionFacultyIds,
 	);
 
 	final Map<User, Set<String>> facultySections = await Logger.logValue(
