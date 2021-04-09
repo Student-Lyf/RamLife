@@ -1,6 +1,7 @@
 // @dart=2.9
 
 import "package:firestore/data.dart";
+import "package:firestore/faculty.dart";
 import "package:firestore/helpers.dart";
 import "package:firestore/sections.dart";
 import "package:firestore/services.dart";
@@ -13,13 +14,18 @@ Future<void> main() async {
 	);
 
 	final Map<String, String> sectionTeachers = await Logger.logValue(
-		"section teachers", SectionReader.getSectionTeachers
+		"section teachers", SectionReader.getSectionFacultyIds
+	);
+
+	final Map<String, User> facultyNames = await Logger.logValue(
+		"faculty names", FacultyReader.getFaculty,
 	);
 
 	final List<Section> sections = await Logger.logValue(
 		"sections list", () => SectionLogic.getSections(
 			courseNames: courseNames,
 			sectionTeachers: sectionTeachers,
+			facultyNames: facultyNames,
 		)
 	);
 

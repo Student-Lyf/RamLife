@@ -18,7 +18,7 @@ class FacultyLogic {
 	/// This function works by taking several arguments: 
 	/// 
 	/// - faculty, from [FacultyReader.getFaculty] 
-	/// - sectionTeachers, from [SectionReader.getSectionTeachers] with `id: true`
+	/// - sectionTeachers, from [SectionReader.getSectionFacultyIds]
 	/// 
 	/// These are kept as parameters instead of calling the functions by itself
 	/// in order to keep the data and logic layers separate. 

@@ -1,5 +1,6 @@
 import "package:firestore/data.dart";
 
+import "package:firestore/faculty.dart";
 import "reader.dart";  // for doc comments
 
 /// A collection of functions to index course data. 
@@ -19,19 +20,21 @@ class SectionLogic {
 	/// This function works by taking several arguments: 
 	/// 
 	/// - courseNames, from [SectionReader.courseNames]
-	/// - sectionTeachers, from [SectionReader.getSectionTeachers] (`id: false`)
+	/// - sectionTeachers, from [SectionReader.getSectionFacultyIds]
+	/// - facultyNames, from [FacultyReader.getFaculty]
 	/// 
 	/// These are kept as parameters instead of calling the functions by itself
 	/// in order to keep the data and logic layers separate. 
 	static List<Section> getSections({
 		@required Map<String, String> courseNames,
 		@required Map<String, String> sectionTeachers,
+		@required Map<String, User> facultyNames,
 	}) => [
 		for (final MapEntry<String, String> entry in sectionTeachers.entries) 
 			Section(
 				id: entry.key,
 				name: courseNames [getCourseId(entry.key)],
-				teacher: entry.value,
+				teacher: facultyNames [entry.value].name,
 			)
 	];
 }

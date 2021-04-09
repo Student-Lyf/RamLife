@@ -40,7 +40,7 @@ class Section extends Serializable {
 	/// The section ID for this class
 	final String id;
 
-	/// The teacher for this section.
+	/// The full name of the teacher for this section.
 	final String teacher;
 
 	/// Creates a section. 
