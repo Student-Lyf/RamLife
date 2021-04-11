@@ -96,7 +96,6 @@ class User {
 
 	/// Creates a new user from JSON. 
 	User.fromJson(Map<String, dynamic> json) : 
-		// dayNames = List<String>.from(json ["dayNames"]),
 		dayNames = List<String>.from(safeJson(json, "dayNames")),
 		schedule = {
 			for (final String dayName in safeJson(json, "dayNames"))
@@ -108,7 +107,7 @@ class User {
 		contactInfo = ContactInfo.fromJson(
 			Map<String, dynamic>.from(safeJson(json, "contactInfo"))
 		),
-		grade = intToGrade [safeJson(json, "grade")],
+		grade = json ["grade"] == null ? null : intToGrade [safeJson(json, "grade")],
 		registeredClubs = List<String>.from(json ["registeredClubs"] ?? []);
 
 	/// Gets the unique section IDs for the courses this user is enrolled in.
