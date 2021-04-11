@@ -322,49 +322,49 @@ class Special {
 		mincha: 9
 	);
 
-	/// The [Special] for Mondays and Thursdays.
-	static const Special regular = Special (
-		"M or R day",
-		[
-			Range(Time(8, 00), Time(8, 50)),
-			Range(Time(8, 55), Time(9, 35)),
-			Range(Time(9, 40), Time(10, 20)),
-			Range(Time(10, 20), Time(10, 35)),
-			Range(Time(10, 35), Time(11, 15)),
-			Range(Time(11, 20), Time(12, 00)),
-			Range(Time(12, 05), Time(12, 45)),
-			Range(Time(12, 50), Time(13, 30)),
-			Range(Time(13, 35), Time(14, 15)),
-			Range(Time(14, 20), Time(15, 00)),
-			Range(Time(15, 00), Time(15, 20)),
-			Range(Time(15, 20), Time(16, 00)),
-			Range(Time(16, 05), Time(16, 45)),
-		],
-		homeroom: 3,
-		mincha: 10
-	);
+	// /// The [Special] for Mondays and Thursdays.
+	// static const Special regular = Special (
+	// 	"M or R day",
+	// 	[
+	// 		Range(Time(8, 00), Time(8, 50)),
+	// 		Range(Time(8, 55), Time(9, 35)),
+	// 		Range(Time(9, 40), Time(10, 20)),
+	// 		Range(Time(10, 20), Time(10, 35)),
+	// 		Range(Time(10, 35), Time(11, 15)),
+	// 		Range(Time(11, 20), Time(12, 00)),
+	// 		Range(Time(12, 05), Time(12, 45)),
+	// 		Range(Time(12, 50), Time(13, 30)),
+	// 		Range(Time(13, 35), Time(14, 15)),
+	// 		Range(Time(14, 20), Time(15, 00)),
+	// 		Range(Time(15, 00), Time(15, 20)),
+	// 		Range(Time(15, 20), Time(16, 00)),
+	// 		Range(Time(16, 05), Time(16, 45)),
+	// 	],
+	// 	homeroom: 3,
+	// 	mincha: 10
+	// );
 
-	/// The [Special] for Tuesday and Wednesday (letters A, B, and C)
-	static const Special rotate = Special (
-		"A, B, or C day",
-		[
-			Range(Time(8, 00), Time(8, 45)),
-			Range(Time(8, 50), Time(9, 30)),
-			Range(Time(9, 35), Time(10, 15)),
-			Range(Time(10, 15), Time(10, 35)),
-			Range(Time(10, 35), Time(11, 15)),
-			Range(Time(11, 20), Time(12, 00)),
-			Range(Time(12, 05), Time(12, 45)),
-			Range(Time(12, 50), Time(13, 30)),
-			Range(Time(13, 35), Time(14, 15)),
-			Range(Time(14, 20), Time(15, 00)),
-			Range(Time(15, 00), Time(15, 20)),
-			Range(Time(15, 20), Time(16, 00)),
-			Range(Time(16, 05), Time(16, 45)),
-		],
-		homeroom: 3,
-		mincha: 10
-	);
+	// /// The [Special] for Tuesday and Wednesday (letters A, B, and C)
+	// static const Special rotate = Special (
+	// 	"A, B, or C day",
+	// 	[
+	// 		Range(Time(8, 00), Time(8, 45)),
+	// 		Range(Time(8, 50), Time(9, 30)),
+	// 		Range(Time(9, 35), Time(10, 15)),
+	// 		Range(Time(10, 15), Time(10, 35)),
+	// 		Range(Time(10, 35), Time(11, 15)),
+	// 		Range(Time(11, 20), Time(12, 00)),
+	// 		Range(Time(12, 05), Time(12, 45)),
+	// 		Range(Time(12, 50), Time(13, 30)),
+	// 		Range(Time(13, 35), Time(14, 15)),
+	// 		Range(Time(14, 20), Time(15, 00)),
+	// 		Range(Time(15, 00), Time(15, 20)),
+	// 		Range(Time(15, 20), Time(16, 00)),
+	// 		Range(Time(16, 05), Time(16, 45)),
+	// 	],
+	// 	homeroom: 3,
+	// 	mincha: 10
+	// );
 
 	/// The [Special] for an early dismissal.
 	static const Special early = Special (
@@ -392,7 +392,7 @@ class Special {
 	/// 
 	/// Used in the UI
 	static const List<Special> specials = [
-		regular,
+		// regular,
 		roshChodesh,
 		fastDay,
 		friday,
@@ -401,7 +401,7 @@ class Special {
 		winterFridayRoshChodesh,
 		amAssembly,
 		pmAssembly,
-		rotate,
+		// rotate,
 		early,
 		covid, 
 	];
