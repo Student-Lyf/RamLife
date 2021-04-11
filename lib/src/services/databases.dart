@@ -23,6 +23,13 @@ class Databases extends Database {
 	Future<void> init() async {
 		await cloudDatabase.init();
 		await localDatabase.init();
+
+		// Download this month's calendar, in case it changed
+		final int month = DateTime.now().month;
+		await localDatabase.setCalendar(
+			month, 
+			await cloudDatabase.getCalendarMonth(month)
+		);
 	}
 
 	/// Downloads all the data and saves it to the local database. 
@@ -33,6 +40,7 @@ class Databases extends Database {
 
 		await localDatabase.setUser(await cloudDatabase.user);
 		await updateCalendar();
+		await updateSports();
 
 		final List<Map<String, dynamic>> cloudReminders = 
 			await cloudDatabase.reminders;
