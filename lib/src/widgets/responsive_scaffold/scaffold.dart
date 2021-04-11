@@ -111,8 +111,8 @@ class ResponsiveScaffold extends StatelessWidget {
 		builder: (BuildContext context, LayoutInfo info, Widget? child) => Scaffold(
 			appBar: appBar,
 			drawer: info.hasStandardDrawer ? null 
-				: hasNavBar ? secondaryDrawer : drawer,
-			endDrawer: info.hasStandardSideSheet ? null : sideSheet,
+				: Drawer(child: hasNavBar ? secondaryDrawer : drawer),
+			endDrawer: info.hasStandardSideSheet ? null : Drawer(child: sideSheet),
 			floatingActionButton: floatingActionButton,
 			floatingActionButtonLocation: floatingActionButtonLocation,
 			bottomNavigationBar: !hasNavBar || !info.hasBottomNavBar 
@@ -139,10 +139,13 @@ class ResponsiveScaffold extends StatelessWidget {
 					)
 					else if (info.hasStandardDrawer) drawer,
 					Expanded(child: child!),
-					if (sideSheet != null && info.hasStandardSideSheet) SizedBox(
-						width: 320,
-						child: sideSheet,
-					)
+					if (sideSheet != null && info.hasStandardSideSheet) ...[
+						const VerticalDivider(),
+						SizedBox(
+							width: 320,
+							child: Drawer(elevation: 0, child: sideSheet),
+						)
+					]
 				]
 			)
 		),
