@@ -40,7 +40,7 @@ class Databases extends Database {
 
 		await localDatabase.setUser(await cloudDatabase.user);
 		await updateCalendar();
-		await updateSports();
+		// await updateSports();
 
 		final List<Map<String, dynamic>> cloudReminders = 
 			await cloudDatabase.reminders;
