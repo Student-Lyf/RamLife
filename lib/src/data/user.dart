@@ -4,7 +4,6 @@ import "contact_info.dart";
 import "schedule/advisory.dart";
 import "schedule/day.dart";
 import "schedule/period.dart";
-import "schedule/special.dart";
 import "schedule/time.dart";
 
 /// What grade the user is in. 
@@ -123,38 +122,12 @@ class User {
 	/// Computes the periods, in order, for a given day. 
 	/// 
 	/// This method converts the [PeriodData]s in [schedule] into [Period]s using 
-	/// [Day.special]. [PeriodData] objects are specific to the user's schedule, 
+	/// [Day.schedule]. [PeriodData] objects are specific to the user's schedule, 
 	/// whereas the times of the day [Range]s are specific to the calendar. 
-	/// 
-	/// See [Special] for an explanation of the different factors this method
-	/// takes into account. 
-	List<Period> getPeriods(Day day) {
-		final Special special = day.special;
-		final int periodCount = special.periods.length;
-		int periodIndex = 0;
-		return [
-			for (int index = 0; index < periodCount; index++)
-				if (special.homeroom == index) Period(
-					data: null,		
-					period: "Homeroom",
-					time: special.periods [index],
-					activity: null,
-				) else if (special.mincha == index) Period(
-					data: null,
-					period: "Mincha",
-					time: special.periods [index],
-					activity: null,
-				) else if (special.skip.contains(index)) Period(
-					data: null,
-					period: "Free period",
-					time: special.periods [index],
-					activity: null,
-				) else Period(
-					data: schedule [day.name]! [periodIndex],
-					period: (++periodIndex).toString(),
-					time: special.periods [index],
-					activity: null,
-				)
-		];
-	}
+	List<Period> getPeriods(Day day) => [
+		for (final Period period in day.schedule.periods) period.copyWith(
+			int.tryParse(period.name) == null ? null 
+				: schedule [day.name]! [int.parse(period.name)]
+		)
+	];
 }

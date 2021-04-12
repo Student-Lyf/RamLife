@@ -1,43 +1,25 @@
-import "dart:convert";
-
 import "package:meta/meta.dart";
 
-import "special.dart";
+import "schedule.dart";
 import "time.dart";
 
 /// A day at Ramaz. 
 /// 
-/// Each day has a [name] and [special] property.
+/// Each day has a [name] and [schedule] property.
 /// The [name] property decides which schedule to show,
-/// while the [special] property decides what time slots to give the periods. 
+/// while the [schedule] property decides what time slots to give the periods. 
 @immutable
 class Day {
 	/// Gets the calendar for the whole year.
 	/// 
-	/// Each element of [data]'s months should be a JSON representation of a [Day].
+	/// Each element of [year]'s months should be a JSON representation of a [Day].
 	/// See [Day.fromJson] for how to represent a Day in JSON. 
-	static List<List<Day?>> getCalendar(
-		List<List<Map<String, dynamic>?>> data
-	) => [
-		for (final List<Map<String, dynamic>?> month in data)
-			getMonth(month)
-	];
-
-	/// Parses a particular month from JSON. 
-	/// 
-	/// See [Day.getCalendar] for details.
-	static List<Day?> getMonth(List<Map<String, dynamic>?> data) => [
-		for (final Map<String, dynamic>? json in data)
-			if (json == null) null
-			else Day.fromJson(json)
-	];
-
-	/// Converts a month in the calendar to JSON. 
-	/// 
-	/// This is how it is currently stored in the database. 
-	static List<Map<String, dynamic>?> monthToJson(List<Day?> month) => [
-		for (final Day? day in month)
-			day?.toJson()
+	static List<List<Day?>> getCalendar(List<List<Map?>> year) => [
+		for (final List<Map?> month in year) [
+			for (final Map? day in month)
+				if (day == null) null
+				else Day.fromJson(day)
+		]
 	];
 
 	/// Gets the Day for [date] in the [calendar].
@@ -51,34 +33,32 @@ class Day {
 
 	/// The time allotment for this day.
 	/// 
-	/// See the [Special] class for more details.
-	final Special special;
+	/// See the [Schedule] class for more details.
+	final Schedule schedule;
 
-	/// Returns a new Day from a [name] and [Special].
+	/// Returns a new Day from a [name] and [Schedule].
 	const Day({
 		required this.name,
-		required this.special
+		required this.schedule
 	});
 
 	/// Returns a Day from a JSON object.
 	/// 
-	/// `json ["name"]` and `json ["special"]` must not be null.
-	/// 
-	/// `json ["special"]` may be: 
-	/// 
-	/// 1. One of the specials from [Special.specials].
-	/// 2. JSON of a special. See [Special.fromJson].
-	/// 
-	/// This factory is not a constructor so it can dynamically check 
-	/// for a valid [name] while keeping the field final.
-	factory Day.fromJson(Map<String, dynamic> json) {
-		if (!json.containsKey("name")) {
-			throw JsonUnsupportedObjectError(json);
+	/// `json ["name"]` and `json ["schedule"]` must not be null.
+	/// `json ["schedule"]` must be the name of a schedule in the calendar. 
+	factory Day.fromJson(Map json) {
+		final String scheduleName = json ["schedule"];
+		final Schedule? schedule = Schedule.schedules.firstWhere(
+			(Schedule schedule) => schedule.name == scheduleName
+		);
+		if (schedule == null) {
+			throw ArgumentError.value(
+				json ["schedule"],  // problematic value
+				"scheduleName",     // description of this value
+				"Unrecognized schedule name"  // error message
+			);
 		}
-		final String name = json ["name"];
-		final jsonSpecial = json ["special"];
-		final Special special = Special.fromJson(jsonSpecial);
-		return Day(name: name, special: special);
+		return Day(name: json ["name"], schedule: schedule);
 	}
 
 	@override 
@@ -90,25 +70,16 @@ class Day {
 	@override 
 	bool operator == (dynamic other) => other is Day && 
 		other.name == name &&
-		other.special == special;
+		other.schedule == schedule;
 
 	/// Returns a JSON representation of this Day. 
-	/// 
-	/// Will convert [special] to its name if it is a built-in special.
-	/// Otherwise it will convert it to JSON form. 
 	Map<String, dynamic> toJson() => {
 		"name": name,
-		"special": Special.stringToSpecial.containsKey(special.name)
-			? special.name
-			: special.toJson()
+		"schedule": schedule.name,
 	};
 
 	/// A human-readable string representation of this day.
-	/// 
-	/// If [name] is null, returns null. 
-	/// Otherwise, returns [name] and [special].
-	/// If [special] was left as the default, will only return the [name].
-	String get displayName => "$name ${special.name}";
+	String get displayName => "$name ${schedule.name}";
 
 	/// Whether to say "a" or "an".
 	/// 
@@ -120,26 +91,22 @@ class Day {
 
 	/// The period right now. 
 	/// 
-	/// Uses [special] to calculate the time slots for all the different periods,
-	/// and uses [DateTime.now()] to look up what period it is right now. 
-	/// 
-	/// See [Time] and [Range] for implementation details.
-	int? get period {
-		final Time time = Time.fromDateTime (DateTime.now());
-		for (int index = 0; index < (special.periods.length); index++) {
-			final Range range = special.periods [index];
-			if (
-				range.contains(time) ||  // during class
-				(  // between periods
+	/// Uses [schedule] to calculate the time slots for all the different periods,
+	/// and uses [DateTime.now()] to look up what period it is right now. Also 
+	/// makes use of [Range] and [Time] comparison operators.
+	int? getCurrentPeriod() {
+		final Time time = Time.fromDateTime(DateTime.now());
+		for (int index = 0; index < schedule.periods.length; index++) {
+			final Range range = schedule.periods [index].time;
+			if (range.contains(time)  // during class
+				|| (  // between periods
 					index != 0 && 
-					special.periods [index - 1] < time && 
+					schedule.periods [index - 1].time < time && 
 					range > time
 				)
 			) {
 				return index;
 			}
 		}
-		// ignore: avoid_returning_null
-		return null;
 	}
 }

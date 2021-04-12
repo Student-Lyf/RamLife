@@ -1,7 +1,5 @@
 import "package:meta/meta.dart";
 
-import "schedule/special.dart";
-
 /// Scopes for administrative privileges.
 /// 
 /// [Admin] users use these scopes ([Admin.scopes]) to determine what they can 
@@ -40,11 +38,6 @@ class Admin {
 	/// A list of scopes available to this user. 
 	final List<Scope> scopes;
 
-	/// A list of custom-made [Special]s by this admin. 
-	/// 
-	/// These can be saved so the admin does not have to recreate them. 
-	final List<Special> specials;
-
 	/// This user's email. 
 	/// 
 	/// This is needed here so it can be indexed in a database. 
@@ -53,7 +46,6 @@ class Admin {
 	/// Creates a user with administrative privileges. 
 	const Admin ({
 		required this.scopes, 
-		required this.specials,
 		required this.email,
 	});
 
@@ -64,18 +56,10 @@ class Admin {
 				if (stringToScope.containsKey(scope))
 					stringToScope [scope]!
 		],
-		email = json ["email"],
-		specials = [
-			for (dynamic special in json ["specials"] ?? [])
-				Special.fromJson (Map<String, dynamic>.from(special))
-		];
+		email = json ["email"];
 
 	/// Converts an admin to JSON form. 
 	Map<String, dynamic> toJson() => {
-		"specials": [
-			for (final Special special in specials)
-				special.toJson(),
-		],
 		"email": email,
 	};
 }
