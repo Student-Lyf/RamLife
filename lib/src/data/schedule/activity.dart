@@ -62,6 +62,28 @@ enum ActivityType {
 	misc,
 }
 
+/// Maps JSON string values to [ActivityType]s.
+ActivityType parseActivityType(String type) {
+	switch (type) {
+		case "advisory": return ActivityType.advisory;
+		case "room": return ActivityType.room;
+		case "grade": return ActivityType.grade;
+		case "misc": return ActivityType.misc;
+		default: throw ArgumentError("Invalid activity type: $type");
+	}
+}
+
+/// Maps [ActivityType] values to their string counterparts.
+String activityTypeToString(ActivityType type) {
+	switch (type) {
+		case ActivityType.advisory: return "advisory";
+		case ActivityType.room: return "room";
+		case ActivityType.grade: return "grade";
+		case ActivityType.misc: return "misc";
+	}
+}
+
+
 /// An activity during a period. 
 /// 
 /// Students can either be directed to their advisories or to a certain room. 
@@ -80,14 +102,6 @@ class Activity {
 		}
 		return result;
 	}
-
-	/// Maps JSON string values to [ActivityType]s.
-	static const Map<String, ActivityType> stringToActivityType = {
-		"advisory": ActivityType.advisory,
-		"room": ActivityType.room,
-		"grade": ActivityType.grade,
-		"misc": ActivityType.misc,
-	};
 
 	/// The type of this activity.
 	final ActivityType type;
@@ -115,9 +129,14 @@ class Activity {
 			GradeActivity.fromJson(Map<String, dynamic>.from(json ["message"]))
 		)
 		: Activity(
-			type: stringToActivityType[json ["type"]!]!,
+			type: parseActivityType(json ["type"]),
 			message: json ["message"]
 		);
+
+	Map toJson() => {
+		"message": message,
+		"type": activityTypeToString(type),
+	};
 
 	@override
 	String toString() {

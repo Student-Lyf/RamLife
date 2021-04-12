@@ -8,8 +8,6 @@
 /// other app should be implemented in this library.
 library data;
 
-export "src/data/admin.dart";
-
 // The clubs feature
 export "src/data/clubs/club.dart";
 export "src/data/clubs/message.dart";
@@ -22,7 +20,7 @@ export "src/data/schedule/activity.dart";
 export "src/data/schedule/advisory.dart";
 export "src/data/schedule/day.dart";
 export "src/data/schedule/period.dart";
-export "src/data/schedule/special.dart";
+export "src/data/schedule/schedule.dart";
 export "src/data/schedule/subject.dart";
 export "src/data/schedule/time.dart";
 
