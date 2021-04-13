@@ -17,11 +17,11 @@ class NavigationDrawer extends StatelessWidget {
 	String? getRouteName(BuildContext context) => 
 		ModalRoute.of(context)!.settings.name;
 
-	bool get isScheduleAdmin => Models.instance.user.admin!
-		.scopes.contains(Scope.calendar);
+	bool get isScheduleAdmin => Models.instance.user
+		.adminScopes!.contains(AdminScope.calendar);
 
-	bool get isSportsAdmin => Models.instance.user.admin!
-		.scopes.contains(Scope.sports);
+	bool get isSportsAdmin => Models.instance.user
+		.adminScopes!.contains(AdminScope.sports);
 
 	@override 
 	Widget build (BuildContext context) => ResponsiveBuilder(
