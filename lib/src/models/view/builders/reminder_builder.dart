@@ -6,7 +6,7 @@ import "package:ramaz/models.dart";
 /// A view model for the dialog that allows the user to build a reminder.
 // ignore: prefer_mixin
 class RemindersBuilderModel with ChangeNotifier {
-	final Schedule _schedule;
+	final ScheduleModel _schedule;
 
 	/// The type of reminder the user is building. 
 	ReminderTimeType? type;

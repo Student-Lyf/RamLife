@@ -6,12 +6,11 @@ import "package:ramaz/widgets.dart";
 
 /// A widget to guide the admin in modifying a day in the calendar. 
 /// 
-/// Creates a pop-up that allows the admin to set the dayName and [Special]
+/// Creates a pop-up that allows the admin to set the dayName and [Schedule]
 /// for a given day in the calendar.
 /// 
 /// If [day] is provided, then the fields [DayBuilderModel.name],
-/// [DayBuilderModel.special], are set to `day.name` ([Day.name]) and 
-/// `day.special` ([Day.special]), respectively.  
+/// [DayBuilderModel.schedule], are set to [Day.name] and [Day.schedule].
 class DayBuilder extends StatelessWidget {
 	final DateTime date;
 
@@ -77,21 +76,19 @@ class DayBuilder extends StatelessWidget {
 							runSpacing: 3,
 							children: [
 								const Text("Schedule"),
-								DropdownButton<Special>(
-									value: 
-										(model.presetSpecials + model.userSpecials).contains(model.special)
-											? model.special : null,
+								DropdownButton<String>(
+									value: model.schedule?.name,
 									hint: const Text("Schedule"),
-									onChanged: !model.hasSchool ? null : 
-										(Special? special) => model.special = special ?? model.special,
-									items: [
-										for (
-											final Special special in 
-											model.presetSpecials + model.userSpecials
-										) DropdownMenuItem<Special>(
-											value: special,
-											child: Text(special.name),
+									onChanged: !model.hasSchool ? null : (String? value) => 
+										model.schedule = Schedule.schedules.firstWhere(
+											(Schedule schedule) => schedule.name == value
 										),
+									items: [
+										for (final Schedule schedule in Schedule.schedules) 
+											DropdownMenuItem(
+												value: schedule.name,
+												child: Text(schedule.name),
+											),
 									],
 								)
 							]

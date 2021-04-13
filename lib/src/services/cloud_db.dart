@@ -129,6 +129,10 @@ class CloudDatabase extends Database {
 		: "${_now.year - 1}-${_now.year}"
 	);
 
+	/// The document for the schedules of the calendar.
+	DocumentReference get schedulesDocument => 
+		calendarCollection.doc("schedules");
+
 	// Service methods
 
 	@override
@@ -157,7 +161,6 @@ class CloudDatabase extends Database {
 	/// No-op -- The user cannot edit their own profile. 
 	/// 
 	/// User profiles can only be modified by the admin SDK. 
-	/// Admin profiles may be modified. See [setAdmin]. 
 	@override
 	Future<void> setUser(Map<String, dynamic> json) async {}
 
@@ -176,6 +179,15 @@ class CloudDatabase extends Database {
 		final DocumentReference document = calendarCollection.doc(month.toString());
 		return document.throwIfNull("No entry in calendar for $month");
 	}
+
+	@override
+	Future<List<Map>> getSchedules() async => (
+		await schedulesDocument.throwIfNull("Cannot find schedules")
+	) ["schedules"];
+
+	@override
+	Future<void> saveSchedules(List<Map> schedules) => 
+		schedulesDocument.set({"schedules": schedules});
 
 	@override 
 	Future<void> setCalendar(int month, Map<String, dynamic> json) => 
@@ -209,13 +221,6 @@ class CloudDatabase extends Database {
 	@override
 	Future<void> deleteReminder(String oldHash) async =>
 		(await remindersCollection.findDocument("hash", oldHash)).delete();
-
-	@override
-	Future<Map<String, dynamic>> get admin => 
-		adminDocument.throwIfNull("User is not admin");
-
-	@override
-	Future<void> setAdmin(Map<String, dynamic> json) => adminDocument.set(json);
 
 	@override
 	Future<List<Map<String, dynamic>>> get sports async {

@@ -8,7 +8,7 @@ const List<String> weekdayNames = [
 ];
 
 class Dashboard extends NavigationItem {
-	final Schedule scheduleModel = Models.instance.schedule;
+	final ScheduleModel scheduleModel = Models.instance.schedule;
 
 	/// The reminders data model. 
 	final Reminders remindersModel = Models.instance.reminders;
@@ -107,7 +107,7 @@ class Dashboard extends NavigationItem {
 /// Holds the schedule info on the home page.
 class ScheduleSlot extends StatelessWidget {
 	/// The schedule data model.
-	late final Schedule scheduleModel;
+	late final ScheduleModel scheduleModel;
 
 	/// The reminders data model.
 	late final Reminders remindersModel;
@@ -141,7 +141,7 @@ class ScheduleSlot extends StatelessWidget {
 				Text(
 					scheduleModel.hasSchool
 						// if there is school, then scheduleModel.today != null
-						? "Schedule: ${scheduleModel.today!.special.name}"
+						? "Schedule: ${scheduleModel.today!.schedule.name}"
 						: "There is no school today",
 					textAlign: TextAlign.center,
 					style: Theme.of(context).textTheme.headline5,

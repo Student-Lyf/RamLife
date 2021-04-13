@@ -6,7 +6,7 @@ import "package:ramaz/models.dart";
 import "package:ramaz/widgets.dart";
 
 class ResponsiveSchedule extends NavigationItem {
-	final ScheduleModel model = ScheduleModel();
+	final ScheduleViewModel model = ScheduleViewModel();
 
 	ResponsiveSchedule() : 
 		super(label: "Schedule", icon: const Icon(Icons.schedule));
@@ -14,7 +14,7 @@ class ResponsiveSchedule extends NavigationItem {
 	/// Allows the user to select a day in the calendar to view. 
 	/// 
 	/// If there is no school on that day, a [SnackBar] will be shown. 
-	Future<void> viewDay(ScheduleModel model, BuildContext context) async {
+	Future<void> viewDay(ScheduleViewModel model, BuildContext context) async {
 		final DateTime? selected = await pickDate(
 			context: context,
 			initialDate: model.date,
@@ -51,10 +51,10 @@ class ResponsiveSchedule extends NavigationItem {
 		);
 
 	@override
-	Widget build (BuildContext context) => ModelListener<ScheduleModel>(
+	Widget build (BuildContext context) => ModelListener(
 		model: () => model,
 		dispose: false,
-		builder: (_, ScheduleModel model, __) => Column(
+		builder: (_, ScheduleViewModel model, __) => Column(
 			children: [
 				ListTile (
 					title: const Text ("Day"),
@@ -75,23 +75,18 @@ class ResponsiveSchedule extends NavigationItem {
 				),
 				ListTile (
 					title: const Text ("Schedule"),
-					trailing: DropdownButton<Special> (
-						value: model.day.special,
-						onChanged: (Special? special) => model.update(
+					trailing: DropdownButton<Schedule> (
+						value: model.day.schedule,
+						onChanged: (Schedule? special) => model.update(
 							newSpecial: special,
 							onInvalidSchedule: () => handleInvalidSchedule(context),
 						),
 						items: [
-							for (final Special special in Special.specials)
+							for (final Schedule schedule in Schedule.schedules)
 								DropdownMenuItem(
-									value: special,
-									child: Text (special.name),
+									value: schedule,
+									child: Text (schedule.name),
 								),
-							if (!Special.specials.contains(model.day.special))
-								DropdownMenuItem(
-									value: model.day.special,
-									child: Text(model.day.special.name)
-								)
 						]
 					)
 				),

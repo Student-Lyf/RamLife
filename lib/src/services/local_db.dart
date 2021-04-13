@@ -153,6 +153,9 @@ class LocalDatabase extends Database {
 	/// The name for the sports object store. 
 	static const String sportsStoreName = "sports";
 
+	/// The name for the schedules object store.
+	static const String scheduleStoreName = "schedules";
+
 	/// All the object stores. 
 	/// 
 	/// This is used in [signOut] to purge all the data. 
@@ -171,7 +174,7 @@ class LocalDatabase extends Database {
 		try {
 			database = await (await idbFactory).open(
 				"ramaz.db",
-				version: 2, 
+				version: 3, 
 				onUpgradeNeeded: (idb.VersionChangeEvent event) {
 					switch(event.oldVersion) {
 						case 0: event.database
@@ -186,6 +189,9 @@ class LocalDatabase extends Database {
 							..deleteObjectStore(reminderStoreName)
 							..createObjectStore(reminderStoreName, autoIncrement: true)
 								.createIndex("hash", "hash", unique: true);
+							continue two;
+						two: case 2: event.database
+							.createObjectStore(scheduleStoreName, keyPath: "name");
 					}
 				},
 			);
@@ -250,9 +256,18 @@ class LocalDatabase extends Database {
 		);
 
 	@override
-	Future<void> setCalendar(int month, Map<String, dynamic> json) async {
-		await database.update(calendarStoreName, json);
+	Future<List<Map>> getSchedules() => database.getAll(scheduleStoreName);
+
+	@override
+	Future<void> saveSchedules(List<Map> schedules) async {
+		for (final Map json in schedules) {
+			await database.update(scheduleStoreName, json);
+		}
 	}
+
+	@override
+	Future<void> setCalendar(int month, Map<String, dynamic> json) =>
+		database.update(calendarStoreName, json);
 
 	@override
 	Future<List<Map<String, dynamic>>> get reminders => 
@@ -279,17 +294,6 @@ class LocalDatabase extends Database {
 			path: "hash",
 		)
 	)?.delete();
-
-	@override
-	Future<Map<String, dynamic>> get admin async => database.throwIfNull(
-		storeName: adminStoreName, 
-		key: Auth.email!,
-		message: "Admin data not found",
-	);
-
-	@override
-	Future<void> setAdmin(Map<String, dynamic> json) => 
-		database.update(adminStoreName, json);
 
 	@override
 	Future<List<Map<String, dynamic>>> get sports => 

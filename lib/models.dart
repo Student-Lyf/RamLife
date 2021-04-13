@@ -39,9 +39,10 @@ export "src/models/data/sports.dart";
 export "src/models/data/user.dart";
 
 // view models
+export "src/models/view/admin_schedules.dart";
 export "src/models/view/builders/day_builder.dart";
 export "src/models/view/builders/reminder_builder.dart";
-export "src/models/view/builders/special_builder.dart";
+export "src/models/view/builders/schedule_builder.dart";
 export "src/models/view/builders/sports_builder.dart";
 export "src/models/view/calendar_editor.dart";
 export "src/models/view/feedback.dart";
@@ -52,8 +53,8 @@ export "src/models/view/sports.dart";
 /// Bundles all the data models together. 
 /// 
 /// Each data model is responsible for different types of data. For example,
-/// [Schedule] keeps track of the schedule (as well as associated data such as
-/// the current period) and [UserModel] reads the user data. 
+/// [ScheduleModel] keeps track of the schedule (as well as associated data such
+/// as the current period) and [UserModel] reads the user data. 
 /// 
 /// Each data model inherits from [Model], so it has [init] and [dispose] 
 /// functions. This model serves to bundles those together, so that calling
@@ -64,7 +65,7 @@ class Models extends Model {
 	static Models instance = Models();
 
 	Reminders? _reminders;
-	Schedule? _schedule;
+	ScheduleModel? _schedule;
 	Sports? _sports;
 	UserModel? _user;
 
@@ -72,7 +73,7 @@ class Models extends Model {
 	Reminders get reminders => _reminders ??= Reminders();
 
 	/// The schedule data model. 
-	Schedule get schedule => _schedule ??= Schedule();
+	ScheduleModel get schedule => _schedule ??= ScheduleModel();
 
 	/// The sports data model. 
 	Sports get sports => _sports ??= Sports();

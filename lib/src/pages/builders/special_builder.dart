@@ -4,37 +4,37 @@ import "package:ramaz/data.dart";
 import "package:ramaz/models.dart";
 import "package:ramaz/widgets.dart";
 
-/// A widget to guide the admin in creating a [Special].
+/// A widget to guide the admin in creating a [Schedule].
 /// 
-/// The [Special] doesn't have to be created from scratch, it can be based on
-/// an existing [Special] by passing it as a parameter to [SpecialBuilder()]. 
-class SpecialBuilder extends StatefulWidget {
-	/// Returns the [Special] created by this widget. 
-	static Future<Special?> buildSpecial(
+/// The [Schedule] doesn't have to be created from scratch, it can be based on
+/// an existing schedule by passing it as a parameter to [ScheduleBuilder()]. 
+class ScheduleBuilder extends StatefulWidget {
+	/// Returns the [Schedule] created by this widget. 
+	static Future<Schedule?> buildSpecial(
 		BuildContext context,
-		[Special? preset]
+		[Schedule? preset]
 	) => showDialog(
 		context: context, 
-		builder: (_) => SpecialBuilder(preset),
+		builder: (_) => ScheduleBuilder(preset),
 	);
 
-	/// The [Special] to base this [Special] on.
-	final Special? preset;
+	/// The [Schedule] to base this schedule on.
+	final Schedule? preset;
 
-	/// Creates a widget to guide the user in creating a [Special].
-	const SpecialBuilder([this.preset]);
+	/// Creates a widget to guide the user in creating a schedule.
+	const ScheduleBuilder([this.preset]);
 
 	@override
 	SpecialBuilderState createState() => SpecialBuilderState();
 }
 
-/// A state for a [SpecialBuilder]. 
+/// A state for a [ScheduleBuilder]. 
 /// 
 /// A state is needed to keep the [TextEditingController] from rebuilding. 
-class SpecialBuilderState extends State<SpecialBuilder> {
-	/// A controller to hold the name of the [Special]. 
+class SpecialBuilderState extends State<ScheduleBuilder> {
+	/// A controller to hold the name of the [Schedule]. 
 	/// 
-	/// This will be preset with the name of [SpecialBuilder.preset].
+	/// This will be preset with the name of [ScheduleBuilder.preset].
 	final TextEditingController controller = TextEditingController();
 
 	/// If the name of the schedule conflicts with another one.
@@ -51,9 +51,9 @@ class SpecialBuilderState extends State<SpecialBuilder> {
 	}
 
 	@override 
-	Widget build(BuildContext context) => ModelListener<SpecialBuilderModel>(
-		model: () => SpecialBuilderModel()..usePreset(widget.preset),
-		builder: (_, SpecialBuilderModel model, Widget? cancel) => Scaffold(
+	Widget build(BuildContext context) => ModelListener<ScheduleBuilderModel>(
+		model: () => ScheduleBuilderModel(widget.preset),
+		builder: (_, ScheduleBuilderModel model, Widget? cancel) => Scaffold(
 			appBar: AppBar(
 				title: const Text("Make new schedule"),
 				actions: [
@@ -61,7 +61,7 @@ class SpecialBuilderState extends State<SpecialBuilder> {
 						icon: const Icon(Icons.sync),
 						tooltip: "Use preset",
 						onPressed: () async {
-							final Special? special = await showModalBottomSheet<Special?>(
+							final Schedule? special = await showModalBottomSheet<Schedule?>(
 								context: context,
 								builder: (BuildContext context) => ListView(
 									children: [
@@ -72,20 +72,11 @@ class SpecialBuilderState extends State<SpecialBuilder> {
 												child: Text("Use a preset", textScaleFactor: 1.5),
 											),
 										),
-										for (final Special special in Special.specials) 
+										for (final Schedule schedule in Schedule.schedules) 
 											ListTile(
-												title: Text (special.name),
-												onTap: () => Navigator.of(context).pop(special),
+												title: Text (schedule.name),
+												onTap: () => Navigator.of(context).pop(schedule),
 											),
-										const Divider(),
-										for (
-											final Special special in 
-											// only admins can access this scren
-											Models.instance.user.admin!.specials  
-										) ListTile(
-											title: Text (special.name),
-											onTap: () => Navigator.of(context).pop(special),
-										),
 									]
 								)
 							);
@@ -101,7 +92,7 @@ class SpecialBuilderState extends State<SpecialBuilder> {
 				label: const Text("Save"),
 				icon: const Icon(Icons.done),
 				onPressed: !model.ready ? null : 
-					() => Navigator.of(context).pop(model.special),
+					() => Navigator.of(context).pop(model.schedule),
 				backgroundColor: model.ready
 					? Theme.of(context).accentColor
 					: Theme.of(context).disabledColor,
@@ -114,8 +105,8 @@ class SpecialBuilderState extends State<SpecialBuilder> {
 						child: TextField(
 							controller: controller,
 							onChanged: (String value) {
-								conflicting = Special.specials.any(
-									(Special special) => special.name == value
+								conflicting = Schedule.schedules.any(
+									(Schedule other) => other.name == value
 								);
 								model.name = value;
 							},
@@ -131,47 +122,10 @@ class SpecialBuilderState extends State<SpecialBuilder> {
 						),
 					),
 					const SizedBox(height: 20),
-					ListTile(
-						title: const Text("Homeroom"),
-						trailing: DropdownButton<int>(
-							value: model.homeroom,
-							onChanged: (int? index) => model.homeroom = index,
-							items: [
-								const DropdownMenuItem(
-									value: null,
-									child: Text("None")
-								),
-								for (int index = 0; index < model.numPeriods; index++) 
-									DropdownMenuItem(
-										value: index,
-										child: Text ("${index + 1}"),
-									)
-							]
-						)
-					),
-					ListTile(
-						title: const Text("Mincha"),
-						trailing: DropdownButton<int>(
-							value: model.mincha,
-							onChanged: (int? index) => model.mincha = index,
-							items: [
-								const DropdownMenuItem(
-									value: null,
-									child: Text("None")
-								),
-								for (int index = 0; index < model.numPeriods; index++) 
-									DropdownMenuItem(
-										value: index,
-										child: Text ("${index + 1}"),
-									)
-							]
-						)
-					),
-					const SizedBox(height: 20),
 					for (int index = 0; index < model.numPeriods; index++)
 						PeriodTile(
 							model: model,
-							range: model.times [index],
+							range: model.periods [index].time,
 							index: index,
 						),
 					Row(

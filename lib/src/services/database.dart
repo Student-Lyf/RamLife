@@ -78,6 +78,10 @@ abstract class Database extends Service {
 	/// with [calendarKey].
 	Future<Map<String, dynamic>> getCalendarMonth(int month);
 
+	Future<List<Map>> getSchedules();
+
+	Future<void> saveSchedules(List<Map> schedules);
+
 	/// Changes the calendar in the database. 
 	/// 
 	/// The fact that this method takes a [month] parameter while [calendar] does
@@ -102,12 +106,6 @@ abstract class Database extends Service {
 	/// This function queries the database for a reminder with the same hash and
 	/// deletes it. 
 	Future<void> deleteReminder(String oldHash);
-
-	/// The admin object (or null).
-	Future<Map<String, dynamic>?> get admin;
-
-	/// Sets the admin object for this user.
-	Future<void> setAdmin(Map<String, dynamic> json);
 
 	/// The sports games. 
 	/// 
