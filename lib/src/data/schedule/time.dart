@@ -23,12 +23,12 @@ class Time {
 	/// Returns a new [Time] object from JSON data.
 	/// 
 	/// The json must have `hour` and `minutes` fields that map to integers.
-	Time.fromJson(Map<String, dynamic> json) :
+	Time.fromJson(Map json) :
 		hour = json ["hour"],
 		minutes = json ["minutes"];
 
 	/// Returns this obect in JSON form
-	Map<String, dynamic> toJson() => {
+	Map toJson() => {
 		"hour": hour, 
 		"minutes": minutes,
 	};
@@ -87,12 +87,12 @@ class Range {
 	/// The json must have `start` and `end` fields 
 	/// that map to [Time] JSON objects.
 	/// See [Time.fromJson] for more details.
-	Range.fromJson(Map<String, dynamic> json) :
-		start = Time.fromJson(Map<String, dynamic>.from(json ["start"])),
-		end = Time.fromJson(Map<String, dynamic>.from(json ["end"]));
+	Range.fromJson(Map json) :
+		start = Time.fromJson(Map.from(json ["start"])),
+		end = Time.fromJson(Map.from(json ["end"]));
 
 	/// Returns a JSON representation of this range. 
-	Map<String, dynamic> toJson() => {
+	Map toJson() => {
 		"start": start.toJson(),
 		"end": end.toJson(),
 	};

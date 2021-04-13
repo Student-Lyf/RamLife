@@ -93,7 +93,7 @@ class Schedule {
 		"name": name,
 		"periods": [
 			for (final Period period in periods) 
-				period.toJson,
+				period.toJson(),
 		],
 	};
 

@@ -23,7 +23,7 @@ class PeriodReminderTime extends ReminderTime {
 	/// 
 	/// `json ["period"]` should be a valid period for that day,
 	/// notwithstanding any schedule changes (like an "early dismissal").
-	PeriodReminderTime.fromJson(Map<String, dynamic> json) :
+	PeriodReminderTime.fromJson(Map json) :
 		dayName = json ["dayName"],
 		period = json ["period"],
 		super (repeats: json ["repeats"], type: ReminderTimeType.period);
@@ -33,7 +33,7 @@ class PeriodReminderTime extends ReminderTime {
 		"${repeats ? 'Repeats every ' : ''}$dayName-$period";
 
 	@override 
-	Map<String, dynamic> toJson() => {
+	Map toJson() => {
 		"dayName": dayName,
 		"period": period,
 		"repeats": repeats,

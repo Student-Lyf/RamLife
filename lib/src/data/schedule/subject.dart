@@ -14,9 +14,9 @@ class Subject {
 	/// corresponding [Subject] instances.
 	/// See [Subject.fromJson] for more details. 
 	static Map<String, Subject> getSubjects(
-		Map<String, Map<String, dynamic>> data
+		Map<String, Map> data
 	) => data.map (
-		(String id, Map<String, dynamic> json) => MapEntry (
+		(String id, Map json) => MapEntry (
 			id,
 			Subject.fromJson(json)
 		)
@@ -37,7 +37,7 @@ class Subject {
 	/// Returns a [Subject] instance from a JSON object. 
 	/// 
 	/// The JSON map must have a `teacher` and `name` field.
-	Subject.fromJson(Map<String, dynamic> json) :
+	Subject.fromJson(Map json) :
 		name = json ["name"], 
 		teacher = json ["teacher"];
 

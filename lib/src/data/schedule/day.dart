@@ -73,7 +73,7 @@ class Day {
 		other.schedule == schedule;
 
 	/// Returns a JSON representation of this Day. 
-	Map<String, dynamic> toJson() => {
+	Map toJson() => {
 		"name": name,
 		"schedule": schedule.name,
 	};

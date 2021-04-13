@@ -14,7 +14,7 @@ class SubjectReminderTime extends ReminderTime {
 	/// Returns a new [SubjectReminderTime] from a JSON object.
 	/// 
 	/// The fields `repeats` and `name` must not be null.
-	SubjectReminderTime.fromJson(Map<String, dynamic> json) :
+	SubjectReminderTime.fromJson(Map json) :
 		name = json ["name"],
 		super (repeats: json ["repeats"], type: ReminderTimeType.subject);
 
@@ -22,7 +22,7 @@ class SubjectReminderTime extends ReminderTime {
 	String toString() => (repeats ? "Repeats every " : "") + name;
 
 	@override 
-	Map<String, dynamic> toJson() => {
+	Map toJson() => {
 		"name": name,
 		"repeats": repeats,
 		"type": reminderTimeToString [type],
