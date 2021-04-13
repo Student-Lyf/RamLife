@@ -61,7 +61,7 @@ abstract class ReminderTime {
 	/// 	"name": "Monday",
 	/// }
 	/// ```
-	factory ReminderTime.fromJson(Map<String, dynamic> json) {
+	factory ReminderTime.fromJson(Map json) {
 		switch (stringToReminderTime [json ["type"]]) {
 			case ReminderTimeType.period: return PeriodReminderTime.fromJson(json);
 			case ReminderTimeType.subject: return SubjectReminderTime.fromJson(json);
@@ -96,7 +96,7 @@ abstract class ReminderTime {
 	}
 
 	/// Returns this [ReminderTime] as JSON.
-	Map<String, dynamic> toJson();
+	Map toJson();
 
 	/// Checks if the reminder should be displayed.
 	/// 

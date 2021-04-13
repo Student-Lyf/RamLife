@@ -24,13 +24,13 @@ class GradeActivity {
 	});
 
 	/// Creates a container for activities from a JSON object.
-	GradeActivity.fromJson(Map<String, dynamic> json) : 
-		freshmen = Activity.fromJson(Map<String, dynamic>.from(json ["freshmen"])),
+	GradeActivity.fromJson(Map json) : 
+		freshmen = Activity.fromJson(Map.from(json ["freshmen"])),
 		sophomores = Activity.fromJson(
-			Map<String, dynamic>.from(json ["sophomores"])
+			Map.from(json ["sophomores"])
 		),
-		juniors = Activity.fromJson(Map<String, dynamic>.from(json ["juniors"])),
-		seniors = Activity.fromJson(Map<String, dynamic>.from(json ["seniors"]));
+		juniors = Activity.fromJson(Map.from(json ["juniors"])),
+		seniors = Activity.fromJson(Map.from(json ["seniors"]));
 
 	@override 
 	String toString() => 
@@ -93,11 +93,11 @@ String activityTypeToString(ActivityType type) {
 @immutable
 class Activity {
 	/// Parses a JSON map of Activities still in JSON.
-	static Map<String, Activity> getActivities(Map<String, dynamic> json) {
+	static Map<String, Activity> getActivities(Map json) {
 		final Map<String, Activity> result = {};
-		for (final MapEntry<String, dynamic> entry in json.entries) {
+		for (final MapEntry entry in json.entries) {
 			result [entry.key] = Activity.fromJson(
-				Map<String, dynamic>.from(entry.value)
+				Map.from(entry.value)
 			);
 		}
 		return result;
@@ -124,9 +124,9 @@ class Activity {
 		type = ActivityType.grade;
 
 	/// Creates an activity from a JSON object.
-	factory Activity.fromJson(Map<String, dynamic> json) => json ["message"] is Map
+	factory Activity.fromJson(Map json) => json ["message"] is Map
 		? Activity.grade(
-			GradeActivity.fromJson(Map<String, dynamic>.from(json ["message"]))
+			GradeActivity.fromJson(Map.from(json ["message"]))
 		)
 		: Activity(
 			type: parseActivityType(json ["type"]),

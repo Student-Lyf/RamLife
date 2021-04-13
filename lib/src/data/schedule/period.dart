@@ -19,7 +19,7 @@ class PeriodData {
 	static List<PeriodData?> getList(List json) => [
 		for (final dynamic periodJson in json)
 			periodJson == null ? null : 
-				PeriodData.fromJson(Map<String, dynamic>.from(periodJson))
+				PeriodData.fromJson(Map.from(periodJson))
 	];
 
 	/// The room the student needs to be in for this period.
@@ -41,7 +41,7 @@ class PeriodData {
 	/// Returns a [PeriodData] from a JSON object.
 	/// 
 	/// Both `json ["room"]` and `json ["id"]` must be non-null.
-	factory PeriodData.fromJson(Map<String, dynamic> json) => PeriodData(
+	factory PeriodData.fromJson(Map json) => PeriodData(
 		room: json ["room"],
 		id: json ["id"]
 	);

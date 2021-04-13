@@ -30,7 +30,7 @@ class Feedback {
 		name = anonymous ? null : name;
 
 	/// A JSON representation of this feedback.
-	Map<String, dynamic> toJson() => {
+	Map toJson() => {
 		"message": message,
 		"email": email,
 		"name": name,

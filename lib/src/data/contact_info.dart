@@ -25,7 +25,7 @@ class ContactInfo {
 	});
 
 	/// Creates a contact from JSON. 
-	ContactInfo.fromJson(Map<String, dynamic> json) : 
+	ContactInfo.fromJson(Map json) : 
 		name = json ["name"],
 		email = json ["email"],
 		phoneNumber = json ["phoneNumber"];

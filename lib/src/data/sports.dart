@@ -78,7 +78,7 @@ class Scores {
 	/// - an "isHome" field, which should be a bool. See [isHome].
 	/// - an "otherScore" field, which should be an integer. See [otherScore].
 	/// - a "ramazScore" field, which should be an integer. See [ramazScore]. 
-  Scores.fromJson(Map<String, dynamic> json) : 
+  Scores.fromJson(Map json) : 
   	isHome = json ["isHome"],
   	ramazScore = json ["ramaz"],
   	otherScore = json ["other"];
@@ -87,7 +87,7 @@ class Scores {
 	/// 
 	/// Passing the result of this function to [Scores.fromJson()] should
 	/// return an equivalent object. 
-  Map<String, dynamic> toJson() => {
+  Map toJson() => {
   	"isHome": isHome,
   	"ramaz": ramazScore,
   	"other": otherScore,
@@ -120,15 +120,15 @@ class SportsGame {
 	/// Converts a list of JSON entries into a list of [SportsGame]s. 
 	/// 
 	/// This method is needed since it casts each `dynamic` entry to a
-	/// `Map<String, dynamic>`, and then passes those values to 
+	/// `Map`, and then passes those values to 
 	/// [SportsGame.fromJson].
-	static List<SportsGame> fromList(List<Map<String, dynamic>> listJson) => [
-		for (final Map<String, dynamic> json in listJson) 
+	static List<SportsGame> fromList(List<Map> listJson) => [
+		for (final Map json in listJson) 
 			SportsGame.fromJson(json)
 	];
 
 	/// Converts a list of [SportsGame]s into a list of JSON entries. 
-	static List<Map<String, dynamic>> getJsonList(List<SportsGame> games) => [
+	static List<Map> getJsonList(List<SportsGame> games) => [
 		for (final SportsGame game in games) 
 			game.toJson()
 	];
@@ -186,7 +186,7 @@ class SportsGame {
 	/// - a "home" field (bool)
 	/// - an "opponent" field (String)
 	/// - a "scores" field. See [Scores.fromJson] for format.
-	SportsGame.fromJson(Map<String, dynamic> json) :
+	SportsGame.fromJson(Map json) :
 		sport = stringToSport [json ["sport"]]!,
 		date = DateTime.parse(json ["date"]),
 		times = Range.fromJson(json ["times"]),
@@ -194,7 +194,7 @@ class SportsGame {
 		isHome = json ["isHome"],
 		opponent = json ["opponent"],
 		scores = json ["scores"] == null ? null : Scores.fromJson(
-			Map<String, dynamic>.from(json ["scores"])
+			Map.from(json ["scores"])
 		);
 
 	// Specifically not including scores, since this can be used 
@@ -215,7 +215,7 @@ class SportsGame {
 	/// 
 	/// Passing the result of this function to [SportsGame.fromJson()] should
 	/// return an equivalent object. 
-	Map<String, dynamic> toJson() => {
+	Map toJson() => {
 		"sport": sportToString [sport],
 		"date": date.toString(),
 		"times": times.toJson(),

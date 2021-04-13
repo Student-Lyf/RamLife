@@ -21,7 +21,7 @@ class Advisory {
 	/// Creates an advisory object from JSON. 
 	/// 
 	/// This JSON can be null, so this constructor should only be called if needed.
-	Advisory.fromJson(Map<String, dynamic> json) :
+	Advisory.fromJson(Map json) :
 		id = json ["id"],
 		room = json ["room"];
 }

@@ -32,7 +32,7 @@ class Reminder {
 	/// Calls [Reminder.fromJson] for every JSON object in the list.
 	static List<Reminder> fromList(List reminders) => [
 		for (final dynamic json in reminders)
-			Reminder.fromJson(Map<String, dynamic>.from(json))
+			Reminder.fromJson(Map.from(json))
 	];
 
 	/// The message this reminder should show. 
@@ -53,12 +53,12 @@ class Reminder {
 	/// to [ReminderTime.fromJson]
 	Reminder.fromJson(dynamic json) :
 		message = json ["message"],
-		time = ReminderTime.fromJson(Map<String, dynamic>.from(json ["time"]));
+		time = ReminderTime.fromJson(Map.from(json ["time"]));
 
 	@override String toString() => "$message ($time)";
 
 	/// Returns a JSON representation of this reminder.
-	Map<String, dynamic> toJson() => {
+	Map toJson() => {
 		"message": message,
 		"time": time.toJson(),
 		"hash": hash, 
