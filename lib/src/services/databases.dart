@@ -41,7 +41,7 @@ class Databases extends Database {
 		await updateCalendar();
 		// await updateSports();
 
-		final List<Map<String, dynamic>> cloudReminders = 
+		final List<Map> cloudReminders = 
 			await cloudDatabase.reminders;
 		for (int index = 0; index < cloudReminders.length; index++) {
 			await localDatabase.updateReminder(index.toString(), cloudReminders [index]);
@@ -74,11 +74,11 @@ class Databases extends Database {
 	}
 
 	@override
-	Future<Map<String, dynamic>> get user => localDatabase.user;
+	Future<Map> get user => localDatabase.user;
 
 	// Cannot modify user profile. 
 	@override
-	Future<void> setUser(Map<String, dynamic> json) async {} 
+	Future<void> setUser(Map json) async {} 
 
 	/// Do not use this function. Use [getSections instead]. 
 	/// 
@@ -88,16 +88,16 @@ class Databases extends Database {
 	/// this function is left blank and [getSections] uses other 
 	/// [Database.getSections] to work.
 	@override
-	Future<Map<String, dynamic>> getSection(String id) async => {};
+	Future<Map> getSection(String id) async => {};
 
 	/// Gets section data. 
 	/// 
 	/// Checks the local database, and downloads it if the data is unavailable.
 	@override
-	Future<Map<String, Map<String, dynamic>>> getSections(
+	Future<Map<String, Map>> getSections(
 		Iterable<String> ids
 	) async {
-		Map<String, Map<String, dynamic>>? result = 
+		Map<String, Map>? result = 
 			await localDatabase.getSections(ids);
 		if (result == null) {
 			result = (await cloudDatabase.getSections(ids))!;
@@ -108,10 +108,10 @@ class Databases extends Database {
 
 	// Cannot modify sections
 	@override
-	Future<void> setSections(Map<String, Map<String, dynamic>> json) async {}
+	Future<void> setSections(Map<String, Map> json) async {}
 
 	@override
-	Future<Map<String, dynamic>> getCalendarMonth(int month) => 
+	Future<Map> getCalendarMonth(int month) => 
 		localDatabase.getCalendarMonth(month);
 
 	@override
@@ -124,16 +124,16 @@ class Databases extends Database {
 	}
 
 	@override
-	Future<void> setCalendar(int month, Map<String, dynamic> json) async {
+	Future<void> setCalendar(int month, Map json) async {
 		await cloudDatabase.setCalendar(month, json);
 		await localDatabase.setCalendar(month, json);
 	}
 
 	@override
-	Future<List<Map<String, dynamic>>> get reminders => localDatabase.reminders;
+	Future<List<Map>> get reminders => localDatabase.reminders;
 
 	@override
-	Future<void> updateReminder(dynamic oldHash, Map<String, dynamic> json) async {
+	Future<void> updateReminder(dynamic oldHash, Map json) async {
 		await cloudDatabase.updateReminder(oldHash, json);
 		await localDatabase.updateReminder(oldHash, json);
 	}
@@ -145,10 +145,10 @@ class Databases extends Database {
 	}
 
 	@override
-	Future<List<Map<String, dynamic>>> get sports => localDatabase.sports;
+	Future<List<Map>> get sports => localDatabase.sports;
 
 	@override
-	Future<void> setSports(List<Map<String, dynamic>> json) async {
+	Future<void> setSports(List<Map> json) async {
 		await cloudDatabase.setSports(json);
 		await localDatabase.setSports(json);
 	}

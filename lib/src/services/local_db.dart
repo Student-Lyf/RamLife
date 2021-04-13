@@ -22,10 +22,10 @@ extension on idb.ObjectStore {
 	/// Gets the data at the key in this object store. 
 	/// 
 	/// This extension provides type safety. 
-	Future<Map<String, dynamic>?> get(Object key) async {
+	Future<Map?> get(Object key) async {
 		final dynamic result = await getObject(key);
 		return result == null ? null : 
-			Map<String, dynamic>.from(result); 
+			Map.from(result); 
 	}
 }
 
@@ -34,17 +34,17 @@ extension on idb.Database {
 	/// Gets data at a key in an object store. 
 	/// 
 	/// This code handles transactions so other code doesn't have to. 
-	Future<Map<String, dynamic>?> get(String storeName, Object key) => 
+	Future<Map?> get(String storeName, Object key) => 
 		transaction(storeName, idb.idbModeReadOnly)
 		.objectStore(storeName)
 		.get(key);
 
-	Future<Map<String, dynamic>> throwIfNull({
+	Future<Map> throwIfNull({
 		required String storeName, 
 		required Object key, 
 		required String message,
 	}) async {
-		final Map<String, dynamic>? result = await get(storeName, key);
+		final Map? result = await get(storeName, key);
 		if (result == null) {
 			throw StateError(message);
 		} else {
@@ -78,12 +78,12 @@ extension on idb.Database {
 	/// 
 	/// Also provides strong type safety on those values, treating them like JSON 
 	/// objects. This code handles transactions so other code doesn't have to. 
-	Future<List<Map<String, dynamic>>> getAll(String storeName) async => [
+	Future<List<Map>> getAll(String storeName) async => [
 		for (
 			final dynamic entry in 
 			await transaction(storeName, idb.idbModeReadOnly)
 				.objectStore(storeName).getAll()
-		)	Map<String, dynamic>.from(entry)
+		)	Map.from(entry)
 	];
 
 	/// Finds an entry in an object store by a field and value. 
@@ -217,38 +217,38 @@ class LocalDatabase extends Database {
 	}
 
 	@override
-	Future<Map<String, dynamic>> get user => database.throwIfNull(
+	Future<Map> get user => database.throwIfNull(
 		storeName: userStoreName, 
 		key: Auth.email!, 
 		message: "User has not been signed in"
 	);
 
 	@override
-	Future<void> setUser(Map<String, dynamic> json) => 
+	Future<void> setUser(Map json) => 
 		database.add(userStoreName, json);
 
 	@override
-	Future<Map<String, dynamic>> getSection(String id) => database.throwIfNull(
+	Future<Map> getSection(String id) => database.throwIfNull(
 		storeName: sectionStoreName, 
 		key: id,
 		message: "Section $id is not recognized",
 	);
 
 	@override
-	Future<Map<String, Map<String, dynamic>>?> getSections(
+	Future<Map<String, Map>?> getSections(
 		Iterable<String> ids
 	) async => await database.objectCount(sectionStoreName) == 0 ? null 
 		: super.getSections(ids);
 
 	@override
-	Future<void> setSections(Map<String, Map<String, dynamic>> json) async {
-		for (final Map<String, dynamic> entry in json.values) {
+	Future<void> setSections(Map<String, Map> json) async {
+		for (final Map entry in json.values) {
 			await database.add(sectionStoreName, entry);
 		}
 	} 
 
 	@override
-	Future<Map<String, dynamic>> getCalendarMonth(int month) => 
+	Future<Map> getCalendarMonth(int month) => 
 		database.throwIfNull(
 			storeName: calendarStoreName, 
 			key: month, 
@@ -266,15 +266,15 @@ class LocalDatabase extends Database {
 	}
 
 	@override
-	Future<void> setCalendar(int month, Map<String, dynamic> json) =>
+	Future<void> setCalendar(int month, Map json) =>
 		database.update(calendarStoreName, json);
 
 	@override
-	Future<List<Map<String, dynamic>>> get reminders => 
+	Future<List<Map>> get reminders => 
 		database.getAll(reminderStoreName);
 
 	@override
-	Future<void> updateReminder(String? oldHash, Map<String, dynamic> json) async {
+	Future<void> updateReminder(String? oldHash, Map json) async {
 		final idb.CursorWithValue? cursor = await database.findEntry(
 			storeName: reminderStoreName, 
 			key: oldHash, 
@@ -296,12 +296,12 @@ class LocalDatabase extends Database {
 	)?.delete();
 
 	@override
-	Future<List<Map<String, dynamic>>> get sports => 
+	Future<List<Map>> get sports => 
 		database.getAll(sportsStoreName);
 
 	@override
-	Future<void> setSports(List<Map<String, dynamic>> json) async {
-		for (final Map<String, dynamic> entry in json) {
+	Future<void> setSports(List<Map> json) async {
+		for (final Map entry in json) {
 			await database.update(sportsStoreName, entry);
 		}
 	}
