@@ -5,9 +5,9 @@ import "package:ramaz/models.dart";
 
 /// A view model for the schedule page. 
 // ignore: prefer_mixin
-class ScheduleModel with ChangeNotifier {
-	/// The default [Special] for the UI.
-	static const Special defaultSpecial = Special.covid;
+class ScheduleViewModel with ChangeNotifier {
+	/// The default [Schedule] for the UI.
+	static Schedule get defaultSpecial => Schedule.schedules.first;
 
 	/// The default [Day] for the UI.
 	late Day defaultDay;
@@ -15,7 +15,7 @@ class ScheduleModel with ChangeNotifier {
 	/// The schedule data model.
 	/// 
 	/// Used to retrieve the schedule for a given day.
-	final Schedule schedule;
+	final ScheduleModel dataModel;
 
 	/// The day whose schedule is being shown in the UI.
 	late Day day;
@@ -31,12 +31,12 @@ class ScheduleModel with ChangeNotifier {
 	/// Also initializes the default day shown to the user. 
 	/// If today is a school day, then use that. Otherwise, use the 
 	/// defaults (see [defaultSpecial]).
-	ScheduleModel () : schedule = Models.instance.schedule {
+	ScheduleViewModel () : dataModel = Models.instance.schedule {
 		defaultDay = Day(
-			name: schedule.user.schedule.keys.first, 
-			special: defaultSpecial
+			name: Models.instance.user.data.schedule.keys.first, 
+			schedule: defaultSpecial
 		);
-		day = schedule.today ?? defaultDay;
+		day = dataModel.today ?? defaultDay;
 	}
 
 	/// Attempts to set the UI to the schedule of the given day. 
@@ -49,7 +49,7 @@ class ScheduleModel with ChangeNotifier {
 			date.month,
 			date.day
 		);
-		final Day? selected = Day.getDate(schedule.calendar, justDate);
+		final Day? selected = Day.getDate(dataModel.calendar, justDate);
 		if (selected == null) {
 			throw Exception("No School");
 		}
@@ -66,19 +66,19 @@ class ScheduleModel with ChangeNotifier {
 	/// If the dayName is non-null, the special defaults to [defaultSpecial].
 	void update({
 		String? newName, 
-		Special? newSpecial, 
+		Schedule? newSpecial, 
 		void Function()? onInvalidSchedule,
 	}) {
 		final String name = newName ?? day.name;
-		final Special special = newSpecial ?? day.special;
-		day = Day(name: name, special: special);
+		final Schedule schedule = newSpecial ?? day.schedule;
+		day = Day(name: name, schedule: schedule);
 		notifyListeners();
 		try {
 			// Just to see if the computation is possible. 
 			// TODO: Move the logic from ClassList here. 
 			Models.instance.schedule.user.getPeriods(day);
 		} on RangeError { // ignore: avoid_catching_errors
-			day = Day(name: day.name, special: defaultSpecial);
+			day = Day(name: day.name, schedule: defaultSpecial);
 			if (onInvalidSchedule != null) {
 				onInvalidSchedule();
 			}

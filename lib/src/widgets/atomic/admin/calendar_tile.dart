@@ -37,7 +37,7 @@ class CalendarTile extends StatelessWidget{
 							Expanded(child: Text("No school", textScaleFactor: textSize))
 						else ...[
 							Expanded(child: Text (day!.name, textScaleFactor: textSize)),
-							Expanded(child: Text (day!.special.name, textScaleFactor: 0.8)),
+							Expanded(child: Text (day!.schedule.name, textScaleFactor: 0.8)),
 						],
 						const Spacer(),
 					]

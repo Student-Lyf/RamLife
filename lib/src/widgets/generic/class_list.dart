@@ -134,11 +134,11 @@ class ClassList extends StatelessWidget {
 				if (period.id != null) 
 					"ID: ${period.id}",
 			],
-			title: int.tryParse(period.period) == null 
+			title: int.tryParse(period.name) == null 
 				? period.getName(subject)
-				: "${period.period}: ${period.getName(subject)}",
+				: "${period.name}: ${period.getName(subject)}",
 			reminders: Models.instance.reminders.getReminders(
-				period: period.period,
+				period: period.name,
 				dayName: day.name,
 				subject: subject?.name,
 			),

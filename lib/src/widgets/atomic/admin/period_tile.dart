@@ -4,10 +4,10 @@ import "package:ramaz/constants.dart";
 import "package:ramaz/data.dart";
 import "package:ramaz/models.dart";
 
-/// A widget to represent a [Period] when creating a [Special].
+/// A widget to represent a [Period] when creating a [Schedule].
 class PeriodTile extends StatelessWidget {
 	/// The view model to decide the properties of this period. 
-	final SpecialBuilderModel model;
+	final ScheduleBuilderModel model;
 
 	/// The times for this period. 
 	final Range range;
@@ -18,19 +18,15 @@ class PeriodTile extends StatelessWidget {
 	/// The [Activity] for this period. 
 	final Activity? activity;
 
-	/// Whether this period is skipped. 
-	final bool skipped;
-
-	/// The index of this period in [SpecialBuilderModel.times].
+	/// The index of this period in [ScheduleBuilderModel.periods].
 	final int index;
 
-	/// Creates a widget to edit a period in a [Special].
+	/// Creates a widget to edit a period in a [Schedule].
 	PeriodTile({
 		required this.model,
 		required this.range,
 		required this.index,
 	}) : 
-		skipped = model.skips.contains(index),
 		activity = null,
 		start = range.start.asTimeOfDay,
 		end = range.end.asTimeOfDay;
@@ -40,22 +36,8 @@ class PeriodTile extends StatelessWidget {
 		height: 55,
 		child: Stack (
 			children: [
-				if (skipped) Center(
-					child: Container(
-						height: 5,
-						color: Colors.black,	
-					),
-				),
 				ListTile(
-					subtitle: Text(model.periods [index]),
-					leading: IconButton(
-						icon: Icon(
-							model.skips.contains(index) 
-								? Icons.add_circle_outline 
-								: Icons.remove_circle_outline
-						),
-						onPressed: () => model.toggleSkip(index),
-					),
+					subtitle: Text(model.periods [index].name),
 					title: Text.rich(
 						TextSpan(
 							children: [

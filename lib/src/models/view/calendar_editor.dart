@@ -52,7 +52,13 @@ class CalendarEditor with ChangeNotifier {
 		.instance.database.cloudDatabase.getCalendarStream(month + 1)
 		.listen(
 			(List<Map<String, dynamic>?> cal) {
-				calendar [month] = layoutMonth(Day.getMonth(cal), month);
+				calendar [month] = layoutMonth(
+					[
+						for (final Map? day in cal)
+							day == null ? null : Day.fromJson(day),
+					], 
+					month
+				);
 				notifyListeners();
 			}
 		);
@@ -104,11 +110,11 @@ class CalendarEditor with ChangeNotifier {
 		await Services.instance.database.setCalendar(
 			date.month, 
 			{
-				"calendar": Day.monthToJson([
+				"calendar": [
 					for (final CalendarDay? day in calendar [date.month - 1]!)
 						if (day != null)
-							day.schoolDay,
-				]),
+							day.schoolDay?.toJson(),
+				],
 				"month": date.month
 			}
 		);

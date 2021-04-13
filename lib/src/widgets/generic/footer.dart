@@ -16,12 +16,12 @@ class Footer extends StatelessWidget {
 	static const double textScale = 1.25;
 
 	@override 
-	Widget build (BuildContext context) => ModelListener<Schedule>(
+	Widget build (BuildContext context) => ModelListener<ScheduleModel>(
 		model: () => Models.instance.schedule,
 		dispose: false,
 		// ignore: sort_child_properties_last
 		child: Container(height: 0, width: 0),
-		builder: (_, Schedule schedule, Widget? blank) =>
+		builder: (_, ScheduleModel schedule, Widget? blank) =>
 			schedule.nextPeriod == null ? blank! : BottomSheet (
 				enableDrag: false,
 				onClosing: () {},

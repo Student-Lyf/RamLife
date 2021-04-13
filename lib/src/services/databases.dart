@@ -1,4 +1,3 @@
-import "auth.dart";
 import "cloud_db.dart";
 import "database.dart";
 import "local_db.dart";
@@ -47,20 +46,16 @@ class Databases extends Database {
 		for (int index = 0; index < cloudReminders.length; index++) {
 			await localDatabase.updateReminder(index.toString(), cloudReminders [index]);
 		}
-
-		if (await Auth.isAdmin) {
-			await localDatabase.setAdmin(await cloudDatabase.admin);
-		}
 	}
 
 	/// Downloads the calendar and saves it to the local database.
 	Future<void> updateCalendar() async {
 		for (int month = 1; month <= 12; month++) {
 			await localDatabase.setCalendar(
-				month, 
-				await cloudDatabase.getCalendarMonth(month)
+				month, await cloudDatabase.getCalendarMonth(month)
 			);
 		}
+		await localDatabase.saveSchedules(await cloudDatabase.getSchedules());
 	}
 
 	/// Downloads sports games and saves them to the local database.
@@ -120,6 +115,15 @@ class Databases extends Database {
 		localDatabase.getCalendarMonth(month);
 
 	@override
+	Future<List<Map>> getSchedules() => localDatabase.getSchedules();
+
+	@override
+	Future<void> saveSchedules(List<Map> schedules) async {
+		await cloudDatabase.saveSchedules(schedules);
+		await localDatabase.saveSchedules(schedules);
+	}
+
+	@override
 	Future<void> setCalendar(int month, Map<String, dynamic> json) async {
 		await cloudDatabase.setCalendar(month, json);
 		await localDatabase.setCalendar(month, json);
@@ -139,16 +143,6 @@ class Databases extends Database {
 		await cloudDatabase.deleteReminder(oldHash);
 		await localDatabase.deleteReminder(oldHash);
 	}
-
-	@override
-	Future<Map<String, dynamic>> get admin => localDatabase.admin;
-
-	@override
-	Future<void> setAdmin(Map<String, dynamic> json) async {
-		await cloudDatabase.setAdmin(json);
-		await localDatabase.setAdmin(json);
-	}
-
 
 	@override
 	Future<List<Map<String, dynamic>>> get sports => localDatabase.sports;

@@ -1,56 +1,55 @@
 import "package:flutter/material.dart";
 
+import "package:ramaz/data.dart";
 import "package:ramaz/models.dart";
 import "package:ramaz/pages.dart";
 import "package:ramaz/widgets.dart";
 
 /// A page to show the admin's custom specials. 
 class AdminSpecialsPage extends StatelessWidget {
-	UserModel get model => Models.instance.user;
 
 	const AdminSpecialsPage();
 
 	// If the user is on this page, they are an admin.
 	// So, model.admin != null
 	@override
-	Widget build(BuildContext context) => ModelListener<UserModel>(
-		model: () => model,
-		dispose: false,
-		builder: (_, UserModel model, __) => ResponsiveScaffold(
+	Widget build(BuildContext context) => ModelListener(
+		model: () => AdminScheduleModel(),
+		builder: (_, AdminScheduleModel model, __) => ResponsiveScaffold(
 			appBar: AppBar(title: const Text("Custom schedules")),
 			drawer: const NavigationDrawer(),
 			floatingActionButton: FloatingActionButton(
-				onPressed: () async => model.addSpecialToAdmin(
-					await SpecialBuilder.buildSpecial(context),
-				),
+				onPressed: () async {
+					final Schedule? schedule = await ScheduleBuilder.buildSpecial(context);
+					if (schedule == null) {
+						return;
+					}
+					await model.createSchedule(schedule);
+				},
 				child: const Icon(Icons.add),
 			),
 			bodyBuilder: (_) => Padding(
 				padding: const EdgeInsets.all(20), 
-				child: model.admin!.specials.isEmpty
+				child: model.schedules.isEmpty
 					? const Center (
 						child: Text (
-							"You don't have any schedules yet, but you can make one!",
+							"There are no schedules yet. Feel free to add one.",
 							textScaleFactor: 1.5,
 							textAlign: TextAlign.center,
 						)
 					)
 					: ListView(
 						children: [
-							for (int index = 0; index < model.admin!.specials.length; index++)
+							for (final Schedule schedule in model.schedules)
 								ListTile(
-									title: Text (model.admin!.specials [index].name),
-									trailing: IconButton(
-										icon: const Icon(Icons.remove_circle),
-										onPressed: () => model.removeSpecialFromAdmin(index),
-									),
-									onTap: () async => model.replaceAdminSpecial(
-										index, 
-										await SpecialBuilder.buildSpecial(
-											context, 
-											model.admin!.specials [index]
-										),
-									)
+									title: Text(schedule.name),
+									onTap: () async {
+										final Schedule? newSchedule = 
+											await ScheduleBuilder.buildSpecial(context, schedule);
+										if (newSchedule != null) {
+											await model.createSchedule(newSchedule);
+										}
+									},
 								)
 						]
 				)

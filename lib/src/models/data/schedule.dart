@@ -8,7 +8,7 @@ import "model.dart";
 import "reminders.dart";
 
 /// A data model for the user's schedule.
-class Schedule extends Model {
+class ScheduleModel extends Model {
 	/// The current date.
 	/// 
 	/// This helps track when the day has changed. 
@@ -61,6 +61,10 @@ class Schedule extends Model {
 
 	/// Initializes the calendar. 
 	Future<void> initCalendar() async {
+		Schedule.schedules = [
+			for (final Map json in await Services.instance.database.getSchedules())
+				Schedule.fromJson(json)
+		];
 		calendar = Day.getCalendar(await Services.instance.database.calendar);
 		setToday();
 		notifyListeners();
@@ -127,7 +131,7 @@ class Schedule extends Model {
 		}
 
 		// So we have school today...
-		final int? newIndex = today?.period;
+		final int? newIndex = today?.getCurrentPeriod();
 
 		// Maybe the day changed
 		if (newIndex != null && newIndex == periodIndex) {
@@ -161,12 +165,12 @@ class Schedule extends Model {
 	void updateReminders({bool scheduleNotifications = false}) {
 		reminders
 			..currentReminders = reminders.getReminders(
-				period: period?.period,
+				period: period?.name,
 				subject: subjects [period?.id]?.name,
 				dayName: today?.name,
 			)
 			..nextReminders = reminders.getReminders(
-				period: nextPeriod?.period,
+				period: nextPeriod?.name,
 				subject: subjects [nextPeriod?.id]?.name,
 				dayName: today?.name,
 			);
@@ -196,7 +200,7 @@ class Schedule extends Model {
 		for (int index = periodIndex!; index < periods!.length; index++) {
 			final Period period = periods! [index];
 			for (final int reminderIndex in reminders.getReminders(
-				period: period.period,
+				period: period.name,
 				subject: subjects [period.id]?.name,
 				dayName: today?.name,
 			)) {

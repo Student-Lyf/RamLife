@@ -16,7 +16,7 @@ import "package:ramaz/services.dart";
 /// have an up-to-date instance. 
 // ignore: prefer_mixin
 class HomeModel with ChangeNotifier {
-	/// Listens to [Schedule] (and by extension, [Reminders]) and [Sports].
+	/// Listens to [ScheduleModel] (and by extension, [Reminders]) and [Sports].
 	HomeModel() {
 		Models.instance.schedule.addListener(notifyListeners);
 		Models.instance.sports.addListener(notifyListeners);
