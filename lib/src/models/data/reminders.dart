@@ -31,10 +31,7 @@ class Reminders extends Model {
 	@override
 	Future<void> init() async {
 		reminders = [
-			for (
-				final Map<String, dynamic> json in 
-				await Services.instance.database.reminders
-			)
+			for (final Map json in await Services.instance.database.reminders)
 				Reminder.fromJson(json)
 		];
 	}
