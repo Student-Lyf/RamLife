@@ -51,7 +51,7 @@ class CalendarEditor with ChangeNotifier {
 	void loadMonth(int month) => subscriptions [month] ??= Services
 		.instance.database.cloudDatabase.getCalendarStream(month + 1)
 		.listen(
-			(List<Map<String, dynamic>?> cal) {
+			(List<Map?> cal) {
 				calendar [month] = layoutMonth(
 					[
 						for (final Map? day in cal)
