@@ -6,6 +6,39 @@ import "schedule/day.dart";
 import "schedule/period.dart";
 import "schedule/time.dart";
 
+/// Scopes for administrative privileges.
+/// 
+/// Admin users use these scopes to determine what they can read/write.
+enum AdminScope {
+	/// The admin can access and modify the calendar.
+	calendar, 
+
+	/// The admin can access and modify student schedules.
+	schedule,
+
+	/// The admin can create and update sports games.
+	sports,
+}
+
+/// Maps Strings to [AdminScope]s. 
+AdminScope parseAdminScope(String scope) {
+	switch (scope) {
+		case "calendar": return AdminScope.calendar;
+		case "schedule": return AdminScope.schedule;
+		case "sports": return AdminScope.sports;
+		default: throw ArgumentError("Invalid admin scope: $scope");
+	}
+}
+
+/// Maps [AdminScope]s to Strings. 
+String adminScopeToString(AdminScope scope) {
+	switch (scope) {
+		case AdminScope.calendar: return "calendar";
+		case AdminScope.schedule: return "schedule";
+		case AdminScope.sports: return "sports";
+	}
+}
+
 /// What grade the user is in. 
 /// 
 /// The [User.grade] field could be an `int`, but by specifying the exact

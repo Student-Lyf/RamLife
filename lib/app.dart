@@ -9,9 +9,9 @@ import "package:ramaz/widgets.dart";
 
 /// The main app widget. 
 class RamLife extends StatelessWidget {
-	static bool hasAdminScope(Scope scope) => Auth.isSignedIn
+	static bool hasAdminScope(AdminScope scope) => Auth.isSignedIn
 		&& Models.instance.user.isAdmin
-		&& Models.instance.user.admin!.scopes.contains(scope);
+		&& Models.instance.user.adminScopes!.contains(scope);
 
 	/// The routes for this app.
 	static final Map<String, WidgetBuilder> routes = {
@@ -33,11 +33,11 @@ class RamLife extends StatelessWidget {
 			child: FeedbackPage(),
 		),
 		Routes.calendar: (_) => RouteInitializer(
-			isAllowed: () => hasAdminScope(Scope.calendar),
+			isAllowed: () => hasAdminScope(AdminScope.calendar),
 			child: const AdminCalendarPage(),
 		),
 		Routes.specials: (_) => RouteInitializer(
-			isAllowed: () => hasAdminScope(Scope.calendar),
+			isAllowed: () => hasAdminScope(AdminScope.calendar),
 			child: const AdminSpecialsPage(),
 		),
 		Routes.sports: (_) => const RouteInitializer(
