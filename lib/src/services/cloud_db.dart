@@ -18,8 +18,8 @@ extension DocumentFinder on CollectionReference {
 /// Convenience methods on [DocumentReference].
 extension NonNullData on DocumentReference {
 	/// Gets data from a document, throwing if null.
-	Future<Map<String, dynamic>> throwIfNull(String message) async {
-		final Map<String, dynamic>? value = (await get()).data();
+	Future<Map> throwIfNull(String message) async {
+		final Map? value = (await get()).data();
 		if (value == null) {
 			throw StateError(message);
 		} else {
@@ -155,46 +155,47 @@ class CloudDatabase extends Database {
 	Future<void> signOut() => Auth.signOut();
 
 	@override
-	Future<Map<String, dynamic>> get user => 
+	Future<Map> get user => 
 		userDocument.throwIfNull("User ${Auth.email} does not exist in the database");
 
 	/// No-op -- The user cannot edit their own profile. 
 	/// 
 	/// User profiles can only be modified by the admin SDK. 
 	@override
-	Future<void> setUser(Map<String, dynamic> json) async {}
+	Future<void> setUser(Map json) async {}
 
 	@override
-	Future<Map<String, dynamic>> getSection(String id) =>
+	Future<Map> getSection(String id) =>
 		sectionCollection.doc(id).throwIfNull("Cannot find section: $id");
 
 	/// No-op -- The user cannot edit the courses list. 
 	/// 
 	/// The courses list can only be modified by the admin SDK. 
 	@override
-	Future<void> setSections(Map<String, Map<String, dynamic>> json) async {}
+	Future<void> setSections(Map<String, Map> json) async {}
 
 	@override
-	Future<Map<String, dynamic>> getCalendarMonth(int month) async {
+	Future<Map> getCalendarMonth(int month) async {
 		final DocumentReference document = calendarCollection.doc(month.toString());
 		return document.throwIfNull("No entry in calendar for $month");
 	}
 
 	@override
-	Future<List<Map>> getSchedules() async => (
+	Future<List<Map>> getSchedules() async => List<Map>.from((
 		await schedulesDocument.throwIfNull("Cannot find schedules")
-	) ["schedules"];
+	) ["schedules"]);
 
 	@override
 	Future<void> saveSchedules(List<Map> schedules) => 
 		schedulesDocument.set({"schedules": schedules});
 
 	@override 
-	Future<void> setCalendar(int month, Map<String, dynamic> json) => 
-		calendarCollection.doc(month.toString()).set(json);
+	Future<void> setCalendar(int month, Map json) => 
+		calendarCollection.doc(month.toString())
+			.set(Map<String, dynamic>.from(json));
 
 	@override
-	Future<List<Map<String, dynamic>>> get reminders async {
+	Future<List<Map>> get reminders async {
 		final QuerySnapshot snapshot = 
 			await remindersCollection.orderBy(FieldPath.documentId).get();
 		final List<QueryDocumentSnapshot> documents = snapshot.docs;
@@ -208,13 +209,13 @@ class CloudDatabase extends Database {
 	}
 
 	@override
-	Future<void> updateReminder(String? oldHash, Map<String, dynamic> json) async {
+	Future<void> updateReminder(String? oldHash, Map json) async {
 		if (oldHash == null) {
-			await remindersCollection.add(json);
+			await remindersCollection.add(Map<String, dynamic>.from(json));
 		} else {
 			final DocumentReference document = await remindersCollection
 				.findDocument("hash", oldHash);
-			await document.set(json);
+			await document.set(Map<String, dynamic>.from(json));
 		}
 	}
 
@@ -223,31 +224,31 @@ class CloudDatabase extends Database {
 		(await remindersCollection.findDocument("hash", oldHash)).delete();
 
 	@override
-	Future<List<Map<String, dynamic>>> get sports async {
-		final Map<String, dynamic> data = await sportsDocument
+	Future<List<Map>> get sports async {
+		final Map data = await sportsDocument
 			.throwIfNull("No sports data found");
 		return [
 			for (final dynamic json in data [sportsKey])
-				Map<String, dynamic>.from(json)
+				Map.from(json)
 		];
 	}
 
 	@override
-	Future<void> setSports(List<Map<String, dynamic>> json) => 
+	Future<void> setSports(List<Map> json) => 
 		sportsDocument.set({sportsKey: json});
 
 	/// Submits feedback. 
 	Future<void> sendFeedback(
-		Map<String, dynamic> json
-	) => feedbackCollection.doc().set(json);
+		Map json
+	) => feedbackCollection.doc().set(Map<String, dynamic>.from(json));
 
 	/// Listens to a month for changes in the calendar. 
-	Stream<List<Map<String, dynamic>?>> getCalendarStream(int month) => 
+	Stream<List<Map?>> getCalendarStream(int month) => 
 		calendarCollection.doc(month.toString()).snapshots().map(
 			(DocumentSnapshot snapshot) => [
 				for (final dynamic entry in snapshot.data()! ["calendar"])
 					if (entry == null) null
-					else Map<String, dynamic>.from(entry)
+					else Map.from(entry)
 				]
 		);
 }

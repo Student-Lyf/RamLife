@@ -18,7 +18,7 @@ abstract class Database extends Service {
 	/// The key to get the calendar within the returned JSON object. 
 	/// 
 	/// The calendar is stored along with its month, which means it cannot
-	/// be a list, and instead must be a `Map<String, dynamic>`. This key
+	/// be a list, and instead must be a `Map`. This key
 	/// gets the list out of the Map. 
 	static const String calendarKey = "calendar";
 
@@ -40,18 +40,18 @@ abstract class Database extends Service {
 	// ---------- Data code below ---------- 
 
 	/// The user object as JSON
-	Future<Map<String, dynamic>> get user;
+	Future<Map> get user;
 
 	/// Changes the user JSON object. 
-	Future<void> setUser(Map<String, dynamic> json);
+	Future<void> setUser(Map json);
 
 	/// Gets one section (a course in Ramaz) as a JSON object. 
 	/// 
 	/// Do not use this directly. Instead, use [getSections]. 
-	Future<Map<String, dynamic>> getSection(String id);
+	Future<Map> getSection(String id);
 
 	/// The different classes (sections, not courses) for a schedule.
-	Future<Map<String, Map<String, dynamic>>?> getSections(
+	Future<Map<String, Map>?> getSections(
 		Iterable<String> ids
 	) async => {
 		for (final String id in ids)
@@ -59,15 +59,15 @@ abstract class Database extends Service {
 	};
 
 	/// Changes the user's classes.
-	Future<void> setSections(Map<String, Map<String, dynamic>> json);
+	Future<void> setSections(Map<String, Map> json);
 
 	/// The calendar in JSON form. 
 	/// 
 	/// Admins can change this with [setCalendar]. 
-	Future<List<List<Map<String, dynamic>?>>> get calendar async => [
+	Future<List<List<Map?>>> get calendar async => [
 		for (int month = 1; month <= 12; month++) [
 			for (final Map? day in (await getCalendarMonth(month)) [calendarKey])
-				day == null ? null : Map<String, dynamic>.from(day)
+				day == null ? null : Map.from(day)
 		]
 	];
 
@@ -76,7 +76,7 @@ abstract class Database extends Service {
 	/// Months are in the range 1-12. The value returned will be a JSON object 
 	/// containing the month and the calendar. The calendar itself can be retrieved
 	/// with [calendarKey].
-	Future<Map<String, dynamic>> getCalendarMonth(int month);
+	Future<Map> getCalendarMonth(int month);
 
 	Future<List<Map>> getSchedules();
 
@@ -90,16 +90,16 @@ abstract class Database extends Service {
 	/// [month] must be 1-12, not 0-11. 
 	/// 
 	/// Only admins can change this. 
-	Future<void> setCalendar(int month, Map<String, dynamic> json);
+	Future<void> setCalendar(int month, Map json);
 
 	/// The user's reminders. 
-	Future<List<Map<String, dynamic>>> get reminders;
+	Future<List<Map>> get reminders;
 
 	/// Updates a reminder, creating it if necessary.
 	/// 
 	/// This function queries the database for a reminder with the same hash and 
 	/// updates it. 
-	Future<void> updateReminder(String? oldHash, Map<String, dynamic> json);
+	Future<void> updateReminder(String? oldHash, Map json);
 
 	/// Deletes a reminder at the given index. 
 	/// 
@@ -110,10 +110,10 @@ abstract class Database extends Service {
 	/// The sports games. 
 	/// 
 	/// Admins can change this with [setSports]. 
-	Future<List<Map<String, dynamic>>> get sports;
+	Future<List<Map>> get sports;
 
 	/// Sets the sports games.
 	/// 
 	/// Only admins can change this. 
-	Future<void> setSports(List<Map<String, dynamic>> json);
+	Future<void> setSports(List<Map> json);
 }
