@@ -140,7 +140,6 @@ class ScheduleModel extends Model {
 
 		// period changed since last checked.
 		periodIndex = newIndex;
-		updateReminders(scheduleNotifications: first);  
 
 		// School ended
 		if (newIndex == null) { 
@@ -153,6 +152,8 @@ class ScheduleModel extends Model {
 		nextPeriod = newIndex < periods!.length - 1 
 			? periods! [newIndex + 1] 
 			: null;
+
+		updateReminders(scheduleNotifications: first);  
 	}
 
 	/// Updates the reminders given the current period.
