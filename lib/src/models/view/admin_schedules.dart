@@ -14,6 +14,7 @@ class AdminScheduleModel with ChangeNotifier {
 
 	Future<void> saveSchedules() async {
 		await Services.instance.database.saveSchedules(jsonSchedules);
+		Schedule.schedules = schedules;
 		notifyListeners();
 	}
 

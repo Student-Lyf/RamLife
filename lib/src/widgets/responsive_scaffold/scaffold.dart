@@ -112,7 +112,8 @@ class ResponsiveScaffold extends StatelessWidget {
 			appBar: appBar,
 			drawer: info.hasStandardDrawer ? null 
 				: Drawer(child: hasNavBar ? secondaryDrawer : drawer),
-			endDrawer: info.hasStandardSideSheet ? null : Drawer(child: sideSheet),
+			endDrawer: info.hasStandardSideSheet || sideSheet == null 
+				? null : Drawer(child: sideSheet),
 			floatingActionButton: floatingActionButton,
 			floatingActionButtonLocation: floatingActionButtonLocation,
 			bottomNavigationBar: !hasNavBar || !info.hasBottomNavBar 
