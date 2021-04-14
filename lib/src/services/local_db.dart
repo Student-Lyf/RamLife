@@ -147,9 +147,6 @@ class LocalDatabase extends Database {
 	/// The name for the reminders object store. 
 	static const String reminderStoreName = "reminders";
 
-	/// The name for the admin object store. 
-	static const String adminStoreName = "admin";
-
 	/// The name for the sports object store. 
 	static const String sportsStoreName = "sports";
 
@@ -161,7 +158,7 @@ class LocalDatabase extends Database {
 	/// This is used in [signOut] to purge all the data. 
 	static const List<String> storeNames = [
 		userStoreName, sectionStoreName, calendarStoreName, reminderStoreName,
-		adminStoreName, sportsStoreName,
+		sportsStoreName, scheduleStoreName,
 	];
 
 	/// The idb database itself. 
@@ -182,7 +179,6 @@ class LocalDatabase extends Database {
 							..createObjectStore(sectionStoreName, keyPath: "id")
 							..createObjectStore(calendarStoreName, keyPath: "month")
 							..createObjectStore(reminderStoreName, autoIncrement: true)
-							..createObjectStore(adminStoreName, keyPath: "email")
 							..createObjectStore(sportsStoreName, autoIncrement:  true);
 							continue one;
 						one: case 1: event.database

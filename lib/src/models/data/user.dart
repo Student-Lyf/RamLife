@@ -20,7 +20,7 @@ class UserModel extends Model {
 	late Map<String, Subject> subjects;
 
 	/// The permissions this user has, if they are an administrator. 
-	late List<AdminScope>? adminScopes;
+	List<AdminScope>? adminScopes;
 
 	/// Whether this user is an admin. 
 	/// 
