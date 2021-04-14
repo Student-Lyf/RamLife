@@ -32,11 +32,32 @@ class Auth {
 	/// Available scopes are held as constants in [Scopes].
 	static Future<void> setScopes(String email, List<String> scopes) async => 
 		auth.setCustomUserClaims(
-			(await auth.getUserByEmail(email)).uid, 
+			(await getUser(email)).uid, 
 			{"isAdmin": scopes.isNotEmpty, "scopes": scopes}
 		);
 
-	static Future<Map<String, dynamic>> getClaims(String email) async => dartify(
-		(await auth.getUserByEmail(email)).customClaims
-	);
+	/// Creates a user. 
+	static Future<void> createUser(String email) => auth
+		.createUser(fb.CreateUserRequest(email: email));
+
+	/// Gets the user with the given email, or creates one
+	static Future<fb.UserRecord> getUser(String email) async {
+		try {
+			return await auth.getUserByEmail(email);
+		} catch (error) {  // ignore: avoid_catches_without_on_clauses
+			// package:firebase_admin_interop is not so good with error types
+			if (error.code == "auth/user-not-found") {
+				await createUser(email);
+				return getUser(email);
+			} else {
+				rethrow;	
+			}
+		}
+	}
+
+	/// Gets the custom claims for a user. 
+	static Future<Map<String, dynamic>> getClaims(String email) async {
+		final fb.UserRecord user = await getUser(email);
+		return dartify(user.customClaims);
+	}
 }

@@ -63,9 +63,9 @@ class Auth {
 	/// 
 	/// Returns null if the user is not an admin (ie, [isAdmin] returns false).
 	static Future<List<String>?> get adminScopes async {
-		final Map? customClaims = await claims;
+		final Iterable? customClaims = (await claims) ?["scopes"];
 		return customClaims == null ? null : [
-			for (final String scope in customClaims ["scopes"])
+			for (final String scope in customClaims)
 				scope.toString()
 		];
 	}

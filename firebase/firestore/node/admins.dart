@@ -12,10 +12,13 @@ Future<void> setClaims(Map<String, List<String>> admins) async {
 	for (final MapEntry<String, List<String>> entry in admins.entries) {
 		final String email = entry.key;
 		final List<String> scopes = entry.value;
-		assert(
-			scopes.every(Scopes.scopes.contains),
-			"Cannot parse scopes for: $email. Got: $scopes"
-		);
+		if (!scopes.every(Scopes.scopes.contains)) {
+			throw ArgumentError.value(
+				scopes.toString(), 
+				"admin scopes", 
+				"Unrecognized scopes for $email"
+			);
+		}
 		Logger.verbose("Setting claims for $email");
 		if (entry.value.isEmpty) {
 			Logger.warning("Removing admin privileges for $email");
@@ -24,7 +27,6 @@ Future<void> setClaims(Map<String, List<String>> admins) async {
 			"Previous claims for $email", () => Auth.getClaims(email)
 		);
 		await Auth.setScopes(email, scopes);
-		await Firestore.uploadAdmin(email);
 	}
 }
 
@@ -36,10 +38,7 @@ Future<void> main() async {
 		await Logger.logValue("admins", getAdmins);
 
 	if (Args.upload) {
-		await Logger.logProgress(
-			"setting admin claims",
-			() async => setClaims(admins)
-		);
+		await setClaims(admins);
 	} else {
 		Logger.warning("Did not upload admin claims. Use the --upload flag.");
 	}

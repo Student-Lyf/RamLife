@@ -53,17 +53,6 @@ class CloudDatabase extends Database {
 	static final CollectionReference userCollection = 
 		firestore.collection("students");
 
-	/// The admin profile collection.
-	/// 
-	/// Each admin has their own document to store their data. Note that the 
-	/// documents themselves do not grant admin privileges, since admins can modify
-	/// their own document. Rather, the scopes of their privileges are stored in 
-	/// FirebaseAuth custom claims. See [Auth.adminScopes]. 
-	/// 
-	/// To access a document in this collection, use [adminDocument].
-	static final CollectionReference adminCollection = 
-		firestore.collection("admin");
-
 	/// The course data collection.
 	/// 
 	/// Sections, not courses, are stored in the database. Each section has its 
@@ -114,12 +103,6 @@ class CloudDatabase extends Database {
 	/// reminder.
 	CollectionReference get remindersCollection =>
 		userDocument.collection("reminders");
-
-	/// The document for this user's admin profile. 
-	/// 
-	/// The collection is indexed by email.
-	DocumentReference get adminDocument => 
-		adminCollection.doc(Auth.email);
 
 	/// The document for this academic year's sports games.
 	///  
