@@ -56,6 +56,10 @@ Future<void> main() async {
 	
 	User.verifySchedules(studentsWithSchedules);
 
+	if (Args.inArgs({"-t", "--testers"})) {
+		studentsWithSchedules.clear();
+	}
+
 	final List<User> testUsers = [
 		for (final Map<String, dynamic> tester in testers)
 			User.empty(
@@ -64,7 +68,11 @@ Future<void> main() async {
 				last: tester ["last"],
 			)
 	];
-	Logger.info("Found ${testUsers.length} testers");
+	Logger.info(
+		"Found ${testUsers.length} testers. "
+		"Use the --testers flag to only process testers"
+	);
+	Logger.debug("Testers", testUsers);
 	studentsWithSchedules.addAll(testUsers);
 
 	Logger.info("Finished data indexing.");
@@ -77,5 +85,5 @@ Future<void> main() async {
 		Logger.warning("Did not upload student data. Use the --upload flag.");
 	}
 	await app.delete();
-	Logger.info("Processed ${students.length} users.");
+	Logger.info("Processed ${studentsWithSchedules.length} users.");
 }
