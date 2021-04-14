@@ -184,10 +184,7 @@ class CloudDatabase extends Database {
 		final List<QueryDocumentSnapshot> documents = snapshot.docs;
 		return [
 			for (final QueryDocumentSnapshot document in documents)
-				// QueryDocumentSnapshot.data() is never null. 
-				// I opened a PR to make the type non-nullable: 
-				// https://github.com/FirebaseExtended/flutterfire/pull/5476
-				document.data()!
+				document.data()
 		];
 	}
 

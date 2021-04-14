@@ -18,7 +18,7 @@ dependencies:
 
   # ------------- Services -------------
   # Firebase/Google
-  cloud_firestore: ^1.0.2
+  cloud_firestore: ^1.0.5
   firebase_auth: ^1.0.1
   firebase_crashlytics: ^1.0.0
   firebase_messaging: ^9.0.1
