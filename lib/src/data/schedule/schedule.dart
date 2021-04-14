@@ -19,12 +19,12 @@ class Schedule {
 	/// the database. So, the data layer needs some lookup method in order to be 
 	/// useful. Specifically, [Day.fromJson()] needs to work _somehow_.
 	/// 
-	/// `late final` means that this value is initialized after startup, but the 
-	/// value cannot be used until it is (and once it is set, it's final). This 
-	/// means that we need to be careful not to access this value until we can be 
-	/// sure that the database values were synced. Dart will throw a runtime error
-	/// otherwise, so it should be fairly simple to catch problems during testing.
-	static late final List<Schedule> schedules;
+	/// `late` means that this value is initialized after startup, but the value 
+	/// cannot be used until it is. This means that we need to be careful not to 
+	/// access this value until we can be sure that the database values were 
+	/// synced. Dart will throw a runtime error otherwise, so it should be fairly
+	/// simple to catch problems during testing.
+	static late List<Schedule> schedules;
 
 	/// The name of this schedule. 
 	final String name;

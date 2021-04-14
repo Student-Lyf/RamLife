@@ -175,6 +175,6 @@ class Day extends Serializable {
 	@override
 	Map<String, String> get json => {
 		"name": name,
-		"special": special,
+		"schedule": special,
 	};
 }

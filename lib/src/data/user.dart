@@ -160,7 +160,7 @@ class User {
 	List<Period> getPeriods(Day day) => [
 		for (final Period period in day.schedule.periods) period.copyWith(
 			int.tryParse(period.name) == null ? null 
-				: schedule [day.name]! [int.parse(period.name)]
+				: schedule [day.name]! [int.parse(period.name) - 1]
 		)
 	];
 }
