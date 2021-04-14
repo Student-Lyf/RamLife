@@ -24,10 +24,10 @@ class Databases extends Database {
 		await localDatabase.init();
 
 		// Download this month's calendar, in case it changed
+		await localDatabase.saveSchedules(await cloudDatabase.getSchedules());
 		final int month = DateTime.now().month;
 		await localDatabase.setCalendar(
-			month, 
-			await cloudDatabase.getCalendarMonth(month)
+			month, await cloudDatabase.getCalendarMonth(month)
 		);
 	}
 
