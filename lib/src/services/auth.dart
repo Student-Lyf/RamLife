@@ -81,6 +81,7 @@ class Auth {
 	/// Signs out the currently logged in user.
 	static Future<void> signOut() async {
 		await google.signOut();
+		await google.disconnect();
 		await auth.signOut();
 	}
 
