@@ -57,11 +57,11 @@ class NavigationDrawer extends StatelessWidget {
 											leading: Icon (Icons.notifications),
 											onTap: pushRoute(context, Routes.reminders),
 										),
-									ListTile (
-										title: Text ("Sports"),
-										leading: Icon (Icons.sports),
-										onTap: pushRoute(context, Routes.sports),
-									),
+									// ListTile (
+									// 	title: Text ("Sports"),
+									// 	leading: Icon (Icons.sports),
+									// 	onTap: pushRoute(context, Routes.sports),
+									// ),
 									if (Models.instance.user.isAdmin) ExpansionTile(
 										leading: Icon(Icons.admin_panel_settings),
 										title: const Text("Admin options"),
