@@ -5,10 +5,10 @@ import "package:ramaz/models.dart";
 import "package:ramaz/pages.dart";
 import "package:ramaz/widgets.dart";
 
-/// A page to show the admin's custom specials. 
-class AdminSpecialsPage extends StatelessWidget {
+/// A page to show the admin's custom schedules. 
+class AdminSchedulesPage extends StatelessWidget {
 
-	const AdminSpecialsPage();
+	const AdminSchedulesPage();
 
 	// If the user is on this page, they are an admin.
 	// So, model.admin != null
@@ -20,7 +20,7 @@ class AdminSpecialsPage extends StatelessWidget {
 			drawer: const NavigationDrawer(),
 			floatingActionButton: FloatingActionButton(
 				onPressed: () async {
-					final Schedule? schedule = await ScheduleBuilder.buildSpecial(context);
+					final Schedule? schedule = await ScheduleBuilder.buildSchedule(context);
 					if (schedule == null) {
 						return;
 					}
@@ -45,7 +45,7 @@ class AdminSpecialsPage extends StatelessWidget {
 									title: Text(schedule.name),
 									onTap: () async {
 										final Schedule? newSchedule = 
-											await ScheduleBuilder.buildSpecial(context, schedule);
+											await ScheduleBuilder.buildSchedule(context, schedule);
 										if (newSchedule != null) {
 											await model.createSchedule(newSchedule);
 										}

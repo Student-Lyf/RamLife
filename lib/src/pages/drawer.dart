@@ -75,7 +75,7 @@ class NavigationDrawer extends StatelessWidget {
 												ListTile(
 													title: Text("Custom schedules"),
 													leading: Icon(Icons.schedule),
-													onTap: pushRoute(context, Routes.specials),
+													onTap: pushRoute(context, Routes.schedules),
 												),
 											],
 											if (isSportsAdmin) 

@@ -10,7 +10,7 @@ import "package:ramaz/widgets.dart";
 /// an existing schedule by passing it as a parameter to [ScheduleBuilder()]. 
 class ScheduleBuilder extends StatefulWidget {
 	/// Returns the [Schedule] created by this widget. 
-	static Future<Schedule?> buildSpecial(
+	static Future<Schedule?> buildSchedule(
 		BuildContext context,
 		[Schedule? preset]
 	) => showDialog(
@@ -25,13 +25,13 @@ class ScheduleBuilder extends StatefulWidget {
 	const ScheduleBuilder([this.preset]);
 
 	@override
-	SpecialBuilderState createState() => SpecialBuilderState();
+	ScheduleBuilderState createState() => ScheduleBuilderState();
 }
 
 /// A state for a [ScheduleBuilder]. 
 /// 
 /// A state is needed to keep the [TextEditingController] from rebuilding. 
-class SpecialBuilderState extends State<ScheduleBuilder> {
+class ScheduleBuilderState extends State<ScheduleBuilder> {
 	/// A controller to hold the name of the [Schedule]. 
 	/// 
 	/// This will be preset with the name of [ScheduleBuilder.preset].
@@ -61,7 +61,7 @@ class SpecialBuilderState extends State<ScheduleBuilder> {
 						icon: const Icon(Icons.sync),
 						tooltip: "Use preset",
 						onPressed: () async {
-							final Schedule? special = await showModalBottomSheet<Schedule?>(
+							final Schedule? schedule = await showModalBottomSheet<Schedule?>(
 								context: context,
 								builder: (BuildContext context) => ListView(
 									children: [
@@ -80,9 +80,9 @@ class SpecialBuilderState extends State<ScheduleBuilder> {
 									]
 								)
 							);
-							if (special != null) {
-								controller.text = special.name;
-								model.usePreset(special);
+							if (schedule != null) {
+								controller.text = schedule.name;
+								model.usePreset(schedule);
 							}
 						}
 					),

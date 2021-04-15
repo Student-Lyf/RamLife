@@ -7,7 +7,7 @@ import "package:ramaz/models.dart";
 // ignore: prefer_mixin
 class ScheduleViewModel with ChangeNotifier {
 	/// The default [Schedule] for the UI.
-	static Schedule get defaultSpecial => Schedule.schedules.first;
+	static Schedule get defatulSchedule => Schedule.schedules.first;
 
 	/// The default [Day] for the UI.
 	late Day defaultDay;
@@ -30,11 +30,11 @@ class ScheduleViewModel with ChangeNotifier {
 	/// 
 	/// Also initializes the default day shown to the user. 
 	/// If today is a school day, then use that. Otherwise, use the 
-	/// defaults (see [defaultSpecial]).
+	/// defaults (see [defatulSchedule]).
 	ScheduleViewModel () : dataModel = Models.instance.schedule {
 		defaultDay = Day(
 			name: Models.instance.user.data.schedule.keys.first, 
-			schedule: defaultSpecial
+			schedule: defatulSchedule
 		);
 		day = dataModel.today ?? defaultDay;
 	}
@@ -61,16 +61,16 @@ class ScheduleViewModel with ChangeNotifier {
 	/// Gets the date whose schedule the user is looking at
 	DateTime get date => _selectedDay;
 
-	/// Updates the UI to a new day given a new dayName or special.
+	/// Updates the UI to a new day given a new dayName or schedule.
 	/// 
-	/// If the dayName is non-null, the special defaults to [defaultSpecial].
+	/// If the dayName is non-null, the schedule defaults to [defatulSchedule].
 	void update({
 		String? newName, 
-		Schedule? newSpecial, 
+		Schedule? newSchedule, 
 		void Function()? onInvalidSchedule,
 	}) {
 		final String name = newName ?? day.name;
-		final Schedule schedule = newSpecial ?? day.schedule;
+		final Schedule schedule = newSchedule ?? day.schedule;
 		day = Day(name: name, schedule: schedule);
 		notifyListeners();
 		try {
@@ -78,7 +78,7 @@ class ScheduleViewModel with ChangeNotifier {
 			// TODO: Move the logic from ClassList here. 
 			Models.instance.schedule.user.getPeriods(day);
 		} on RangeError { // ignore: avoid_catching_errors
-			day = Day(name: day.name, schedule: defaultSpecial);
+			day = Day(name: day.name, schedule: defatulSchedule);
 			if (onInvalidSchedule != null) {
 				onInvalidSchedule();
 			}
