@@ -5,7 +5,7 @@ import "package:ramaz/data.dart";
 /// A view model to create a [Schedule].
 // ignore: prefer_mixin
 class ScheduleBuilderModel with ChangeNotifier {
-	/// The special that this special is based on. 
+	/// The schedule that this schedule is based on. 
 	Schedule? preset;
 
 	ScheduleBuilderModel([this.preset]) {
@@ -19,7 +19,7 @@ class ScheduleBuilderModel with ChangeNotifier {
 	String? _name;
 	int _numPeriods = 0;
 
-	/// The name of this special.
+	/// The name of this schedule.
 	/// 
 	/// See [Schedule.name].
 	String? get name => _name;
@@ -57,7 +57,7 @@ class ScheduleBuilderModel with ChangeNotifier {
 		notifyListeners();
 	}
 
-	/// Whether this special is ready to be built. 
+	/// Whether this schedule is ready to be built. 
 	bool get ready => numPeriods > 0  
 		&& periods.isNotEmpty
 		&& name != null && name!.isNotEmpty 
@@ -75,9 +75,9 @@ class ScheduleBuilderModel with ChangeNotifier {
 		notifyListeners();
 	}
 
-	/// Sets properties of this special based on an existing special. 
+	/// Sets properties of this schedule based on an existing schedule. 
 	/// 
-	/// The special can then be fine-tuned afterwards. 
+	/// The schedule can then be fine-tuned afterwards. 
 	void usePreset(Schedule? schedule) {
 		if (schedule == null) {
 			return;

@@ -36,9 +36,9 @@ class RamLife extends StatelessWidget {
 			isAllowed: () => hasAdminScope(AdminScope.calendar),
 			child: const AdminCalendarPage(),
 		),
-		Routes.specials: (_) => RouteInitializer(
+		Routes.schedules: (_) => RouteInitializer(
 			isAllowed: () => hasAdminScope(AdminScope.calendar),
-			child: const AdminSpecialsPage(),
+			child: const AdminSchedulesPage(),
 		),
 		Routes.sports: (_) => const RouteInitializer(
 			child: SportsPage(),
