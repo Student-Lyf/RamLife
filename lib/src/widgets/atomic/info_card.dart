@@ -44,7 +44,7 @@ class InfoCard extends StatelessWidget {
 						...[
 							for (final String text in children!) ...[
 								const SizedBox(height: 2.5),
-								Text(text, textScaleFactor: 1.25),
+								SelectableText(text, textScaleFactor: 1.25),
 								const SizedBox(height: 2.5),
 							]
 						]
