@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import "package:link_text/link_text.dart";
 
 /// A tile to represent some info. 
 /// 
@@ -44,7 +45,11 @@ class InfoCard extends StatelessWidget {
 						...[
 							for (final String text in children!) ...[
 								const SizedBox(height: 2.5),
-								SelectableText(text, textScaleFactor: 1.25),
+								LinkText(
+									text, 
+									shouldTrimParams: true,
+									linkStyle: const TextStyle(color: Color(0xff0000EE))
+								),
 								const SizedBox(height: 2.5),
 							]
 						]
