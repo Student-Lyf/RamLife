@@ -58,7 +58,7 @@ class ClassPanel extends StatelessWidget {
 							for (final String label in children) 
 								Padding (
 									padding: const EdgeInsets.symmetric(vertical: 5),
-									child: Text (label)
+									child: SelectableText(label)
 								),
 							if (activity != null)
 								ActivityTile(activity!),  // already checked for null
