@@ -91,6 +91,9 @@ class CloudDatabase extends Database {
 	static final CollectionReference sportsCollection =
 		firestore.collection("sports");
 
+	static final CollectionReference clubsCollection =
+		firestore.collection("clubs");	
+
 	/// The document for this user's data. 
 	/// 
 	/// The collection is indexed by email. 
@@ -234,4 +237,12 @@ class CloudDatabase extends Database {
 					else Map.from(entry)
 				]
 		);
+
+	Future<void> registerForClub(String clubId, Map json) {
+		final DocumentReference clubDocument = clubsCollection.doc(clubId);
+		final CollectionReference members = clubDocument.collection("members");
+		final String email = Auth.email!;
+		final DocumentReference userDocument = members.doc(email);
+		return userDocument.set(Map<String, dynamic>.from(json));
+	}
 }
