@@ -28,10 +28,14 @@ class Subject {
 	/// The teacher who teaches this subject.
 	final String teacher;
 
+	/// A link to a virtual class, like Zoom.
+	final String? virtualLink;
+
 	/// A const constructor for a [Subject].
 	const Subject ({
 		required this.name,
-		required this.teacher
+		required this.teacher,
+		this.virtualLink,
 	});
 
 	/// Returns a [Subject] instance from a JSON object. 
@@ -39,7 +43,8 @@ class Subject {
 	/// The JSON map must have a `teacher` and `name` field.
 	Subject.fromJson(Map json) :
 		name = json ["name"], 
-		teacher = json ["teacher"];
+		teacher = json ["teacher"],
+		virtualLink = json ["virtualLink"];
 
 	@override 
 	String toString() => "$name ($teacher)";
