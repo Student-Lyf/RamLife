@@ -29,12 +29,14 @@ class SectionLogic {
 		@required Map<String, String> courseNames,
 		@required Map<String, String> sectionTeachers,
 		@required Map<String, User> facultyNames,
+		@required Map<String, String> zoomLinks,
 	}) => [
 		for (final MapEntry<String, String> entry in sectionTeachers.entries) 
 			Section(
 				id: entry.key,
 				name: courseNames [getCourseId(entry.key)],
 				teacher: facultyNames [entry.value].name,
+				zoomLink: zoomLinks [entry.key],
 			)
 	];
 }

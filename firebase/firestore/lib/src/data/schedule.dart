@@ -43,11 +43,14 @@ class Section extends Serializable {
 	/// The full name of the teacher for this section.
 	final String teacher;
 
+	final String zoomLink;
+
 	/// Creates a section. 
 	const Section({
 		@required this.name, 
 		@required this.id, 
 		@required this.teacher,
+		this.zoomLink,
 	}) : 
 		assert(
 			name != null && id != null && teacher != null,
@@ -62,6 +65,7 @@ class Section extends Serializable {
 		"name": name,
 		"teacher": teacher,
 		"id": id,
+		"virtualLink": zoomLink,
 	};
 }
 

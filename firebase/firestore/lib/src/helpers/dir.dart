@@ -44,13 +44,15 @@ class DataFiles {
 	/// Contains the names, emails, and IDs of every student.
 	static final String students = "${dataDir.path}\\students.csv";
 
+	static final String zoomLinks = "${dataDir.path}\\zoom_links.csv";
+
 	/// The list of admins.
 	/// 
 	/// Each row should be the name of the admin, followed by a list of scopes.
 	static final String admins = "${dataDir.path}\\admins.csv";
 
 	static final String constants = "${projectDir.path}\\constants.yaml";
-
+	
 	/// Returns the path for the calendar at a given month.
 	/// 
 	/// The month should follow 1-based indexing.

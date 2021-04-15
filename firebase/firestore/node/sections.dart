@@ -21,11 +21,17 @@ Future<void> main() async {
 		"faculty names", FacultyReader.getFaculty,
 	);
 
+	final Map<String, String> zoomLinks = await Logger.logValue(
+		"zoom links", ZoomLinkReader.getZoomLinks,
+	);
+	Logger.info("Found ${zoomLinks.keys.length} zoom links");
+
 	final List<Section> sections = await Logger.logValue(
 		"sections list", () => SectionLogic.getSections(
 			courseNames: courseNames,
 			sectionTeachers: sectionTeachers,
 			facultyNames: facultyNames,
+			zoomLinks: zoomLinks,
 		)
 	);
 

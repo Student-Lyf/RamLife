@@ -32,3 +32,11 @@ class SectionReader {
 				row ["SECTION_ID"]: row ["FACULTY_ID"],
 	};
 }
+
+class ZoomLinkReader {
+	static Future<Map<String, String>> getZoomLinks() async => {
+		await for (final Map<String, String> row in csvReader(DataFiles.zoomLinks))
+			if (row ["LINK"].isNotEmpty)
+				row ["ID"]: row ["LINK"],
+	};
+}
