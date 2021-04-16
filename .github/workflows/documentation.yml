@@ -7,7 +7,7 @@ name: Dart
 
 on:
   push:
-    branches: [ documentation ]
+    branches: [ master ]
 
 jobs:
   documentation:
