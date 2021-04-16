@@ -26,9 +26,12 @@ class ContributorCard extends StatelessWidget{
 
 	@override 
 	Widget build (BuildContext context) => Card(
+		margin: EdgeInsets.fromLTRB(75, 25, 75, 25),
+		elevation: 2,
 		child: Column(
 			children: [
 				ListTile(
+					contentPadding: EdgeInsets.fromLTRB(50, 25, 50, 0),
 					leading: Image.network(contributor.imageName),
 					title: Text(
 						contributor.name,
@@ -44,7 +47,8 @@ class ContributorCard extends StatelessWidget{
 					contributor.description,
 					textAlign: TextAlign.left,
 					textScaleFactor: 1.2
-				)
+				),
+				const SizedBox(height: 25),
 			]
 		)
 	);
@@ -53,19 +57,47 @@ class ContributorCard extends StatelessWidget{
 class Contributor {
 
 	static const List<Contributor> contributors = [
-	Contributor(
-
-	)
+		Contributor(
+			name: 'David T.',
+			title: 'Frontend',
+			email: 'tarrabd@ramaz.org',
+			imageName: 'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg',
+			description: 'All Hail Shadow'
+		),
+		Contributor(
+			name: 'Brayden K.',
+			title: 'Backend',
+			email: 'braydenk@ramaz.org',
+			imageName: 'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg',
+			description: 'All Hail Shadow'
+		),
+		Contributor(
+			name: 'Joshua T.',
+			title: 'Middleend and Apple Expert',
+			email: 'todesj@ramaz.org',
+			imageName: 'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg',
+			description: 'All Hail Shadow'
+		),
+		Contributor(
+			name: 'Levi L.',
+			title: 'Biggest Boi',
+			email: 'leschesl@ramaz.org',
+			imageName: 'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg',
+			description: 'All Hail Shadow'
+		),
+		Contributor(
+			name: 'Mr. Vovsha',
+			title: 'Cool Guy',
+			email: 'evovsha@ramaz.org',
+			imageName: 'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg',
+			description: 'All Hail Shadow'
+		)
 	];
-
-
-
 
 	final String name;
 	final String title;
 	final String email;
 	final String description;
-	final double imgSideLength;
 	final String imageName;
 
 	const Contributor({
@@ -73,7 +105,7 @@ class Contributor {
 		required this.email,
 		required this.name,
 		required this.title,
-		required this.imgSideLength,
 		required this.imageName,
 	});
+	
 }

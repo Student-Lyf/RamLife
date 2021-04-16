@@ -43,6 +43,9 @@ class RamLife extends StatelessWidget {
 		Routes.sports: (_) => const RouteInitializer(
 			child: SportsPage(),
 		),
+		Routes.credits: (_) => const RouteInitializer(
+			child: CreditsPage(),
+		),
 	};
 
 	/// Provides a const constructor.
