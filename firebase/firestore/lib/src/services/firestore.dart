@@ -21,11 +21,6 @@ class Firestore {
 	/// The name of the feedback collection.
 	static const String feedbackKey = "feedback";
 
-	/// The name of the reminders collection.
-	static const String remindersKey = "reminders";
-
-	static const String adminsKey = "admin";
-
 	/// The students collection.
 	static final fb.CollectionReference studentsCollection = 
 		firestore.collection(studentsKey);
@@ -42,14 +37,7 @@ class Firestore {
 	static final fb.CollectionReference feedbackCollection =
 		firestore.collection(feedbackKey);
 
-	/// The reminders collection.
-	static final fb.CollectionReference remindersCollection =
-		firestore.collection(remindersKey);
-
-	static final fb.CollectionReference adminsCollection = 
-		firestore.collection(adminsKey);
-
-	/// Deletes reminders froma given user that fit a predicate function.
+	/// Removes and returns reminders from a given user.
 	/// 
 	/// If [transaction] is null, one will be created and passed to this function.
 	static Future<List<Map<String, dynamic>>> deleteRemindersFromUser(
@@ -64,7 +52,8 @@ class Firestore {
 			);
 		}
 
-		final fb.DocumentReference document = remindersCollection.document(email);
+		final fb.DocumentReference document = studentsCollection
+			.document(email).collection("reminders").document(email); 
 		final fb.DocumentSnapshot snapshot = await transaction.get(document);
 
 		final Map<String, dynamic> data = snapshot.data.toMap();
@@ -104,7 +93,7 @@ class Firestore {
 		for (final User user in users) {
 			batch.setData(
 				studentsCollection.document(user.email), 
-				fb.DocumentData.fromMap(user.json)
+				fb.DocumentData.fromMap(user.json),
 			);
 		}
 		return batch.commit();
@@ -162,11 +151,4 @@ class Firestore {
 		];
 		return calendar;
 	} 
-
-	static Future<void> uploadAdmin(String email) async => adminsCollection
-		.document(email)
-		.setData(
-			fb.DocumentData.fromMap({"email": email}),
-			fb.SetOptions(merge: true),
-		);
 }

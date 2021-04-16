@@ -77,8 +77,8 @@ class ResponsiveSchedule extends NavigationItem {
 					title: const Text ("Schedule"),
 					trailing: DropdownButton<Schedule> (
 						value: model.day.schedule,
-						onChanged: (Schedule? special) => model.update(
-							newSpecial: special,
+						onChanged: (Schedule? schedule) => model.update(
+							newSchedule: schedule,
 							onInvalidSchedule: () => handleInvalidSchedule(context),
 						),
 						items: [

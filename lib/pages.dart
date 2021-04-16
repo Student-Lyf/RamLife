@@ -1,11 +1,11 @@
 library pages;
 
 export "src/pages/admin/calendar.dart";
-export "src/pages/admin/specials.dart";
+export "src/pages/admin/schedules.dart";
 
 export "src/pages/builders/day_builder.dart";
 export "src/pages/builders/reminder_builder.dart";
-export "src/pages/builders/special_builder.dart";
+export "src/pages/builders/schedule_builder.dart";
 export "src/pages/builders/sports_builder.dart";
 export "src/pages/drawer.dart";
 export "src/pages/feedback.dart";
@@ -38,8 +38,8 @@ class Routes {
 	/// The route name for the calendar page. 
 	static const String calendar = "calendar";
 
-	/// The route name for the specials manager page. 
-	static const String specials = "specials";
+	/// The route name for the schedules manager page. 
+	static const String schedules = "schedules";
 
 	/// The route name for the sports games page.
 	static const String sports = "sports";

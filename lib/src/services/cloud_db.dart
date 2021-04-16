@@ -91,6 +91,9 @@ class CloudDatabase extends Database {
 	static final CollectionReference sportsCollection =
 		firestore.collection("sports");
 
+	static final CollectionReference clubsCollection =
+		firestore.collection("clubs");	
+
 	/// The document for this user's data. 
 	/// 
 	/// The collection is indexed by email. 
@@ -184,10 +187,7 @@ class CloudDatabase extends Database {
 		final List<QueryDocumentSnapshot> documents = snapshot.docs;
 		return [
 			for (final QueryDocumentSnapshot document in documents)
-				// QueryDocumentSnapshot.data() is never null. 
-				// I opened a PR to make the type non-nullable: 
-				// https://github.com/FirebaseExtended/flutterfire/pull/5476
-				document.data()!
+				document.data()
 		];
 	}
 
@@ -234,4 +234,12 @@ class CloudDatabase extends Database {
 					else Map.from(entry)
 				]
 		);
+
+	Future<void> registerForClub(String clubId, Map json) {
+		final DocumentReference clubDocument = clubsCollection.doc(clubId);
+		final CollectionReference members = clubDocument.collection("members");
+		final String email = Auth.email!;
+		final DocumentReference userDocument = members.doc(email);
+		return userDocument.set(Map<String, dynamic>.from(json));
+	}
 }

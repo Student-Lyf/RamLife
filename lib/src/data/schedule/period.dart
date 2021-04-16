@@ -184,5 +184,6 @@ class Period {
 		if (int.tryParse(name) != null) "Period: $name",
 		if (data != null) "Room: ${data!.room}",
 		if (subject != null) "Teacher: ${subject.teacher}",
+		if (subject?.virtualLink != null) "Zoom link: ${subject!.virtualLink}",
 	];
 }
