@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
+  <meta name="description" content="API docs for the Scores class from the data library, for the Dart programming language.">
+  <title>Scores class - data library - Dart API</title>
+
+
+  
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="../static-assets/github.css">
+  <link rel="stylesheet" href="../static-assets/styles.css">
+  <link rel="icon" href="../static-assets/favicon.png">
+
+  
+</head>
+
+
+<body data-base-href="../"
+      data-using-base-href="false">
+
+<div id="overlay-under-drawer"></div>
+
+<header id="title">
+  <button id="sidenav-left-toggle" type="button">&nbsp;</button>
+  <ol class="breadcrumbs gt-separated dark hidden-xs">
+    <li><a href="../index.html">ramaz</a></li>
+    <li><a href="../data/data-library.html">data</a></li>
+    <li class="self-crumb">Scores class</li>
+  </ol>
+  <div class="self-name">Scores</div>
+  <form class="search navbar-right" role="search">
+    <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+
+<main>
+
+
+  <div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
+    <header id="header-search-sidebar" class="hidden-l">
+  <form class="search-sidebar" role="search">
+    <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+
+<ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
+  <li><a href="../index.html">ramaz</a></li>
+  <li><a href="../data/data-library.html">data</a></li>
+  <li class="self-crumb">Scores class</li>
+</ol>
+
+
+    <h5>data library</h5>
+    <ol>
+  <li class="section-title"><a href="../data/data-library.html#classes">Classes</a></li>
+  <li><a href="../data/Activity-class.html">Activity</a></li>
+  <li><a href="../data/Advisory-class.html">Advisory</a></li>
+  <li><a href="../data/Club-class.html">Club</a></li>
+  <li><a href="../data/Day-class.html">Day</a></li>
+  <li><a href="../data/Feedback-class.html">Feedback</a></li>
+  <li><a href="../data/GradeActivity-class.html">GradeActivity</a></li>
+  <li><a href="../data/Message-class.html">Message</a></li>
+  <li><a href="../data/Period-class.html">Period</a></li>
+  <li><a href="../data/PeriodData-class.html">PeriodData</a></li>
+  <li><a href="../data/PeriodReminderTime-class.html">PeriodReminderTime</a></li>
+  <li><a href="../data/Range-class.html">Range</a></li>
+  <li><a href="../data/Reminder-class.html">Reminder</a></li>
+  <li><a href="../data/ReminderTime-class.html">ReminderTime</a></li>
+  <li><a href="../data/Schedule-class.html">Schedule</a></li>
+  <li><a href="../data/Scores-class.html">Scores</a></li>
+  <li><a href="../data/SportsGame-class.html">SportsGame</a></li>
+  <li><a href="../data/Subject-class.html">Subject</a></li>
+  <li><a href="../data/SubjectReminderTime-class.html">SubjectReminderTime</a></li>
+  <li><a href="../data/Time-class.html">Time</a></li>
+  <li><a href="../data/User-class.html">User</a></li>
+
+
+
+  <li class="section-title"><a href="../data/data-library.html#constants">Constants</a></li>
+  <li><a href="../data/reminderTimeToString-constant.html">reminderTimeToString</a></li>
+  <li><a href="../data/stringToReminderTime-constant.html">stringToReminderTime</a></li>
+  <li><a href="../data/stringToSport-constant.html">stringToSport</a></li>
+
+  <li class="section-title"><a href="../data/data-library.html#properties">Properties</a></li>
+  <li><a href="../data/intToGrade.html">intToGrade</a></li>
+  <li><a href="../data/sportToString.html">sportToString</a></li>
+
+  <li class="section-title"><a href="../data/data-library.html#functions">Functions</a></li>
+  <li><a href="../data/activityTypeToString.html">activityTypeToString</a></li>
+  <li><a href="../data/adminScopeToString.html">adminScopeToString</a></li>
+  <li><a href="../data/parseActivityType.html">parseActivityType</a></li>
+  <li><a href="../data/parseAdminScope.html">parseAdminScope</a></li>
+
+  <li class="section-title"><a href="../data/data-library.html#enums">Enums</a></li>
+  <li><a href="../data/ActivityType-class.html">ActivityType</a></li>
+  <li><a href="../data/AdminScope-class.html">AdminScope</a></li>
+  <li><a href="../data/Grade-class.html">Grade</a></li>
+  <li><a href="../data/ReminderTimeType-class.html">ReminderTimeType</a></li>
+  <li><a href="../data/Sport-class.html">Sport</a></li>
+
+
+</ol>
+
+  </div>
+
+  <div id="dartdoc-main-content" class="main-content">
+      <div>
+  <div id="external-links" class="btn-group"><a title="View source code" class="source-link" href="https://github.com/Levi-Lesches/Ramaz-Student-Life/blob/master/lib/src/data/sports.dart#L55"><i class="material-icons">description</i></a></div>
+<h1><span class="kind-class">Scores</span> class 
+    <a href="https://dart.dev/null-safety" class="feature feature-null-safety" title="Supports the null safety language feature.">Null safety</a>
+ 
+</h1></div>
+
+    
+<section class="desc markdown">
+  <p>The scores for a <a href="../data/SportsGame-class.html">SportsGame</a>.</p>
+<p>This class provides helper functions that will simplify higher-level logic.</p>
+</section>
+
+
+    <section>
+      <dl class="dl-horizontal">
+
+
+
+
+
+        <dt>Annotations</dt>
+        <dd><ul class="annotation-list clazz-relationships">
+          <li>@<a href="https://pub.dev/documentation/meta/1.3.0/meta/immutable-constant.html">immutable</a></li>
+        </ul></dd>
+      </dl>
+    </section>
+
+    <section class="summary offset-anchor" id="constructors">
+      <h2>Constructors</h2>
+
+      <dl class="constructor-summary-list">
+        <dt id="Scores" class="callable">
+          <span class="name"><a href="../data/Scores/Scores.html">Scores</a></span><span class="signature">(<span class="parameter" id="-param-ramazScore">{<span>required</span> <span class="type-annotation">int</span> <span class="parameter-name">ramazScore</span>, </span><span class="parameter" id="-param-otherScore"><span>required</span> <span class="type-annotation">int</span> <span class="parameter-name">otherScore</span>, </span><span class="parameter" id="-param-isHome"><span>required</span> <span class="type-annotation">bool</span> <span class="parameter-name">isHome</span>}</span>)</span>
+        </dt>
+        <dd>
+          Holds the scores for a <a href="../data/SportsGame-class.html">SportsGame</a>. 
+          <div class="constructor-modifier features">const</div>
+        </dd>
+        <dt id="Scores.fromJson" class="callable">
+          <span class="name"><a href="../data/Scores/Scores.fromJson.html">Scores.fromJson</a></span><span class="signature">(<span class="parameter" id="fromJson-param-json"><span class="type-annotation">Map</span> <span class="parameter-name">json</span></span>)</span>
+        </dt>
+        <dd>
+          Creates a <a href="../data/Scores-class.html">Scores</a> object from a JSON entry. <a href="../data/Scores/Scores.fromJson.html">[...]</a>
+        </dd>
+      </dl>
+    </section>
+
+    <section class="summary offset-anchor" id="instance-properties">
+      <h2>Properties</h2>
+
+      <dl class="properties">
+        <dt id="didDraw" class="property">
+  <span class="name"><a href="../data/Scores/didDraw.html">didDraw</a></span>
+  <span class="signature">&#8594; bool</span> 
+
+</dt>
+<dd>
+  If the game ended in a tie. 
+  <div class="features">read-only</div>
+
+</dd>
+
+        <dt id="didWin" class="property">
+  <span class="name"><a href="../data/Scores/didWin.html">didWin</a></span>
+  <span class="signature">&#8594; bool</span> 
+
+</dt>
+<dd>
+  If Ramaz won the game. 
+  <div class="features">read-only</div>
+
+</dd>
+
+        <dt id="hashCode" class="property inherited">
+  <span class="name"><a href="../data/Scores/hashCode.html">hashCode</a></span>
+  <span class="signature">&#8594; int</span> 
+
+</dt>
+<dd class="inherited">
+  The hash code for this object. <a href="../data/Scores/hashCode.html">[...]</a>
+  <div class="features">read-only, inherited</div>
+
+</dd>
+
+        <dt id="isHome" class="property">
+  <span class="name"><a href="../data/Scores/isHome.html">isHome</a></span>
+  <span class="signature">&#8594; bool</span> 
+
+</dt>
+<dd>
+  Whether the game is being played at home. <a href="../data/Scores/isHome.html">[...]</a>
+  <div class="features">final</div>
+
+</dd>
+
+        <dt id="otherScore" class="property">
+  <span class="name"><a href="../data/Scores/otherScore.html">otherScore</a></span>
+  <span class="signature">&#8594; int</span> 
+
+</dt>
+<dd>
+  The score for the other team. 
+  <div class="features">final</div>
+
+</dd>
+
+        <dt id="ramazScore" class="property">
+  <span class="name"><a href="../data/Scores/ramazScore.html">ramazScore</a></span>
+  <span class="signature">&#8594; int</span> 
+
+</dt>
+<dd>
+  The score for Ramaz. 
+  <div class="features">final</div>
+
+</dd>
+
+        <dt id="runtimeType" class="property inherited">
+  <span class="name"><a href="../data/Scores/runtimeType.html">runtimeType</a></span>
+  <span class="signature">&#8594; Type</span> 
+
+</dt>
+<dd class="inherited">
+  A representation of the runtime type of the object. 
+  <div class="features">read-only, inherited</div>
+
+</dd>
+
+      </dl>
+    </section>
+
+    <section class="summary offset-anchor" id="instance-methods">
+      <h2>Methods</h2>
+      <dl class="callables">
+        <dt id="getScore" class="callable">
+  <span class="name"><a href="../data/Scores/getScore.html">getScore</a></span><span class="signature">(<wbr><span class="parameter" id="getScore-param-home">{<span>required</span> <span class="type-annotation">bool</span> <span class="parameter-name">home</span>}</span>)
+    <span class="returntype parameter">&#8594; int</span>
+  </span>
+  
+
+</dt>
+<dd>
+  Gets the score for either the home team or the away team. 
+  
+
+</dd>
+
+        <dt id="noSuchMethod" class="callable inherited">
+  <span class="name"><a href="../data/Scores/noSuchMethod.html">noSuchMethod</a></span><span class="signature">(<wbr><span class="parameter" id="noSuchMethod-param-invocation"><span class="type-annotation">Invocation</span> <span class="parameter-name">invocation</span></span>)
+    <span class="returntype parameter">&#8594; dynamic</span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  Invoked when a non-existent method or property is accessed. <a href="../data/Scores/noSuchMethod.html">[...]</a>
+  <div class="features">inherited</div>
+
+</dd>
+
+        <dt id="toJson" class="callable">
+  <span class="name"><a href="../data/Scores/toJson.html">toJson</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; Map</span>
+  </span>
+  
+
+</dt>
+<dd>
+  Converts this object to JSON. <a href="../data/Scores/toJson.html">[...]</a>
+  
+
+</dd>
+
+        <dt id="toString" class="callable">
+  <span class="name"><a href="../data/Scores/toString.html">toString</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; String</span>
+  </span>
+  
+
+</dt>
+<dd>
+  A string representation of this object. <a href="../data/Scores/toString.html">[...]</a>
+  
+
+</dd>
+
+      </dl>
+    </section>
+
+    <section class="summary offset-anchor inherited" id="operators">
+      <h2>Operators</h2>
+      <dl class="callables">
+        <dt id="operator ==" class="callable inherited">
+  <span class="name"><a href="../data/Scores/operator_equals.html">operator ==</a></span><span class="signature">(<wbr><span class="parameter" id="==-param-other"><span class="type-annotation">Object</span> <span class="parameter-name">other</span></span>)
+    <span class="returntype parameter">&#8594; bool</span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  The equality operator. <a href="../data/Scores/operator_equals.html">[...]</a>
+  <div class="features">inherited</div>
+
+</dd>
+
+      </dl>
+    </section>
+
+
+
+
+  </div> <!-- /.main-content -->
+
+  <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
+    <ol>
+
+    <li class="section-title"><a href="../data/Scores-class.html#constructors">Constructors</a></li>
+    <li><a href="../data/Scores/Scores.html">Scores</a></li>
+    <li><a href="../data/Scores/Scores.fromJson.html">fromJson</a></li>
+
+
+    <li class="section-title">
+      <a href="../data/Scores-class.html#instance-properties">Properties</a>
+    </li>
+    <li><a href="../data/Scores/didDraw.html">didDraw</a></li>
+    <li><a href="../data/Scores/didWin.html">didWin</a></li>
+    <li class="inherited"><a href="../data/Scores/hashCode.html">hashCode</a></li>
+    <li><a href="../data/Scores/isHome.html">isHome</a></li>
+    <li><a href="../data/Scores/otherScore.html">otherScore</a></li>
+    <li><a href="../data/Scores/ramazScore.html">ramazScore</a></li>
+    <li class="inherited"><a href="../data/Scores/runtimeType.html">runtimeType</a></li>
+
+    <li class="section-title"><a href="../data/Scores-class.html#instance-methods">Methods</a></li>
+    <li><a href="../data/Scores/getScore.html">getScore</a></li>
+    <li class="inherited"><a href="../data/Scores/noSuchMethod.html">noSuchMethod</a></li>
+    <li><a href="../data/Scores/toJson.html">toJson</a></li>
+    <li><a href="../data/Scores/toString.html">toString</a></li>
+
+    <li class="section-title inherited"><a href="../data/Scores-class.html#operators">Operators</a></li>
+    <li class="inherited"><a href="../data/Scores/operator_equals.html">operator ==</a></li>
+
+
+
+
+</ol>
+
+  </div><!--/.sidebar-offcanvas-->
+
+</main>
+
+<footer>
+  <span class="no-break">
+    ramaz
+      2.1.1+1
+  </span>
+
+  
+</footer>
+
+
+<script src="../static-assets/highlight.pack.js"></script>
+<script src="../static-assets/script.js"></script>
+
+
+
+</body>
+
+</html>
+
