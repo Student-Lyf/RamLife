@@ -1,0 +1,47 @@
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+
+name: Dart
+
+on:
+  push:
+    branches: [ documentation ]
+
+jobs:
+  documentation:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: dart-lang/setup-dart@v1
+      
+      - name: Install Flutter
+        uses: britannio/action-install-flutter@v1.0
+        
+      - name: Install dartdoc
+        run: flutter pub global activate dartdoc
+        
+      - name: Install dependencies
+        run: flutter packages get
+        
+      - name: Debug 
+        run: |
+          flutter pub global run dartdoc --version
+          flutter --version
+        
+      - name: Generate documentation
+        run: flutter pub global run dartdoc --ignore 'unresolved-doc-reference,not-implemented,no-documentable-libraries,ambiguous-reexport' --exclude 'dart:async,dart:collection,dart:convert,dart:core,dart:developer,dart:io,dart:isolate,dart:math,dart:typed_data,dart:ui,dart:html,dart:js,dart:ffi,dart:js_util' --quiet --json --output docs --no-auto-include-dependencies --no-validate-links --no-verbose-warnings --no-allow-non-local-warnings
+        
+      - name: Commit files
+        run: |
+          git config --local user.name "github-actions[bot]"
+          git stage --force docs
+          git commit -a -m "Generated documentation"
+      
+      - name: Push commit
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: documentation
+
