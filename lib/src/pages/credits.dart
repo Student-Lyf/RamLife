@@ -26,32 +26,41 @@ class ContributorCard extends StatelessWidget{
 
 	@override 
 	Widget build (BuildContext context) => Card(
-		margin: EdgeInsets.fromLTRB(75, 25, 75, 25),
-		elevation: 2,
+		margin: const EdgeInsets.fromLTRB(75, 25, 75, 25),
+		elevation: 3,
 		child: Row(
 			children: [
 				Column(
 					children: [ 
-					CircleAvatar(foregroundImage: NetworkImage(contributor.imageName), radius: 70),
+						Padding(
+							padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
+							child: Image.network(
+								contributor.imageName, 
+								width: 200, 
+								height: 200
+							),
+						)
 					]
 				),
 				Column(
 					children: [
-				ListTile(
-					contentPadding: EdgeInsets.fromLTRB(50, 25, 50, 0),
-					title: Text(
+				 Text(
 						contributor.name,
+						style: const TextStyle(
+							color: Colors.black,
+							fontSize: 85,
+						),
+						textAlign: TextAlign.end
+					),
+					Text(
+						"${contributor.title}, ${contributor.email}",
 						style: Theme.of(context).textTheme.headline4
 					),
-					subtitle: Text(
-						"${contributor.title}, ${contributor.email}",
-					)
-				),
 				const SizedBox(height: 50),
 				Text(
 					contributor.description,
 					textAlign: TextAlign.left,
-					textScaleFactor: 1.2
+					textScaleFactor: 2
 				),
 				const SizedBox(height: 25),
 			])]
@@ -63,39 +72,39 @@ class Contributor {
 
 	static const List<Contributor> contributors = [
 		Contributor(
-			name: 'David T.',
-			title: 'Frontend',
-			email: 'tarrabd@ramaz.org',
-			imageName: 'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg',
-			description: 'All Hail Shadow'
+			name: "David T.",
+			title: "Frontend",
+			email: "tarrabd@ramaz.org",
+			imageName: "https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg",
+			description: "All Hail Shadow"
 		),
 		Contributor(
-			name: 'Brayden K.',
-			title: 'Backend',
-			email: 'braydenk@ramaz.org',
-			imageName: 'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg',
-			description: 'All Hail Shadow'
+			name: "Brayden K.",
+			title: "Backend",
+			email: "braydenk@ramaz.org",
+			imageName: "https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg",
+			description: "All Hail Shadow"
 		),
 		Contributor(
-			name: 'Joshua T.',
-			title: 'Middleend and Apple Expert',
-			email: 'todesj@ramaz.org',
-			imageName: 'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg',
-			description: 'All Hail Shadow'
+			name: "Joshua T.",
+			title: "Middleend and Apple Expert",
+			email: "todesj@ramaz.org",
+			imageName: "https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg",
+			description: "All Hail Shadow"
 		),
 		Contributor(
-			name: 'Levi L.',
-			title: 'Biggest Boi',
-			email: 'leschesl@ramaz.org',
-			imageName: 'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg',
-			description: 'All Hail Shadow'
+			name: "Levi L.",
+			title: "Biggest Boi",
+			email: "leschesl@ramaz.org",
+			imageName: "https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg",
+			description: "All Hail Shadow"
 		),
 		Contributor(
-			name: 'Mr. Vovsha',
-			title: 'Cool Guy',
-			email: 'evovsha@ramaz.org',
-			imageName: 'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg',
-			description: 'All Hail Shadow'
+			name: "Mr. Vovsha",
+			title: "Cool Guy",
+			email: "evovsha@ramaz.org",
+			imageName: "https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg",
+			description: "All Hail Shadow"
 		)
 	];
 
