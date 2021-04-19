@@ -1,5 +1,7 @@
 import "package:flutter/material.dart";
 
+import "package:ramaz/widgets.dart";
+
 import "drawer.dart";
 
 class CreditsPage extends StatelessWidget {
@@ -7,10 +9,10 @@ class CreditsPage extends StatelessWidget {
 	const CreditsPage();
 
 	@override 
-	Widget build (BuildContext context) => Scaffold(
+	Widget build (BuildContext context) => ResponsiveScaffold(
 		drawer: const NavigationDrawer(),
 		appBar: AppBar(title: const Text ("Credits")),
-		body: ListView(
+		bodyBuilder: (_) => ListView(
 			children: [
 				for (final Contributor contributor in Contributor.contributors)
 					ContributorCard(contributor)
@@ -43,27 +45,32 @@ class ContributorCard extends StatelessWidget{
 					]
 				),
 				Column(
+					mainAxisAlignment: MainAxisAlignment.start,
 					children: [
-				 Text(
-						contributor.name,
-						style: const TextStyle(
-							color: Colors.black,
-							fontSize: 85,
+				 		Text(
+							contributor.name,
+							textAlign: TextAlign.start,
+							style: const TextStyle(
+								color: Colors.black,
+								fontSize: 65,
+							),
 						),
-						textAlign: TextAlign.end
-					),
-					Text(
-						"${contributor.title}, ${contributor.email}",
-						style: Theme.of(context).textTheme.headline4
-					),
-				const SizedBox(height: 50),
-				Text(
-					contributor.description,
-					textAlign: TextAlign.left,
-					textScaleFactor: 2
+						Text(
+							"${contributor.title}, ${contributor.email}",
+							textAlign: TextAlign.start,
+							style: Theme.of(context).textTheme.headline4
+						),
+						const SizedBox(height: 50),
+						Text(
+							contributor.description,
+							textAlign: TextAlign.start,
+							textScaleFactor: 2
+						),
+						const SizedBox(height: 25),
+					]
 				),
-				const SizedBox(height: 25),
-			])]
+				const Spacer()
+			]
 		)
 	);
 }
