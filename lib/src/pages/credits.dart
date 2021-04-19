@@ -28,18 +28,23 @@ class ContributorCard extends StatelessWidget{
 	Widget build (BuildContext context) => Card(
 		margin: EdgeInsets.fromLTRB(75, 25, 75, 25),
 		elevation: 2,
-		child: Column(
+		child: Row(
 			children: [
+				Column(
+					children: [ 
+					CircleAvatar(foregroundImage: NetworkImage(contributor.imageName), radius: 70),
+					]
+				),
+				Column(
+					children: [
 				ListTile(
 					contentPadding: EdgeInsets.fromLTRB(50, 25, 50, 0),
-					leading: Image.network(contributor.imageName),
 					title: Text(
 						contributor.name,
 						style: Theme.of(context).textTheme.headline4
 					),
 					subtitle: Text(
 						"${contributor.title}, ${contributor.email}",
-						textScaleFactor: 1.5
 					)
 				),
 				const SizedBox(height: 50),
@@ -49,7 +54,7 @@ class ContributorCard extends StatelessWidget{
 					textScaleFactor: 1.2
 				),
 				const SizedBox(height: 25),
-			]
+			])]
 		)
 	);
 }

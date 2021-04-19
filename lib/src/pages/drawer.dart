@@ -97,24 +97,10 @@ class NavigationDrawer extends StatelessWidget {
 										leading: Icon (Icons.feedback),
 										onTap: pushRoute(context, Routes.feedback),
 									),
-									const AboutListTile (
-										icon: Icon (Icons.info),
-										// ignore: sort_child_properties_last
-										child: Text ("About"),
-										applicationName: "Ramaz Student Life",
-										applicationVersion: "0.5",
-										applicationIcon: Logos.ramazIcon,
-										aboutBoxChildren: [
-											Text (
-												"Created by the Ramaz Coding Club (Levi Lesches and Sophia "
-												"Kremer) with the support of the Ramaz administration. "
-											),
-											SizedBox (height: 20),
-											Text (
-												"A special thanks to Mr. Vovsha for helping us go from idea to "
-												"reality."
-											),
-										]
+									ListTile (
+										title: const Text ("Credits"),
+										leading: Icon (Icons.info),
+										onTap: pushRoute(context, Routes.credits),
 									),
 									const Spacer(),
 									Align (
