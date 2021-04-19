@@ -30,8 +30,9 @@ jobs:
           flutter pub global run dartdoc --version
           flutter --version
           
-      - name: Switch branches
+      - name: Prepare Git
         run: |
+          git pull
           git switch --track origin/documentation
           git merge master
         
