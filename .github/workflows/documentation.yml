@@ -32,6 +32,7 @@ jobs:
           
       - name: Prepare Git
         run: |
+          git pull
           git switch --track origin/documentation
           git merge master
       
