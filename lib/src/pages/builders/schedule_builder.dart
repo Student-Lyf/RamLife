@@ -111,8 +111,9 @@ class ScheduleBuilderState extends State<ScheduleBuilder> {
 	        child: ListView(
 	          padding: const EdgeInsets.all(16),
 	          children: [
-	            const TextField(
-	              decoration: InputDecoration(hintText: "Name of schedule"),
+	            TextField(
+	              decoration: const InputDecoration(hintText: "Name of schedule"),
+	              onChanged: (String value) => model.name = value,
 	            ),
 	            const SizedBox(height: 16),
 	            IntegerInput(
