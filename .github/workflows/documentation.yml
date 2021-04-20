@@ -27,6 +27,7 @@ jobs:
         
       - name: Debug 
         run: |
+          
           flutter pub global run dartdoc --version
           flutter --version
           
@@ -40,6 +41,7 @@ jobs:
         
       - name: Commit files
         run: |
+          git status
           git config --local user.name "github-actions[bot]"
           git stage --force docs
           git commit -a -m "Generated documentation"
