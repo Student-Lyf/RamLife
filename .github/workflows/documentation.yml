@@ -29,6 +29,7 @@ jobs:
         run: |
           flutter pub global run dartdoc --version
           flutter --version
+
           
       - name: Prepare Git
         run: |
@@ -41,6 +42,9 @@ jobs:
         
       - name: Commit files
         run: |
+          ls
+          cd docs
+          cd ..
           git status
           git config --local user.name "github-actions[bot]"
           git stage --force docs
