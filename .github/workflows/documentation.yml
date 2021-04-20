@@ -14,6 +14,9 @@ on:
 jobs:
   documentation:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./repo
     steps:
       - name: Cache Flutter
         id: cache-flutter
@@ -24,7 +27,6 @@ jobs:
 
       - name: Install Flutter
         if: steps.cache-flutter.outputs.cache-hit != 'true'
-        # uses: dart-lang/setup-dart@v1
         uses: britannio/action-install-flutter@v1.0
 
       - uses: actions/checkout@v2
@@ -35,7 +37,6 @@ jobs:
 
       - name: Git Setup
         run: |
-          cd repo
           git config --local user.name "github-actions[bot]"
           git branch --all
           git switch --track origin/documentation
