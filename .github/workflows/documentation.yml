@@ -17,16 +17,17 @@ jobs:
       - uses: dart-lang/setup-dart@v1
       - uses: britannio/action-install-flutter@v1.0
       
-      - name: Setup 
+      - name: Flutter Setup 
         run: |
           flutter packages get
           flutter pub global activate dartdoc
           flutter pub global run dartdoc --version
           flutter --version
           
-      - name: Prepare Git
+      - name: Git Setup
         run: |
           git config --local user.name "github-actions[bot]"
+          git pull
           git switch --track origin/documentation
           rm -rf docs
           git stage docs
