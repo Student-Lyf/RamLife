@@ -15,11 +15,6 @@ jobs:
   documentation:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-        with: 
-          fetch-depth: 0
-          ref: master
-
       - name: Cache Flutter
         id: cache-flutter
         uses: actions/cache@v2
@@ -32,8 +27,15 @@ jobs:
         # uses: dart-lang/setup-dart@v1
         uses: britannio/action-install-flutter@v1.0
 
+      - uses: actions/checkout@v2
+        with: 
+          fetch-depth: 0
+          ref: master
+          path: repo  # keep Flutter separate
+
       - name: Git Setup
         run: |
+          cd repo
           git config --local user.name "github-actions[bot]"
           git branch --all
           git switch --track origin/documentation
