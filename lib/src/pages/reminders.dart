@@ -4,9 +4,14 @@ import "package:ramaz/models.dart";
 import "package:ramaz/pages.dart";
 import "package:ramaz/widgets.dart";
 
+/// The reminders page. 
+/// 
+/// Allows CRUD operations on reminders. 
 class ResponsiveReminders extends NavigationItem {
+	/// The data model for reminders.
 	final Reminders model = Models.instance.reminders;
 
+	/// Creates the reminders page.
 	ResponsiveReminders() : 
 		super(label: "Reminders", icon: const Icon(Icons.notifications));
 

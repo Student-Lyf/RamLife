@@ -9,6 +9,7 @@ import "package:ramaz/widgets.dart";
 
 /// The main app widget. 
 class RamLife extends StatelessWidget {
+	/// Determines whether the user is an admin with the given scope.  
 	static bool hasAdminScope(AdminScope scope) => Auth.isSignedIn
 		&& Models.instance.user.isAdmin
 		&& Models.instance.user.adminScopes!.contains(scope);
