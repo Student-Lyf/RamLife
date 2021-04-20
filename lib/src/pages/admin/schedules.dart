@@ -47,7 +47,7 @@ class AdminSchedulesPage extends StatelessWidget {
 										final Schedule? newSchedule = 
 											await ScheduleBuilder.buildSchedule(context, preset: schedule);
 										if (newSchedule != null) {
-											await model.createSchedule(newSchedule);
+											await model.replaceSchedule(newSchedule);
 										}
 									},
 								)

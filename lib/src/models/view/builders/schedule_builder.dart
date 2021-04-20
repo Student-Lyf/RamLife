@@ -127,7 +127,7 @@ class ScheduleBuilderModel with ChangeNotifier {
 	/// Copies data from another schedule to this one. 
 	/// 
 	/// Allows the user to quickly make small changes to existing schedules. 
-	void usePreset(Schedule? preset) {
+	void usePreset(Schedule? preset, {bool includeName = false}) {
 		if (preset == null) {
 			return;
 		}
@@ -135,6 +135,9 @@ class ScheduleBuilderModel with ChangeNotifier {
 			for (final Period period in preset.periods)
 				EditablePeriod.fromPeriod(period)
 		];
+		if (includeName) {
+			_name = preset.name;
+		}
 		notifyListeners();
 	}
 
