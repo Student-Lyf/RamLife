@@ -64,6 +64,7 @@ class GenericSportsView<T> extends StatelessWidget {
 	);
 }
 
+/// Creates the AppBar for the sports page. 
 AppBar buildAppBar(SportsModel model) => AppBar(
 	title: const Text("Sports"),
 	bottom: const TabBar(
@@ -243,6 +244,7 @@ void openMenu({
 
 /// A page to show recent and upcoming games to the user. 
 class SportsPage extends StatelessWidget {
+	/// Creates the sports page.
 	const SportsPage();
 
 	@override 

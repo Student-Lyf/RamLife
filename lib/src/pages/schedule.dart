@@ -5,9 +5,15 @@ import "package:ramaz/data.dart";
 import "package:ramaz/models.dart";
 import "package:ramaz/widgets.dart";
 
+/// Allows users to explore their schedule.
+/// 
+/// Users can use the calendar button to check the schedule for a given date
+/// or create a custom [Day] from the drop-down menus.
 class ResponsiveSchedule extends NavigationItem {
+	/// The data model for the schedule.
 	final ScheduleViewModel model = ScheduleViewModel();
 
+	/// Creates the schedule page.
 	ResponsiveSchedule() : 
 		super(label: "Schedule", icon: const Icon(Icons.schedule));
 

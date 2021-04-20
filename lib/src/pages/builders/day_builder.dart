@@ -12,11 +12,13 @@ import "package:ramaz/widgets.dart";
 /// If [day] is provided, then the fields [DayBuilderModel.name],
 /// [DayBuilderModel.schedule], are set to [Day.name] and [Day.schedule].
 class DayBuilder extends StatelessWidget {
+	/// The date this widget is modifying.
 	final DateTime date;
 
 	/// The day to edit, if it already exists. 
 	final Day? day;
 
+	/// A function to upload the created day to the calendar. 
 	final Future<void> Function(Day?) upload;
 
 	/// Creates a widget to guide the user in creating a [Day] 

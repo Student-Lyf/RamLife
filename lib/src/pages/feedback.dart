@@ -8,6 +8,7 @@ import "drawer.dart";
 
 /// A page to submit feedback. 
 class FeedbackPage extends StatelessWidget {
+	/// Creates the feedback page.
 	const FeedbackPage();
 
 	@override 
