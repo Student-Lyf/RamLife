@@ -7,7 +7,7 @@ import "package:ramaz/widgets.dart";
 
 /// A page to show the admin's custom schedules. 
 class AdminSchedulesPage extends StatelessWidget {
-
+	/// Creates a page for admins to manage schedules.
 	const AdminSchedulesPage();
 
 	// If the user is on this page, they are an admin.
@@ -45,7 +45,7 @@ class AdminSchedulesPage extends StatelessWidget {
 									title: Text(schedule.name),
 									onTap: () async {
 										final Schedule? newSchedule = 
-											await ScheduleBuilder.buildSchedule(context, schedule);
+											await ScheduleBuilder.buildSchedule(context, preset: schedule);
 										if (newSchedule != null) {
 											await model.createSchedule(newSchedule);
 										}

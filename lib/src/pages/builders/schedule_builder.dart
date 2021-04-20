@@ -4,153 +4,233 @@ import "package:ramaz/data.dart";
 import "package:ramaz/models.dart";
 import "package:ramaz/widgets.dart";
 
-/// A widget to guide the admin in creating a [Schedule].
+import "../drawer.dart";
+
+/// Allows the user to input a small integer. 
 /// 
-/// The [Schedule] doesn't have to be created from scratch, it can be based on
-/// an existing schedule by passing it as a parameter to [ScheduleBuilder()]. 
-class ScheduleBuilder extends StatefulWidget {
-	/// Returns the [Schedule] created by this widget. 
-	static Future<Schedule?> buildSchedule(
-		BuildContext context,
-		[Schedule? preset]
-	) => showDialog(
-		context: context, 
-		builder: (_) => ScheduleBuilder(preset),
-	);
+/// Shows a number with + and - buttons nearby.
+class IntegerInput extends StatelessWidget {
+	/// The value being represented. 
+  final int value;
 
-	/// The [Schedule] to base this schedule on.
-	final Schedule? preset;
+  /// Callback for when the + button is pressed.
+  final VoidCallback onAdd;
 
-	/// Creates a widget to guide the user in creating a schedule.
-	const ScheduleBuilder([this.preset]);
+  /// Callback for when the - button is pressed.
+  final VoidCallback onRemove;
 
-	@override
-	ScheduleBuilderState createState() => ScheduleBuilderState();
+  /// Creates a small integer input widget. 
+  const IntegerInput({
+    required this.value,
+    required this.onAdd,
+    required this.onRemove,
+  });
+  
+  @override
+  Widget build(BuildContext context) => Row(
+    children: [
+      const SizedBox(width: 16),
+      const Text("Periods: "),
+      const Spacer(),
+      TextButton(
+        onPressed: onRemove,
+        child: const Icon(Icons.remove),
+      ),
+      Text(value.toString()),
+      TextButton(
+        onPressed: onAdd,
+        child: const Icon(Icons.add),
+      ),
+      const SizedBox(width: 16),
+    ]
+  );
 }
 
-/// A state for a [ScheduleBuilder]. 
+/// A page to create a [Schedule]. 
 /// 
-/// A state is needed to keep the [TextEditingController] from rebuilding. 
-class ScheduleBuilderState extends State<ScheduleBuilder> {
-	/// A controller to hold the name of the [Schedule]. 
+/// This uses [ScheduleBuilderModel] to create a schedule period by period. 
+/// You can also pass in another schedule to quickly preset all the periods.
+/// This allows admins to quickly make small changes to existing schedules.
+class ScheduleBuilder extends StatefulWidget {
+	/// Opens the schedule builder and saves the result.
 	/// 
-	/// This will be preset with the name of [ScheduleBuilder.preset].
-	final TextEditingController controller = TextEditingController();
+	/// If you pass a schedule, the builder will configure itself to match it.
+	/// This allows admins to make small changes quickly. 
+	static Future<Schedule?> buildSchedule(
+		BuildContext context,
+		{Schedule? preset}
+	) => Navigator
+		.of(context)
+		.push<Schedule>(
+			PageRouteBuilder(
+				transitionDuration: Duration.zero,
+				pageBuilder: (_, __, ___) => ScheduleBuilder(preset: preset))
+		);
 
-	/// If the name of the schedule conflicts with another one.
-	/// 
-	/// Names of custom schedules cannot conflict with the default schedules, since
-	/// users will be confused when the app displays a familiar schedule name, but 
-	/// updates at unusual times.
-	bool conflicting = false;
+	/// The schedule to work off.
+	final Schedule? preset;
+
+	/// Creates a schedule builder, with an optional preset. 
+	const ScheduleBuilder({this.preset});
+
+  @override
+  ScheduleBuilderState createState() => ScheduleBuilderState();
+}
+
+/// The state for the schedule builder.
+class ScheduleBuilderState extends State<ScheduleBuilder> {
+	/// The model that represents the data. 
+	late ScheduleBuilderModel model;
+
+	/// Triggers whenever the underlying data updates. 
+	void listener() => setState(() {});
 
 	@override
 	void initState() {
+		model = ScheduleBuilderModel()
+			..usePreset(widget.preset)
+			..addListener(listener);
 		super.initState();
-		controller.text = widget.preset?.name ?? "";
 	}
 
-	@override 
-	Widget build(BuildContext context) => ModelListener<ScheduleBuilderModel>(
-		model: () => ScheduleBuilderModel(widget.preset),
-		builder: (_, ScheduleBuilderModel model, Widget? cancel) => Scaffold(
-			appBar: AppBar(
-				title: const Text("Make new schedule"),
-				actions: [
-					IconButton(
-						icon: const Icon(Icons.sync),
-						tooltip: "Use preset",
-						onPressed: () async {
-							final Schedule? schedule = await showModalBottomSheet<Schedule?>(
-								context: context,
-								builder: (BuildContext context) => ListView(
-									children: [
-										const SizedBox(
-											width: double.infinity,
-											height: 60,
-											child: Center(
-												child: Text("Use a preset", textScaleFactor: 1.5),
-											),
-										),
-										for (final Schedule schedule in Schedule.schedules) 
-											ListTile(
-												title: Text (schedule.name),
-												onTap: () => Navigator.of(context).pop(schedule),
-											),
-									]
-								)
-							);
-							if (schedule != null) {
-								controller.text = schedule.name;
-								model.usePreset(schedule);
-							}
-						}
-					),
-				]
-			),
-			floatingActionButton: FloatingActionButton.extended(
-				label: const Text("Save"),
-				icon: const Icon(Icons.done),
-				onPressed: !model.ready ? null : 
-					() => Navigator.of(context).pop(model.schedule),
-				backgroundColor: model.ready
-					? Theme.of(context).accentColor
-					: Theme.of(context).disabledColor,
-			),
-			body: ListView(
-				padding: const EdgeInsets.all(15),
-				children: [
-					Padding(
-						padding: const EdgeInsets.symmetric(horizontal: 10),
-						child: TextField(
-							controller: controller,
-							onChanged: (String value) {
-								conflicting = Schedule.schedules.any(
-									(Schedule other) => other.name == value
-								);
-								model.name = value;
-							},
-							textInputAction: TextInputAction.done,
-							textCapitalization: TextCapitalization.sentences,
-							decoration: InputDecoration(
-								labelText: "Name",
-								hintText: "Name of the schedule",
-								errorText: conflicting 
-									? "Name cannot match an existing schedule's name" 
-									: null,
-							),
-						),
-					),
-					const SizedBox(height: 20),
-					for (int index = 0; index < model.numPeriods; index++)
-						PeriodTile(
-							model: model,
-							range: model.periods [index].time,
-							index: index,
-						),
-					Row(
-						children: [
-							TextButton.icon(
-								icon: const Icon (Icons.add),
-								label: const Text("Add"),
-								onPressed: () => model.numPeriods++,
-							),
-							if (model.numPeriods > 0) 
-								TextButton.icon(
-									icon: const Icon(Icons.remove),
-									label: const Text("Remove"),
-									onPressed: () => model.numPeriods--
-								),
-						]
-					),
-					if (model.numPeriods == 0) 
-						const Text(
-							"You can also select a preset by clicking the button on top",
-							textScaleFactor: 1.5,
-							textAlign: TextAlign.center,
-						),
-				]
-			)
-		)
-	);
+	@override
+	void dispose() {
+		model
+			..removeListener(listener)
+			..dispose();
+		super.dispose();
+	}
+
+  @override
+  Widget build(BuildContext context) => ResponsiveScaffold(
+  	drawer: const NavigationDrawer(),
+    appBar: AppBar(title: const Text("Create schedule")),
+    bodyBuilder: (_) => Column(
+	    children: [
+	      Expanded(
+	        child: ListView(
+	          padding: const EdgeInsets.all(16),
+	          children: [
+	            const TextField(
+	              decoration: InputDecoration(hintText: "Name of schedule"),
+	            ),
+	            const SizedBox(height: 16),
+	            IntegerInput(
+	              value: model.periods.length,
+	              onAdd: model.addPeriod,
+	              onRemove: model.removePeriod,
+	            ),
+	            const SizedBox(height: 24),
+	            DataTable(
+	              columns: const [
+	                DataColumn(label: Text("Name")),
+	                DataColumn(label: Text("Start")),
+	                DataColumn(label: Text("End")),
+	                DataColumn(label: Text("Class?")),
+	              ],
+	              rows: [
+	                for (final EditablePeriod period in model.periods) DataRow(
+	                  cells: [
+	                    DataCell(
+	                      TextField(
+	                        controller: period.controller,
+	                        onChanged: (_) => setState(() {}),
+	                      ),
+	                      showEditIcon: true,
+	                    ),
+	                    DataCell(
+	                      Text(
+	                      	period.start?.format(context) ?? "Start time",
+	                      	style: !period.hasInvalidTime ? null : TextStyle(
+	                      		color: Theme.of(context).colorScheme.error
+                      		),
+                      	),
+	                      placeholder: period.start == null,
+	                      showEditIcon: true,
+	                      onTap: () async {
+	                        period.start = (await editTime(period.start)) 
+		                        ?? period.start;
+	                        setState(() {});
+	                      } 
+	                    ),
+	                    DataCell(
+	                      Text(
+	                      	period.end?.format(context) ?? "End time",
+	                      	style: !period.hasInvalidTime ? null : TextStyle(
+	                      		color: Theme.of(context).colorScheme.error
+                      		),
+                      	),
+	                      placeholder: period.end == null,
+	                      showEditIcon: true,
+	                       onTap: () async {
+	                        period.end = (await editTime(period.end)) 
+		                        ?? period.end;
+	                        setState(() {});
+	                      } 
+	                    ),
+	                    DataCell(
+	                      int.tryParse(period.name) == null ? Container() 
+		                      : const Icon(Icons.check, color: Colors.green),
+	                    )
+	                  ]
+	                ),
+	              ]
+	            ),
+	          ],
+	        ),
+	      ),
+	      const SizedBox(height: 16),
+	      Row(
+	        children: [
+	          const SizedBox(width: 16),
+	          TextButton(
+	            onPressed: () => showModalBottomSheet(
+	              context: context,
+	              builder: (_) => ListView(
+	                children: [
+	                  for (final Schedule schedule in Schedule.schedules)
+	                    ListTile(
+	                    	title: Text(schedule.name),
+	                    	subtitle: Text("${schedule.periods.length} periods"),
+	                    	onTap: () {
+	                    		model.usePreset(schedule);
+	                    		Navigator.of(context).pop();
+	                    	}
+	                  	)
+	                ]
+	              )
+	            ),
+	            child: const Text("Build off another schedule"),
+	          ),
+	          const Spacer(),
+	          TextButton(
+	            onPressed: () => Navigator.of(context).pop(),
+	            child: const Text("Cancel"),
+	          ),
+	          ElevatedButton(
+	            onPressed: !model.isReady ? null : 
+	              () => Navigator.of(context).pop(model.schedule),
+	            child: const Text("Save"),
+	          ),
+	          const SizedBox(width: 16),
+	        ]
+	      ),
+	      const SizedBox(height: 16),
+	    ]
+    )
+  );
+    
+	/// Picks a new time for a period. 
+	/// 
+	/// On desktop, this shows the keyboard-friendly UI. On all other devices,
+	/// the touch-friendly UI is the default.
+  Future<TimeOfDay?> editTime([TimeOfDay? initialTime]) {
+  	final LayoutInfo layout = LayoutInfo(context);
+  	return showTimePicker(
+	    context: context,
+	    initialTime: initialTime ?? TimeOfDay.now(),
+	    initialEntryMode: layout.isDesktop 
+		    ? TimePickerEntryMode.input : TimePickerEntryMode.dial,
+	  );
+  }
 }
