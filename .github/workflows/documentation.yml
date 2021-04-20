@@ -67,7 +67,4 @@ jobs:
           git commit -a -m "Generated documentation"
       
       - name: Push commit
-        uses: ad-m/github-push-action@master
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: documentation
+        run: git push
