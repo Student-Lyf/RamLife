@@ -23,6 +23,15 @@ class AdminScheduleModel with ChangeNotifier {
 		return saveSchedules();
 	}
 
+	Future<void> replaceSchedule(Schedule schedule) async {
+		schedules
+			..removeWhere(
+				(Schedule other) => other.name == schedule.name
+			)
+			..add(schedule);
+		return saveSchedules();
+	}
+
 	Future<void> deleteSchedule(Schedule schedule) async {
 		schedules.removeWhere(
 			(Schedule other) => other.name == schedule.name

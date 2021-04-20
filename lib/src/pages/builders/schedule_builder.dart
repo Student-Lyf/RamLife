@@ -82,14 +82,18 @@ class ScheduleBuilderState extends State<ScheduleBuilder> {
 	/// The model that represents the data. 
 	late ScheduleBuilderModel model;
 
+	/// The text controller for the name of the schedule. 
+	late TextEditingController nameController;
+
 	/// Triggers whenever the underlying data updates. 
 	void listener() => setState(() {});
 
 	@override
 	void initState() {
 		model = ScheduleBuilderModel()
-			..usePreset(widget.preset)
+			..usePreset(widget.preset, includeName: true)
 			..addListener(listener);
+		nameController = TextEditingController(text: widget.preset?.name ?? "");
 		super.initState();
 	}
 
@@ -98,6 +102,7 @@ class ScheduleBuilderState extends State<ScheduleBuilder> {
 		model
 			..removeListener(listener)
 			..dispose();
+		nameController.dispose();
 		super.dispose();
 	}
 
@@ -112,6 +117,7 @@ class ScheduleBuilderState extends State<ScheduleBuilder> {
 	          padding: const EdgeInsets.all(16),
 	          children: [
 	            TextField(
+	            	controller: nameController,
 	              decoration: const InputDecoration(hintText: "Name of schedule"),
 	              onChanged: (String value) => model.name = value,
 	            ),
