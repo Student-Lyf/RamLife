@@ -78,8 +78,10 @@ abstract class Database extends Service {
 	/// with [calendarKey].
 	Future<Map> getCalendarMonth(int month);
 
+	/// Gets all available schedules. 
 	Future<List<Map>> getSchedules();
 
+	/// Saves the list of available schedules.
 	Future<void> saveSchedules(List<Map> schedules);
 
 	/// Changes the calendar in the database. 
