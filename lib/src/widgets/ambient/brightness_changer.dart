@@ -42,6 +42,7 @@ class BrightnessChanger extends StatefulWidget {
 	BrightnessChangerState createState() => BrightnessChangerState();
 }
 
+/// The state for a [BrightnessChanger].
 class BrightnessChangerState extends State<BrightnessChanger> {
 	bool? _brightness;
 
