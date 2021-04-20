@@ -5,6 +5,7 @@ import "package:ramaz/data.dart";
 /// A view model for the creating a new [Day].
 // ignore: prefer_mixin
 class DayBuilderModel with ChangeNotifier {
+	/// The date being modified.
 	final DateTime date;
 
 	bool _hasSchool;

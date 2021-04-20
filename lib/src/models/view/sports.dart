@@ -2,7 +2,7 @@ import "package:flutter/foundation.dart";
 
 import "package:ramaz/data.dart";
 import "package:ramaz/models.dart";
-import "package:ramaz/services.dart";
+import "package:ramaz/services.dart" hide AsyncCallback;
 
 /// Different ways to sort the sports calendar.
 enum SortOption {
