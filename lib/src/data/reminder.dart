@@ -64,5 +64,6 @@ class Reminder {
 		"hash": hash, 
 	};
 
+	/// A unique identifier for this reminder.
 	String get hash => "$message-${time.hash}";
 }

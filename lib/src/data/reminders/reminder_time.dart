@@ -113,5 +113,6 @@ abstract class ReminderTime {
 	@override
 	String toString();
 
+	/// A unique identifier for this reminder. 
 	String get hash;
 }
