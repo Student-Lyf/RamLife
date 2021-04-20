@@ -8,6 +8,8 @@ name: Dart
 on:
   push:
     branches: [ actions ]
+  pull_request: 
+    branches: [ actions ]
 
 jobs:
   documentation:
@@ -17,8 +19,18 @@ jobs:
         with: 
           fetch-depth: 0
           ref: master
-      - uses: dart-lang/setup-dart@v1
-      - uses: britannio/action-install-flutter@v1.0
+
+      - name: Cache Flutter
+        id: cache-flutter
+        uses: actions/cache@v2
+        with:
+          path: flutter/
+          key: ${{ runner.os }}-flutter
+
+      - name: Install Flutter
+        if: steps.cache-flutter.outputs.cache-hit != 'true'
+        # uses: dart-lang/setup-dart@v1
+        uses: britannio/action-install-flutter@v1.0
 
       - name: Git Setup
         run: |
@@ -36,6 +48,9 @@ jobs:
           flutter pub global activate dartdoc
           flutter pub global run dartdoc --version
           flutter --version
+
+      - name: Analyze code
+        run: flutter analyze --dartdocs
           
       - name: Generate documentation
         run: flutter pub global run dartdoc --ignore 'unresolved-doc-reference,not-implemented,no-documentable-libraries,ambiguous-reexport' --exclude 'dart:async,dart:collection,dart:convert,dart:core,dart:developer,dart:io,dart:isolate,dart:math,dart:typed_data,dart:ui,dart:html,dart:js,dart:ffi,dart:js_util' --quiet --json --output docs --no-validate-links --no-verbose-warnings --no-allow-non-local-warnings
@@ -53,4 +68,3 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           branch: documentation
-
