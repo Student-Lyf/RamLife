@@ -133,6 +133,7 @@ class Activity {
 			message: json ["message"]
 		);
 
+	/// A JSON representation of this object.
 	Map toJson() => {
 		"message": message,
 		"type": activityTypeToString(type),
