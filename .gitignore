@@ -33,7 +33,6 @@
 *.txt.yaml
 todo
 /data/
-docs/
 
 # Firebase folders:
 node_modules
