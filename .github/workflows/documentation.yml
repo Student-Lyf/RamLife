@@ -22,9 +22,8 @@ jobs:
       - name: Git Setup
         run: |
           git config --local user.name "github-actions[bot]"
-          git pull
           git switch --track origin/documentation
-          git merge --allow-unrelated-histories master
+          git merge origin/master
           rm -rf docs
           git stage docs
           git commit -m "Removed documentation" -m "Will generate new docs"
