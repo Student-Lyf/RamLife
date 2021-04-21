@@ -1,5 +1,14 @@
 {
   "projects": {
     "default": "ramaz-go"
+  },
+  "targets": {
+    "ramaz-go": {
+      "hosting": {
+        "test": [
+          "ramlife-test"
+        ]
+      }
+    }
   }
 }
