@@ -32,7 +32,7 @@ jobs:
       - uses: actions/checkout@v2
         with: 
           fetch-depth: 0
-          ref: master
+          ref: actions
           path: repo  # keep Flutter separate
 
       - name: Git Setup
@@ -40,7 +40,7 @@ jobs:
           git config --local user.name "github-actions[bot]"
           git branch --all
           git switch --track origin/documentation
-          git merge origin/master
+          git merge origin/actions
           rm -rf docs
           git stage docs
           git commit -m "Removed documentation" -m "Will generate new docs"
