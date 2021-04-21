@@ -22,7 +22,9 @@ jobs:
         uses: britannio/action-install-flutter@v1.0
 
       - name: Add Flutter to path
-        run: echo "../flutter/bin" >> $GITHUB_PATH
+        run: |
+          pwd
+          echo "../flutter/bin" >> $GITHUB_PATH
         
       - uses: actions/checkout@v2
         with: 
