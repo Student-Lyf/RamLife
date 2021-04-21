@@ -6,6 +6,7 @@ on: pull_request
 
 jobs:
   build_and_preview:
+    if: ${{ github.repository }} == Levi-Lesches/RamLife
     runs-on: ubuntu-latest
     defaults:
       run:
