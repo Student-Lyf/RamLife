@@ -6,6 +6,7 @@ on: pull_request
 
 jobs:
   build_and_preview:
+    if: ${{ github.repository }} == Levi-Lesches/RamLife
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -28,7 +29,10 @@ jobs:
           path: repo
 
       - name: Add Flutter to path
-        run: echo "../flutter/bin" >> $GITHUB_PATH
+        run: |
+          echo "../flutter/bin" >> $GITHUB_PATH
+          echo "Running on ${{ github.repository }}
+
   
       - name: Build web app
         run: flutter build web
@@ -42,3 +46,5 @@ jobs:
           entryPoint: ./repo
         env:
           FIREBASE_CLI_PREVIEWS: hostingchannels
+
+
