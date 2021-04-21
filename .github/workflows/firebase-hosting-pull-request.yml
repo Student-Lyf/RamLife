@@ -29,9 +29,7 @@ jobs:
           path: repo
 
       - name: Add Flutter to path
-        run: |
-          echo "../flutter/bin" >> $GITHUB_PATH
-          echo "Running on ${{ github.repository }}
+        run: echo "../flutter/bin" >> $GITHUB_PATH
   
       - name: Build web app
         run: flutter build web
