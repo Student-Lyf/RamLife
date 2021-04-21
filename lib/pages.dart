@@ -7,6 +7,7 @@ export "src/pages/builders/day_builder.dart";
 export "src/pages/builders/reminder_builder.dart";
 export "src/pages/builders/schedule_builder.dart";
 export "src/pages/builders/sports_builder.dart";
+export "src/pages/credits.dart";
 export "src/pages/drawer.dart";
 export "src/pages/feedback.dart";
 export "src/pages/home.dart";
@@ -43,4 +44,7 @@ class Routes {
 
 	/// The route name for the sports games page.
 	static const String sports = "sports";
+
+	/// The route name for the credits page.
+	static const String credits = "credits";
 }
