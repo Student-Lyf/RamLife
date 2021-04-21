@@ -12,6 +12,8 @@ library data;
 export "src/data/clubs/club.dart";
 export "src/data/clubs/message.dart";
 
+export "src/data/contributor.dart";
+
 export "src/data/feedback.dart";
 export "src/data/reminder.dart";
 

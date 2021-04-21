@@ -1,11 +1,13 @@
 import "package:flutter/material.dart";
 
 import "package:ramaz/widgets.dart";
+import "package:ramaz/data.dart";
 
 import "drawer.dart";
 
+/// Creates the Credits Page by iterating through each ContributorCard.
 class CreditsPage extends StatelessWidget {
-
+	/// Builds the Credits page.
 	const CreditsPage();
 
 	@override 
@@ -20,113 +22,60 @@ class CreditsPage extends StatelessWidget {
 		)
 	);
 }
-
+/// A class that creates each individual Contributor's Card.
+/// It creates a Row that holds the Image, and then a Column that
+/// holds the rest of the information.
 class ContributorCard extends StatelessWidget{
+	/// contributor is a variable that must be a Contributor.
 	final Contributor contributor;
-
+	/// ContributorCard requires a Contributor to be passed.
 	const ContributorCard(this.contributor);
 
 	@override 
 	Widget build (BuildContext context) => Card(
-		margin: const EdgeInsets.fromLTRB(75, 25, 75, 25),
+		margin: const EdgeInsets.fromLTRB(75, 15, 75, 15),
 		elevation: 3,
 		child: Row(
 			children: [
-				Column(
-					children: [ 
-						Padding(
-							padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
-							child: Image.network(
-								contributor.imageName, 
-								width: 200, 
-								height: 200
-							),
-						)
-					]
+				Padding(
+					padding: const EdgeInsets.all(20),
+					child: Image.network(
+						contributor.imageName, 
+						width: 150, 
+						height: 150
+					),
 				),
+
 				Column(
-					mainAxisAlignment: MainAxisAlignment.start,
+					crossAxisAlignment: CrossAxisAlignment.start,
 					children: [
+						const SizedBox(height: 20),
 				 		Text(
-							contributor.name,
+							"${contributor.name} ${contributor.gradYear}",
 							textAlign: TextAlign.start,
-							style: const TextStyle(
-								color: Colors.black,
-								fontSize: 65,
-							),
+							style: Theme.of(context).textTheme.headline3,
 						),
 						Text(
-							"${contributor.title}, ${contributor.email}",
+							"${contributor.email}",
 							textAlign: TextAlign.start,
-							style: Theme.of(context).textTheme.headline4
+							style: Theme.of(context).textTheme.headline6
 						),
-						const SizedBox(height: 50),
+						Text(
+							"${contributor.title}",
+							textAlign: TextAlign.start,
+							style: Theme.of(context).textTheme.headline6
+						),
+						const SizedBox(height: 15),
 						Text(
 							contributor.description,
 							textAlign: TextAlign.start,
-							textScaleFactor: 2
+							style: Theme.of(context).textTheme.subtitle1
 						),
-						const SizedBox(height: 25),
+						const SizedBox(height: 20),
 					]
 				),
 				const Spacer()
 			]
 		)
 	);
-}
-
-class Contributor {
-
-	static const List<Contributor> contributors = [
-		Contributor(
-			name: "David T.",
-			title: "Frontend",
-			email: "tarrabd@ramaz.org",
-			imageName: "https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg",
-			description: "All Hail Shadow"
-		),
-		Contributor(
-			name: "Brayden K.",
-			title: "Backend",
-			email: "braydenk@ramaz.org",
-			imageName: "https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg",
-			description: "All Hail Shadow"
-		),
-		Contributor(
-			name: "Joshua T.",
-			title: "Middleend and Apple Expert",
-			email: "todesj@ramaz.org",
-			imageName: "https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg",
-			description: "All Hail Shadow"
-		),
-		Contributor(
-			name: "Levi L.",
-			title: "Biggest Boi",
-			email: "leschesl@ramaz.org",
-			imageName: "https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg",
-			description: "All Hail Shadow"
-		),
-		Contributor(
-			name: "Mr. Vovsha",
-			title: "Cool Guy",
-			email: "evovsha@ramaz.org",
-			imageName: "https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg",
-			description: "All Hail Shadow"
-		)
-	];
-
-	final String name;
-	final String title;
-	final String email;
-	final String description;
-	final String imageName;
-
-	const Contributor({
-		required this.description,
-		required this.email,
-		required this.name,
-		required this.title,
-		required this.imageName,
-	});
-	
 }
