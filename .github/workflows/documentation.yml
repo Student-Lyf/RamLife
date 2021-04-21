@@ -7,7 +7,7 @@ name: Dart
 
 on:
   push:
-    branches: [ actions ]
+    branches: [ master ]
 
 jobs:
   documentation:
@@ -30,7 +30,6 @@ jobs:
       - uses: actions/checkout@v2
         with: 
           fetch-depth: 0
-          ref: {{ GITHUB_REF }}
           path: repo  # keep Flutter separate
 
       - name: Git Setup
@@ -38,7 +37,7 @@ jobs:
           git config --local user.name "github-actions[bot]"
           git branch --all
           git switch --track origin/documentation
-          git merge origin/actions
+          git merge origin/master
           rm -rf docs
           git stage docs
           git commit -m "Removed documentation" -m "Will generate new docs"
