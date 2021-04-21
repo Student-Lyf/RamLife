@@ -27,7 +27,7 @@ class CreditsPage extends StatelessWidget {
 /// It creates a Row that holds the Image, and then a Column that
 /// holds the rest of the information.
 class ContributorCard extends StatelessWidget{
-	/// contributor is a variable that must be a Contributor.
+	/// The contributor this widget represents.
 	final Contributor contributor;
 	/// ContributorCard requires a Contributor to be passed.
 	const ContributorCard(this.contributor);
