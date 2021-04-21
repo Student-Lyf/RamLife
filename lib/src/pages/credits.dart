@@ -1,11 +1,11 @@
 import "package:flutter/material.dart";
 
-import "package:ramaz/widgets.dart";
 import "package:ramaz/data.dart";
+import "package:ramaz/widgets.dart";
 
 import "drawer.dart";
 
-/// Creates the Credits Page by creating a [ContributorCard] for each contributor.
+/// Creates the Credits Page by creating [ContributorCard] for each contributor.
 class CreditsPage extends StatelessWidget {
 	/// Builds the Credits page.
 	const CreditsPage();

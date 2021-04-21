@@ -1,3 +1,4 @@
+/// A class that defines and creates each Contributor for ContributorCard.
 class Contributor {
 	static const List<Contributor> contributors = [
 		Contributor(
@@ -43,8 +44,10 @@ class Contributor {
 	];
 
 	final String name;
+	/// This can be years worked at Ramaz (for faculty)
 	final String gradYear;
 	final String title;
+	/// Non-Ramaz email
 	final String email;
 	final String description;
 	final String imageName;
