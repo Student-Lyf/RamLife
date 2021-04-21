@@ -91,6 +91,7 @@ class CloudDatabase extends Database {
 	static final CollectionReference sportsCollection =
 		firestore.collection("sports");
 
+	/// The clubs collection in the database. 
 	static final CollectionReference clubsCollection =
 		firestore.collection("clubs");	
 
@@ -235,6 +236,7 @@ class CloudDatabase extends Database {
 				]
 		);
 
+	/// Registers the user for a club. 
 	Future<void> registerForClub(String clubId, Map json) {
 		final DocumentReference clubDocument = clubsCollection.doc(clubId);
 		final CollectionReference members = clubDocument.collection("members");

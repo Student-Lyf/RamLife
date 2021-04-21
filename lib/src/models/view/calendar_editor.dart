@@ -5,9 +5,15 @@ import "package:flutter/foundation.dart" show ChangeNotifier;
 import "package:ramaz/data.dart";
 import "package:ramaz/services.dart";
 
+/// Bundles a [DateTime] with a [Day] to edit the calendar.
 class CalendarDay {
+	/// The date being represented. 
 	final DateTime date;
+
+	/// The school day for the given date. 
 	Day? schoolDay;
+
+	/// Bundles a date and a [Day] together.
 	CalendarDay({required this.date, required this.schoolDay});
 }
 
@@ -48,6 +54,7 @@ class CalendarEditor with ChangeNotifier {
 				: month > 7 ? currentYear - 1 : currentYear
 	];
 
+	/// Loads a month from the database and pads it accordingly.
 	void loadMonth(int month) => subscriptions [month] ??= Services
 		.instance.database.cloudDatabase.getCalendarStream(month + 1)
 		.listen(

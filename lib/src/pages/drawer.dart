@@ -12,16 +12,20 @@ class NavigationDrawer extends StatelessWidget {
 	static Future<void> Function() pushRoute(BuildContext context, String name) => 
 		() => Navigator.of(context).pushReplacementNamed(name);
 
+	/// Creates the drawer.
 	const NavigationDrawer();
 
+	/// Returns the current route name.
 	String? getRouteName(BuildContext context) => 
 		ModalRoute.of(context)!.settings.name;
 
-	bool get isScheduleAdmin => Models.instance.user
-		.adminScopes!.contains(AdminScope.calendar);
+	/// Whether the user is allowed to modify the calendar.
+	bool get isScheduleAdmin => (Models.instance.user.adminScopes ?? [])
+		.contains(AdminScope.calendar);
 
-	bool get isSportsAdmin => Models.instance.user
-		.adminScopes!.contains(AdminScope.sports);
+	/// Whether the user is allowed to modify sports. 
+	bool get isSportsAdmin => (Models.instance.user.adminScopes ?? [])
+		.contains(AdminScope.sports);
 
 	@override 
 	Widget build (BuildContext context) => ResponsiveBuilder(

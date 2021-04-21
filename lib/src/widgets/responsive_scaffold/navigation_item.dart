@@ -25,8 +25,15 @@ abstract class NavigationItem extends StatelessWidget {
 	NavigationRailDestination get navRail => 
 		NavigationRailDestination(icon: icon, label: Text(label));
 
+	/// The app bar for this page.
 	AppBar get appBar;
+
+	/// The side sheet for this page.
 	Widget? get sideSheet => null;
+
+	/// The FAB for this page.
 	Widget? get floatingActionButton => null;
+
+	/// The FAB location for this page.
 	FloatingActionButtonLocation? get floatingActionButtonLocation => null;
 }

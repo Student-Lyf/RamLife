@@ -1,19 +1,45 @@
 import "../contact_info.dart";
 import "message.dart";
 
+/// An after-school club. 
+/// 
+/// Users can "register" for clubs and get notifications on certain events. 
+/// Captains can send messages and mark certain events as important. 
 class Club {
+	/// The name of the club. 
 	final String name;
+
+	/// A short description of the club. 
 	final String shortDescription;
+
+	/// A fullfull description of full description of the club.
 	final String description;
-	final List<ContactInfo> captains;
-	final ContactInfo facultyAdvisor;
+
+	/// A URL to an image for this club. 
 	final String image;
-	final List<ContactInfo> members;
-	final List<Message> messages;
+
+	/// A URL to a form needed to register for the club. 
 	final String? formUrl;
+
+	/// Whether a phone number is needed to join the club.
 	final bool phoneNumberRequested;
+	
+	/// A list of members in this club. 
+	final List<ContactInfo> members;
+
+	/// A list of messages sent by the club. 
+	final List<Message> messages;
+
+	/// A list of attendance for each member of the club.
 	final Map<String, int> attendance;
 
+	/// The captains of the club.
+	final List<ContactInfo> captains;
+
+	/// The faculty advisor for this club.
+	final ContactInfo facultyAdvisor;
+
+	/// Creates a new club.
 	Club({
 		required this.name,
 		required this.shortDescription,
