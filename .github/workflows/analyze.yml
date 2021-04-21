@@ -18,7 +18,7 @@ jobs:
           key: ${{ runner.os }}-flutter
 
       - name: Install Flutter
-        if: steps.cache-flutter.outputs.cache-hit != true
+        if: steps.cache-flutter.outputs.cache-hit != 'true'
         uses: britannio/action-install-flutter@v1.0
 
       - name: Add Flutter to path
