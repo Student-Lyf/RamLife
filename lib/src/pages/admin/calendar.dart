@@ -55,12 +55,14 @@ class OldCalendarWidget extends StatelessWidget {
 
 /// A page for admins to modify the calendar in the database. 
 class AdminCalendarPage extends StatefulWidget {
+	/// Creates a page to edit the calendar.
 	const AdminCalendarPage();
 
 	@override
 	AdminCalendarState createState() => AdminCalendarState();
 }
 
+/// The state for the admin calendar page. 
 class AdminCalendarState extends State<AdminCalendarPage> {
 	/// The months of the year. 
 	/// 
@@ -78,8 +80,10 @@ class AdminCalendarState extends State<AdminCalendarPage> {
 		"Sun", "Mon", "Tue", "Wed", "Thur", "Fri", "Sat"
 	];
 
+	/// The underlying data model.
 	final CalendarEditor model = CalendarEditor();
 
+	/// Rebuilds the widget when the data changes. 
 	void listener() => setState(() {});
 
 	@override
@@ -99,6 +103,9 @@ class AdminCalendarState extends State<AdminCalendarPage> {
 	}
 
 	int _currentMonth = DateTime.now().month - 1;
+	/// The current month being viewed. 
+	/// 
+	/// Changing this will load the month from the database if needed.
 	int get currentMonth => _currentMonth;
 	set currentMonth(int value) {
 		_currentMonth = loopMonth(value);
@@ -106,6 +113,7 @@ class AdminCalendarState extends State<AdminCalendarPage> {
 		setState(() {});
 	}
 
+	/// Allows the user to go from Dec to Jan and vice-versa.
 	int loopMonth(int val) {
 		if (val == 12) {
 			return 0;

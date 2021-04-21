@@ -3,11 +3,14 @@ import "package:flutter/material.dart";
 import "package:ramaz/models.dart";
 import "package:ramaz/widgets.dart";
 
+/// The names of the weekdays.
 const List<String> weekdayNames = [
 	"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"
 ];
 
+/// Shows relevant info about today on the home page. 
 class Dashboard extends NavigationItem {
+	/// The underlying data representing this widget.
 	final ScheduleModel scheduleModel = Models.instance.schedule;
 
 	/// The reminders data model. 
@@ -16,6 +19,7 @@ class Dashboard extends NavigationItem {
 	/// The sports data model. 
 	final Sports sportsModel = Models.instance.sports;
 
+	/// Creates the dashboard page. 
 	Dashboard() : 
 		super(label: "Dashboard", icon: const Icon(Icons.dashboard));
 

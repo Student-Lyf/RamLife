@@ -12,9 +12,10 @@ class CalendarTile extends StatelessWidget{
 	/// This should not be wrapped in a [GestureDetector]. 
 	static const CalendarTile blank = CalendarTile(day: null, date: null);
 
-	/// The [Day] represented by this tile. 
+	/// The [Day] this cell represents. 
 	final Day? day;
 
+	/// The date this cell represents.
 	final DateTime? date;
 
 	/// Creates a widget to update a day in the calendar

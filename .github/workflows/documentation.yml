@@ -15,27 +15,33 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: dart-lang/setup-dart@v1
+      - uses: britannio/action-install-flutter@v1.0
       
-      - name: Install Flutter
-        uses: britannio/action-install-flutter@v1.0
-        
-      - name: Install dartdoc
-        run: flutter pub global activate dartdoc
-        
-      - name: Install dependencies
-        run: flutter packages get
-        
-      - name: Debug 
+      - name: Flutter Setup 
         run: |
+          flutter packages get
+          flutter pub global activate dartdoc
           flutter pub global run dartdoc --version
           flutter --version
+          
+      - name: Git Setup
+        run: |
+          git config --local user.name "github-actions[bot]"
+          git pull
+          git switch --track origin/documentation
+          git merge --allow-unrelated-histories master
+          rm -rf docs
+          git stage docs
+          git commit -m "Removed documentation" -m "Will generate new docs"
         
       - name: Generate documentation
-        run: flutter pub global run dartdoc --ignore 'unresolved-doc-reference,not-implemented,no-documentable-libraries,ambiguous-reexport' --exclude 'dart:async,dart:collection,dart:convert,dart:core,dart:developer,dart:io,dart:isolate,dart:math,dart:typed_data,dart:ui,dart:html,dart:js,dart:ffi,dart:js_util' --quiet --json --output docs --no-auto-include-dependencies --no-validate-links --no-verbose-warnings --no-allow-non-local-warnings
+        run: flutter pub global run dartdoc --ignore 'unresolved-doc-reference,not-implemented,no-documentable-libraries,ambiguous-reexport' --exclude 'dart:async,dart:collection,dart:convert,dart:core,dart:developer,dart:io,dart:isolate,dart:math,dart:typed_data,dart:ui,dart:html,dart:js,dart:ffi,dart:js_util' --quiet --json --output docs --no-validate-links --no-verbose-warnings --no-allow-non-local-warnings
         
       - name: Commit files
         run: |
-          git config --local user.name "github-actions[bot]"
+          cd docs
+          cd ..
+          git status
           git stage --force docs
           git commit -a -m "Generated documentation"
       
