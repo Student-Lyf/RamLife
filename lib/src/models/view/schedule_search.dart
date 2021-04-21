@@ -1,9 +1,6 @@
 import "package:ramaz/data.dart";
 import "package:ramaz/models.dart";
 
-extension on Subject{
-  String get id => "";
-}
 class ScheduleSearchModel {
   late List<Subject> subjects;
 
