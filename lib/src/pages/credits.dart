@@ -29,7 +29,8 @@ class CreditsPage extends StatelessWidget {
 class ContributorCard extends StatelessWidget{
 	/// The contributor this widget represents.
 	final Contributor contributor;
-	/// ContributorCard requires a Contributor to be passed.
+	
+	/// Creates a widget to represent a [Contributor].
 	const ContributorCard(this.contributor);
 
 	@override 
