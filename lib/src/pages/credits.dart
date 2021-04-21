@@ -23,6 +23,7 @@ class CreditsPage extends StatelessWidget {
 	);
 }
 /// A class that creates each individual Contributor's Card.
+/// 
 /// It creates a Row that holds the Image, and then a Column that
 /// holds the rest of the information.
 class ContributorCard extends StatelessWidget{
