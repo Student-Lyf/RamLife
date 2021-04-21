@@ -1,5 +1,4 @@
 class Contributor {
-
 	static const List<Contributor> contributors = [
 		Contributor(
 			name: "David T.",
