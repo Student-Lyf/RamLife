@@ -7,6 +7,7 @@ export "src/pages/builders/day_builder.dart";
 export "src/pages/builders/reminder_builder.dart";
 export "src/pages/builders/schedule_builder.dart";
 export "src/pages/builders/sports_builder.dart";
+
 export "src/pages/credits.dart";
 export "src/pages/drawer.dart";
 export "src/pages/feedback.dart";

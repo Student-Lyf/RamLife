@@ -102,7 +102,7 @@ class NavigationDrawer extends StatelessWidget {
 										onTap: pushRoute(context, Routes.feedback),
 									),
 									ListTile (
-										title: const Text ("Credits"),
+										title: const Text("About Us"),
 										leading: Icon (Icons.info),
 										onTap: pushRoute(context, Routes.credits),
 									),
