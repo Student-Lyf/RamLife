@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import "package:url_launcher/url_launcher.dart";
 
 import "package:ramaz/data.dart";
 import "package:ramaz/widgets.dart";
@@ -35,7 +36,7 @@ class ContributorCard extends StatelessWidget{
 
 	@override 
 	Widget build (BuildContext context) => SizedBox(
-		height: 176,
+		height: 176,  // 2 * 88, standard ListTile height
 		child: Card(
 		margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
 		elevation: 4,
@@ -62,16 +63,24 @@ class ContributorCard extends StatelessWidget{
 							textAlign: TextAlign.start,
 							style: Theme.of(context).textTheme.headline5,
 						),
-						const SizedBox(height: 8),
-						Text(
-							"${contributor.email}",
-							textAlign: TextAlign.start,
-							style: Theme.of(context).textTheme.bodyText1
-						),
+						const SizedBox(height: 4),
 						Text(
 							"${contributor.title}",
 							textAlign: TextAlign.start,
-							style: Theme.of(context).textTheme.bodyText1
+							style: Theme.of(context).textTheme.bodyText1,
+							textScaleFactor: 1.1,
+						),
+						const SizedBox(height: 4),
+						InkWell(
+							onTap: () => launch("mailto:${contributor.email}"),
+							child: Text(
+								"${contributor.email}",
+								textAlign: TextAlign.start,
+								textScaleFactor: 1.1,
+								style: Theme.of(context).textTheme.caption!.copyWith(
+									color: Colors.blue.withAlpha(200), 
+								),
+							),
 						),
 						const Spacer(),
 						Text(
