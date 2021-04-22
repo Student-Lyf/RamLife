@@ -34,50 +34,55 @@ class ContributorCard extends StatelessWidget{
 	const ContributorCard(this.contributor);
 
 	@override 
-	Widget build (BuildContext context) => Card(
-		margin: const EdgeInsets.fromLTRB(75, 15, 75, 15),
-		elevation: 3,
+	Widget build (BuildContext context) => SizedBox(
+		height: 176,
+		child: Card(
+		margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+		elevation: 4,
 		child: Row(
 			children: [
+				const SizedBox(width: 16),
 				Padding(
-					padding: const EdgeInsets.all(20),
-					child: Image.network(
-						contributor.imageName, 
-						width: 150, 
-						height: 150
+					padding: const EdgeInsets.symmetric(vertical: 16),
+					child: AspectRatio(
+						aspectRatio: 1, 
+						child: Image.network(
+							contributor.imageName, 
+						),
 					),
 				),
-
+				const SizedBox(width: 8),
 				Column(
 					crossAxisAlignment: CrossAxisAlignment.start,
+					mainAxisSize: MainAxisSize.min,
 					children: [
-						const SizedBox(height: 20),
+						const SizedBox(height: 16),
 				 		Text(
 							"${contributor.name} ${contributor.gradYear}",
 							textAlign: TextAlign.start,
-							style: Theme.of(context).textTheme.headline3,
+							style: Theme.of(context).textTheme.headline5,
 						),
+						const SizedBox(height: 8),
 						Text(
 							"${contributor.email}",
 							textAlign: TextAlign.start,
-							style: Theme.of(context).textTheme.headline6
+							style: Theme.of(context).textTheme.bodyText1
 						),
 						Text(
 							"${contributor.title}",
 							textAlign: TextAlign.start,
-							style: Theme.of(context).textTheme.headline6
+							style: Theme.of(context).textTheme.bodyText1
 						),
-						const SizedBox(height: 15),
+						const Spacer(),
 						Text(
 							contributor.description,
 							textAlign: TextAlign.start,
 							style: Theme.of(context).textTheme.subtitle1
 						),
-						const SizedBox(height: 20),
+						const SizedBox(height: 16),
 					]
 				),
-				const Spacer()
 			]
-		)
+		))
 	);
 }
