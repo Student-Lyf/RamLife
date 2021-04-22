@@ -1,0 +1,22 @@
+# Brayden has backend: data, testing, services and Firebase
+/firebase/ @BraydenKO
+/lib/data.dart @BraydenKO
+/lib/services.dart @BraydenKO
+/lib/src/data @BraydenKO
+/lib/src/services @BraydenKO
+/test/ @BraydenKO
+
+# David Tarrab has frontend and android
+/android/ @DavidTarrab
+/images/ @DavidTarrab
+/lib/app.dart @DavidTarrab
+/lib/main.dart @DavidTarrab
+/lib/widgets.dart @DavidTarrab
+/lib/pages.dart @DavidTarrab
+/lib/src/pages/ @DavidTarrab
+/lib/src/widgets/ @DavidTarrab
+
+# Josh has middleware and ios
+/ios/ @todesj
+/lib/models.dart @todesj
+/lib/src/models/ @todesj
