@@ -7,6 +7,9 @@
       "hosting": {
         "test": [
           "ramlife-test"
+        ],
+        "main": [
+          "ramaz-go"
         ]
       }
     }
