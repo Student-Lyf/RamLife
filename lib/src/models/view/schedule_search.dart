@@ -9,12 +9,12 @@ class ScheduleSearchModel {
     subjects = model.subjects.values.toList();
   }
 
-  List<Subject> getMatchingClasses(String query) =>
-      [
-        for(final Subject subject in subjects)
-          if(subject.name.contains(query))
-            subject
-      ];
+  List<Subject> getMatchingClasses(String query) => [
+    for (final Subject subject in subjects)
+      if (subject.name.contains(query))
+        subject
+  ];
+  
   List<String> getPeriods(Subject subject){
     final List<String> result = [];
     Map<String,List<PeriodData?>> schedule = Models.instance.schedule.user.schedule;
