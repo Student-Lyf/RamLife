@@ -10,7 +10,8 @@ class Contributor {
 			title: "Frontend",
 			email: "davidtbassist@gmail.com",
 			imageName: "https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg",
-			description: "David has been working on RamLife since sophomore year and mainly works on creating the user interface and page layouts."
+			description: "David has been working on RamLife since sophomore year and "
+				"mainly works on creating the user interface and page layouts."
 		),
 		Contributor(
 			name: "Brayden K.",
