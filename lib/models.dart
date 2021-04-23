@@ -49,6 +49,7 @@ export "src/models/view/feedback.dart";
 export "src/models/view/home.dart";
 export "src/models/view/schedule.dart";
 export "src/models/view/sports.dart";
+export "src/models/view/schedule_search.dart";
 
 /// Bundles all the data models together. 
 /// 
