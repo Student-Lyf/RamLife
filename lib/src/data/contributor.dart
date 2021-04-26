@@ -19,7 +19,8 @@ class Contributor {
 			title: "Backend",
 			email: "kohlerb@ramaz.org",
 			imageName: "https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg",
-			description: "Placeholder"
+			description: "Brayden joined the RamLife team as a sophomore and manages "
+				"the logic of the app. He also handles the database and other services."
 		),
 		Contributor(
 			name: "Joshua T.",
@@ -27,7 +28,8 @@ class Contributor {
 			title: "Middleware and Apple Expert",
 			email: "todesj@ramaz.org",
 			imageName: "https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg",
-			description: "Placeholder"
+			description: "Joshua worked on the iPhone app since he was a FreshmanHe "
+				"and now handles tying the logic and the graphics seamlessly."
 		),
 		Contributor(
 			name: "Levi Lesches",
@@ -40,11 +42,12 @@ class Contributor {
 		),
 		Contributor(
 			name: "Mr. Vovsha",
-			gradYear: "'21",
-			title: "Mentor",
+			gradYear: "'21",  // TODO
+			title: "Faculty Advisor",
 			email: "evovsha@ramaz.org",
 			imageName: "https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg",
-			description: "Placeholder"
+			description: "Mr. Vovsha led the group since its conception, and has worked"
+				" tirelessly with the school to help bring RamLife where it is today."
 		)
 	];
 
