@@ -54,6 +54,13 @@ class RouteInitializerState extends State<RouteInitializer> {
 		try {
 			if (!Services.instance.isReady) {
 				await Services.instance.init();
+
+				ThemeChanger.of(context).brightness = caseConverter<Brightness> (
+					value: Services.instance.prefs.brightness,
+					onTrue: Brightness.light,
+					onFalse: Brightness.dark,
+					onNull: MediaQuery.of(context).platformBrightness,
+				);
 			}
 			if (Auth.isSignedIn && !Models.instance.isReady) {
 				await Models.instance.init();
