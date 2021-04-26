@@ -23,13 +23,13 @@ class Contributor {
 				"the logic of the app. He also handles the database and other services."
 		),
 		Contributor(
-			name: "Joshua T.",
+			name: "Josh Todes",
 			gradYear: "'23",
 			title: "Middleware and Apple Expert",
 			email: "todesj@ramaz.org",
 			imageName: "https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg",
-			description: "Joshua worked on the iPhone app since he was a FreshmanHe "
-				"and now handles tying the logic and the graphics seamlessly."
+			description: "Josh worked on the iPhone app since he was a Freshman "
+				"and now handles tying the logic and graphics together seamlessly."
 		),
 		Contributor(
 			name: "Levi Lesches",
