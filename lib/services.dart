@@ -15,7 +15,7 @@
 library ramaz_services;
 
 import "src/services/crashlytics.dart";
-import "src/services/databases.dart";
+import "src/services/database.dart";
 import "src/services/notifications.dart";
 import "src/services/preferences.dart";
 import "src/services/push_notifications.dart";
@@ -25,7 +25,6 @@ export "src/services/auth.dart";
 export "src/services/cloud_db.dart";
 export "src/services/crashlytics.dart";
 export "src/services/database.dart";
-export "src/services/databases.dart";
 export "src/services/firebase_core.dart";
 export "src/services/local_db.dart";
 export "src/services/notifications.dart";
@@ -46,7 +45,7 @@ class Services implements Service {
 	final Crashlytics crashlytics = Crashlytics.instance;
 
 	/// The database bundle. 
-	final Databases database = Databases();
+	final Database database = Database();
 
 	/// The local notifications interface. 
 	/// 
