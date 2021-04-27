@@ -118,7 +118,7 @@ class ClassListState extends ModelListener<Reminders, ClassList> {
 	Widget build(BuildContext context) => ListView(
 		shrinkWrap: true,
 		children: [
-			DrawerHeader(
+			if (widget.headerText != null) DrawerHeader(
 				child: Center (
 					child: Text (
 						widget.headerText ?? "",
