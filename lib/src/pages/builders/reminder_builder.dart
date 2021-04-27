@@ -45,9 +45,14 @@ class ReminderBuilder extends StatefulWidget {
 /// 
 /// [State.initState] is needed to instantiate a [TextEditingController]
 /// exactly once. 
-class ReminderBuilderState extends State<ReminderBuilder> {
+class ReminderBuilderState extends ModelListener<
+	RemindersBuilderModel, ReminderBuilder
+> {
 	/// The text controller to hold the message of the [Reminder]. 
 	final TextEditingController controller = TextEditingController();
+
+	@override
+	RemindersBuilderModel getModel() => RemindersBuilderModel(widget.reminder);
 
 	@override 
 	void initState() {
@@ -56,121 +61,121 @@ class ReminderBuilderState extends State<ReminderBuilder> {
 	}
 
 	@override
-	Widget build(BuildContext context) => ModelListener<RemindersBuilderModel>(
-		model: () => RemindersBuilderModel(widget.reminder),
-		// ignore: sort_child_properties_last
-		child: TextButton(
-			onPressed: Navigator.of(context).pop,
-			child: const Text("Cancel"),
-		),
-		builder: (BuildContext context, RemindersBuilderModel model, Widget? back) =>
-			AlertDialog(
-				title: Text (widget.reminder == null ? "Create reminder" : "Edit reminder"),
-				actions: [
-					back!,
-					ElevatedButton(
-						onPressed: model.ready
-							? () => Navigator.of(context).pop(model.build())
-							: null,
-						child: const Text("Save"),
-					)
-				],
-				content: Column (
-					mainAxisSize: MainAxisSize.min,
-					children: [
-						TextField (
-							controller: controller,
-							onChanged: model.onMessageChanged,
-							textCapitalization: TextCapitalization.sentences,
-						),
-						const SizedBox (height: 20),
-						RadioListTile<ReminderTimeType> (
-							value: ReminderTimeType.period,
-							groupValue: model.type,
-							// if toggleable is false (default), the value can never be null
-							onChanged: (value) => model.toggleRepeatType(value!),  
-							title: Text (
-								"${model.shouldRepeat ? 'Repeats every' : 'On'} period"
-							),
-						),
-						RadioListTile<ReminderTimeType> (
-							value: ReminderTimeType.subject,
-							groupValue: model.type,
-							// if toggleable is false (default), the value can never be null
-							onChanged: (value) => model.toggleRepeatType(value!),
-							title: Text (
-								"${model.shouldRepeat ? 'Repeats every' : 'On'} subject"
-							),
-						),
-						const SizedBox (height: 20),
-						if (model.type == ReminderTimeType.period) ...[
-							ListTile (
-								title: const Text ("Day"),
-								trailing: DropdownButton<String>(
-									items: [
-										for (final String dayName in Models.instance.schedule.user.dayNames)
-											DropdownMenuItem(
-												value: dayName,
-												child: Text(dayName),
-											),
-									],
-									onChanged: (String? value) {
-										if (value != null) {
-											model.changeDay(value);
-										}
-									},
-									value: model.dayName,
-									hint: const Text("Day"),
-								),
-							),
-							ListTile (
-								title: const Text ("Period"),
-								trailing: DropdownButton<String> (
-									items: [
-										for (final String period in model.periods ?? [])
-											DropdownMenuItem(
-												value: period,
-												child: Text (period),
-											)
-									],
-									onChanged: (String? value) {
-										if (value != null) {
-											model.changePeriod(value);
-										}
-									},
-									value: model.period,
-									hint: const Text ("Period"),
-								)
-							)
-						] else if (model.type == ReminderTimeType.subject)
-							ListTile (
-								title: const Text ("Class"),
-								trailing: DropdownButton<String>(
-									items: [
-										for (final String course in model.courses)
-											DropdownMenuItem(
-												value: course,
-												child: Text("${ReminderBuilder.trimString(course, 14)}..."),
-											)
-									],
-									onChanged: (String? value) {
-										if (value != null) {
-											model.changeCourse(value);
-										}
-									},
-									value: model.course,
-									isDense: true,
-									hint: const Text ("Class"),
-								)
-							),
-						SwitchListTile (
-							value: model.shouldRepeat,
-							onChanged: model.toggleRepeat,
-							title: const Text ("Repeat"),
-							secondary: const Icon (Icons.repeat),
-						),
-					]
-				)
+	void dispose() {
+		controller.dispose();
+		super.dispose();
+	}
+
+	@override
+	Widget build(BuildContext context) => AlertDialog(
+		title: Text (widget.reminder == null ? "Create reminder" : "Edit reminder"),
+		actions: [
+			TextButton(
+				onPressed: Navigator.of(context).pop,
+				child: const Text("Cancel"),
+			),
+			ElevatedButton(
+				onPressed: model.ready
+					? () => Navigator.of(context).pop(model.build())
+					: null,
+				child: const Text("Save"),
 			)
+		],
+		content: Column (
+			mainAxisSize: MainAxisSize.min,
+			children: [
+				TextField (
+					controller: controller,
+					onChanged: model.onMessageChanged,
+					textCapitalization: TextCapitalization.sentences,
+				),
+				const SizedBox (height: 20),
+				RadioListTile<ReminderTimeType> (
+					value: ReminderTimeType.period,
+					groupValue: model.type,
+					// if toggleable is false (default), the value can never be null
+					onChanged: (value) => model.toggleRepeatType(value!),  
+					title: Text (
+						"${model.shouldRepeat ? 'Repeats every' : 'On'} period"
+					),
+				),
+				RadioListTile<ReminderTimeType> (
+					value: ReminderTimeType.subject,
+					groupValue: model.type,
+					// if toggleable is false (default), the value can never be null
+					onChanged: (value) => model.toggleRepeatType(value!),
+					title: Text (
+						"${model.shouldRepeat ? 'Repeats every' : 'On'} subject"
+					),
+				),
+				const SizedBox (height: 20),
+				if (model.type == ReminderTimeType.period) ...[
+					ListTile (
+						title: const Text ("Day"),
+						trailing: DropdownButton<String>(
+							items: [
+								for (final String dayName in Models.instance.schedule.user.dayNames)
+									DropdownMenuItem(
+										value: dayName,
+										child: Text(dayName),
+									),
+							],
+							onChanged: (String? value) {
+								if (value != null) {
+									model.changeDay(value);
+								}
+							},
+							value: model.dayName,
+							hint: const Text("Day"),
+						),
+					),
+					ListTile (
+						title: const Text ("Period"),
+						trailing: DropdownButton<String> (
+							items: [
+								for (final String period in model.periods ?? [])
+									DropdownMenuItem(
+										value: period,
+										child: Text (period),
+									)
+							],
+							onChanged: (String? value) {
+								if (value != null) {
+									model.changePeriod(value);
+								}
+							},
+							value: model.period,
+							hint: const Text ("Period"),
+						)
+					)
+				] else if (model.type == ReminderTimeType.subject)
+					ListTile (
+						title: const Text ("Class"),
+						trailing: DropdownButton<String>(
+							items: [
+								for (final String course in model.courses)
+									DropdownMenuItem(
+										value: course,
+										child: Text("${ReminderBuilder.trimString(course, 14)}..."),
+									)
+							],
+							onChanged: (String? value) {
+								if (value != null) {
+									model.changeCourse(value);
+								}
+							},
+							value: model.course,
+							isDense: true,
+							hint: const Text ("Class"),
+						)
+					),
+				SwitchListTile (
+					value: model.shouldRepeat,
+					onChanged: model.toggleRepeat,
+					title: const Text ("Repeat"),
+					secondary: const Icon (Icons.repeat),
+				),
+			]
+		)
 	);
 }
