@@ -78,6 +78,16 @@ extension DatabaseHelpers on Database {
 		.objectStore(storeName)
 		.put(value, key);
 
+	/// Deletes data from an object store. 
+	/// 
+	/// This code handles transactions so other code doesn't have to. 
+	Future<void> delete({
+		required String storeName,
+		required Object key,
+	}) => transaction(storeName, idbModeReadWrite)
+		.objectStore(storeName)
+		.delete(key);
+
 	/// Gets all the data in an object store. 
 	/// 
 	/// Also provides strong type safety on those values, treating them like JSON 
@@ -140,11 +150,8 @@ extension DatabaseHelpers on Database {
 /// from one version to another will follow each other, which should always 
 /// lead to an up-to-date schema. 
 class Idb extends Service {
-	/// The singleton instance of this service.
-	static final Idb instance = Idb();
-
 	/// The idb Database object
-	late final Database database;
+	static late final Database instance;
 
 	/// The name for the users object store. 
 	static const String userStoreName = "users";
@@ -168,7 +175,7 @@ class Idb extends Service {
 	Future<void> init() async {
 		final IdbFactory _factory = await idbFactory;
 		try {
-			database = await _factory.open(
+			instance = await _factory.open(
 				"ramlife.db",
 				version: 3, 
 				onUpgradeNeeded: (VersionChangeEvent event) {
