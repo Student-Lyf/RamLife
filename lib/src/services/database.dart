@@ -6,8 +6,9 @@ import "service.dart";
 
 import "databases/hybrid.dart";
 
-import "databases/user/hybrid.dart";
+import "databases/calendar/hybrid.dart";
 import "databases/schedule/hybrid.dart";
+import "databases/user/hybrid.dart";
 
 /// A wrapper around all data in all database. 
 /// 
@@ -32,6 +33,9 @@ class Database extends Service {
 	/// The schedule data manager
 	final HybridSchedule schedule = HybridSchedule();
 
+	/// The calendar data manager.
+	final HybridCalendar calendar = HybridCalendar();
+
 	@override
 	Future<void> init() async {
 		await firestore.init();
@@ -45,11 +49,10 @@ class Database extends Service {
 
 		await user.signIn();
 		await schedule.signIn();
+		await calendar.signIn();
 	}
 }
 
-// calendarMonth(month)
-// schedule
 // reminders
 // updateReminder
 // deleteReminder
