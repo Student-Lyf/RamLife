@@ -44,7 +44,7 @@ dev_dependencies:
   flutter_test: 
     sdk: flutter
   matcher: any
-  flutter_launcher_icons: ^0.7.0
+  flutter_launcher_icons: ^0.9.0
   # pedantic: ^1.4.0
 
 flutter_icons:
