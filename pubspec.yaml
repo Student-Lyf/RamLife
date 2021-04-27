@@ -20,7 +20,7 @@ dependencies:
   # Firebase/Google
   cloud_firestore: ^1.0.5
   firebase_auth: ^1.0.1
-  firebase_crashlytics: ^1.0.0
+  firebase_crashlytics: ^2.0.2
   firebase_messaging: ^9.0.1
   google_sign_in: ^5.0.1
 
