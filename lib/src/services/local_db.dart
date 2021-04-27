@@ -171,7 +171,7 @@ class LocalDatabase extends Database {
 		try {
 			database = await (await idbFactory).open(
 				"ramaz.db",
-				version: 3, 
+				version: 2, 
 				onUpgradeNeeded: (idb.VersionChangeEvent event) {
 					switch(event.oldVersion) {
 						case 0: event.database
