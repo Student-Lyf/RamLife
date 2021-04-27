@@ -224,7 +224,7 @@ class SportBuilderState extends State<SportsBuilder> {
 						]
 					),
 					const SizedBox(height: 20),
-					SportsTile(
+					if (model.ready) SportsTile(
 						model.game,
 						onTap: () async => model.scores = 
 							await SportsScoreUpdater.updateScores(context, model.game) 
