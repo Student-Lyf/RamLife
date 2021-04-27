@@ -70,8 +70,11 @@ extension DatabaseHelpers on Database {
 	/// have a key. 
 	/// 
 	/// This code handles transactions so other code doesn't have to. 
-	Future<void> update(String storeName, Object value, [Object? key]) => 
-		transaction(storeName, idbModeReadWrite)
+	Future<void> update({
+		required String storeName, 
+		required Object value, 
+		Object? key
+	}) => transaction(storeName, idbModeReadWrite)
 		.objectStore(storeName)
 		.put(value, key);
 

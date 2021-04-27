@@ -4,6 +4,8 @@ import "auth.dart";
 import "firebase_core.dart";
 import "service.dart";
 
+export "package:cloud_firestore/cloud_firestore.dart";
+
 /// Convenience methods on [CollectionReference].
 extension CollectionHelpers on CollectionReference {
 	/// Returns a [DocumentReference] by querying a field. 
@@ -35,8 +37,7 @@ extension DocumentHelpers on DocumentReference {
 /// for another service that will specify which data it is responsible for. 
 /// This service just manages the connection to Firestore. 
 /// 
-/// Users of this service will still need to import cloud_firestore. That's 
-/// because this class provides the basic initialization behind Firestore, and 
+/// This class provides the basic initialization behind Firestore, and 
 /// doesn't expose any methods that will help retreive data. 
 class Firestore extends Service {
 	/// The singleton instance of this service.
