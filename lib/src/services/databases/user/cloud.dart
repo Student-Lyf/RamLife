@@ -9,9 +9,11 @@ class CloudUser implements UserInterface {
 	static final CollectionReference users = Firestore.instance
 		.collection("students");
 
+	/// The document for this user.
+	static DocumentReference get userDocument => users.doc(Auth.email!);
+
 	@override
-	Future<Map> getUser() => users.doc(Auth.email!)
-		.throwIfNull("User not in the database");
+	Future<Map> getUser() => userDocument.throwIfNull("User not in the database");
 
 	// Users cannot currently edit their own profiles.
 	@override 
