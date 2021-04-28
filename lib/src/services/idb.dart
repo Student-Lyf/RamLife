@@ -141,8 +141,7 @@ class Idb extends DatabaseService {
 							..createObjectStore(calendarStoreName, keyPath: "month")
 							..createObjectStore(reminderStoreName, autoIncrement: true)
 							..createObjectStore(sportsStoreName, autoIncrement:  true)
-							..createObjectStore(reminderStoreName, autoIncrement: true)
-								.createIndex("hash", "hash", unique: true)
+							..createObjectStore(reminderStoreName, keyPath: "id")
 							..createObjectStore(scheduleStoreName, keyPath: "name");
 					}
 				},
