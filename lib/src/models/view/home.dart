@@ -3,10 +3,10 @@ import "package:flutter/foundation.dart";
 import "package:ramaz/models.dart";
 import "package:ramaz/services.dart";
 
-/// A view model for the home page. 
+/// A view model for the dashboard page. 
 /// 
 /// This model doesn't actually do much, it just listens to any data models
-/// that are relevant to the home page. Because we're using [ChangeNotifier], 
+/// that are relevant to the dashboard. Because we're using [ChangeNotifier], 
 /// as its the only [Listenable] with a [dispose] method, we can't simply use 
 /// [Listenable.merge]. 
 /// 
@@ -15,11 +15,20 @@ import "package:ramaz/services.dart";
 /// model. Instead, we have to reference it through [Models], which will always
 /// have an up-to-date instance. 
 // ignore: prefer_mixin
-class HomeModel with ChangeNotifier {
+class DashboardModel with ChangeNotifier {
+	/// The underlying data representing this widget.
+	final ScheduleModel schedule = Models.instance.schedule;
+
+	/// The reminders data model. 
+	final Reminders reminders = Models.instance.reminders;
+
+	/// The sports data model. 
+	final Sports sports = Models.instance.sports;
+
 	/// Listens to [ScheduleModel] (and by extension, [Reminders]) and [Sports].
-	HomeModel() {
-		Models.instance.schedule.addListener(notifyListeners);
-		Models.instance.sports.addListener(notifyListeners);
+	DashboardModel() {
+		schedule.addListener(notifyListeners);
+		sports.addListener(notifyListeners);
 	}
 
 	// Do not attempt to clean up this code by using a list. 
@@ -28,11 +37,10 @@ class HomeModel with ChangeNotifier {
 	// be used instead. 
 	@override
 	void dispose() {
-		Models.instance.schedule.removeListener(notifyListeners);
-		Models.instance.sports.removeListener(notifyListeners);
+		schedule.removeListener(notifyListeners);
+		sports.removeListener(notifyListeners);
 		super.dispose();
 	}
-
 
 	/// Refreshes the database. 
 	/// 
@@ -42,7 +50,7 @@ class HomeModel with ChangeNotifier {
 		try {
 			await Services.instance.database.calendar.signIn();
 			await Services.instance.database.sports.signIn();
-			await Models.instance.schedule.initCalendar();
+			await schedule.initCalendar();
 		} catch (error) {  // ignore: avoid_catches_without_on_clauses
 			// We just want to allow the user to retry. But still rethrow.
 			onFailure();
