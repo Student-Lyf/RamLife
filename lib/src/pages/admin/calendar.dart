@@ -63,7 +63,9 @@ class AdminCalendarPage extends StatefulWidget {
 }
 
 /// The state for the admin calendar page. 
-class AdminCalendarState extends State<AdminCalendarPage> {
+class AdminCalendarState extends ModelListener<
+	CalendarEditor, AdminCalendarPage
+> {
 	/// The months of the year. 
 	/// 
 	/// These will be the headers of all the months. 
@@ -80,29 +82,11 @@ class AdminCalendarState extends State<AdminCalendarPage> {
 		"Sun", "Mon", "Tue", "Wed", "Thur", "Fri", "Sat"
 	];
 
-	/// The underlying data model.
-	final CalendarEditor model = CalendarEditor();
-
-	/// Rebuilds the widget when the data changes. 
-	void listener() => setState(() {});
-
 	@override
-	void initState() {
-		super.initState();
-		model
-			..addListener(listener)
-			..loadMonth(_currentMonth);
-	}
-
-	@override
-	void dispose() {
-		model
-			..removeListener(listener)
-			..dispose();
-		super.dispose();
-	}
+	CalendarEditor getModel() => CalendarEditor();
 
 	int _currentMonth = DateTime.now().month - 1;
+	
 	/// The current month being viewed. 
 	/// 
 	/// Changing this will load the month from the database if needed.

@@ -54,6 +54,11 @@ class CalendarEditor with ChangeNotifier {
 				: month > 7 ? currentYear - 1 : currentYear
 	];
 
+	/// Loads the current month to create the calendar.
+	CalendarEditor() {
+		loadMonth(DateTime.now().month - 1);
+	}
+
 	/// Loads a month from the database and pads it accordingly.
 	void loadMonth(int month) => subscriptions [month] ??= Services
 		.instance.database.cloudDatabase.getCalendarStream(month + 1)

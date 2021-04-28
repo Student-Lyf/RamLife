@@ -9,13 +9,17 @@ import "package:ramaz/widgets.dart";
 /// 
 /// Users can use the calendar button to check the schedule for a given date
 /// or create a custom [Day] from the drop-down menus.
-class ResponsiveSchedule extends NavigationItem {
-	/// The data model for the schedule.
-	final ScheduleViewModel model = ScheduleViewModel();
+class ResponsiveSchedule extends NavigationItem<ScheduleViewModel> {
+	@override
+	ScheduleViewModel get model => super.model!;
 
 	/// Creates the schedule page.
-	ResponsiveSchedule() : 
-		super(label: "Schedule", icon: const Icon(Icons.schedule));
+	ResponsiveSchedule() : super(
+		label: "Schedule", 
+		icon: const Icon(Icons.schedule),
+		model: ScheduleViewModel(),
+		shouldDispose: true,
+	);
 
 	/// Allows the user to select a day in the calendar to view. 
 	/// 
@@ -51,61 +55,56 @@ class ResponsiveSchedule extends NavigationItem {
 	);
 
 	/// Lets the user know that they chose an invalid schedule combination. 
-	void handleInvalidSchedule(BuildContext context) => 
-		ScaffoldMessenger.of(context).showSnackBar(
-			const SnackBar(content: Text("Invalid schedule"))
-		);
+	void handleInvalidSchedule(BuildContext context) => ScaffoldMessenger
+		.of(context)
+		.showSnackBar(const SnackBar(content: Text("Invalid schedule")));
 
 	@override
-	Widget build (BuildContext context) => ModelListener(
-		model: () => model,
-		dispose: false,
-		builder: (_, ScheduleViewModel model, __) => Column(
-			children: [
-				ListTile (
-					title: const Text ("Day"),
-					trailing: DropdownButton<String> (
-						value: model.day.name, 
-						onChanged: (String? value) => model.update(
-							newName: value,
-							onInvalidSchedule: () => handleInvalidSchedule(context),
-						),
-						items: [
-							for (final String dayName in Models.instance.schedule.user.dayNames)
-								DropdownMenuItem(
-									value: dayName,
-									child: Text(dayName),
-								)
-						]
-					)
-				),
-				ListTile (
-					title: const Text ("Schedule"),
-					trailing: DropdownButton<Schedule> (
-						value: model.day.schedule,
-						onChanged: (Schedule? schedule) => model.update(
-							newSchedule: schedule,
-							onInvalidSchedule: () => handleInvalidSchedule(context),
-						),
-						items: [
-							for (final Schedule schedule in Schedule.schedules)
-								DropdownMenuItem(
-									value: schedule,
-									child: Text (schedule.name),
-								),
-						]
-					)
-				),
-				const SizedBox (height: 20),
-				const Divider(),
-				const SizedBox (height: 20),
-				Expanded(
-					child: ClassList(
-						day: model.day, 
-						periods: Models.instance.user.data.getPeriods(model.day)
-					)
-				),
-			]
-		)
+	Widget build(BuildContext context) => Column(
+		children: [
+			ListTile (
+				title: const Text ("Day"),
+				trailing: DropdownButton<String> (
+					value: model.day.name, 
+					onChanged: (String? value) => model.update(
+						newName: value,
+						onInvalidSchedule: () => handleInvalidSchedule(context),
+					),
+					items: [
+						for (final String dayName in Models.instance.schedule.user.dayNames)
+							DropdownMenuItem(
+								value: dayName,
+								child: Text(dayName),
+							)
+					]
+				)
+			),
+			ListTile (
+				title: const Text ("Schedule"),
+				trailing: DropdownButton<Schedule> (
+					value: model.day.schedule,
+					onChanged: (Schedule? schedule) => model.update(
+						newSchedule: schedule,
+						onInvalidSchedule: () => handleInvalidSchedule(context),
+					),
+					items: [
+						for (final Schedule schedule in Schedule.schedules)
+							DropdownMenuItem(
+								value: schedule,
+								child: Text (schedule.name),
+							),
+					]
+				)
+			),
+			const SizedBox (height: 20),
+			const Divider(),
+			const SizedBox (height: 20),
+			Expanded(
+				child: ClassList(
+					day: model.day, 
+					periods: Models.instance.user.data.getPeriods(model.day)
+				)
+			),
+		]
 	);
 }
