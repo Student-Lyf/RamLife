@@ -36,8 +36,4 @@ class SubjectReminderTime extends ReminderTime {
 		required String? subject, 
 		required String? period,
 	}) => subject == name;
-
-	@override
-	String get hash => "$name-$repeats";
 }
-

@@ -8,8 +8,11 @@ import "interface.dart";
 /// User profile is loaded once, on sign-in. Once this is complete, 
 /// the full profile is always assumed to be on-device. 
 class HybridUser extends HybridDatabase implements UserInterface {
-	/// Bundles user data from the device and the cloud.
-	HybridUser() : super(cloud: CloudUser(), local: LocalUser());
+	@override
+	final UserInterface cloud = CloudUser();
+
+	@override
+	final UserInterface local = LocalUser();
 
 	@override
 	Future<void> signIn() async {

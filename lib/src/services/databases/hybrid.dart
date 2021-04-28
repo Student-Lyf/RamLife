@@ -17,16 +17,10 @@
 /// Use it to initialize any data the app expects be on-device. 
 abstract class HybridDatabase<T> {
   /// The interface for this data in the online database.
-  final T cloud;
+  T get cloud;
 
   /// The interface for this data in the offline database.
-  final T local;
-
-  /// Bundles two databases into one.
-  HybridDatabase({
-    required this.cloud,
-    required this.local,
-  });
+  T get local;
 
   /// Initializes any data necessary for sign-in
   Future<void> signIn();

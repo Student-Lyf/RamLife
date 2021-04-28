@@ -12,8 +12,11 @@ import "interface.dart";
 /// Make sure to call [update] once per day. 
 // ignore: lines_longer_than_80_chars
 class HybridCalendar extends HybridDatabase<CalendarInterface> implements CalendarInterface {
-	/// Bundles the cloud and local calendar data.
-	HybridCalendar() : super(cloud: CloudCalendar(), local: LocalCalendar());
+	@override
+	final CloudCalendar cloud = CloudCalendar();
+
+	@override
+	final LocalCalendar local = LocalCalendar();
 
 	@override
 	Future<void> signIn() async {

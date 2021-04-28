@@ -10,8 +10,11 @@ import "interface.dart";
 /// is left empty, and the logic should instead go to middleware.
 // ignore: lines_longer_than_80_chars
 class HybridSchedule extends HybridDatabase<ScheduleInterface> implements ScheduleInterface {
-	/// Bundles the schedule data for the cloud and the device.
-	HybridSchedule() : super(cloud: CloudSchedule(), local: LocalSchedule());
+	@override
+	final ScheduleInterface cloud = CloudSchedule();
+
+	@override
+	final ScheduleInterface local = LocalSchedule();
 
 	@override
 	Future<void> signIn() async { }

@@ -8,8 +8,11 @@ import "interface.dart";
 /// Reminders are downloaded after sign-in, and are updated locally and online.
 // ignore: lines_longer_than_80_chars
 class HybridReminders extends HybridDatabase<RemindersInterface> implements RemindersInterface {
-	/// Bundles the reminder data in the cloud and device.
-	HybridReminders() : super(cloud: CloudReminders(), local: LocalReminders());
+	@override
+	final CloudReminders cloud = CloudReminders();
+
+	@override
+	final LocalReminders local = LocalReminders();
 
 	@override
 	Future<void> signIn() async {
@@ -32,4 +35,7 @@ class HybridReminders extends HybridDatabase<RemindersInterface> implements Remi
 		await cloud.delete(id);
 		await local.delete(id);
 	}
+
+	/// Generates a unique ID for a new reminder.
+	String getId() => cloud.getId();
 }

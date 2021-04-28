@@ -9,8 +9,11 @@ import "interface.dart";
 /// basis. They should also be manually refreshable.
 // ignore: lines_longer_than_80_chars
 class HybridSports extends HybridDatabase<SportsInterface> implements SportsInterface {
-	/// Bundles the sports data from the cloud and on the device. 
-	HybridSports() : super(cloud: CloudSports(), local: LocalSports());
+	@override
+	final SportsInterface cloud = CloudSports();
+
+	@override
+	final SportsInterface local = LocalSports();
 
 	@override
 	Future<void> signIn() async => local.setAll(await cloud.getAll());

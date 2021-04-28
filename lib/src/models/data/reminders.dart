@@ -92,7 +92,13 @@ class Reminders extends Model {
 		if (reminder == null) {
 			return;
 		}
-		final String oldHash = reminders [index].hash;
+		if (reminders [index].id != reminder.id) {
+			throw ArgumentError.value(
+				reminder.id,  // value
+				"New reminder id",  // name of value
+				"New reminder ID must match old reminder ID",  // message
+			);
+		}
 		reminders [index] = reminder;
 		Services.instance.database.reminders.set(reminder.toJson());
 		verifyReminders(index);
@@ -110,10 +116,10 @@ class Reminders extends Model {
 	}
 
 	/// Deletes the reminder at a given index.
-	void deleteReminder(int index) {
-		final String oldHash = reminders [index].hash;
+	Future<void> deleteReminder(int index) async {
+		final String id = reminders [index].id;
+		await Services.instance.database.reminders.delete(id);
 		reminders.removeAt(index);
-		Services.instance.database.reminders.delete(oldHash);
 		verifyReminders(index);  // remove the reminder from the schedule
 		notifyListeners();
 	}

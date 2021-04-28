@@ -23,6 +23,9 @@ class CloudReminders implements RemindersInterface {
 
 	@override
 	Future<void> delete(String id) => reminders.doc(id).delete();
+
+	/// Generates a random ID.
+	String getId() => reminders.doc().id;
 }
 
 /// Handles reminder data in the on-device database. 

@@ -112,7 +112,4 @@ abstract class ReminderTime {
 	/// Used for debugging and throughout the UI.
 	@override
 	String toString();
-
-	/// A unique identifier for this reminder. 
-	String get hash;
 }
