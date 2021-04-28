@@ -12,6 +12,12 @@ import "databases/schedule/hybrid.dart";
 import "databases/sports/hybrid.dart";
 import "databases/user/hybrid.dart";
 
+export "databases/calendar/hybrid.dart";
+export "databases/reminders/hybrid.dart";
+export "databases/schedule/hybrid.dart";
+export "databases/sports/hybrid.dart";
+export "databases/user/hybrid.dart";
+
 /// A wrapper around all data in all database. 
 /// 
 /// The database is split into 2N parts: N types of data, with a Firestore and 

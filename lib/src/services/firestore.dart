@@ -62,4 +62,14 @@ class Firestore extends DatabaseService {
 	/// Submits feedback to the feedback collection.
 	Future<void> sendFeedback(Map json) => instance.collection("feedback").doc()
 		.set(Map<String, dynamic>.from(json));
+
+	/// Listens to a month for changes in the calendar. 
+	Stream<List<Map?>> getCalendarStream(int month) => instance
+		.collection("calendar").doc(month.toString()).snapshots().map(
+			(DocumentSnapshot snapshot) => [
+				for (final dynamic entry in snapshot.data()! ["calendar"])
+					if (entry == null) null
+					else Map.from(entry)
+				]
+		);
 }

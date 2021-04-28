@@ -115,7 +115,7 @@ Widget getLayout(BuildContext context, SportsModel model) {
 		case SortOption.chronological: 
 			return GenericSportsView<int>(
 				loading: model.loading,
-				onRefresh: model.adminFunc(Services.instance.database.updateSports),
+				onRefresh: model.adminFunc(Services.instance.database.sports.signIn),
 				recents: model.recents,
 				upcoming: model.upcoming,
 				builder: (int index) => SportsTile(
@@ -130,7 +130,7 @@ Widget getLayout(BuildContext context, SportsModel model) {
 		case SortOption.sport: 
 			return GenericSportsView<MapEntry<Sport, List<int>>>(
 				loading: model.loading,
-				onRefresh: model.adminFunc(Services.instance.database.updateSports),
+				onRefresh: model.adminFunc(Services.instance.database.sports.signIn),
 				recents: model.recentBySport.entries.toList(),
 				upcoming: model.upcomingBySport.entries.toList(),
 				builder: (MapEntry<Sport, List<int>> entry) => Column(

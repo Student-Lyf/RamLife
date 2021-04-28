@@ -31,7 +31,7 @@ class Reminders extends Model {
 	@override
 	Future<void> init() async {
 		reminders = [
-			for (final Map json in await Services.instance.database.reminders)
+			for (final Map json in await Services.instance.database.reminders.getAll())
 				Reminder.fromJson(json)
 		];
 	}
@@ -94,7 +94,7 @@ class Reminders extends Model {
 		}
 		final String oldHash = reminders [index].hash;
 		reminders [index] = reminder;
-		Services.instance.database.updateReminder(oldHash, reminder.toJson());
+		Services.instance.database.reminders.set(reminder.toJson());
 		verifyReminders(index);
 		notifyListeners();
 	}
@@ -105,7 +105,7 @@ class Reminders extends Model {
 			return;
 		}
 		reminders.add(reminder);
-		Services.instance.database.updateReminder(null, reminder.toJson());
+		Services.instance.database.reminders.set(reminder.toJson());
 		notifyListeners();
 	}
 
@@ -113,7 +113,7 @@ class Reminders extends Model {
 	void deleteReminder(int index) {
 		final String oldHash = reminders [index].hash;
 		reminders.removeAt(index);
-		Services.instance.database.deleteReminder(oldHash);
+		Services.instance.database.reminders.delete(oldHash);
 		verifyReminders(index);  // remove the reminder from the schedule
 		notifyListeners();
 	}
