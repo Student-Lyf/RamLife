@@ -7,13 +7,17 @@ import "package:ramaz/widgets.dart";
 /// The reminders page. 
 /// 
 /// Allows CRUD operations on reminders. 
-class ResponsiveReminders extends NavigationItem {
-	/// The data model for reminders.
-	final Reminders model = Models.instance.reminders;
+class ResponsiveReminders extends NavigationItem<Reminders> {
+	@override
+	Reminders get model => super.model!;
 
 	/// Creates the reminders page.
-	ResponsiveReminders() : 
-		super(label: "Reminders", icon: const Icon(Icons.notifications));
+	ResponsiveReminders() : super(
+		label: "Reminders", 
+		icon: const Icon(Icons.notifications),
+		model: Models.instance.reminders,
+		shouldDispose: false,
+	);
 
 	@override
 	AppBar get appBar => AppBar(title: const Text ("Reminders"));
@@ -28,24 +32,18 @@ class ResponsiveReminders extends NavigationItem {
 	);
 
 	@override 
-	Widget build(BuildContext context) => ModelListener<Reminders>(
-		model: () => Models.instance.reminders,
-		dispose: false,
-		// ignore: sort_child_properties_last
-		child: const Center (
+	Widget build(BuildContext context) => model.reminders.isEmpty 
+		? const Center (
 			child: Text (
 				"You don't have any reminders yet",
 				textScaleFactor: 1.5,
 				textAlign: TextAlign.center,
 			),
-		),
-		builder: (_, Reminders model, Widget? empty) => model.reminders.isEmpty
-			? empty!  // widget is supplied above
-			: ListView.separated (
-				itemCount: model.reminders.length,
-				separatorBuilder: (_, __) => const Divider(),
-				itemBuilder: (BuildContext context, int index) => 
-					ReminderTile(index: index),
-			)
-	);
+		)
+		: ListView.separated (
+			itemCount: model.reminders.length,
+			separatorBuilder: (_, __) => const Divider(),
+			itemBuilder: (BuildContext context, int index) => 
+				ReminderTile(index: index),
+		);
 }
