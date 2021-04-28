@@ -1,8 +1,7 @@
 import "../hybrid.dart";
 
-import "cloud.dart";
+import "implementation.dart";
 import "interface.dart";
-import "local.dart";
 
 /// Handles reminders in the cloud and on the device. 
 /// 
@@ -10,10 +9,7 @@ import "local.dart";
 // ignore: lines_longer_than_80_chars
 class HybridReminders extends HybridDatabase<RemindersInterface> implements RemindersInterface {
 	/// Bundles the reminder data in the cloud and device.
-	HybridReminders() : super(
-		cloud: CloudReminders(),
-		local: LocalReminders(),
-	);
+	HybridReminders() : super(cloud: CloudReminders(), local: LocalReminders());
 
 	@override
 	Future<void> signIn() async {

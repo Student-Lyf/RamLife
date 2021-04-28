@@ -1,32 +1,28 @@
 import "../hybrid.dart";
 
-import "cloud.dart";
+import "implementation.dart";
 import "interface.dart";
-import "local.dart";
 
 /// Handles user data in the cloud and on the device. 
 /// 
 /// User profile is loaded once, on sign-in. Once this is complete, 
-/// the full profile is assumed to be on-device. 
+/// the full profile is always assumed to be on-device. 
 class HybridUser extends HybridDatabase implements UserInterface {
 	/// Bundles user data from the device and the cloud.
-	HybridUser() : super(
-		local: LocalUser(),
-		cloud: CloudUser(),
-	);
+	HybridUser() : super(cloud: CloudUser(), local: LocalUser());
 
 	@override
 	Future<void> signIn() async {
-		final Map userData = await cloud.getUser();
-		await local.setUser(userData);
+		final Map userData = await cloud.getProfile();
+		await local.setProfile(userData);
 	}
 
 	@override
-	Future<Map> getUser() => local.getUser();
+	Future<Map> getProfile() => local.getProfile();
 
 	@override
-	Future<void> setUser(Map json) async {
-		await cloud.setUser(json);
-		await local.setUser(json);
+	Future<void> setProfile(Map json) async {
+		await cloud.setProfile(json);
+		await local.setProfile(json);
 	}
 }

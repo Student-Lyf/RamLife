@@ -16,6 +16,12 @@ extension CollectionHelpers on CollectionReference {
 		final DocumentReference document = snapshot.reference;
 		return document;
 	}
+
+	/// Gets all the documents in a collection.
+	Future<List<Map>> getAll() async => [
+		for (final QueryDocumentSnapshot doc in (await get()).docs)
+			doc.data()
+	];
 }
 
 /// Convenience methods on [DocumentReference].
@@ -38,8 +44,9 @@ extension DocumentHelpers on DocumentReference {
 /// This service just manages the connection to Firestore. 
 /// 
 /// This class provides the basic initialization behind Firestore, and 
-/// doesn't expose any methods that will help retreive data. 
-class Firestore extends Service {
+/// doesn't expose any methods that will help retreive data. Any methods that 
+/// are provided don't have an offline equivalent. 
+class Firestore extends DatabaseService {
 	/// The singleton instance of this service.
 	static final FirebaseFirestore instance = FirebaseFirestore.instance;
 
@@ -48,4 +55,11 @@ class Firestore extends Service {
 
 	@override
 	Future<void> signIn() => Auth.signIn();
+
+	@override
+	Future<void> signOut() => Auth.signOut();
+
+	/// Submits feedback to the feedback collection.
+	Future<void> sendFeedback(Map json) => instance.collection("feedback").doc()
+		.set(Map<String, dynamic>.from(json));
 }

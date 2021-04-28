@@ -3,8 +3,8 @@
 /// Sports are split by school year. 
 abstract class SportsInterface {
 	/// Gets all the sports games for this year. 
-	Future<List<Map>> getSports();
+	Future<List<Map>> getAll();
 
 	/// Sets the sports games for this year.
-	Future<void> setSports(List<Map> json);
+	Future<void> setAll(List<Map> json);
 }

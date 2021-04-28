@@ -1,8 +1,7 @@
 import "../hybrid.dart";
 
-import "cloud.dart";
+import "implementation.dart";
 import "interface.dart";
-import "local.dart";
 
 /// Handles user data in the cloud and on the device. 
 /// 
@@ -12,10 +11,7 @@ import "local.dart";
 // ignore: lines_longer_than_80_chars
 class HybridSchedule extends HybridDatabase<ScheduleInterface> implements ScheduleInterface {
 	/// Bundles the schedule data for the cloud and the device.
-	HybridSchedule() : super(
-		local: LocalSchedule(),
-		cloud: CloudSchedule(),
-	);
+	HybridSchedule() : super(cloud: CloudSchedule(), local: LocalSchedule());
 
 	@override
 	Future<void> signIn() async { }

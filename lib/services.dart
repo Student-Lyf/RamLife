@@ -22,11 +22,9 @@ import "src/services/push_notifications.dart";
 import "src/services/service.dart";
 
 export "src/services/auth.dart";
-export "src/services/cloud_db.dart";
 export "src/services/crashlytics.dart";
 export "src/services/database.dart";
 export "src/services/firebase_core.dart";
-export "src/services/local_db.dart";
 export "src/services/notifications.dart";
 export "src/services/preferences.dart";
 export "src/services/push_notifications.dart";

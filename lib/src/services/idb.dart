@@ -6,19 +6,6 @@ import "local_db/idb_factory_stub.dart"
 
 import "service.dart";
 
-/// Helper functions for streams.
-extension StreamHelpers<T> on Stream<T> {
-	/// Provides the first element in a stream that passes the test, if any.
-  Future<T?> firstWhereOrNull(bool Function(T) test) async {
-    await for (final T element in this) {
-    	if (test(element)) {
-	      return element;
-	    }
-    }
-    return null;
-  }
-}
-
 /// Helper functions for [ObjectStore].
 extension ObjectStoreHelpers on ObjectStore {
 	/// Gets the data at the key in this object store. 
@@ -30,10 +17,10 @@ extension ObjectStoreHelpers on ObjectStore {
 }
 
 /// Provides convenience methods on a [Database]. 
+/// 
+/// This extension mostly abstracts details of IDB and handles type-safety.
 extension DatabaseHelpers on Database {
 	/// Gets data at a key in an object store. 
-	/// 
-	/// This code handles transactions so other code doesn't have to. 
 	Future<Map?> get(String storeName, Object key) => 
 		transaction(storeName, idbModeReadOnly)
 		.objectStore(storeName)
@@ -53,23 +40,7 @@ extension DatabaseHelpers on Database {
 		}
 	}
 
-	/// Adds data at a key to an object store. 
-	/// 
-	/// This code handles transactions so other code doesn't have to. 
-	Future<void> add({required String storeName, required Object value}) => 
-		transaction(storeName, idbModeReadWrite)
-		.objectStore(storeName)
-		.add(value);
-
-	/// Updates data in an object store. 
-	/// 
-	/// This function does not care if the key already exists, it will simply 
-	/// update it. 
-	/// 
-	/// This code can produce unexpected behavior if the object store does not 
-	/// have a key. 
-	/// 
-	/// This code handles transactions so other code doesn't have to. 
+	/// Sets data in an object store, overwriting if necessary.
 	Future<void> update({
 		required String storeName, 
 		required Object value, 
@@ -79,8 +50,6 @@ extension DatabaseHelpers on Database {
 		.put(value, key);
 
 	/// Deletes data from an object store. 
-	/// 
-	/// This code handles transactions so other code doesn't have to. 
 	Future<void> delete({
 		required String storeName,
 		required Object key,
@@ -89,9 +58,6 @@ extension DatabaseHelpers on Database {
 		.delete(key);
 
 	/// Gets all the data in an object store. 
-	/// 
-	/// Also provides strong type safety on those values, treating them like JSON 
-	/// objects. This code handles transactions so other code doesn't have to. 
 	Future<List<Map>> getAll(String storeName) async => [
 		for (
 			final dynamic entry in 
@@ -99,27 +65,6 @@ extension DatabaseHelpers on Database {
 				.objectStore(storeName).getAll()
 		)	Map.from(entry)
 	];
-
-	/// Finds an entry in an object store by a field and value. 
-	/// 
-	/// Returns null if no key is given. 
-	Future<CursorWithValue?> findEntry({
-		required String storeName, 
-		required String? key, 
-		required String path
-	}) async => key == null ? null : transaction(storeName, idbModeReadWrite)
-		.objectStore(storeName)
-		.index(path)
-		.openCursor(range: KeyRange.only(key), autoAdvance: true)
-		.firstWhereOrNull(
-			(CursorWithValue cursor) => cursor.key == key,
-		);
-
-	/// Returns how many elements are in an object store.
-	Future<int> objectCount(String storeName) => 
-		transaction(storeName, idbModeReadOnly)
-		.objectStore(storeName)
-		.count();
 }
 
 /// A database that's hosted on the user's device. 
@@ -133,7 +78,7 @@ extension DatabaseHelpers on Database {
 /// value. The choice should be made based on the data in that object store. 
 /// 
 /// Reading and writing data is done with transactions. This process is 
-/// abstracted by extensions on [ObjectStore] and [Database]. 
+/// abstracted by extensions like [DatabaseHelpers] and [ObjectStoreHelpers]. 
 /// 
 /// Another quirk of idb is that object stores can only be created on startup. 
 /// One way this is relevant is sign-in. If it turns out that the user 
@@ -149,7 +94,7 @@ extension DatabaseHelpers on Database {
 /// using a switch statement. A switch statement cascades, meaning the changes
 /// from one version to another will follow each other, which should always 
 /// lead to an up-to-date schema. 
-class Idb extends Service {
+class Idb extends DatabaseService {
 	/// The idb Database object
 	static late final Database instance;
 
@@ -170,6 +115,16 @@ class Idb extends Service {
 
 	/// The name for the schedules object store.
 	static const String scheduleStoreName = "schedules";
+
+	/// The names of all the object stores.
+	static const List<String> storeNames = [
+		userStoreName,
+		sectionStoreName,
+		calendarStoreName,
+		reminderStoreName,
+		sportsStoreName,
+		scheduleStoreName,
+	];
 
 	@override
 	Future<void> init() async {
@@ -200,4 +155,14 @@ class Idb extends Service {
 
 	@override
 	Future<void> signIn() async { }
+
+	@override
+	Future<void> signOut() async {
+		final Transaction transaction = instance
+			.transactionList(storeNames, idbModeReadWrite);
+
+		for (final String storeName in storeNames) {
+			await transaction.objectStore(storeName).clear();
+		}
+	}
 }

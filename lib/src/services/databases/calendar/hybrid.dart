@@ -1,8 +1,7 @@
 import "../hybrid.dart";
 
-import "cloud.dart";
+import "implementation.dart";
 import "interface.dart";
-import "local.dart";
 
 /// Handles calendar data in the cloud and on the device. 
 /// 
@@ -14,10 +13,7 @@ import "local.dart";
 // ignore: lines_longer_than_80_chars
 class HybridCalendar extends HybridDatabase<CalendarInterface> implements CalendarInterface {
 	/// Bundles the cloud and local calendar data.
-	HybridCalendar() : super(
-		cloud: CloudCalendar(),
-		local: LocalCalendar(),
-	);
+	HybridCalendar() : super(cloud: CloudCalendar(), local: LocalCalendar());
 
 	@override
 	Future<void> signIn() async {
@@ -28,10 +24,10 @@ class HybridCalendar extends HybridDatabase<CalendarInterface> implements Calend
 	}
 
 	@override
-	Future<Map> getMonth(int month) => local.getMonth(month);	
+	Future<List<Map?>> getMonth(int month) => local.getMonth(month);	
 
 	@override
-	Future<void> setMonth(int month, Map json) async {
+	Future<void> setMonth(int month, List<Map?> json) async {
 		await cloud.setMonth(month, json);
 		await local.setMonth(month, json);
 	}
@@ -47,7 +43,7 @@ class HybridCalendar extends HybridDatabase<CalendarInterface> implements Calend
 
 	/// Downloads the parts of the calendar necessary to be up-to-date.
 	/// 
-	/// Just the schedules and the current month.
+	/// Just saves the schedules and the current month.
 	Future<void> update() async {
 		final int currentMonth = DateTime.now().month;
 		await local.setSchedules(await cloud.getSchedules());

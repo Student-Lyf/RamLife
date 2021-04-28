@@ -9,6 +9,7 @@ import "databases/hybrid.dart";
 import "databases/calendar/hybrid.dart";
 import "databases/reminders/hybrid.dart";
 import "databases/schedule/hybrid.dart";
+import "databases/sports/hybrid.dart";
 import "databases/user/hybrid.dart";
 
 /// A wrapper around all data in all database. 
@@ -21,12 +22,16 @@ import "databases/user/hybrid.dart";
 /// realm, so any and all initialization must be done here. Each database is 
 /// allowed to implement a [signIn] method, which will be called here. If data 
 /// needs to be downloaded and cached, that's where it will be done. 
-class Database extends Service {
+class Database extends DatabaseService {
 	/// The cloud database, using Firebase's Cloud Firestore. 
 	final Firestore firestore = Firestore();
 
 	/// The local database. 
 	final Idb idb = Idb();
+
+	// ----------------------------------------------------------------
+	// The data managers for each category 
+	// ----------------------------------------------------------------
 
 	/// The user data manager. 
 	final HybridUser user = HybridUser();
@@ -39,6 +44,11 @@ class Database extends Service {
 
 	/// The reminders data manager.
 	final HybridReminders reminders = HybridReminders();
+
+	/// The sports data manager.
+	final HybridSports sports = HybridSports();
+
+ 	// ----------------------------------------------------------------
 
 	@override
 	Future<void> init() async {
@@ -55,7 +65,12 @@ class Database extends Service {
 		await schedule.signIn();
 		await calendar.signIn();
 		await reminders.signIn();
+		await sports.signIn();
+	}
+
+	@override
+	Future<void> signOut() async {
+		await firestore.signOut();
+		await idb.signOut();
 	}
 }
-
-// sports

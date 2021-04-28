@@ -1,8 +1,8 @@
 /// Defines methods for the user profile.
 abstract class UserInterface {
 	/// The user profile.
-	Future<Map> getUser();
+	Future<Map> getProfile();
 
 	/// Sets the user profile.
-	Future<void> setUser(Map json);
+	Future<void> setProfile(Map json);
 }
