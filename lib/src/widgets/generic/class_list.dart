@@ -83,7 +83,7 @@ class ClassPanel extends StatelessWidget {
 /// A list of all the classes for a given day.
 /// 
 /// The list is composed of [ClassPanel]s, one for each period in the day. 
-class ClassList extends StatelessWidget {
+class ClassList extends StatefulWidget {
 	/// The day whose periods should be represented.
 	final Day day;
 
@@ -96,36 +96,42 @@ class ClassList extends StatelessWidget {
 	final String? headerText;
 
 	/// Creates a list of [ClassPanel] widgets to represent periods in a day.
-	const ClassList ({
+	const ClassList({
 		required this.day, 
 		required this.periods,
 		this.headerText,
 	});
 
+	@override
+	ClassListState createState() => ClassListState();
+}
+
+/// A state for the class list. 
+class ClassListState extends ModelListener<Reminders, ClassList> {
+	/// Creates a state that can read reminders
+	ClassListState() : super(shouldDispose: false);
+
 	@override 
-	Widget build(BuildContext context) => ModelListener<Reminders>(
-		model: () => Models.instance.reminders,
-		dispose: false,
-		// ignore: sort_child_properties_last
-		child: DrawerHeader (
-			child: Center (
-				child: Text (
-					headerText ?? "",
-					textScaleFactor: 2,
-					textAlign: TextAlign.center,
+	Reminders getModel() => Models.instance.reminders;
+
+	@override 
+	Widget build(BuildContext context) => ListView(
+		shrinkWrap: true,
+		children: [
+			if (widget.headerText != null) DrawerHeader(
+				child: Center (
+					child: Text (
+						widget.headerText ?? "",
+						textScaleFactor: 2,
+						textAlign: TextAlign.center,
+					)
 				)
-			)
-		),
-		builder: (_, __, Widget? header) => ListView(
-			shrinkWrap: true,
-			children: [
-				if (headerText != null) header!,  // child is supplied
-				...[
-					for (final Period period in periods) 
-						getPanel(period)
-				],
-			]
-		)
+			),  
+			...[
+				for (final Period period in widget.periods) 
+					getPanel(period)
+			],
+		]
 	);
 
 	/// Creates a [ClassPanel] for a given period. 
@@ -144,7 +150,7 @@ class ClassList extends StatelessWidget {
 				: "${period.name}: ${period.getName(subject)}",
 			reminders: Models.instance.reminders.getReminders(
 				period: period.name,
-				dayName: day.name,
+				dayName: widget.day.name,
 				subject: subject?.name,
 			),
 			activity: period.activity,

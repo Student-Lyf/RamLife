@@ -64,51 +64,6 @@ class GenericSportsView<T> extends StatelessWidget {
 	);
 }
 
-/// Creates the AppBar for the sports page. 
-AppBar buildAppBar(SportsModel model) => AppBar(
-	title: const Text("Sports"),
-	bottom: const TabBar(
-		tabs: [
-			Tab(text: "Upcoming"),
-			Tab(text: "Recent"),
-		]
-	),
-	actions: [
-		ModelListener<SportsModel>(
-			model: () => model,
-			dispose: false,
-			builder: (BuildContext context, __, ___) => !model.isAdmin ? Container() 
-				: IconButton(
-					icon: const Icon(Icons.add),
-					tooltip: "Add a game",
-					onPressed: model.adminFunc(() async => 
-						model.data.addGame(await SportsBuilder.createGame(context))
-					),
-				),
-		),
-    PopupMenuButton(
-      icon: const Icon(Icons.sort),
-      onSelected: (SortOption option) => model.sortOption = option,
-      tooltip: "Sort games",
-      itemBuilder: (_) => [
-        const PopupMenuItem(
-          value: SortOption.chronological,
-          child: Text("By date"),
-        ),
-        const PopupMenuItem(
-          value: SortOption.sport,
-          child: Text("By sport"),
-        )
-      ]
-    ),
-    IconButton(
-    	icon: const Icon(Icons.live_tv),
-    	onPressed: () => launch(Urls.sportsLivestream),
-    	tooltip: "Watch livestream",
-  	)
-	]
-);
-
 /// Creates a [GenericSportsView] based on the sorting option.
 Widget getLayout(BuildContext context, SportsModel model) {
 	switch(model.sortOption) {
@@ -166,97 +121,140 @@ void openMenu({
 		title: Text(model.data.games [index].description),
 		children: [
 			SimpleDialogOption(
-			  onPressed: () async {
-			  	Navigator.of(newContext).pop();
-			  	final Scores? scores = await SportsScoreUpdater.updateScores(
-		  			context, model.data.games [index]
-	  			);
-			  	if (scores == null) {
-			  		return;
-			  	}
-			  	model.loading = true;
-			  	await Models.instance.sports.replace(
-				  	index, 
-				  	model.data.games [index].replaceScores(scores)
-		  		);
-			  	model.loading = false;
-		  	},
-			  child: const Text("Edit scores", textScaleFactor: 1.2),
+				onPressed: () async {
+					Navigator.of(newContext).pop();
+					final Scores? scores = await SportsScoreUpdater.updateScores(
+						context, model.data.games [index]
+					);
+					if (scores == null) {
+						return;
+					}
+					model.loading = true;
+					await Models.instance.sports.replace(
+						index, 
+						model.data.games [index].replaceScores(scores)
+					);
+					model.loading = false;
+				},
+				child: const Text("Edit scores", textScaleFactor: 1.2),
 			),
 			const SizedBox(height: 10),
 			SimpleDialogOption(
 				onPressed: () async {
-			  	Navigator.of(newContext).pop();
-			  	model.loading = true;
-			  	await Models.instance.sports.replace(
-				  	index, 
-				  	model.data.games [index].replaceScores(null)
-		  		);
-			  	model.loading = false;
+					Navigator.of(newContext).pop();
+					model.loading = true;
+					await Models.instance.sports.replace(
+						index, 
+						model.data.games [index].replaceScores(null)
+					);
+					model.loading = false;
 				},
 				child: const Text("Remove scores", textScaleFactor: 1.2),
 			),
 			const SizedBox(height: 10),
 			SimpleDialogOption(
-			  onPressed: () async {
-			  	Navigator.of(newContext).pop();
-			  	model.loading = true;
-			  	await Models.instance.sports.replace(
-				  	index, 
-				  	await SportsBuilder.createGame(context, model.data.games [index])
-			  	);
-			  	model.loading = false;
-		  	},
-			  child: const Text("Edit game", textScaleFactor: 1.2),
+				onPressed: () async {
+					Navigator.of(newContext).pop();
+					model.loading = true;
+					await Models.instance.sports.replace(
+						index, 
+						await SportsBuilder.createGame(context, model.data.games [index])
+					);
+					model.loading = false;
+				},
+				child: const Text("Edit game", textScaleFactor: 1.2),
 			),
 			const SizedBox(height: 10),
 			SimpleDialogOption(
-			  onPressed: () async {
-			  	Navigator.of(newContext).pop();
-			  	final bool? confirm = await showDialog(
-			  		context: context,
-			  		builder: (BuildContext context) => AlertDialog(
-			  			title: const Text("Confirm"),
-			  			content: const Text("Are you sure you want to delete this game?"),
-			  			actions: [
-			  				TextButton(
-			  					onPressed: () => Navigator.of(context).pop(false),
-			  					child: const Text("Cancel"),
-		  					),
-		  					ElevatedButton(
-		  						onPressed: () => Navigator.of(context).pop(true),
-		  						child: const Text("Confirm"),
-	  						)
-			  			]
-		  			)
-		  		);
-		  		if (confirm ?? false) {
-		  			model.loading = true;
-				  	await Models.instance.sports.delete(index);
-		  			model.loading = false;
-				  }
-			  },
-			  child: const Text("Remove game", textScaleFactor: 1.2),
+				onPressed: () async {
+					Navigator.of(newContext).pop();
+					final bool? confirm = await showDialog(
+						context: context,
+						builder: (BuildContext context) => AlertDialog(
+							title: const Text("Confirm"),
+							content: const Text("Are you sure you want to delete this game?"),
+							actions: [
+								TextButton(
+									onPressed: () => Navigator.of(context).pop(false),
+									child: const Text("Cancel"),
+								),
+								ElevatedButton(
+									onPressed: () => Navigator.of(context).pop(true),
+									child: const Text("Confirm"),
+								)
+							]
+						)
+					);
+					if (confirm ?? false) {
+						model.loading = true;
+						await Models.instance.sports.delete(index);
+						model.loading = false;
+					}
+				},
+				child: const Text("Remove game", textScaleFactor: 1.2),
 			),
 		]
 	)
 );
 
 /// A page to show recent and upcoming games to the user. 
-class SportsPage extends StatelessWidget {
+class SportsPage extends StatefulWidget {
 	/// Creates the sports page.
 	const SportsPage();
+
+	@override
+	SportsPageState createState() => SportsPageState();
+}
+
+/// The state for the sports page. 
+class SportsPageState extends ModelListener<SportsModel, SportsPage> {
+	@override
+	SportsModel getModel() => SportsModel(Models.instance.sports);
 
 	@override 
 	Widget build(BuildContext context) => DefaultTabController(
 		length: 2,
-		child: ModelListener<SportsModel>(
-			model: () => SportsModel(Models.instance.sports),
-			builder: (_, SportsModel model, __) => ResponsiveScaffold(
-				appBar: buildAppBar(model),
-				drawer: const NavigationDrawer(),
-				bodyBuilder: (_) => getLayout(context, model),
+		child: ResponsiveScaffold(
+			appBar: AppBar(
+				title: const Text("Sports"),
+				bottom: const TabBar(
+					tabs: [
+						Tab(text: "Upcoming"),
+						Tab(text: "Recent"),
+					]
+				),
+				actions: [
+					if (model.isAdmin) IconButton(
+						icon: const Icon(Icons.add),
+						tooltip: "Add a game",
+						onPressed: model.adminFunc(() async => 
+							model.data.addGame(await SportsBuilder.createGame(context))
+						),
+					),
+					PopupMenuButton(
+						icon: const Icon(Icons.sort),
+						onSelected: (SortOption option) => model.sortOption = option,
+						tooltip: "Sort games",
+						itemBuilder: (_) => [
+							const PopupMenuItem(
+								value: SortOption.chronological,
+								child: Text("By date"),
+							),
+							const PopupMenuItem(
+								value: SortOption.sport,
+								child: Text("By sport"),
+							)
+						]
+					),
+					IconButton(
+						icon: const Icon(Icons.live_tv),
+						onPressed: () => launch(Urls.sportsLivestream),
+						tooltip: "Watch livestream",
+					)
+				]
 			),
-		)
+			drawer: const NavigationDrawer(),
+			bodyBuilder: (_) => getLayout(context, model),
+		),
 	);
 }
