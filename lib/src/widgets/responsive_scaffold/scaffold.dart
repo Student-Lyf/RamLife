@@ -128,9 +128,6 @@ class ResponsiveScaffoldState extends State<ResponsiveScaffold> {
 	void _dispose(NavigationItem? item) {
 		if (item != null) {
 			item.model?.removeListener(listener);
-			if (item.shouldDispose) {
-				item.model?.dispose();
-			}
 		}
 	}
 
@@ -144,6 +141,11 @@ class ResponsiveScaffoldState extends State<ResponsiveScaffold> {
 	@override
 	void dispose() {
 		_dispose(navItem);
+		for (final NavigationItem item in widget.navItems ?? []) {
+			if (item.shouldDispose) {
+				item.model?.dispose();
+			}
+		}
 		super.dispose();
 	}
 
