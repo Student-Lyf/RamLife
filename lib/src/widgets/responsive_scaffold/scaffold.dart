@@ -16,10 +16,10 @@ class ResponsiveScaffold extends StatefulWidget {
 	/// The app bar. 
 	/// 
 	/// This does not change with the layout, except for showing a drawer menu.
-	final PreferredSizeWidget appBar;
+	final PreferredSizeWidget? appBar;
 
 	/// The main body of the scaffold. 
-	final WidgetBuilder bodyBuilder;
+	final WidgetBuilder? bodyBuilder;
 
 	/// The full drawer to show. 
 	/// 
@@ -84,18 +84,17 @@ class ResponsiveScaffold extends StatefulWidget {
 		initialNavIndex = null;
 
 	/// Creates a responsive layout with primary navigation items. 
-	ResponsiveScaffold.navBar({
+	const ResponsiveScaffold.navBar({
 		required this.drawer,
 		required this.secondaryDrawer,
 		required List<NavigationItem> this.navItems,
 		required int this.initialNavIndex,
-	}) :
-		appBar = navItems [initialNavIndex].appBar,
-		bodyBuilder = navItems [initialNavIndex].build,
-		floatingActionButton = navItems [initialNavIndex].floatingActionButton,
-		floatingActionButtonLocation = navItems [initialNavIndex]
-			.floatingActionButtonLocation,
-		sideSheet = navItems [initialNavIndex].sideSheet;
+	}) : 
+		appBar = null,
+		sideSheet = null,
+		bodyBuilder = null,
+		floatingActionButton = null,
+		floatingActionButtonLocation = null;
 
 	/// Whether this widget is being used with a navigation bar. 
 	bool get hasNavBar => navItems != null;
@@ -125,11 +124,7 @@ class ResponsiveScaffoldState extends State<ResponsiveScaffold> {
 	void listener() => setState(() {});
 
 	void _listen(NavigationItem? item) => item?.model?.addListener(listener);
-	void _dispose(NavigationItem? item) {
-		if (item != null) {
-			item.model?.removeListener(listener);
-		}
-	}
+	void _dispose(NavigationItem? item) => item?.model?.removeListener(listener);
 
 	@override
 	void initState() {
@@ -151,17 +146,20 @@ class ResponsiveScaffoldState extends State<ResponsiveScaffold> {
 
 	@override
 	Widget build(BuildContext context) => ResponsiveBuilder(
-		child: widget.bodyBuilder(context),  // ignore: sort_child_properties_last
+		// ignore: sort_child_properties_last
+		child: navItem?.build(context) ?? widget.bodyBuilder?.call(context),
 		builder: (BuildContext context, LayoutInfo info, Widget? child) => Scaffold(
-			appBar: widget.appBar,
+			appBar: navItem?.appBar ?? widget.appBar,
 			drawer: info.hasStandardDrawer ? null 
 				: Drawer(child: widget.hasNavBar ? widget.secondaryDrawer : widget.drawer),
-			endDrawer: info.hasStandardSideSheet || widget.sideSheet == null 
-				? null : Drawer(child: widget.sideSheet),
-			floatingActionButton: widget.floatingActionButton,
-			floatingActionButtonLocation: widget.floatingActionButtonLocation,
-			bottomNavigationBar: !widget.hasNavBar || !info.hasBottomNavBar 
-				? null 
+			endDrawer: info.hasStandardSideSheet 
+				|| (navItem?.sideSheet ?? widget.sideSheet) == null 
+					? null : Drawer(child: navItem?.sideSheet ?? widget.sideSheet),
+			floatingActionButton: navItem?.floatingActionButton 
+				?? widget.floatingActionButton,
+			floatingActionButtonLocation: navItem?.floatingActionButtonLocation
+				?? widget.floatingActionButtonLocation,
+			bottomNavigationBar: !widget.hasNavBar || !info.hasBottomNavBar ? null 
 				: BottomNavigationBar(
 					type: BottomNavigationBarType.fixed,
 					items: [
@@ -178,17 +176,23 @@ class ResponsiveScaffoldState extends State<ResponsiveScaffold> {
 						destinations: [
 							for (final NavigationItem item in widget.navItems!)
 								item.navRail,
-						],		
+						],
 						selectedIndex: navIndex,
 						onDestinationSelected: (int index) => navIndex = index,
 					)
 					else if (info.hasStandardDrawer) widget.drawer,
 					Expanded(child: child!),
-					if (widget.sideSheet != null && info.hasStandardSideSheet) ...[
+					if (
+						(navItem?.sideSheet ?? widget.sideSheet) != null 
+						&& info.hasStandardSideSheet
+					) ...[
 						const VerticalDivider(),
 						SizedBox(
 							width: 320,
-							child: Drawer(elevation: 0, child: widget.sideSheet),
+							child: Drawer(
+								elevation: 0, 
+								child: navItem?.sideSheet ?? widget.sideSheet
+							),
 						)
 					]
 				]
