@@ -13,6 +13,6 @@
     "prettier": "^1.19.1"
   },
   "dependencies": {
-    "grpc": "^1.24.2"
+    "grpc": "^1.24.9"
   }
 }
