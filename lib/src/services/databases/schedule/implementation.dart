@@ -9,7 +9,7 @@ import "interface.dart";
 /// the courses section-IDs, so they're really "sections", not courses.
 class CloudSchedule implements ScheduleInterface {
 	/// The courses collection in Firestore. 
-	static final CollectionReference courses = Firestore.instance
+	static final CollectionReference<Map> courses = Firestore.instance
 		.collection("classes");
 
 	@override 

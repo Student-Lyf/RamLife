@@ -7,7 +7,7 @@ import "service.dart";
 export "package:cloud_firestore/cloud_firestore.dart";
 
 /// Convenience methods on [CollectionReference].
-extension CollectionHelpers on CollectionReference {
+extension CollectionHelpers on CollectionReference<Map> {
 	/// Returns a [DocumentReference] by querying a field. 
 	Future<DocumentReference> findDocument(String field, String value) async {
 		final Query query = where(field, isEqualTo: value);
@@ -19,13 +19,13 @@ extension CollectionHelpers on CollectionReference {
 
 	/// Gets all the documents in a collection.
 	Future<List<Map>> getAll() async => [
-		for (final QueryDocumentSnapshot doc in (await get()).docs)
+		for (final QueryDocumentSnapshot<Map> doc in (await get()).docs)
 			doc.data()
 	];
 }
 
 /// Convenience methods on [DocumentReference].
-extension DocumentHelpers on DocumentReference {
+extension DocumentHelpers on DocumentReference<Map> {
 	/// Gets data from a document, throwing if null.
 	Future<Map> throwIfNull(String message) async {
 		final Map? value = (await get()).data();
@@ -66,7 +66,7 @@ class Firestore extends DatabaseService {
 	/// Listens to a month for changes in the calendar. 
 	Stream<List<Map?>> getCalendarStream(int month) => instance
 		.collection("calendar").doc(month.toString()).snapshots().map(
-			(DocumentSnapshot snapshot) => [
+			(DocumentSnapshot<Map<String, dynamic>> snapshot) => [
 				for (final dynamic entry in snapshot.data()! ["calendar"])
 					if (entry == null) null
 					else Map.from(entry)

@@ -132,7 +132,7 @@ class Idb extends DatabaseService {
 		try {
 			instance = await _factory.open(
 				"ramlife.db",
-				version: 3, 
+				version: 1, 
 				onUpgradeNeeded: (VersionChangeEvent event) {
 					switch(event.oldVersion) {
 						case 0: event.database
@@ -141,7 +141,6 @@ class Idb extends DatabaseService {
 							..createObjectStore(calendarStoreName, keyPath: "month")
 							..createObjectStore(reminderStoreName, autoIncrement: true)
 							..createObjectStore(sportsStoreName, autoIncrement:  true)
-							..createObjectStore(reminderStoreName, keyPath: "id")
 							..createObjectStore(scheduleStoreName, keyPath: "name");
 					}
 				},

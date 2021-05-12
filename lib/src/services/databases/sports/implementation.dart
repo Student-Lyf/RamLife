@@ -9,7 +9,7 @@ import "interface.dart";
 /// is determined. Each document has a `games` field with a list of games.
 class CloudSports implements SportsInterface {
 	/// The collection for sports games.
-	static final CollectionReference sports = Firestore.instance
+	static final CollectionReference<Map> sports = Firestore.instance
 		.collection("sports");
 
 	/// The current school year. 
@@ -23,7 +23,7 @@ class CloudSports implements SportsInterface {
 	}
 
 	/// The document for the current year. 
-	static DocumentReference get gamesDocument => 
+	static DocumentReference<Map> get gamesDocument => 
 		sports.doc(schoolYear.toString());
 
 	@override

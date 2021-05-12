@@ -12,11 +12,11 @@ import "interface.dart";
 /// Users cannot currently modify their own profiles. Use the Admin SDK instead.
 class CloudUser implements UserInterface {
 	/// The users collection in firestore.
-	static final CollectionReference users = Firestore.instance
+	static final CollectionReference<Map> users = Firestore.instance
 		.collection("students");
 
 	/// The document for this user.
-	static DocumentReference get userDocument => users.doc(Auth.email!);
+	static DocumentReference<Map> get userDocument => users.doc(Auth.email!);
 
 	@override
 	Future<Map> getProfile() => userDocument

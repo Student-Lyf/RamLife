@@ -11,7 +11,7 @@ import "interface.dart";
 /// document has the reminder id as its ID.
 class CloudReminders implements RemindersInterface {
 	/// The reminders subcollection for this user.
-	static CollectionReference get reminders => CloudUser.userDocument
+	static CollectionReference<Map> get reminders => CloudUser.userDocument
 		.collection("reminders");
 
 	@override
