@@ -96,6 +96,18 @@ class ResponsiveSchedule extends NavigationItem<ScheduleViewModel> {
 					]
 				)
 			),
+			ConstrainedBox(
+				constraints: const BoxConstraints.tightFor(width: 250),
+				child: ElevatedButton(
+				onPressed: () => showSearch(
+					context: context,
+					delegate: CustomSearchDelegate(hintText: "Search for a class")
+				),
+				child: const ListTile(
+					leading:  Icon(Icons.search),
+					title: Text("Search for a class")
+					)
+			),),
 			const SizedBox (height: 20),
 			const Divider(),
 			const SizedBox (height: 20),
@@ -103,8 +115,64 @@ class ResponsiveSchedule extends NavigationItem<ScheduleViewModel> {
 				child: ClassList(
 					day: model.day, 
 					periods: Models.instance.user.data.getPeriods(model.day)
-				)
+				),
 			),
 		]
 	);
+}
+
+/// A class that creates the search bar using ScheduleModel
+class CustomSearchDelegate extends SearchDelegate {
+	/// A constructor that constructs the search bar
+  CustomSearchDelegate({
+    required String hintText,
+  }) : super(
+    searchFieldLabel: hintText,
+    keyboardType: TextInputType.text,
+    textInputAction: TextInputAction.search,
+  );
+
+  @override
+  Widget buildLeading(BuildContext context) => ElevatedButton(
+  	onPressed: () => Navigator.of(context).pop(),
+  	child: const Icon(Icons.arrow_back)
+  );
+
+  @override
+  Widget buildSuggestions(BuildContext context) => Column(
+  	children: [
+  		const SizedBox(height: 15),
+  		for (int i=0; i < 5; i++) 
+		  	Column(
+		  		children: [ 
+		  			ListTile(
+			  			onTap: () {
+			  				query = "Algebra & Trig 7";
+			  				showResults(context);
+			  			},
+			  			title: Text(
+			  				"Algebra & Trig 7",
+			  					style: Theme.of(context).textTheme.headline5
+			  				),
+			  			subtitle: const Text("Mr. Jaffe")
+			  		),
+			  		const SizedBox(height: 10),
+			  		const Divider(),
+			  		const SizedBox(height: 10),
+			  ]
+			)
+  	]
+  );
+
+  @override
+  Widget buildResults(BuildContext context) => const Text("results");
+
+  @override
+  List<Widget> buildActions(BuildContext context) => [
+  	if (query != "")
+  		IconButton(
+  			icon: const Icon(Icons.highlight_off),
+  			onPressed: () => query = ""
+  		)
+  ];
 }
