@@ -12,11 +12,12 @@ import "interface.dart";
 /// `schedules`.
 class CloudCalendar implements CalendarInterface {
 	/// The calendar collection in Firestore.
-	static final CollectionReference<Map> calendar = Firestore.instance
-		.collection("calendar");
+	static final CollectionReference<Map<String, dynamic>> calendar = Firestore
+		.instance.collection("calendar");
 
 	/// The document inside [calendar] that holds the schedules.
-	static final DocumentReference<Map> schedules = calendar.doc("schedules");
+	static final DocumentReference<Map<String, dynamic>> schedules = 
+		calendar.doc("schedules");
 
 	@override
 	Future<List<Map?>> getMonth(int month) async {

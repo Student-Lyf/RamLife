@@ -18,6 +18,9 @@ class RemindersBuilderModel with ChangeNotifier {
 	/// The message for this reminder.
 	String message = "";
 
+	/// The ID for this reminder.
+	late String _id;
+
 	/// Whether this reminder repeats.
 	/// 
 	/// This affects whether it will be deleted after 
@@ -52,9 +55,11 @@ class RemindersBuilderModel with ChangeNotifier {
 		]
 	{
 		if (reminder == null) {
+			_id = Services.instance.database.reminders.getId();
 			return;
 		}
 
+		_id = reminder.id;
 		message = reminder.message;
 		time = reminder.time;	
 		shouldRepeat = time!.repeats;
@@ -77,7 +82,7 @@ class RemindersBuilderModel with ChangeNotifier {
 	/// Returns a new reminder from the model's fields.
 	Reminder build() => Reminder (
 		message: message, 
-		id: Services.instance.database.reminders.getId(),
+		id: _id, 
 		time: ReminderTime.fromType(
 			type: type!,
 			dayName: dayName,
