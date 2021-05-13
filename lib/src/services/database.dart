@@ -1,121 +1,82 @@
-import "service.dart";
+// ignore_for_file: directives_ordering
 
-/// A database that can read and write data. 
+import "firestore.dart";
+import "idb.dart";
+import "service.dart";  
+
+import "databases/hybrid.dart";
+
+import "databases/calendar/hybrid.dart";
+import "databases/reminders/hybrid.dart";
+import "databases/schedule/hybrid.dart";
+import "databases/sports/hybrid.dart";
+import "databases/user/hybrid.dart";
+
+export "databases/calendar/hybrid.dart";
+export "databases/reminders/hybrid.dart";
+export "databases/schedule/hybrid.dart";
+export "databases/sports/hybrid.dart";
+export "databases/user/hybrid.dart";
+
+/// A wrapper around all data in all database. 
 /// 
-/// A [Database] is a special type of [Service]. Whereas a service only needs
-/// to know when the app starts and the user signs in, a database has other 
-/// responsibilities. 
+/// The database is split into 2N parts: N types of data, with a Firestore and 
+/// IDB implementation for each. The local and cloud implementations are bundled
+/// into [HybridDatabase]s, which we use here.
 /// 
-/// Functionally, a database needs to be able to determine whether the user
-/// is signed in, so the app knows where to direct the user. Additionally,
-/// since the data is tied to the user, the database needs to know when the
-/// user is signing out, it can purge that data. Of course, the database also
-/// needs to know when the user is signing in, so it can connect to the data. 
-/// 
-/// This class also serves to dictate what data the database should provide, 
-/// as well as their types. Most of the code in this class does exactly that. 
-abstract class Database extends Service {
-	/// The key to get the calendar within the returned JSON object. 
-	/// 
-	/// The calendar is stored along with its month, which means it cannot
-	/// be a list, and instead must be a `Map`. This key
-	/// gets the list out of the Map. 
-	static const String calendarKey = "calendar";
+/// This is the only class that brings the [Service] paradigm into the database
+/// realm, so any and all initialization must be done here. Each database is 
+/// allowed to implement a [signIn] method, which will be called here. If data 
+/// needs to be downloaded and cached, that's where it will be done. 
+class Database extends DatabaseService {
+	/// The cloud database, using Firebase's Cloud Firestore. 
+	final Firestore firestore = Firestore();
 
-	/// Determines whether the user is signed in.
-	/// 
-	/// From all the services, a [Database] is the only one that can, and is 
-	/// expected to, know whether the user is signed in.  
-	bool get isSignedIn;
+	/// The local database. 
+	final Idb idb = Idb();
 
-	/// Signs the user out of the app. 
-	/// 
-	/// As opposed to [signIn], only databases need to know when the user is
-	/// signing out. It can be helpful for non-database services to know when the 
-	/// user signs in, since this indicates they are truly ready to engage with 
-	/// the app, but signing out carries no valuable information. The databases,
-	/// however, must purge all their data. 
-	Future<void> signOut();
+	// ----------------------------------------------------------------
+	// The data managers for each category 
+	// ----------------------------------------------------------------
 
-	// ---------- Data code below ---------- 
+	/// The user data manager. 
+	final HybridUser user = HybridUser();
 
-	/// The user object as JSON
-	Future<Map> get user;
+	/// The schedule data manager
+	final HybridSchedule schedule = HybridSchedule();
 
-	/// Changes the user JSON object. 
-	Future<void> setUser(Map json);
+	/// The calendar data manager.
+	final HybridCalendar calendar = HybridCalendar();
 
-	/// Gets one section (a course in Ramaz) as a JSON object. 
-	/// 
-	/// Do not use this directly. Instead, use [getSections]. 
-	Future<Map> getSection(String id);
+	/// The reminders data manager.
+	final HybridReminders reminders = HybridReminders();
 
-	/// The different classes (sections, not courses) for a schedule.
-	Future<Map<String, Map>?> getSections(
-		Iterable<String> ids
-	) async => {
-		for (final String id in ids)
-			id: await getSection(id)
-	};
+	/// The sports data manager.
+	final HybridSports sports = HybridSports();
 
-	/// Changes the user's classes.
-	Future<void> setSections(Map<String, Map> json);
+ 	// ----------------------------------------------------------------
 
-	/// The calendar in JSON form. 
-	/// 
-	/// Admins can change this with [setCalendar]. 
-	Future<List<List<Map?>>> get calendar async => [
-		for (int month = 1; month <= 12; month++) [
-			for (final Map? day in (await getCalendarMonth(month)) [calendarKey])
-				day == null ? null : Map.from(day)
-		]
-	];
+	@override
+	Future<void> init() async {
+		await firestore.init();
+		await idb.init();
+	}
 
-	/// Gets one month out of the calendar. 
-	/// 
-	/// Months are in the range 1-12. The value returned will be a JSON object 
-	/// containing the month and the calendar. The calendar itself can be retrieved
-	/// with [calendarKey].
-	Future<Map> getCalendarMonth(int month);
+	@override
+	Future<void> signIn() async {
+		await firestore.signIn();
+		await idb.signIn();
 
-	/// Gets all available schedules. 
-	Future<List<Map>> getSchedules();
+		await user.signIn();
+		await schedule.signIn();
+		await calendar.signIn();
+		await reminders.signIn();
+		await sports.signIn();
+	}
 
-	/// Saves the list of available schedules.
-	Future<void> saveSchedules(List<Map> schedules);
-
-	/// Changes the calendar in the database. 
-	/// 
-	/// The fact that this method takes a [month] parameter while [calendar] does
-	/// not is an indicator that the calendar schema needs to be rewritten. 
-	/// 
-	/// [month] must be 1-12, not 0-11. 
-	/// 
-	/// Only admins can change this. 
-	Future<void> setCalendar(int month, Map json);
-
-	/// The user's reminders. 
-	Future<List<Map>> get reminders;
-
-	/// Updates a reminder, creating it if necessary.
-	/// 
-	/// This function queries the database for a reminder with the same hash and 
-	/// updates it. 
-	Future<void> updateReminder(String? oldHash, Map json);
-
-	/// Deletes a reminder at the given index. 
-	/// 
-	/// This function queries the database for a reminder with the same hash and
-	/// deletes it. 
-	Future<void> deleteReminder(String oldHash);
-
-	/// The sports games. 
-	/// 
-	/// Admins can change this with [setSports]. 
-	Future<List<Map>> get sports;
-
-	/// Sets the sports games.
-	/// 
-	/// Only admins can change this. 
-	Future<void> setSports(List<Map> json);
+	@override
+	Future<void> signOut() async {
+		await firestore.signOut();
+		await idb.signOut();
+	}
 }
