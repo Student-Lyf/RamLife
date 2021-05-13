@@ -2,6 +2,7 @@ import "package:flutter/foundation.dart";
 
 import "package:ramaz/data.dart";
 import "package:ramaz/models.dart";
+import "package:ramaz/services.dart";
 
 /// A view model for the dialog that allows the user to build a reminder.
 // ignore: prefer_mixin
@@ -16,6 +17,9 @@ class RemindersBuilderModel with ChangeNotifier {
 
 	/// The message for this reminder.
 	String message = "";
+
+	/// The ID for this reminder.
+	late String _id;
 
 	/// Whether this reminder repeats.
 	/// 
@@ -51,9 +55,11 @@ class RemindersBuilderModel with ChangeNotifier {
 		]
 	{
 		if (reminder == null) {
+			_id = Services.instance.database.reminders.getId();
 			return;
 		}
 
+		_id = reminder.id;
 		message = reminder.message;
 		time = reminder.time;	
 		shouldRepeat = time!.repeats;
@@ -76,6 +82,7 @@ class RemindersBuilderModel with ChangeNotifier {
 	/// Returns a new reminder from the model's fields.
 	Reminder build() => Reminder (
 		message: message, 
+		id: _id, 
 		time: ReminderTime.fromType(
 			type: type!,
 			dayName: dayName,

@@ -36,7 +36,7 @@ class ReminderTile extends StatelessWidget {
 					subtitle: Text(reminder.time.toString()),
 					onTap: () async {
 						if (!Models.instance.schedule.isValidReminder(reminder)) {
-							reminders.deleteReminder(index);
+							await reminders.deleteReminder(index);
 							ScaffoldMessenger.of(context).showSnackBar(
 								const SnackBar(content: Text("Deleted outdated reminder"))
 							);

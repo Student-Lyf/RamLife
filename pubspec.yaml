@@ -17,15 +17,12 @@ dependencies:
     sdk: flutter
 
   # ------------- Services -------------
-  # Firebase/Google
-  cloud_firestore: ^1.0.5
-  firebase_auth: ^1.0.1
-
-  firebase_core: ^1.1.0
-
-  firebase_crashlytics: ^2.0.2
-  firebase_messaging: ^9.0.1
-  google_sign_in: ^5.0.1
+  cloud_firestore: ^2.1.0
+  firebase_auth: ^1.1.4
+  firebase_core: ^1.1.1
+  firebase_crashlytics: ^2.0.3
+  firebase_messaging: ^9.1.4
+  google_sign_in: ^5.0.2
 
   flutter_local_notifications: ^5.0.0
   idb_shim: ^2.0.0

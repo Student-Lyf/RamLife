@@ -47,7 +47,4 @@ class PeriodReminderTime extends ReminderTime {
 		required String? subject, 
 		required String? period,
 	}) => dayName == this.dayName && period == this.period;
-
-	@override
-	String get hash => "$dayName-$period-$repeats";
 }
