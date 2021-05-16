@@ -17,7 +17,7 @@ class RamLife extends StatelessWidget {
 	/// The routes for this app.
 	static final Map<String, WidgetBuilder> routes = {
 		Routes.login: (_) => RouteInitializer(
-			onError: null ,
+			onError: null,
 			isAllowed: () => true,
 			child: const Login(),
 		),

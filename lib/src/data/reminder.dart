@@ -41,10 +41,16 @@ class Reminder {
 	/// The [ReminderTime] for this reminder. 
 	final ReminderTime time;
 
+	/// A unique ID for this reminder.
+	/// 
+	/// Used to locate this in a database.
+	final String id;
+
 	/// Creates a new reminder.
 	const Reminder({
 		required this.message,
 		required this.time,
+		required this.id,
 	});
 
 	/// Creates a new [Reminder] from a JSON object.
@@ -53,6 +59,7 @@ class Reminder {
 	/// to [ReminderTime.fromJson]
 	Reminder.fromJson(dynamic json) :
 		message = json ["message"],
+		id = json ["id"],
 		time = ReminderTime.fromJson(Map.from(json ["time"]));
 
 	@override String toString() => "$message ($time)";
@@ -61,9 +68,6 @@ class Reminder {
 	Map toJson() => {
 		"message": message,
 		"time": time.toJson(),
-		"hash": hash, 
+		"id": id,
 	};
-
-	/// A unique identifier for this reminder.
-	String get hash => "$message-${time.hash}";
 }

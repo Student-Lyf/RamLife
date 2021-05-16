@@ -110,12 +110,17 @@ class SportsBuilder extends StatefulWidget {
 /// A state for [SportsBuilder].
 /// 
 /// This state keeps [TextEditingController]s intact. 
-class SportBuilderState extends State<SportsBuilder> {
+class SportBuilderState extends ModelListener<
+	SportsBuilderModel, SportsBuilder
+> {
 	/// A controller to hold [SportsBuilder.parent]'s team name.
 	final TextEditingController teamController = TextEditingController();
 
 	/// A controller to hold [SportsBuilder.parent]'s opponent.
 	final TextEditingController opponentController = TextEditingController();
+
+	@override
+	SportsBuilderModel getModel() => SportsBuilderModel(widget.parent);
 
 	@override
 	void initState() {
@@ -125,126 +130,130 @@ class SportBuilderState extends State<SportsBuilder> {
 	}
 
 	@override
-	Widget build(BuildContext context) => ModelListener<SportsBuilderModel>(
-		model: () => SportsBuilderModel(widget.parent),
-		builder: (_, SportsBuilderModel model, __) => Scaffold(
-			appBar: AppBar(title: const Text("Add game")),
-			bottomSheet: !model.loading ? null : Container(
-				height: 60, 
-				padding: const EdgeInsets.all(10),
-				child: Row(
-					mainAxisAlignment: MainAxisAlignment.spaceBetween,
-					children: const [Text("Saving..."), CircularProgressIndicator()]
-				)
-			),
-			body: ListView(
-				padding: const EdgeInsets.all(20),
-				children: [
-					FormRow(
-						"Sport",
-						DropdownButtonFormField<Sport>(
-							hint: const Text("Choose a sport"),
-							value: model.sport,
-							onChanged: (Sport? value) => model.sport = value,
-							items: [
-								for (final Sport sport in Sport.values) 
-									DropdownMenuItem<Sport>(
-										value: sport,
-										child: Text(SportsGame.capitalize(sport))
-									)
-							],
-						),
-						sized: true,
-					),
-					FormRow(
-						"Team",
-						TextField(
-							onChanged: (String value) => model.team = value,
-							textCapitalization: TextCapitalization.words,
-							controller: teamController,
-						),
-						sized: true,
-					),
-					FormRow(
-						"Opponent",
-						TextField(
-							onChanged: (String value) => model.opponent = value,
-							textCapitalization: TextCapitalization.words,
-							controller: opponentController,
-						),
-						sized: true,
-					),
-					FormRow(
-						"Away game",
-						Checkbox(
-							value: model.away,
-							// If tristate == false (default), value never be null
-							onChanged: (bool? value) => model.away = value!,
-						),
-					),
-					FormRow.editable(
-						title: "Date",
-						value: SportsTile.formatDate(model.date),
-						whenNull: Icons.date_range,
-						setNewValue: () async => model.date = await pickDate(
-							initialDate: DateTime.now(),
-							context: context
-						),
-					),
-					FormRow.editable(
-						title: "Start time",
-						value: model.start?.format(context),
-						whenNull: Icons.access_time,
-						setNewValue: () async => model.start = await showTimePicker(
-							context: context,
-							initialTime: model.start ?? TimeOfDay.now(),
-						),
-					),
-					FormRow.editable(
-						title: "End time",
-						value: model.end?.format(context),
-						whenNull: Icons.access_time,
-						setNewValue: () async => model.end = await showTimePicker(
-							context: context,
-							initialTime: model.end ?? TimeOfDay.now(),
-						),
-					),
-					const SizedBox(height: 10),
-					Row(
-						mainAxisAlignment: MainAxisAlignment.spaceBetween,
-						children: [
-							const Text(
-								"Tap on the card to change the scores", 
-								textScaleFactor: 0.9
-							),
-							TextButton(
-								onPressed: () => model.scores = null,
-								child: const Text("Clear"),
-							)
-						]
-					),
-					const SizedBox(height: 20),
-					SportsTile(
-						model.game,
-						onTap: () async => model.scores = 
-							await SportsScoreUpdater.updateScores(context, model.game) 
-								?? model.scores
-					),
-					ButtonBar(
-						children: [
-							TextButton(
-								onPressed: () => Navigator.of(context).pop(),
-								child: const Text("Cancel"),
-							),
-							ElevatedButton(
-								onPressed: !model.ready ? null : 
-									() => Navigator.of(context).pop(model.game),
-								child: const Text("Save"),
-							)
-						]
-					)
-				]
+	void dispose() {
+		teamController.dispose();
+		opponentController.dispose();
+		super.dispose();
+	}
+
+	@override
+	Widget build(BuildContext context) => Scaffold(
+		appBar: AppBar(title: const Text("Add game")),
+		bottomSheet: !model.loading ? null : Container(
+			height: 60, 
+			padding: const EdgeInsets.all(10),
+			child: Row(
+				mainAxisAlignment: MainAxisAlignment.spaceBetween,
+				children: const [Text("Saving..."), CircularProgressIndicator()]
 			)
+		),
+		body: ListView(
+			padding: const EdgeInsets.all(20),
+			children: [
+				FormRow(
+					"Sport",
+					DropdownButtonFormField<Sport>(
+						hint: const Text("Choose a sport"),
+						value: model.sport,
+						onChanged: (Sport? value) => model.sport = value,
+						items: [
+							for (final Sport sport in Sport.values) 
+								DropdownMenuItem<Sport>(
+									value: sport,
+									child: Text(SportsGame.capitalize(sport))
+								)
+						],
+					),
+					sized: true,
+				),
+				FormRow(
+					"Team",
+					TextField(
+						onChanged: (String value) => model.team = value,
+						textCapitalization: TextCapitalization.words,
+						controller: teamController,
+					),
+					sized: true,
+				),
+				FormRow(
+					"Opponent",
+					TextField(
+						onChanged: (String value) => model.opponent = value,
+						textCapitalization: TextCapitalization.words,
+						controller: opponentController,
+					),
+					sized: true,
+				),
+				FormRow(
+					"Away game",
+					Checkbox(
+						value: model.away,
+						// If tristate == false (default), value never be null
+						onChanged: (bool? value) => model.away = value!,
+					),
+				),
+				FormRow.editable(
+					title: "Date",
+					value: SportsTile.formatDate(model.date),
+					whenNull: Icons.date_range,
+					setNewValue: () async => model.date = await pickDate(
+						initialDate: DateTime.now(),
+						context: context
+					),
+				),
+				FormRow.editable(
+					title: "Start time",
+					value: model.start?.format(context),
+					whenNull: Icons.access_time,
+					setNewValue: () async => model.start = await showTimePicker(
+						context: context,
+						initialTime: model.start ?? TimeOfDay.now(),
+					),
+				),
+				FormRow.editable(
+					title: "End time",
+					value: model.end?.format(context),
+					whenNull: Icons.access_time,
+					setNewValue: () async => model.end = await showTimePicker(
+						context: context,
+						initialTime: model.end ?? TimeOfDay.now(),
+					),
+				),
+				const SizedBox(height: 10),
+				Row(
+					mainAxisAlignment: MainAxisAlignment.spaceBetween,
+					children: [
+						const Text(
+							"Tap on the card to change the scores", 
+							textScaleFactor: 0.9
+						),
+						TextButton(
+							onPressed: () => model.scores = null,
+							child: const Text("Clear"),
+						)
+					]
+				),
+				const SizedBox(height: 20),
+				if (model.ready) SportsTile(
+					model.game,
+					onTap: () async => model.scores = 
+						await SportsScoreUpdater.updateScores(context, model.game) 
+							?? model.scores
+			),
+				ButtonBar(
+					children: [
+						TextButton(
+							onPressed: () => Navigator.of(context).pop(),
+							child: const Text("Cancel"),
+						),
+						ElevatedButton(
+							onPressed: !model.ready ? null : 
+								() => Navigator.of(context).pop(model.game),
+							child: const Text("Save"),
+						)
+					]
+				)
+			]
 		)
 	);
 }

@@ -46,18 +46,6 @@ class BrightnessChanger extends StatefulWidget {
 class BrightnessChangerState extends State<BrightnessChanger> {
 	bool? _brightness;
 
-	@override
-	void initState() {
-		super.initState();
-		_brightness = Services.instance.prefs.brightness;
-	}
-
-	@override
-	void didChangeDependencies() {
-		super.didChangeDependencies();
-		Future(() => setBrightness(context, value: _brightness));
-	}
-
 	/// The icon for this widget. 
 	Icon get icon => Icon (
 		caseConverter<IconData>(
@@ -67,6 +55,12 @@ class BrightnessChangerState extends State<BrightnessChanger> {
 			onFalse: Icons.brightness_low,
 		)
 	);
+	
+	@override
+	void initState() {
+		super.initState();
+		_brightness = Services.instance.prefs.brightness;
+	}
 
 	@override 
 	Widget build (BuildContext context) {

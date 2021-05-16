@@ -12,14 +12,14 @@ import "responsive_builder.dart";
 /// primary navigation items (to avoid duplication in the UI).
 /// 
 /// See the package documentation for how the layout is determined. 
-class ResponsiveScaffold extends StatelessWidget {
+class ResponsiveScaffold extends StatefulWidget {
 	/// The app bar. 
 	/// 
 	/// This does not change with the layout, except for showing a drawer menu.
-	final PreferredSizeWidget appBar;
+	final PreferredSizeWidget? appBar;
 
 	/// The main body of the scaffold. 
-	final WidgetBuilder bodyBuilder;
+	final WidgetBuilder? bodyBuilder;
 
 	/// The full drawer to show. 
 	/// 
@@ -67,11 +67,8 @@ class ResponsiveScaffold extends StatelessWidget {
 	/// [secondaryDrawer] that does not include these items.  
 	final List<NavigationItem>? navItems;
 
-	/// The index of the current navigation item in [navItems].
-	final int? navIndex;
-
-	/// A callback for when the user selects a navigation item.
-	final ValueChanged<int>? onNavIndexChanged;
+	/// The initial index of the current navigation item in [navItems].
+	final int? initialNavIndex;
 
 	/// Creates a scaffold that responds to the screen size. 
 	const ResponsiveScaffold({
@@ -84,67 +81,118 @@ class ResponsiveScaffold extends StatelessWidget {
 	}) : 
 		secondaryDrawer = null,
 		navItems = null,
-		navIndex = null,
-		onNavIndexChanged = null;
+		initialNavIndex = null;
 
 	/// Creates a responsive layout with primary navigation items. 
-	ResponsiveScaffold.navBar({
+	const ResponsiveScaffold.navBar({
 		required this.drawer,
 		required this.secondaryDrawer,
 		required List<NavigationItem> this.navItems,
-		required int this.navIndex,
-		required this.onNavIndexChanged,
-	}) :
-		appBar = navItems [navIndex].appBar,
-		bodyBuilder = navItems [navIndex].build,
-		floatingActionButton = navItems [navIndex].floatingActionButton,
-		floatingActionButtonLocation = navItems [navIndex]
-			.floatingActionButtonLocation,
-		sideSheet = navItems [navIndex].sideSheet;
+		required int this.initialNavIndex,
+	}) : 
+		appBar = null,
+		sideSheet = null,
+		bodyBuilder = null,
+		floatingActionButton = null,
+		floatingActionButtonLocation = null;
 
 	/// Whether this widget is being used with a navigation bar. 
 	bool get hasNavBar => navItems != null;
 
 	@override
+	ResponsiveScaffoldState createState() => ResponsiveScaffoldState();
+}
+
+/// The state of the scaffold. 
+class ResponsiveScaffoldState extends State<ResponsiveScaffold> {
+	late int _navIndex;
+	
+	/// The index of the current navigation item in [ResponsiveScaffold.navItems].
+	int get navIndex => _navIndex;
+	set navIndex(int value) {
+		_dispose(navItem);
+		_navIndex = value;
+		_listen(navItem);
+		setState(() {});
+	}
+
+	/// The currently selected navigation item, if any.
+	NavigationItem? get navItem => !widget.hasNavBar ? null 
+		: widget.navItems! [navIndex];
+
+	/// Refreshes the page when the underlying data changes. 
+	void listener() => setState(() {});
+
+	void _listen(NavigationItem? item) => item?.model?.addListener(listener);
+	void _dispose(NavigationItem? item) => item?.model?.removeListener(listener);
+
+	@override
+	void initState() {
+		super.initState();
+		_navIndex = widget.initialNavIndex ?? 0;
+		_listen(navItem);
+	}
+
+	@override
+	void dispose() {
+		_dispose(navItem);
+		for (final NavigationItem item in widget.navItems ?? []) {
+			if (item.shouldDispose) {
+				item.model?.dispose();
+			}
+		}
+		super.dispose();
+	}
+
+	@override
 	Widget build(BuildContext context) => ResponsiveBuilder(
-		child: bodyBuilder(context),  // ignore: sort_child_properties_last
+		// ignore: sort_child_properties_last
+		child: navItem?.build(context) ?? widget.bodyBuilder?.call(context),
 		builder: (BuildContext context, LayoutInfo info, Widget? child) => Scaffold(
-			appBar: appBar,
+			appBar: navItem?.appBar ?? widget.appBar,
 			drawer: info.hasStandardDrawer ? null 
-				: Drawer(child: hasNavBar ? secondaryDrawer : drawer),
-			endDrawer: info.hasStandardSideSheet || sideSheet == null 
-				? null : Drawer(child: sideSheet),
-			floatingActionButton: floatingActionButton,
-			floatingActionButtonLocation: floatingActionButtonLocation,
-			bottomNavigationBar: !hasNavBar || !info.hasBottomNavBar 
-				? null 
+				: Drawer(child: widget.hasNavBar ? widget.secondaryDrawer : widget.drawer),
+			endDrawer: info.hasStandardSideSheet 
+				|| (navItem?.sideSheet ?? widget.sideSheet) == null 
+					? null : Drawer(child: navItem?.sideSheet ?? widget.sideSheet),
+			floatingActionButton: navItem?.floatingActionButton 
+				?? widget.floatingActionButton,
+			floatingActionButtonLocation: navItem?.floatingActionButtonLocation
+				?? widget.floatingActionButtonLocation,
+			bottomNavigationBar: !widget.hasNavBar || !info.hasBottomNavBar ? null 
 				: BottomNavigationBar(
 					type: BottomNavigationBarType.fixed,
 					items: [
-						for (final NavigationItem item in navItems!)
+						for (final NavigationItem item in widget.navItems!)
 							item.bottomNavBar,
 					],
-					currentIndex: navIndex!,
-					onTap: onNavIndexChanged,
+					currentIndex: navIndex,
+					onTap: (int index) => navIndex = index,
 				),
 			body: Row(
 				children: [
-					if (hasNavBar && info.hasNavRail) NavigationRail(
+					if (widget.hasNavBar && info.hasNavRail) NavigationRail(
 						labelType: NavigationRailLabelType.all,
 						destinations: [
-							for (final NavigationItem item in navItems!)
+							for (final NavigationItem item in widget.navItems!)
 								item.navRail,
-						],		
-						selectedIndex: navIndex!,
-						onDestinationSelected: onNavIndexChanged,
+						],
+						selectedIndex: navIndex,
+						onDestinationSelected: (int index) => navIndex = index,
 					)
-					else if (info.hasStandardDrawer) drawer,
+					else if (info.hasStandardDrawer) widget.drawer,
 					Expanded(child: child!),
-					if (sideSheet != null && info.hasStandardSideSheet) ...[
+					if (
+						(navItem?.sideSheet ?? widget.sideSheet) != null 
+						&& info.hasStandardSideSheet
+					) ...[
 						const VerticalDivider(),
 						SizedBox(
 							width: 320,
-							child: Drawer(elevation: 0, child: sideSheet),
+							child: Drawer(
+								elevation: 0, 
+								child: navItem?.sideSheet ?? widget.sideSheet
+							),
 						)
 					]
 				]

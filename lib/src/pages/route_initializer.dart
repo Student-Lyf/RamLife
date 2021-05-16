@@ -54,16 +54,24 @@ class RouteInitializerState extends State<RouteInitializer> {
 		try {
 			if (!Services.instance.isReady) {
 				await Services.instance.init();
+				ThemeChanger.of(context).brightness = caseConverter<Brightness> (
+					value: Services.instance.prefs.brightness,
+					onTrue: Brightness.light,
+					onFalse: Brightness.dark,
+					onNull: MediaQuery.of(context).platformBrightness,
+				);
 			}
+
 			if (Auth.isSignedIn && !Models.instance.isReady) {
 				await Models.instance.init();
 			}
-		} catch (error) {
+		} catch (error, stack) {
 			await Services.instance.crashlytics.log("Error. Disposing models");
 			Models.instance.dispose();
 			if (widget.onError != null) {
 				await Navigator.of(context).pushReplacementNamed(widget.onError!);
 			}
+			await Services.instance.crashlytics.recordError(error, stack);
 		}
 		if (!widget.isAllowed()) {
 			await Navigator.of(context).pushReplacementNamed(widget.onFailure);

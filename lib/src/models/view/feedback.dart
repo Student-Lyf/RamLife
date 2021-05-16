@@ -34,7 +34,7 @@ class FeedbackModel with ChangeNotifier {
 	Future<void> send() async => Services
 		.instance
 		.database
-		.cloudDatabase
+		.firestore
 		.sendFeedback(
 			Feedback (
 				message: message!,
