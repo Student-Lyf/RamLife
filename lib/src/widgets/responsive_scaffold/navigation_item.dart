@@ -4,8 +4,13 @@ import "package:flutter/material.dart";
 /// 
 /// This class maps to both [BottomNavigationBarItem] and 
 /// [NavigationRailDestination] with an [icon] and [label] property.
-@immutable
-abstract class NavigationItem extends StatelessWidget {
+abstract class NavigationItem<M extends ChangeNotifier> {
+	/// The data model for this page, if any.
+	M? model;
+
+	/// Whether this item's data model should be disposed.
+	bool shouldDispose;
+
 	/// The icon for this item.
 	final Widget icon;
 
@@ -15,7 +20,12 @@ abstract class NavigationItem extends StatelessWidget {
 	final String label;
 
 	/// Creates an abstraction for a navigation item.
-	const NavigationItem({required this.icon, required this.label});
+	NavigationItem({
+		required this.icon, 
+		required this.label,
+		this.model,
+		this.shouldDispose = true,
+	});
 
 	/// Generates an item for [BottomNavigationBar].
 	BottomNavigationBarItem get bottomNavBar => 
@@ -36,4 +46,7 @@ abstract class NavigationItem extends StatelessWidget {
 
 	/// The FAB location for this page.
 	FloatingActionButtonLocation? get floatingActionButtonLocation => null;
+
+	/// The main content on the page. 
+	Widget build(BuildContext context);
 }

@@ -9,25 +9,22 @@ const List<String> weekdayNames = [
 ];
 
 /// Shows relevant info about today on the home page. 
-class Dashboard extends NavigationItem {
-	/// The underlying data representing this widget.
-	final ScheduleModel scheduleModel = Models.instance.schedule;
-
-	/// The reminders data model. 
-	final Reminders remindersModel = Models.instance.reminders;
-
-	/// The sports data model. 
-	final Sports sportsModel = Models.instance.sports;
+class Dashboard extends NavigationItem<DashboardModel> {
+	@override
+	DashboardModel get model => super.model!;
 
 	/// Creates the dashboard page. 
-	Dashboard() : 
-		super(label: "Dashboard", icon: const Icon(Icons.dashboard));
+	Dashboard() : super(
+		label: "Dashboard", 
+		icon: const Icon(Icons.dashboard),
+		model: DashboardModel(),
+	);
 
 	@override
 	AppBar get appBar => AppBar(
 		title: const Text("Dashboard"),
 		actions: [
-		if (scheduleModel.hasSchool)
+		if (model.schedule.hasSchool)
 			Builder(
 				builder: (BuildContext context) => TextButton(
 					onPressed: () => Scaffold.of(context).openEndDrawer(),
@@ -38,21 +35,27 @@ class Dashboard extends NavigationItem {
 	);
 
 	@override
-	Widget? get sideSheet => !scheduleModel.hasSchool ? null : ClassList(
-		// if there is school, then:
-		// 	scheduleModel.today != null
-		// 	scheduleModel.periods != null
-		day: scheduleModel.today!,  
-		periods: scheduleModel.nextPeriod == null 
-			? scheduleModel.periods!
-			: scheduleModel.periods!.getRange (
-				(scheduleModel.periodIndex ?? -1) + 1, 
-				scheduleModel.periods!.length
-			),
-		headerText: scheduleModel.period == null 
-			? "Today's Schedule" 
-			: "Upcoming Classes"
-	);
+	Widget? get sideSheet {
+		if (!model.schedule.hasSchool) {
+			return null;
+		} 
+		final ScheduleModel schedule = model.schedule;
+		return ClassList(
+			// if there is school, then:
+			// 	model!.schedule.today != null
+			// 	model!.schedule.periods != null
+			day: schedule.today!,  
+			periods: schedule.nextPeriod == null 
+				? schedule.periods!
+				: schedule.periods!.getRange (
+					(schedule.periodIndex ?? -1) + 1, 
+					schedule.periods!.length
+				),
+			headerText: schedule.period == null 
+				? "Today's Schedule" 
+				: "Upcoming Classes"
+		);
+	}
 
 	/// Allows the user to refresh data. 
 	/// 
@@ -60,50 +63,47 @@ class Dashboard extends NavigationItem {
 	/// log out and log back in. 
 	/// 
 	/// This has to be a separate function since it can recursively call itself. 
-	Future<void> refresh(BuildContext context, HomeModel model) => model.refresh(
+	Future<void> refresh(BuildContext context) => model.refresh(
 		() => ScaffoldMessenger.of(context).showSnackBar(
 			SnackBar(
 				content: const Text("No Internet"), 
 				action: SnackBarAction(
 					label: "RETRY", 
-					onPressed: () => refresh(context, model),
+					onPressed: () => refresh(context),
 				),
 			)
 		)
 	);
 
 	@override 
-	Widget build(BuildContext context) => ModelListener(
-		model: () => HomeModel(),
-		builder: (BuildContext context, HomeModel model, _) => RefreshIndicator(
-			onRefresh: () => refresh(context, model),
-			child: ListView(
-				padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-				children: [
-					Text (
-						scheduleModel.today == null
-							? "There is no school today"
-							: "Today is ${scheduleModel.today!.name}",
-						style: Theme.of(context).textTheme.headline3,
-						textAlign: TextAlign.center
+	Widget build(BuildContext context) => RefreshIndicator(
+		onRefresh: () => refresh(context),
+		child: ListView(
+			padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+			children: [
+				Text (
+					model.schedule.today == null
+						? "There is no school today"
+						: "Today is ${model.schedule.today!.name}",
+					style: Theme.of(context).textTheme.headline3,
+					textAlign: TextAlign.center
+				),
+				const SizedBox (height: 20),
+				if (model.schedule.hasSchool) ...[
+					ScheduleSlot(),
+					const SizedBox(height: 10),
+				],
+				if (model.sports.todayGames.isNotEmpty) ...[
+					Text(
+						"Sports games",
+						textAlign: TextAlign.center,
+						style: Theme.of(context).textTheme.headline5,
 					),
-					const SizedBox (height: 20),
-					if (scheduleModel.hasSchool) ...[
-						ScheduleSlot(),
-						const SizedBox(height: 10),
-					],
-					if (sportsModel.todayGames.isNotEmpty) ...[
-						Text(
-							"Sports games",
-							textAlign: TextAlign.center,
-							style: Theme.of(context).textTheme.headline5,
-						),
-						const SizedBox(height: 10),
-						for (final int index in sportsModel.todayGames)
-							SportsTile(sportsModel.games [index])
-					]
+					const SizedBox(height: 10),
+					for (final int index in model.sports.todayGames)
+						SportsTile(model.sports.games [index])
 				]
-			)
+			]
 		)
 	);
 }

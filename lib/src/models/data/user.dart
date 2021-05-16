@@ -30,10 +30,13 @@ class UserModel extends Model {
 
 	@override
 	Future<void> init() async {
-		data = User.fromJson(await Services.instance.database.user);
-		subjects = Subject.getSubjects(
-			await Services.instance.database.getSections(data.sectionIDs)
-		);
+		data = User.fromJson(await Services.instance.database.user.getProfile());
+		subjects = {
+			for (final String id in data.sectionIDs)
+				id: Subject.fromJson(
+					await Services.instance.database.schedule.getCourse(id)
+				)
+		};
 		final List<String>? scopeStrings = await Auth.adminScopes;
 		adminScopes = scopeStrings == null ? null : [
 			for (final String scope in scopeStrings)

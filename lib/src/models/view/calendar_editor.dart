@@ -54,9 +54,14 @@ class CalendarEditor with ChangeNotifier {
 				: month > 7 ? currentYear - 1 : currentYear
 	];
 
+	/// Loads the current month to create the calendar.
+	CalendarEditor() {
+		loadMonth(DateTime.now().month - 1);
+	}
+
 	/// Loads a month from the database and pads it accordingly.
 	void loadMonth(int month) => subscriptions [month] ??= Services
-		.instance.database.cloudDatabase.getCalendarStream(month + 1)
+		.instance.database.firestore.getCalendarStream(month + 1)
 		.listen(
 			(List<Map?> cal) {
 				calendar [month] = layoutMonth(
@@ -114,16 +119,10 @@ class CalendarEditor with ChangeNotifier {
 		final int index = calendar [date.month - 1]!
 			.indexWhere((CalendarDay? day) => day != null);
 		calendar [date.month - 1]! [index + date.day - 1]!.schoolDay = day;
-		await Services.instance.database.setCalendar(
-			date.month, 
-			{
-				"calendar": [
-					for (final CalendarDay? day in calendar [date.month - 1]!)
-						if (day != null)
-							day.schoolDay?.toJson(),
-				],
-				"month": date.month
-			}
-		);
+		await Services.instance.database.calendar.setMonth(date.month, [
+			for (final CalendarDay? day in calendar [date.month - 1]!)
+				if (day != null)
+					day.schoolDay?.toJson(),
+		]);
 	}
 }
