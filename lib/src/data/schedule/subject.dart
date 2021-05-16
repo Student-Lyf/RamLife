@@ -28,6 +28,9 @@ class Subject {
 	/// The teacher who teaches this subject.
 	final String teacher;
 
+	/// The subject's id.
+	final String id;
+
 	/// A link to a virtual class, like Zoom.
 	final String? virtualLink;
 
@@ -35,6 +38,7 @@ class Subject {
 	const Subject ({
 		required this.name,
 		required this.teacher,
+		required this.id,
 		this.virtualLink,
 	});
 
@@ -44,6 +48,7 @@ class Subject {
 	Subject.fromJson(Map json) :
 		name = json ["name"], 
 		teacher = json ["teacher"],
+		id = json ["id"],
 		virtualLink = json ["virtualLink"];
 
 	@override 
