@@ -28,7 +28,7 @@ class Subject {
 	/// The teacher who teaches this subject.
 	final String teacher;
 
-	/// The subject's id.
+	/// The section-ID for this subject
 	final String id;
 
 	/// A link to a virtual class, like Zoom.
