@@ -61,11 +61,18 @@ class ScheduleModel extends Model {
 
 	/// Initializes the calendar. 
 	Future<void> initCalendar() async {
+		final HybridCalendar calendarDatabase = Services.instance.database.calendar;
+		final List<Map> json = await calendarDatabase.getSchedules();
 		Schedule.schedules = [
-			for (final Map json in await Services.instance.database.getSchedules())
-				Schedule.fromJson(json)
+			for (final Map schedule in json)
+				Schedule.fromJson(schedule)
 		];
-		calendar = Day.getCalendar(await Services.instance.database.calendar);
+		calendar = [
+			for (int month = 1; month <= 12; month++) [
+				for (final Map? day in await calendarDatabase.getMonth(month))
+					day == null ? null : Day.fromJson(day)
+			]
+		];
 		setToday();
 		notifyListeners();
 	}
