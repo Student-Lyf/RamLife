@@ -30,12 +30,20 @@ class PeriodData {
 	/// See the [Subject] class for more details.
 	final String id;
 
+	/// The period's name.
+	final String name;
+
+	/// The day this period occurs.
+	final String dayName;
+
 	/// A const constructor for a [PeriodData]. 
 	/// 
 	/// Free periods should be represented by null and not [PeriodData].
 	const PeriodData ({
 		required this.room,
-		required this.id
+		required this.id,
+		required this.name,
+		required this.dayName,
 	});
 
 	/// Returns a [PeriodData] from a JSON object.
@@ -43,11 +51,13 @@ class PeriodData {
 	/// Both `json ["room"]` and `json ["id"]` must be non-null.
 	factory PeriodData.fromJson(Map json) => PeriodData(
 		room: json ["room"],
-		id: json ["id"]
+		id: json ["id"],
+		name: json ["name"],
+		dayName: json ["dayName"],
 	);
 
 	@override 
-	String toString() => "PeriodData ($id, $room)";
+	String toString() => "PeriodData ($id, $room, $name, $dayName)";
 
 	@override 
 	int get hashCode => "$room-$id".hashCode;
