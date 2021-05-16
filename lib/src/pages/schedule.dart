@@ -152,9 +152,12 @@ class CustomSearchDelegate extends SearchDelegate {
 			  			},
 			  			title: Text(
 			  				"Algebra & Trig 7",
-			  					style: Theme.of(context).textTheme.headline5
+			  					style: Theme.of(context).textTheme.headline4
 			  				),
-			  			subtitle: const Text("Mr. Jaffe")
+			  			subtitle: Text(
+			  				"Rodger Jaffe   102004-10",
+			  				style: Theme.of(context).textTheme.headline6
+			  			)
 			  		),
 			  		const SizedBox(height: 10),
 			  		const Divider(),
@@ -165,7 +168,29 @@ class CustomSearchDelegate extends SearchDelegate {
   );
 
   @override
-  Widget buildResults(BuildContext context) => const Text("results");
+  Widget buildResults(BuildContext context) => Column(
+  	children: [
+  		const SizedBox(height: 15),
+  		for (int i=0; i < 5; i++) 
+		  	Column(
+		  		children: [ 
+		  			ListTile(
+			  			title: Text(
+			  				"Monday",
+			  					style: Theme.of(context).textTheme.headline4
+			  				),
+			  			subtitle: Text(
+			  				"Period 2   1:00-2:00",
+			  				style: Theme.of(context).textTheme.headline6
+			  			)
+			  		),
+			  		const SizedBox(height: 10),
+			  		const Divider(),
+			  		const SizedBox(height: 10),
+			  ]
+			)
+  	]
+  );
 
   @override
   List<Widget> buildActions(BuildContext context) => [
