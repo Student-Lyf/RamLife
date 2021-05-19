@@ -23,9 +23,9 @@ class ScheduleSearchModel {
 	/// [Subject.name], [Subject.id], or [Subject.teacher].
 	List<Subject> getMatchingClasses(String query) => [
 		for (final Subject subject in subjects)
-			if (subject.name.toUpperCase().contains(query.toUpperCase())||
-					subject.id.toUpperCase().contains(query.toUpperCase())||
-					subject.teacher.toUpperCase().contains(query.toUpperCase()))
+			if (subject.name.toLowerCase().contains(query.toLowerCase())||
+					subject.id.toLowerCase().contains(query.toLowerCase())||
+					subject.teacher.toLowerCase().contains(query.toLowerCase()))
 				subject
 	];
 
