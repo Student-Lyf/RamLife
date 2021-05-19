@@ -44,7 +44,19 @@ class ResponsiveSchedule extends NavigationItem<ScheduleViewModel> {
 	}
 
 	@override
-	AppBar get appBar => AppBar(title: const Text("Schedule"));
+	AppBar get appBar => AppBar(
+		title: const Text("Schedule"),
+		actions: [ Builder( 
+			builder: (BuildContext context) => IconButton(
+				icon: const Icon(Icons.search),
+				tooltip: "Search schedule",
+				onPressed: () => showSearch(
+					context: context,
+					delegate: CustomSearchDelegate(hintText: "Search for a class")
+				),
+			)
+		)]
+	);
 
 	@override
 	Widget? get floatingActionButton => Builder(
@@ -96,21 +108,7 @@ class ResponsiveSchedule extends NavigationItem<ScheduleViewModel> {
 					]
 				)
 			),
-			ConstrainedBox(
-				constraints: const BoxConstraints.tightFor(width: 250),
-				child: ElevatedButton(
-				onPressed: () => showSearch(
-					context: context,
-					delegate: CustomSearchDelegate(hintText: "Search for a class")
-				),
-				child: const ListTile(
-					leading:  Icon(Icons.search),
-					title: Text("Search for a class")
-					)
-			),),
-			const SizedBox (height: 20),
-			const Divider(),
-			const SizedBox (height: 20),
+			const Divider(height: 40),
 			Expanded(
 				child: ClassList(
 					day: model.day, 
@@ -121,14 +119,17 @@ class ResponsiveSchedule extends NavigationItem<ScheduleViewModel> {
 	);
 }
 
-/// A class that creates the search bar using ScheduleModel
+/// A class that creates the search bar using ScheduleModel.
 class CustomSearchDelegate extends SearchDelegate {
-	/// A constructor that constructs the search bar
-  CustomSearchDelegate({
-    required String hintText,
-  }) : super(
-    searchFieldLabel: hintText,
-    keyboardType: TextInputType.text,
+	/// This model handles the searching logic.
+	final ScheduleSearchModel model = ScheduleSearchModel();
+
+	/// A constructor that constructs the search bar.
+	CustomSearchDelegate({
+		required String hintText,
+	}) : super(
+		searchFieldLabel: hintText,
+		keyboardType: TextInputType.text,
     textInputAction: TextInputAction.search,
   );
 
@@ -139,56 +140,28 @@ class CustomSearchDelegate extends SearchDelegate {
   );
 
   @override
-  Widget buildSuggestions(BuildContext context) => Column(
+  Widget buildSuggestions(BuildContext context) => ListView(
   	children: [
   		const SizedBox(height: 15),
-  		for (int i=0; i < 5; i++) 
-		  	Column(
-		  		children: [ 
-		  			ListTile(
-			  			onTap: () {
-			  				query = "Algebra & Trig 7";
-			  				showResults(context);
-			  			},
-			  			title: Text(
-			  				"Algebra & Trig 7",
-			  					style: Theme.of(context).textTheme.headline4
-			  				),
-			  			subtitle: Text(
-			  				"Rodger Jaffe   102004-10",
-			  				style: Theme.of(context).textTheme.headline6
-			  			)
-			  		),
-			  		const SizedBox(height: 10),
-			  		const Divider(),
-			  		const SizedBox(height: 10),
-			  ]
-			)
+  		for (Subject suggestion in model.getMatchingClasses(query)) 
+		  	SuggestionWidget(
+		  		suggestion: suggestion,
+		  		onTap: () {
+  					query = suggestion.name;
+  					showResults(context);
+  				},
+		  	)
   	]
   );
 
   @override
-  Widget buildResults(BuildContext context) => Column(
+  Widget buildResults(BuildContext context) => ListView(
   	children: [
   		const SizedBox(height: 15),
-  		for (int i=0; i < 5; i++) 
-		  	Column(
-		  		children: [ 
-		  			ListTile(
-			  			title: Text(
-			  				"Monday",
-			  					style: Theme.of(context).textTheme.headline4
-			  				),
-			  			subtitle: Text(
-			  				"Period 2   1:00-2:00",
-			  				style: Theme.of(context).textTheme.headline6
-			  			)
-			  		),
-			  		const SizedBox(height: 10),
-			  		const Divider(),
-			  		const SizedBox(height: 10),
-			  ]
-			)
+  		for (
+  			PeriodData period in 
+  			model.getPeriods(model.getMatchingClasses(query).first)
+  		) ResultWidget(period)
   	]
   );
 
@@ -196,8 +169,64 @@ class CustomSearchDelegate extends SearchDelegate {
   List<Widget> buildActions(BuildContext context) => [
   	if (query != "")
   		IconButton(
-  			icon: const Icon(Icons.highlight_off),
+  			icon: const Icon(Icons.close),
   			onPressed: () => query = ""
   		)
   ];
+}
+
+/// A class that creates each individual suggestion.
+class SuggestionWidget extends StatelessWidget {
+	/// The function to be run when the suggestion is clicked.
+	final VoidCallback onTap;
+	/// The Subject given to the widget.
+	final Subject suggestion;
+	/// A constructor that defines what a suggestion should have.
+	const SuggestionWidget({
+		required this.suggestion,
+		required this.onTap
+	});
+
+	@override
+	Widget build(BuildContext context) => Column(
+		children: [ 
+			ListTile(
+  			onTap: onTap,
+  			title: Text(
+  				suggestion.name,
+  					style: Theme.of(context).textTheme.headline4
+  				),
+  			subtitle: Text(
+  				"${suggestion.teacher}   ${suggestion.id}",
+  				style: Theme.of(context).textTheme.headline6
+  			)
+  		),
+  		const Divider(height: 20),
+  	]
+	);
+}
+
+/// A class that creates each individual result.
+class ResultWidget extends StatelessWidget {
+	/// The PeriodData given to the widget.
+	final PeriodData period;
+	/// A constructor that defines what a result should have.
+	const ResultWidget(this.period);
+
+	@override
+	Widget build(BuildContext context) => Column(
+		children: [ 
+			ListTile(
+  			title: Text(
+  				period.dayName,
+  					style: Theme.of(context).textTheme.headline4
+  				),
+  			subtitle: Text(
+  				"Period ${period.name}",
+  				style: Theme.of(context).textTheme.headline6
+  			)
+  		),
+  		const Divider(height: 20),
+  	]
+	);
 }
