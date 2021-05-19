@@ -30,7 +30,7 @@ class Sports extends Model {
 	@override
 	Future<void> init() async {
 		timer = Timer.periodic(_minute, (_) => todayGames = getTodayGames());
-		games = SportsGame.fromList(await Services.instance.database.sports);
+		games = SportsGame.fromList(await Services.instance.database.sports.getAll());
 		todayGames = getTodayGames();
 		now = DateTime.now();
 	}
@@ -74,6 +74,6 @@ class Sports extends Model {
 	/// Saves the games to the database. 
 	/// 
 	/// Used in any database CRUD methods. 
-	Future<void> saveGames() => 
-		Services.instance.database.setSports(SportsGame.getJsonList(games));
+	Future<void> saveGames() => Services.instance.database.sports
+		.setAll(SportsGame.getJsonList(games));
 }

@@ -32,3 +32,12 @@ abstract class Service {
 	/// Override this function with code that facilitates the sign-in process. 
 	Future<void> signIn();
 }
+
+/// A service specific to databases.
+/// 
+/// Databases need to know when the user signs out, as they should unlink the 
+/// user from all the data. 
+abstract class DatabaseService extends Service {
+	/// Provides the database a chance to unlink all data from the user. 
+	Future<void> signOut();
+}

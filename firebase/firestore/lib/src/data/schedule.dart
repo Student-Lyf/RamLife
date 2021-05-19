@@ -120,5 +120,7 @@ class Period extends Serializable {
 	Map<String, String> get json => {
 		"room": room,
 		"id": id,
+		"dayName": day,
+		"name": period.toString(),
 	};
 }
