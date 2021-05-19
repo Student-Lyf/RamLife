@@ -130,57 +130,60 @@ class CustomSearchDelegate extends SearchDelegate {
 	}) : super(
 		searchFieldLabel: hintText,
 		keyboardType: TextInputType.text,
-    textInputAction: TextInputAction.search,
-  );
+		textInputAction: TextInputAction.search,
+	);
 
-  @override
-  Widget buildLeading(BuildContext context) => ElevatedButton(
-  	onPressed: () => Navigator.of(context).pop(),
-  	child: const Icon(Icons.arrow_back)
-  );
+	@override
+	Widget buildLeading(BuildContext context) => ElevatedButton(
+		onPressed: () => Navigator.of(context).pop(),
+		child: const Icon(Icons.arrow_back)
+	);
 
-  @override
-  Widget buildSuggestions(BuildContext context) => ListView(
-  	children: [
-  		const SizedBox(height: 15),
-  		for (Subject suggestion in model.getMatchingClasses(query)) 
-		  	SuggestionWidget(
-		  		suggestion: suggestion,
-		  		onTap: () {
-  					query = suggestion.name;
-  					showResults(context);
-  				},
-		  	)
-  	]
-  );
+	@override
+	Widget buildSuggestions(BuildContext context) => ListView(
+		children: [
+			const SizedBox(height: 15),
+			for (Subject suggestion in model.getMatchingClasses(query)) 
+				SuggestionWidget(
+					suggestion: suggestion,
+					onTap: () {
+						query = suggestion.name;
+						showResults(context);
+					},
+				)
+		]
+	);
 
-  @override
-  Widget buildResults(BuildContext context) => ListView(
-  	children: [
-  		const SizedBox(height: 15),
-  		for (
-  			PeriodData period in 
-  			model.getPeriods(model.getMatchingClasses(query).first)
-  		) ResultWidget(period)
-  	]
-  );
+	@override
+	Widget buildResults(BuildContext context) => ListView(
+		children: [
+			const SizedBox(height: 15),
+			for (
+				PeriodData period in 
+				model.getPeriods(model.getMatchingClasses(query).first)
+			) ResultWidget(period)
+		]
+	);
 
-  @override
-  List<Widget> buildActions(BuildContext context) => [
-  	if (query != "")
-  		IconButton(
-  			icon: const Icon(Icons.close),
-  			onPressed: () => query = ""
-  		)
-  ];
+	@override
+	List<Widget> buildActions(BuildContext context) => [
+		if (query != "")
+			IconButton(
+				icon: const Icon(Icons.close),
+				onPressed: () => query = ""
+			)
+	];
 }
 
 /// A class that creates each individual suggestion.
 class SuggestionWidget extends StatelessWidget {
+
 	/// The function to be run when the suggestion is clicked.
 	final VoidCallback onTap;
+
 	/// The Subject given to the widget.
 	final Subject suggestion;
+
 	/// A constructor that defines what a suggestion should have.
 	const SuggestionWidget({
 		required this.suggestion,
@@ -191,25 +194,27 @@ class SuggestionWidget extends StatelessWidget {
 	Widget build(BuildContext context) => Column(
 		children: [ 
 			ListTile(
-  			onTap: onTap,
-  			title: Text(
-  				suggestion.name,
-  					style: Theme.of(context).textTheme.headline4
-  				),
-  			subtitle: Text(
-  				"${suggestion.teacher}   ${suggestion.id}",
-  				style: Theme.of(context).textTheme.headline6
-  			)
-  		),
-  		const Divider(height: 20),
-  	]
+				onTap: onTap,
+				title: Text(
+					suggestion.name,
+						style: Theme.of(context).textTheme.headline4
+					),
+				subtitle: Text(
+					"${suggestion.teacher}   ${suggestion.id}",
+					style: Theme.of(context).textTheme.headline6
+				)
+			),
+			const Divider(height: 20),
+		]
 	);
 }
 
 /// A class that creates each individual result.
 class ResultWidget extends StatelessWidget {
+
 	/// The PeriodData given to the widget.
 	final PeriodData period;
+
 	/// A constructor that defines what a result should have.
 	const ResultWidget(this.period);
 
@@ -217,16 +222,16 @@ class ResultWidget extends StatelessWidget {
 	Widget build(BuildContext context) => Column(
 		children: [ 
 			ListTile(
-  			title: Text(
-  				period.dayName,
-  					style: Theme.of(context).textTheme.headline4
-  				),
-  			subtitle: Text(
-  				"Period ${period.name}",
-  				style: Theme.of(context).textTheme.headline6
-  			)
-  		),
-  		const Divider(height: 20),
-  	]
+				title: Text(
+					period.dayName,
+						style: Theme.of(context).textTheme.headline4
+					),
+				subtitle: Text(
+					"Period ${period.name}",
+					style: Theme.of(context).textTheme.headline6
+				)
+			),
+			const Divider(height: 20),
+		]
 	);
 }
