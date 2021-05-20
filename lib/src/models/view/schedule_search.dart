@@ -21,6 +21,8 @@ class ScheduleSearchModel {
 	/// The query parameter should be a part of a course's name, id, or teacher
 	/// and classes will be matched by searching against
 	/// [Subject.name], [Subject.id], or [Subject.teacher].
+	///
+	/// [query] should be in lower-case to allow broader matching.
 	List<Subject> getMatchingClasses(String query) => [
 		for (final Subject subject in subjects)
 			if (subject.name.toLowerCase().contains(query.toLowerCase())||
