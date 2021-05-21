@@ -23,15 +23,17 @@ class ScheduleSearchModel {
 	/// [Subject.name], [Subject.id], or [Subject.teacher].
 	///
 	/// [query] should be in lower-case to allow broader matching.
-	List<Subject> getMatchingClasses(String query) => [
-		for (final Subject subject in subjects)
-			if (
-				subject.name.toLowerCase().contains(query.toLowerCase())
-				|| subject.id.toLowerCase().contains(query.toLowerCase())
-				|| subject.teacher.toLowerCase().contains(query.toLowerCase())
-			) subject
-
-	];
+	List<Subject> getMatchingClasses(String query) {
+		query=query.toLowerCase();
+		return [
+			for (final Subject subject in subjects)
+				if (
+				subject.name.toLowerCase().contains(query)
+						|| subject.id.toLowerCase().contains(query)
+						|| subject.teacher.toLowerCase().contains(query)
+				) subject
+		];
+	}
 
 	/// Finds the periods when a given course meets. 
 	List<PeriodData> getPeriods(Subject subject) => [
