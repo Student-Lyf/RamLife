@@ -23,7 +23,7 @@ class ScheduleSearchModel {
 	/// [Subject.name], [Subject.id], or [Subject.teacher].
 	///
 	/// [query] must be a lower-case string.
-	List<Subject> getMatchingClasses(String query) =>[
+	List<Subject> getMatchingClasses(String query) => [
 		for (final Subject subject in subjects)
 			if (
 			subject.name.toLowerCase().contains(query)
