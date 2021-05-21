@@ -26,7 +26,7 @@ class ScheduleSearchModel {
 	List<Subject> getMatchingClasses(String query) => [
 		for (final Subject subject in subjects)
 			if (
-			subject.name.toLowerCase().contains(query)
+				subject.name.toLowerCase().contains(query)
 				|| subject.id.toLowerCase().contains(query)
 				|| subject.teacher.toLowerCase().contains(query)
 			) subject
