@@ -19,7 +19,7 @@ class ClubAdmins extends Model{
 
   /// Allows a clubs admin to delete a club.
   Future<void> deleteClub(Club club) async{
-    Services.instance.database.clubs.delete(club.toJson());
+    Services.instance.database.clubs.delete(club.id);
   }
 
   Future<void> addFacultyAdvisor(Club club, ContactInfo facultyAdvisor){
