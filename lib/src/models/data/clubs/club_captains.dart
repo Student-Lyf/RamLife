@@ -20,11 +20,8 @@ class ClubCaptains extends Model {
 
   /// Allows user to upload a club.
   Future<void> uploadClub(Club newClub) async {
-    if((Models.instance.user.adminScopes ?? []).contains(AdminScope.clubs)){
-      newClub.isApproved = true;
-    }else{
-      newClub.isApproved = null;
-    }
+    newClub.isApproved = (Models.instance.user.adminScopes ?? [])
+      .contains(AdminScope.clubs) ? true : null
     Services.instance.database.clubs.admin.create(newClub.toJson());
   }
 
