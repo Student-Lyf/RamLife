@@ -9,6 +9,12 @@ class Club {
 	/// The name of the club. 
 	final String name;
 
+	/// The random id assigned to the club to identify it.
+	final String id;
+
+	/// Approval status of the club.
+	bool? isApproved;
+
 	/// A short description of the club. 
 	final String shortDescription;
 
@@ -31,17 +37,19 @@ class Club {
 	final List<Message> messages;
 
 	/// A list of attendance for each member of the club.
-	final Map<String, int> attendance;
+	final Map<ContactInfo, int> attendance;
 
 	/// The captains of the club.
-	final List<ContactInfo> captains;
+	final List<ContactInfo?> captains;
 
 	/// The faculty advisor for this club.
-	final ContactInfo facultyAdvisor;
+	final List<ContactInfo?> facultyAdvisor;
 
 	/// Creates a new club.
 	Club({
 		required this.name,
+		required this.isApproved,
+		required this.id,
 		required this.shortDescription,
 		required this.description,
 		required this.phoneNumberRequested,

@@ -37,7 +37,9 @@ export "src/models/data/reminders.dart";
 export "src/models/data/schedule.dart";
 export "src/models/data/sports.dart";
 export "src/models/data/user.dart";
-
+export "src/models/data/clubs/clubs.dart";
+export "src/models/data/clubs/club_captains.dart";
+export "src/models/data/clubs/club_admin.dart";
 // view models
 export "src/models/view/admin_schedules.dart";
 export "src/models/view/builders/day_builder.dart";
