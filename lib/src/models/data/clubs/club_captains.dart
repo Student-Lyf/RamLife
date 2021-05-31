@@ -36,7 +36,7 @@ class ClubCaptains extends Model {
   }
 
   /// Allows captain to post message.
-  Future<void>? postMessage(Club club, Message message) async {
+  Future<void> postMessage(Club club, Message message) async {
     Services.instance.database.clubs.postMessage(club.id, message.toJson());
   }
 
