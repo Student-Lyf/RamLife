@@ -43,7 +43,7 @@ class Club {
 	final List<ContactInfo> captains;
 
 	/// The faculty advisor for this club.
-	final List<ContactInfo?> facultyAdvisor;
+	final List<ContactInfo> facultyAdvisor;
 
 	/// Creates a new club.
 	Club({
