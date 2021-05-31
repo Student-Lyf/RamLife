@@ -54,8 +54,9 @@ class ClubCaptains extends Model {
   /// Allows a captain to take attendance.
   Future<void> takeAttendance(
       ContactInfo member, Club club, {required bool didAttend}) async{
-    attend ? club.attendance[member]= (club.attendance[member]!) + 1
-        :club.attendance[member] = club.attendance[member]!;
+    if (didAttend) {
+      club.attendance [member] = (club.attendance[member] ?? 0) + 1;
+    }
     Services.instance.database.clubs.update(club.toJson());
   }
 }
