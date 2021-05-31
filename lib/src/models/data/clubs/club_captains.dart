@@ -16,7 +16,7 @@ class ClubCaptains extends Model {
       club.captains.contains(Models.instance.user.data.contactInfo);
 
   /// Checks if a user is a faculty advisor.
-  bool? isFacultyAdvisor(Club club) =>
+  bool isFacultyAdvisor(Club club) =>
       club.facultyAdvisor.contains(Models.instance.user.data.contactInfo);
 
   /// Allows user to upload a club.
