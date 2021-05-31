@@ -40,10 +40,10 @@ class Club {
 	final Map<ContactInfo, int> attendance;
 
 	/// The captains of the club.
-	final List<ContactInfo?> captains;
+	final List<ContactInfo> captains;
 
 	/// The faculty advisor for this club.
-	final List<ContactInfo?> facultyAdvisor;
+	final List<ContactInfo> facultyAdvisor;
 
 	/// Creates a new club.
 	Club({

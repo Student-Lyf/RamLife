@@ -1,7 +1,6 @@
 import "package:ramaz/models.dart";
 import "package:ramaz/data.dart";
 import "package:ramaz/services.dart";
-import "package:ramaz/src/data/contact_info.dart";
 import "../model.dart";
 
 /// Handles all the actions a admin may need to do
@@ -20,7 +19,7 @@ class ClubAdmins extends Model{
 
   /// Allows a clubs admin to delete a club.
   Future<void> deleteClub(Club club) async{
-    Services.instance.database.clubs.delete(club.toJson());
+    Services.instance.database.clubs.delete(club.id);
   }
 
   Future<void> addFacultyAdvisor(Club club, ContactInfo facultyAdvisor){
