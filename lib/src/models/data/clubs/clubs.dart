@@ -26,7 +26,6 @@ class Clubs extends Model{
     Services.instance.database.clubs.register(
         club.id, Models.instance.user.data.contactInfo.toJson()
     );
-    club.attendance[(Models.instance.user.data.contactInfo)]=0;
   }
 
   ///Allows User to unregister from a club
