@@ -1,7 +1,6 @@
 import "package:ramaz/models.dart";
 import "package:ramaz/data.dart";
 import "package:ramaz/services.dart";
-import "package:ramaz/src/data/contact_info.dart";
 import "../model.dart";
 
 /// Handles all the actions a admin may need to do
