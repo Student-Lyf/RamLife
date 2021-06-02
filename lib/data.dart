@@ -26,3 +26,4 @@ export "src/data/schedule/time.dart";
 
 export "src/data/sports.dart";
 export "src/data/user.dart";
+export "src/data/contact_info.dart";

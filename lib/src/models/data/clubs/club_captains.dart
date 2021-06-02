@@ -4,6 +4,9 @@ import "package:ramaz/services.dart";
 import "../model.dart";
 
 /// A model which handles all the actions which a captain may need.
+/// Club captains and faculty advisors have to be able to upload clubs,
+/// edit the clubs, remove a memer, post a message, and change the meeting
+/// time for a week.
 class ClubCaptains extends Model {
 
   @override
@@ -22,14 +25,14 @@ class ClubCaptains extends Model {
   Future<void> uploadClub(Club newClub) async {
     newClub.isApproved = (Models.instance.user.adminScopes ?? [])
       .contains(AdminScope.clubs) ? true : null
-    Services.instance.database.clubs.admin.create(newClub.toJson());
+    await Services.instance.database.clubs.admin.create(newClub.toJson());
   }
 
   /// Allows admin or club captain to remove a member from a club.
   Future<void> removeMember(Club club, ContactInfo member) async {
     Models.instance.user.data.registeredClubs.remove(club.id);
     club.members.remove(member);
-    Services.instance.database.clubs.memberRemove(
+    await Services.instance.database.clubs.memberRemove(
         club.id, member.toJson()
     );
     club.attendance.remove(Models.instance.user.data.contactInfo);
@@ -37,18 +40,15 @@ class ClubCaptains extends Model {
 
   /// Allows captain to post message.
   Future<void> postMessage(Club club, Message message) async {
-    Services.instance.database.clubs.postMessage(club.id, message.toJson());
+    await Services.instance.database.clubs.postMessage(
+       club.id, message.toJson());
   }
 
   /// Allows captains to edit a club.
   Future<void> editClub(Club club) async {
-    if((Models.instance.user.data.adminScopes ?? []).contains(
-        AdminScope.clubs)){
-      club.isApproved = true;
-    }else{
-      club.isApproved = null;
-    }
-    Services.instance.database.clubs.update(club.toJson());
+    club.isApproved = (Models.instance.user.adminScopes ?? [])
+        .contains(AdminScope.clubs) ? true : false;
+    await Services.instance.database.clubs.update(club.toJson());
   }
 
   /// Allows a captain to take attendance.
@@ -57,6 +57,13 @@ class ClubCaptains extends Model {
     if (didAttend) {
       club.attendance [member] = (club.attendance[member] ?? 0) + 1;
     }
-    Services.instance.database.clubs.update(club.toJson());
+   await Services.instance.database.clubs.update(club.toJson());
+  }
+
+  /// If a captain wants to either change the time
+  Future<void> editNextMeetingTime(
+      Club club, DateTime date, DateTime? time) async {
+    club.editedMeetingTimes[date]=time;
+    await Services.instance.database.clubs.update(club.toJson());
   }
 }

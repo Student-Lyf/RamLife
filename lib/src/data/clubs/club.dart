@@ -45,6 +45,15 @@ class Club {
 	/// The faculty advisor for this club.
 	final List<ContactInfo> facultyAdvisor;
 
+	/// Var should be day of the week the club meets and time they meet.
+	DateTime normalMeetingTime;
+
+	///  Should be the date the special  time applies to or the date the club
+	///  won't meet. The first [DateTime] is the date the second [DateTime] must
+	///  be the meeting time. The second [DateTime] should be null if it is a
+	///  week which the club will not meet.
+	Map<DateTime,DateTime?> editedMeetingTimes;
+
 	/// Creates a new club.
 	Club({
 		required this.name,
@@ -55,6 +64,8 @@ class Club {
 		required this.phoneNumberRequested,
 		required this.captains,
 		required this.facultyAdvisor,
+		required this.normalMeetingTime,
+		required this.editedMeetingTimes,
 		required this.image,
 		this.formUrl,
 	}) : 
