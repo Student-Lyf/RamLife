@@ -47,7 +47,7 @@ class ClubCaptains extends Model {
   /// Allows captains to edit a club.
   Future<void> editClub(Club club) async {
     club.isApproved = (Models.instance.user.adminScopes ?? [])
-        .contains(AdminScope.clubs) ? true : false;
+        .contains(AdminScope.clubs) ? true : null;
     await Services.instance.database.clubs.update(club.toJson());
   }
 
