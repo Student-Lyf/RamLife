@@ -24,7 +24,7 @@ class ClubCaptains extends Model {
   /// Allows user to upload a club.
   Future<void> uploadClub(Club newClub) async {
     newClub.isApproved = (Models.instance.user.adminScopes ?? [])
-      .contains(AdminScope.clubs) ? true : null
+      .contains(AdminScope.clubs) ? true : null;
     await Services.instance.database.clubs.admin.create(newClub.toJson());
   }
 
@@ -64,6 +64,12 @@ class ClubCaptains extends Model {
   Future<void> editNextMeetingTime(
       Club club, DateTime date, DateTime? time) async {
     club.editedMeetingTimes[date]=time;
+    await Services.instance.database.clubs.update(club.toJson());
+  }
+
+  /// A function to add another club captain
+  Future<void> addCaptain(Club club, ContactInfo captain) async{
+    club.captains.add(captain);
     await Services.instance.database.clubs.update(club.toJson());
   }
 }
