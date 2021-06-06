@@ -12,6 +12,7 @@ library data;
 export "src/data/clubs/club.dart";
 export "src/data/clubs/message.dart";
 
+export "src/data/contact_info.dart";
 export "src/data/feedback.dart";
 export "src/data/reminder.dart";
 
@@ -26,4 +27,3 @@ export "src/data/schedule/time.dart";
 
 export "src/data/sports.dart";
 export "src/data/user.dart";
-export "src/data/contact_info.dart";

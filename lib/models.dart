@@ -33,13 +33,11 @@ import "src/models/data/sports.dart";
 import "src/models/data/user.dart";
 
 // data models
+export "src/models/data/clubs.dart";
 export "src/models/data/reminders.dart";
 export "src/models/data/schedule.dart";
 export "src/models/data/sports.dart";
 export "src/models/data/user.dart";
-export "src/models/data/clubs/clubs.dart";
-export "src/models/data/clubs/club_captains.dart";
-export "src/models/data/clubs/club_admin.dart";
 // view models
 export "src/models/view/admin_schedules.dart";
 export "src/models/view/builders/day_builder.dart";
@@ -47,6 +45,8 @@ export "src/models/view/builders/reminder_builder.dart";
 export "src/models/view/builders/schedule_builder.dart";
 export "src/models/view/builders/sports_builder.dart";
 export "src/models/view/calendar_editor.dart";
+export "src/models/view/club_admin.dart";
+export "src/models/view/club_captains.dart";
 export "src/models/view/feedback.dart";
 export "src/models/view/home.dart";
 export "src/models/view/schedule.dart";
