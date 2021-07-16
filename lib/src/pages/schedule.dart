@@ -1,9 +1,11 @@
 // ignore_for_file: prefer_const_constructors_in_immutables
+import "package:flutter/gestures.dart";
 import "package:flutter/material.dart";
 
 import "package:ramaz/data.dart";
 import "package:ramaz/models.dart";
 import "package:ramaz/widgets.dart";
+import "package:url_launcher/url_launcher.dart";
 
 /// Allows users to explore their schedule.
 /// 
@@ -140,30 +142,59 @@ class CustomSearchDelegate extends SearchDelegate {
 	);
 
 	@override
-	Widget buildSuggestions(BuildContext context) => ListView(
-		children: [
-			const SizedBox(height: 15),
-			for (Subject suggestion in model.getMatchingClasses(query)) 
-				SuggestionWidget(
-					suggestion: suggestion,
-					onTap: () {
-						query = suggestion.name;
-						showResults(context);
-					},
-				)
-		]
-	);
+	Widget buildSuggestions(BuildContext context) {
+
+		final List<Subject> subjects = model.getMatchingClasses(query.toLowerCase());
+
+		return ListView(
+			children: [
+				const SizedBox(height: 15),
+				if (subjects.isNotEmpty)
+					for (Subject suggestion in subjects)
+						SuggestionWidget(
+							suggestion: suggestion,
+							onTap: () {
+								query = suggestion.name;
+								showResults(context);
+							},
+						)
+				else 
+					Column(
+						crossAxisAlignment: CrossAxisAlignment.center,
+						children: [ Text(
+							"No Results Found",
+							style: Theme.of(context).textTheme.headline4
+						)
+					])
+			]
+		);
+	}
 
 	@override
-	Widget buildResults(BuildContext context) => ListView(
-		children: [
-			const SizedBox(height: 15),
-			for (
-				PeriodData period in 
-				model.getPeriods(model.getMatchingClasses(query).first)
-			) ResultWidget(period)
-		]
-	);
+	Widget buildResults(BuildContext context) { 
+
+		final List<Subject> subjects = model.getMatchingClasses(query.toLowerCase());
+
+		return ListView(
+			children: [
+				const SizedBox(height: 15),
+				if (subjects.isNotEmpty)
+					for (
+						PeriodData period in 
+						model.getPeriods(subjects.first)
+					)
+						ResultWidget(period)
+				else 
+					Column(
+						crossAxisAlignment: CrossAxisAlignment.center,
+						children: [ Text(
+							"No Results Found",
+							style: Theme.of(context).textTheme.headline4
+						)
+					])
+			]
+		);
+	}
 
 	@override
 	List<Widget> buildActions(BuildContext context) => [
@@ -192,20 +223,47 @@ class SuggestionWidget extends StatelessWidget {
 
 	@override
 	Widget build(BuildContext context) => Column(
-		children: [ 
-			ListTile(
-				onTap: onTap,
-				title: Text(
-					suggestion.name,
-						style: Theme.of(context).textTheme.headline4
-					),
-				subtitle: Text(
-					"${suggestion.teacher}   ${suggestion.id}",
-					style: Theme.of(context).textTheme.headline6
+		crossAxisAlignment: CrossAxisAlignment.start,
+		children: [ InkWell(
+			onTap: onTap,
+			child: Row(
+				children: [ Expanded(
+					child: Padding(
+						padding: const EdgeInsets.only(left: 20),
+						child: Column(
+							crossAxisAlignment: CrossAxisAlignment.start,
+							children: [ 
+								Text(
+									suggestion.name,
+									style: Theme.of(context).textTheme.headline4
+								),
+								const SizedBox(height: 5),
+								Text(
+									"${suggestion.teacher}   ${suggestion.id}",
+									style: Theme.of(context).textTheme.headline6
+								),
+								const SizedBox(height: 10),
+								if (suggestion.virtualLink != null)
+									RichText(
+										text: TextSpan(
+											text:"Link: ${suggestion.virtualLink}",
+											style: Theme.of(context).textTheme.subtitle1,
+											recognizer: TapGestureRecognizer()
+                								..onTap = () => launch("${suggestion.virtualLink}")
+                						)
+									)
+							]
+						)
+					)
 				)
-			),
-			const Divider(height: 20),
-		]
+			])
+		),
+		const Divider(
+			height: 20,
+			indent: 40,
+			endIndent: 40
+		)
+	]
 	);
 }
 
@@ -216,21 +274,40 @@ class ResultWidget extends StatelessWidget {
 	final PeriodData period;
 
 	/// A constructor that defines what a result should have.
-	const ResultWidget(this.period);
+	ResultWidget(this.period);
 
 	@override
 	Widget build(BuildContext context) => Column(
-		children: [ 
+		crossAxisAlignment: CrossAxisAlignment.start,
+		children: [
 			ListTile(
 				title: Text(
 					period.dayName,
 						style: Theme.of(context).textTheme.headline4
 					),
 				subtitle: Text(
-					"Period ${period.name}",
+					"Period ${period.name}   Room ${period.room}",
 					style: Theme.of(context).textTheme.headline6
 				)
 			),
+			for (int reminder in Models.instance.reminders.getReminders(
+				dayName: period.dayName,
+				period: period.name,
+				subject: Models.instance.user.subjects[period.id]?.name
+			))
+				Padding(
+					padding: const EdgeInsets.only(left: 7),
+					child: Row(
+						children: [
+							const Icon(Icons.notifications),
+							const SizedBox(width: 3),
+							Text(
+								Models.instance.reminders.reminders[reminder].message,
+								style: Theme.of(context).textTheme.subtitle1
+							)
+						]
+					)
+				),
 			const Divider(height: 20),
 		]
 	);
