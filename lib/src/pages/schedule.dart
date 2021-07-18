@@ -1,5 +1,4 @@
 // ignore_for_file: prefer_const_constructors_in_immutables
-import "package:flutter/gestures.dart";
 import "package:flutter/material.dart";
 
 import "package:link_text/link_text.dart";
@@ -7,7 +6,6 @@ import "package:link_text/link_text.dart";
 import "package:ramaz/data.dart";
 import "package:ramaz/models.dart";
 import "package:ramaz/widgets.dart";
-import "package:url_launcher/url_launcher.dart";
 
 /// Allows users to explore their schedule.
 /// 
