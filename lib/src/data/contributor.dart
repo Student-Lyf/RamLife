@@ -9,7 +9,7 @@ class Contributor {
 			gradYear: "'23",
 			title: "Frontend",
 			email: "davidtbassist@gmail.com",
-			imageName: "https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg",
+			imageName: "images/contributors/david-tarrab.jpg",
 			description: "David has been working on RamLife since sophomore year and "
 				"mainly works on creating the user interface and page layouts."
 		),
@@ -18,7 +18,7 @@ class Contributor {
 			gradYear: "'23",
 			title: "Backend",
 			email: "kohlerb@ramaz.org",
-			imageName: "https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg",
+			imageName: "images/contributors/brayden-kohler.jpg",
 			description: "Brayden joined the RamLife team as a sophomore and manages "
 				"the logic of the app. He also handles the database and other services."
 		),
@@ -27,28 +27,28 @@ class Contributor {
 			gradYear: "'23",
 			title: "Middleware and Apple Expert",
 			email: "todesj@ramaz.org",
-			imageName: "https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg",
+			imageName: "images/contributors/josh-todes.jpg",
 			description: "Josh worked on the iPhone app since he was a Freshman "
 				"and now handles tying the logic and graphics together seamlessly."
-		),
-		Contributor(
-			name: "Levi Lesches",
-			gradYear: "'21",
-			title: "Creator and Head Programmer",
-			email: "levilesches@gmail.com",
-			imageName: "https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg",
-			description: "Levi created RamLife when he was a freshman and expanded it "
-				"over four years. He wrote all the code and went through many iterations."
 		),
 		Contributor(
 			name: "Mr. Vovsha",
 			gradYear: "'21",  // TODO
 			title: "Faculty Advisor",
 			email: "evovsha@ramaz.org",
-			imageName: "https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg",
+			imageName: "images/contributors/eli-vovsha.jpg",
 			description: "Mr. Vovsha led the group since its conception, and has worked"
 				" tirelessly with the school to help bring RamLife where it is today."
-		)
+		),
+		Contributor(
+			name: "Levi Lesches",
+			gradYear: "'21",
+			title: "Creator and Head Programmer",
+			email: "levilesches@gmail.com",
+			imageName: "images/contributors/levi-lesches.jpg",
+			description: "Levi created RamLife when he was a freshman and expanded it "
+				"over four years. He wrote all the code and went through many iterations."
+		),
 	];
 
 	/// The name of the contributor.

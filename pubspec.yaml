@@ -89,6 +89,11 @@ flutter:
     - images/logos/ramaz/ram_square_words.png
     - images/logos/ramaz/ram_square.png
     - images/logos/ramaz/teal.jpg
+    - images/contributors/brayden-kohler.jpg
+    - images/contributors/david-tarrab.jpg
+    - images/contributors/eli-vovsha.jpg
+    - images/contributors/josh-todes.jpg
+    - images/contributors/levi-lesches.jpg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.io/assets-and-images/#resolution-aware.

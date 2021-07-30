@@ -17,6 +17,8 @@ class CreditsPage extends StatelessWidget {
 		appBar: AppBar(title: const Text ("Credits")),
 		bodyBuilder: (_) => ListView(
 			children: [
+				Text("Thank You", style: Theme.of(context).textTheme.headline5),
+				const Text("To those who made this app possible"),
 				for (final Contributor contributor in Contributor.contributors)
 					ResponsiveContributorCard(contributor)
 			]
@@ -72,7 +74,7 @@ class WideContributorCard extends StatelessWidget {
 					flex: 1,
 					child: AspectRatio(
 						aspectRatio: 1, 
-						child: Image.network(contributor.imageName),
+						child: Image.asset(contributor.imageName),
 					),
 				),
 				const SizedBox(width: 8),
@@ -120,6 +122,11 @@ class WideContributorCard extends StatelessWidget {
 	);
 }
 
+class AvatarClipper extends CustomClipper<Rect> {
+	Rect getClip(Size size) => Rect.fromCircle(center: Offset.zero, radius: 0);
+	bool shouldReclip(AvatarClipper oldClipper) => false;
+}
+
 /// A compact variant of the contributor card. 
 class CompactContributorCard extends StatelessWidget {
 	/// The contributor being represented.
@@ -136,7 +143,15 @@ class CompactContributorCard extends StatelessWidget {
 				title: Text("${contributor.name} ${contributor.gradYear}"),
 				leading: CircleAvatar(
 					radius: 48,  // a standard Material radius
-					foregroundImage: NetworkImage(contributor.imageName),
+					foregroundImage: AssetImage(contributor.imageName),
+					// child: ClipOval(
+					// 	child: Image.asset(
+					// 		contributor.imageName,
+					// 		width: 96,
+					// 		height: 96,
+					// 		fit: BoxFit.cover,
+					// 	)
+					// )
 				),
 				subtitle: Column(
 					crossAxisAlignment: CrossAxisAlignment.start,
