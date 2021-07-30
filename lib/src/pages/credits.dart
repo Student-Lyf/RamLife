@@ -122,11 +122,6 @@ class WideContributorCard extends StatelessWidget {
 	);
 }
 
-class AvatarClipper extends CustomClipper<Rect> {
-	Rect getClip(Size size) => Rect.fromCircle(center: Offset.zero, radius: 0);
-	bool shouldReclip(AvatarClipper oldClipper) => false;
-}
-
 /// A compact variant of the contributor card. 
 class CompactContributorCard extends StatelessWidget {
 	/// The contributor being represented.
