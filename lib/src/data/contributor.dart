@@ -36,7 +36,7 @@ class Contributor {
 		),
 		Contributor(
 			name: "Mr. Vovsha",
-			gradYear: "'21",  // TODO
+			gradYear: "",
 			title: "Faculty Advisor",
 			url: "mailto:evovsha@ramaz.org",
 			linkName: "Email me",
@@ -52,7 +52,7 @@ class Contributor {
 			linkName: "See my other projects",
 			imageName: "images/contributors/levi-lesches.jpg",
 			description: "Levi created RamLife when he was a freshman and expanded it "
-				"over four years. He wrote all the code and went through many iterations."
+				"over four years. He was the sole programmer until his senior year"
 		),
 	];
 
