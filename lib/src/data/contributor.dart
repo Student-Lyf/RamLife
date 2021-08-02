@@ -18,8 +18,8 @@ class Contributor {
 			name: "Brayden K.",
 			gradYear: "'23",
 			title: "Backend",
-			url: "mailto:kohlerb@ramaz.org",
-			linkName: "Email me",
+			url: "https://github.com/BraydenKO",
+			linkName: "See my other projects",
 			imageName: "images/contributors/brayden-kohler.jpg",
 			description: "Brayden joined the RamLife team as a sophomore and manages "
 				"the logic of the app. He also handles the database and other services."
