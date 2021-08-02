@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 import "package:url_launcher/url_launcher.dart";
+// import "package:link_text/link_text.dart";
 
 import "package:ramaz/data.dart";
 import "package:ramaz/widgets.dart";
@@ -17,8 +18,18 @@ class CreditsPage extends StatelessWidget {
 		appBar: AppBar(title: const Text ("Credits")),
 		bodyBuilder: (_) => ListView(
 			children: [
-				Text("Thank You", style: Theme.of(context).textTheme.headline5),
-				const Text("To those who made this app possible"),
+				const SizedBox(height: 8),
+				Text(
+					"Thank You", 
+					style: Theme.of(context).textTheme.headline4,
+					textAlign: TextAlign.center,
+				),
+				Text(
+					"To those who made this app possible",
+					style: Theme.of(context).textTheme.headline5,
+					textAlign: TextAlign.center,
+				),
+				const SizedBox(height: 16),
 				for (final Contributor contributor in Contributor.contributors)
 					ResponsiveContributorCard(contributor)
 			]
@@ -96,9 +107,9 @@ class WideContributorCard extends StatelessWidget {
 							),
 							const SizedBox(height: 4),
 							InkWell(
-								onTap: () => launch("mailto:${contributor.email}"),
+								onTap: () => launch(contributor.url),
 								child: Text(
-									contributor.email,
+									contributor.linkName,
 									textScaleFactor: 1.1,
 									style: Theme.of(context).textTheme.caption!.copyWith(
 										color: Colors.blue.withAlpha(200), 
@@ -139,23 +150,15 @@ class CompactContributorCard extends StatelessWidget {
 				leading: CircleAvatar(
 					radius: 48,  // a standard Material radius
 					foregroundImage: AssetImage(contributor.imageName),
-					// child: ClipOval(
-					// 	child: Image.asset(
-					// 		contributor.imageName,
-					// 		width: 96,
-					// 		height: 96,
-					// 		fit: BoxFit.cover,
-					// 	)
-					// )
 				),
 				subtitle: Column(
 					crossAxisAlignment: CrossAxisAlignment.start,
 					children: [
 						Text(contributor.title),
 						InkWell(
-							onTap: () => launch("mailto:${contributor.email}"),
+							onTap: () => launch(contributor.url),
 							child: Text(
-								contributor.email,
+								contributor.linkName,
 								style: TextStyle(color: Colors.blue.withAlpha(200)),
 							),
 						),
