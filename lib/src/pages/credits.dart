@@ -149,7 +149,7 @@ class CompactContributorCard extends StatelessWidget {
 				title: Text("${contributor.name} ${contributor.gradYear}"),
 				leading: CircleAvatar(
 					radius: 48,  // a standard Material radius
-					foregroundImage: AssetImage(contributor.imageName),
+					backgroundImage: AssetImage(contributor.imageName),
 				),
 				subtitle: Column(
 					crossAxisAlignment: CrossAxisAlignment.start,
