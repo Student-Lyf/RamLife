@@ -18,10 +18,10 @@ dependency_overrides:
     git: 
       url: https://github.com/pulyaevskiy/node-interop.git
       path: build_node_compilers
-  node_io:
-    git: 
-      url: https://github.com/pulyaevskiy/node-interop.git
-      path: node_io
+  #node_io:
+  #  git: 
+  #    url: https://github.com/pulyaevskiy/node-interop.git
+  #    path: node_io
   #node_interop: 
   #  git: 
   #    url: https://github.com/pulyaevskiy/node-interop.git
