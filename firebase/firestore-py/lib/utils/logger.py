@@ -55,7 +55,7 @@ else:
 logger.addHandler(console_handler)
 
 if args.debug: 
-	file_handler = logging.FileHandler("debug.log")
+	file_handler = logging.FileHandler("debug.log", encoding='utf8')
 	file_handler.setFormatter(ColorFormatter(False))
 	file_handler.setLevel(logging.DEBUG)
 	logger.addHandler(file_handler)

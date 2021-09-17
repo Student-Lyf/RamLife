@@ -1,5 +1,6 @@
 from firebase_admin import firestore
 from .firebase import app
+from .. import data
 
 _firestore = firestore.client()
 
@@ -30,6 +31,6 @@ def get_month(month):
 	return calendar.document(str(month)).get().to_dict()
 
 def get_feedback(): return [
-	Feedback.from_json(document.to_dict())
+	data.Feedback.from_json(document.to_dict())
 	for document in feedback.get()
 ]
