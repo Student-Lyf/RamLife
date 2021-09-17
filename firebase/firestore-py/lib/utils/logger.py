@@ -40,7 +40,6 @@ logging.addLevelName(logging.VERBOSE, "VERBOSE")  # between INFO and DEBUG
 logging.Logger.verbose = verbose
 logging.Logger.debug = debug
 logger = logging.getLogger("ramlife")
-print(logging.getLogger().handlers)
 logger.setLevel(level)
 handler = logging.StreamHandler()
 handler.setFormatter(ColorFormatter())
