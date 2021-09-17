@@ -1,12 +1,13 @@
 from .firebase import app
-from firebase_admin import auth, UserNotFoundError
+from firebase_admin import auth
+from firebase_admin.exceptions import NotFoundError
 
 def create_user(email): 
 	auth.create_user(email=email)
 
 def get_user(email): 
 	try: return auth.get_user_by_email(email)
-	except UserNotFoundError: return create_user(email)
+	except NotFoundError: return create_user(email)
 
 def get_claims(email): 
 	return get_user(email).custom_claims

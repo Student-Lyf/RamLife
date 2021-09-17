@@ -45,11 +45,13 @@ console_handler = logging.StreamHandler()
 console_handler.setFormatter(ColorFormatter())
 if args.verbose: 
 	logger.setLevel(logging.VERBOSE)
-elif logger.debug:
+	console_handler.setLevel(logging.VERBOSE)
+elif args.debug:
 	logger.setLevel(logging.DEBUG)
 	console_handler.setLevel(logging.VERBOSE)
 else: 
 	logger.setLevel(logging.INFO)
+	console_handler.setLevel(logging.INFO)
 logger.addHandler(console_handler)
 
 if args.debug: 
