@@ -1,5 +1,5 @@
 import csv
-import dir
+from ..utils import dir
 
 '''
 A collection of functions to read course data.

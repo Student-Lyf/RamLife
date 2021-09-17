@@ -21,7 +21,7 @@ class Semesters():
 # Classes are split into courses which hold descriptive data about
 # the course itself. Courses are split into one or more sections, which
 # hold data specific to that section, such as the teacher or roster list.
-class Section(Serializable):
+class Section():
   def __init__(self,name,id,teacher,zoomlink=""):
     # The name of this section.
     self.name = name
@@ -45,7 +45,7 @@ class Section(Serializable):
   '''
 
 # A period in the day
-class Period(Serializable):
+class Period():
   def __init__(self, room, id, day, period):
   # Maps a [Day.name] to the number of periods in that day.
   #

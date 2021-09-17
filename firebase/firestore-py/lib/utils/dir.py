@@ -48,6 +48,9 @@ admins = data_dir / "admins.csv"
 # Options for this tool
 config = data_dir / "config.yaml"
 
+# Constants such as dayNames, corruptStudents, and testers
+constants = data_dir / "constants.yaml"
+
 # Returns the path for the calendar at a given month.
 # 
 # The month should follow 1-based indexing.
