@@ -1,0 +1,2 @@
+colorama==0.4.4
+firebase_admin==5.0.2

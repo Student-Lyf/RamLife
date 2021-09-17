@@ -12,6 +12,6 @@ def get_claims(email):
 	return get_user(email).custom_claims
 
 def set_scopes(email, scopes): auth.set_custom_user_claims(
-	uid=get_user(email).uid,
+	get_user(email).uid,
 	{"isAdmin": bool(scopes), "scopes": scopes},
 )
