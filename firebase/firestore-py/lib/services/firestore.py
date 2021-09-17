@@ -27,9 +27,9 @@ def upload_sections(sections):
 	batch.commit()
 
 def get_month(month): 
-	return calendar.document(str(month)).get().data.to_dict()
+	return calendar.document(str(month)).get().to_dict()
 
 def get_feedback(): return [
-	Feedback.from_json(document.data.to_dict())
+	Feedback.from_json(document.to_dict())
 	for document in feedback.get()
 ]

@@ -36,12 +36,13 @@ def debug(self, label, value, *args, **kwargs):
 if args.debug: level = logging.DEBUG
 elif args.verbose: level = logging.VERBOSE
 else: level = logging.INFO
-logging.basicConfig(level=level)
 logging.addLevelName(logging.VERBOSE, "VERBOSE")  # between INFO and DEBUG
 logging.Logger.verbose = verbose
 logging.Logger.debug = debug
-logger = logging.getLogger()
-handler = logger.handlers[0]
+logger = logging.getLogger("ramlife")
+print(logging.getLogger().handlers)
+logger.setLevel(level)
+handler = logging.StreamHandler()
 handler.setFormatter(ColorFormatter())
 logger.addHandler(handler)
 
