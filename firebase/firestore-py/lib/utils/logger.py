@@ -5,10 +5,13 @@ from colorama import Fore, Back, Style
 
 init(autoreset=True)
 logging.VERBOSE = 15
-reset = u"\x1b[0m"
+reset = Style.RESET_ALL
 def get_ansi(code): return f"\u001b[38;5;{code}m"
 
 class ColorFormatter(logging.Formatter):
+	def __init__(self, use_color = True):
+		self.use_color = use_color
+
 	FORMATS = {
 		logging.DEBUG: Fore.WHITE,
 		logging.VERBOSE: Style.BRIGHT + Fore.BLACK,
@@ -19,11 +22,11 @@ class ColorFormatter(logging.Formatter):
 
 	def format(self, record):
 		color = self.FORMATS[record.levelno]
-		formatter = logging.Formatter(f"{color}[{record.levelname[0]}]{reset} %(message)s")
-		# return f"{color} [{record.levelname[0]}] {record.message}"
+		if self.use_color: 
+			formatter = logging.Formatter(f"{color}[{record.levelname[0]}]{reset} %(message)s")
+		else: 
+			formatter = logging.Formatter(f"[{record.levelname[0]}] %(message)s")
 		return formatter.format(record)
-		# return formatter.format(record)
-
 
 def verbose(self, message, *args, **kwargs): 
 	if self.isEnabledFor(logging.VERBOSE):
@@ -33,17 +36,27 @@ def debug(self, label, value, *args, **kwargs):
 	if self.isEnabledFor(logging.DEBUG): 
 		self._log(logging.DEBUG, f"{label}: {value}", args, **kwargs)
 
-if args.debug: level = logging.DEBUG
-elif args.verbose: level = logging.VERBOSE
-else: level = logging.INFO
 logging.addLevelName(logging.VERBOSE, "VERBOSE")  # between INFO and DEBUG
 logging.Logger.verbose = verbose
 logging.Logger.debug = debug
+
 logger = logging.getLogger("ramlife")
-logger.setLevel(level)
-handler = logging.StreamHandler()
-handler.setFormatter(ColorFormatter())
-logger.addHandler(handler)
+console_handler = logging.StreamHandler()
+console_handler.setFormatter(ColorFormatter())
+if args.verbose: 
+	logger.setLevel(logging.VERBOSE)
+elif logger.debug:
+	logger.setLevel(logging.DEBUG)
+	console_handler.setLevel(logging.VERBOSE)
+else: 
+	logger.setLevel(logging.INFO)
+logger.addHandler(console_handler)
+
+if args.debug: 
+	file_handler = logging.FileHandler("debug.log")
+	file_handler.setFormatter(ColorFormatter(False))
+	file_handler.setLevel(logging.DEBUG)
+	logger.addHandler(file_handler)
 
 def log_value(label, function): 
 	"""

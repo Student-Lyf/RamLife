@@ -51,4 +51,4 @@ config = data_dir / "config.yaml"
 # Returns the path for the calendar at a given month.
 # 
 # The month should follow 1-based indexing.
-def getMonth(month): return data_dir / "calendar" / f"{month}.csv"
+def get_month(month): return data_dir / "calendar" / f"{month}.csv"
