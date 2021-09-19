@@ -18,7 +18,7 @@ def upload_users(users):
 def upload_month(month, data): 
 	calendar.document(str(month)).update({
 		"month": month,
-		"calendar": [day.to_json() for day in data]
+		"calendar": [(day.to_json() if day is not None else None) for day in data]
 	})
 
 def upload_sections(sections): 
