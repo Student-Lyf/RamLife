@@ -4,8 +4,9 @@ import "package:flutter/services.dart" show PlatformException;
 
 import "package:url_launcher/url_launcher.dart";
 
-import "package:ramaz/pages.dart";
+// ignore: directives_ordering
 import "package:ramaz/models.dart";
+import "package:ramaz/pages.dart";
 import "package:ramaz/services.dart";
 import "package:ramaz/widgets.dart";
 
