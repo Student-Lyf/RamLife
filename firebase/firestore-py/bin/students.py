@@ -1,7 +1,7 @@
 from lib import data
 from lib import utils
 from lib.readers import students as student_reader
-from lib import services as firebase
+from lib import services
 
 from collections import defaultdict
 from firebase_admin import delete_app
@@ -52,11 +52,10 @@ if __name__ == '__main__':
 	if utils.args.should_upload:
 		utils.logger.log_progress(
 			"data upload", 
-			lambda: firebase.firestore.upload_users(students_with_schedules)
+			lambda: services.upload_users(students_with_schedules)
 		)
 	else: utils.logger.warning("Did not upload student data. Use the --upload flag.")
 
-	delete_app(firebase.app)
 	utils.logger.info(f"Processed {len(students_with_schedules)} users.")
 
 
