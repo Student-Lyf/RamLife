@@ -1,91 +1,50 @@
-# Tracks if a section meets in a semester.
-class Semesters():
-  def __init__(self, semester1, semester2,sectionId):
-    # Whether this section meets in the first semester.
-    self.semester1 = semester1
-    # Whether this section meets in the second semester.
-    self.semester2 = semester2
+class Semesters: 
+	def __init__(self, semester1, semester2, section_id): 
+		self.semester1 = semester1
+		self.semester2 = semester2
+		self.section_id = section_id
+		assert semester1 is not None and semester2 is not None, f"Could not read semester data for {section_id}"
 
-    self.sectionId = sectionId
+	def __str__(self): return f"Semesters({self.semester1}, {self.semester2})"
 
-    assert semester1 and semester2, f"Could not read semester data for {sectionId}"
+class Section: 
+	def __init__(self, name, id, teacher, zoom_link): 
+		self.name = name
+		self.id = id
+		self.teacher = teacher
+		self.zoom_link = zoom_link
 
-  def __str__(self):
-    return f"Semesters({self.semester1}, {self.semester2}"
-  
-# A class section
-#
-# Classes are split into courses which hold descriptive data about
-# the course itself. Courses are split into one or more sections, which
-# hold data specific to that section, such as the teacher or roster list.
-class Section():
-  def __init__(self,name,id,teacher,zoomlink=""):
-    # The name of this section.
-    self.name = name
+	def __repr__(self): return f"{self.name} ({self.id})"
 
-    # The section ID for this class.
-    self.id = id
+	def to_json(self): return {
+		"name": self.name, 
+		"teacher": self.teacher, 
+		"id": self.id, 
+		"virtualLink": self.zoom_link,
+	}
 
-    # The full name of the teacher for this section.
-    self.teacher = teacher
+class Period: 
+	PERIODS_IN_DAY = {
+		"Monday": 10,
+		"Tuesday": 10,
+		"Wednesday": 10,
+		"Thursday": 10,
+		"Friday": 6,
+	}
 
-    # Zoom link for the section. May or may not exist.
-    self.zoomLink = zoomlink
+	def __init__(self, room, id, day, period): 
+		assert day is not None and period is not None, f"Could not read period data for {id}"
+		assert (id is None) == (room is None), f"If ID is None, room must be too (and vice versa): {day}, {period}, {id}"
+		self.room = room
+		self.id = id
+		self.day = day
+		self.period = period
 
-    assert name and id and teacher, f"Could not read section data for {id}" 
+	def __repr__(self): return f"{self.day}_{self.period}({self.id})"
 
-  def __str__(self):
-    return f"{self.name} ({self.id})"
-
-  def get_json(self):
-    return {
-      "name" : self.name,
-      "teacher" : self.teacher,
-      "id" : self.id,
-      "virtualLink" : self.zoomLink
-    }
-
-# A period in the day
-class Period():
-   # Maps a [Day.name] to the number of periods in that day.
-  #
-  # Not all periods will be shown in the app. 'Special.periods.length' will
-  # dictate that, and 'Special.periods.skips' dictates which periods will be
-  # skipped
-  periodsInDay = {
-    "Monday": 10,
-    "Tuesday": 10,
-    "Wednesday": 10,
-    "Thursday": 10,
-    "Friday": 10 
-    }
-  def __init__(self, room, id, day, period):
-    # The room the period is located in.
-    self.room = room
-
-    # The section ID for this period.
-    self.id = id
-
-    # The day this period takes place.
-    self.day = day
-
-    # The period number.
-    self.period = period
-
-    assert day and period, f"Could not read period data for {id}"
-
-    # Should be the same as (id == null) == (room==null) but wouldnt
-    # the error be raised if ID is null and room isn't (and vice versa)
-    # not if both ID and room are null?
-    assert (not id) == (not room), f"If ID is null, room must be (and vice versa) {day}, {period}, {id}"
-
-  def __str__(self):
-    return f"{self.day}_{self.period}({self.id})"
-
-  def get_json(self):
-    return {
-      "room" : self.room,
-      "id" : self.id,
-      "dayName" : self.day,
-      "name" : str(self.period)
-    }
+	def to_json(self): return {
+		"room": self.room,
+		"id": self.id,
+		"dayname": self.day,
+		"name": str(self.period),
+	}

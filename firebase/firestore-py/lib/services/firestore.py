@@ -12,19 +12,19 @@ feedback = _firestore.collection("feedback")
 def upload_users(users): 
 	batch = _firestore.batch()
 	for user in users:
-		batch.create(students.document(user.email), user.json)
+		batch.set(students.document(user.email), user.to_json())
 	batch.commit()
 
 def upload_month(month, data): 
 	calendar.document(str(month)).update({
 		"month": month,
-		"calendar": [day.to_json() for day in data]
+		"calendar": [(day.to_json() if day is not None else None) for day in data]
 	})
 
 def upload_sections(sections): 
 	batch = _firestore.bulk_writer()
 	for section in sections:
-		batch.create(courses.document(section.id), section.json)
+		batch.set(courses.document(section.id), section.json)
 	batch.commit()
 
 def get_month(month): 

@@ -36,9 +36,15 @@ def debug(self, label, value, *args, **kwargs):
 	if self.isEnabledFor(logging.DEBUG): 
 		self._log(logging.DEBUG, f"{label}: {value}", args, **kwargs)
 
+def error(self, message, *args, **kwards): 
+	if self.isEnabledFor(logging.ERROR):
+		self._log(logging.ERROR, message, args, **kwards)
+		raise AssertionError(message)
+
 logging.addLevelName(logging.VERBOSE, "VERBOSE")  # between INFO and DEBUG
 logging.Logger.verbose = verbose
 logging.Logger.debug = debug
+logging.Logger.error = error
 
 logger = logging.getLogger("ramlife")
 console_handler = logging.StreamHandler()

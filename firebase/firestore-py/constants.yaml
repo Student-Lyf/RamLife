@@ -1,0 +1,34 @@
+dayNames:
+  - "Monday" 
+  - "Tuesday" 
+  - "Wednesday" 
+  - "Thursday" 
+  - "Friday"
+
+corruptStudents:
+  - "724703"
+  - "722601"
+  - "723397"
+
+testers: 
+  testt@ramaz.org: 
+    first: "Test"
+    last: "Account"
+  taubj@ramaz.org: 
+    first: "Jennifer"
+    last: "Taub"
+  shafnera@ramaz.org: 
+    first: "Adina"
+    last: "Shafner"
+  mentj@ramaz.org: 
+    first: "John"
+    last: "Ment"
+  leschesl@ramaz.org:
+    first: "Levi"
+    last: "Lesches"
+
+ignoredStudents: 
+  - "ID"
+
+ignoredSections: 
+  - "909000-10"

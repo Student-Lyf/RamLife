@@ -22,9 +22,9 @@ def get_default_calendar(month):
 		if date.month != month: continue
 		weekday = calendar_model.day_name[date.weekday()]
 		if weekday in {"Saturday", "Sunday"}: 
-			result.append(Day(date=date, name=None, special=None))
+			result.append(None)
 		else: 
-			result.append(Day(date=date, name=weekday, special=None))
+			result.append(Day(date=date, name=weekday, special="Weekday"))
 	return result
 
 def get_year(month): 
@@ -33,10 +33,7 @@ def get_year(month):
 	else: 
 		return current_year - 1 if month > 7 else current_year
 
-def get_empty_calendar(month): return [
-	Day(name=None, special=None, date=datetime(get_year(month), month, day + 1))
-	for day in range(0, 31)
-]
+def get_empty_calendar(month): return [None] * 31
 
 class Day: 
 	def get_list(date_line, name_line, special_line, month): return [
@@ -47,11 +44,8 @@ class Day:
 
 	def verify_calendar(month, calendar): 
 		_, days_in_month = calendar_model.monthrange(current_year, month)
-		days = set(range(days_in_month + 1))
-		days.remove(0)
-		for day in calendar: 
-			if day is not None: days.remove(day.date.day)
-		is_valid = not days and len(calendar) == days_in_month
+		days = set(range(1, days_in_month + 1))
+		is_valid = len(calendar) == days_in_month
 		if not is_valid: utils.logger.warning(f"Calendar for {month} is invalid. Missing entries for {days}.")
 		return is_valid
 

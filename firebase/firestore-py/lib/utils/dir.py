@@ -46,7 +46,7 @@ zoom_links = data_dir / "zoom_links.csv"
 admins = data_dir / "admins.csv"
 
 # Options for this tool
-config = data_dir / "config.yaml"
+constants = project_dir / "constants.yaml"
 
 # Constants such as dayNames, corruptStudents, and testers
 constants = data_dir / "constants.yaml"
