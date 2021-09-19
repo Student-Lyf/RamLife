@@ -1,7 +1,7 @@
 import "package:flutter/material.dart";
 
-import "package:ramaz/pages.dart";
 import "package:ramaz/models.dart";
+import "package:ramaz/pages.dart";
 import "package:ramaz/widgets.dart";
 
 /// A footer to display all around the app. 
