@@ -1,17 +1,17 @@
 import yaml
 from utils import dir
 
-def getDayNames():
+def get_day_names():
   with open(dir.constants) as file:
     constants = yaml.full_load(file)
     return constants["dayNames"]
   
-def getCorruptStudents():
+def get_corrupt_students():
   with open(dir.constants) as file:
     constants = yaml.full_load(file)
     return constants["corruptStudents"]
 
-def getTesters():
+def get_testers():
   with open(dir.constants) as file:
     constants = yaml.full_load(file)
     return constants["testers"]

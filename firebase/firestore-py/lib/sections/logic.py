@@ -9,29 +9,31 @@ the data indexing
 '''
 
 # Converts a section ID to a course ID.
-def getCourseId(sectionId):
-  result = sectionId[0:sectionId.index("-")]
+def get_course_id(section_id):
+  result = section_id[0:section_id.index("-")]
   if result.startswith("0"):
     return result[1:]
   else:
     return result
 
-#Do data and faculty first
-#
-#def getSections(courseNames, sectionTeachers, facultyNames, zoomlinks):
-#  for sect_id, fac_id  in sectionTeachers.items():
-#    Section(
-#      id = sect_id,
-#      name = courseNames[getCourseId(sect_id)],
-#      teacher = facultyNames[fac_id].name)
+	# Builds a list of [Section] objects.
+	# 
+	# This function works by taking several arguments: 
+	# 
+	# - courseNames, from [section_reader.course_names]
+	# - sectionTeachers, from [section_reader.get_section_faculty_ids]
+	# - facultyNames, from [faculty_reader.get_faculty]
+	# 
+	# These are kept as parameters instead of calling the functions by itself
+	# in order to keep the data and logic layers separate.
 
-def getSections(coursenames, sectionTeachers, facultyNames, zoomLinks):
+def get_sections(course_names, section_teachers, faculty_names, zoom_links):
   return [
     Section(
       id = key,
-      name = coursenames[getCourseId(key)],
-      teacher = facultyNames[value].name,
-      zoomLink = zoomLinks[key]
+      name = course_names[get_course_id(key)],
+      teacher = faculty_names[value].name,
+      zoomLink = zoom_links[key]
     )
-    for key, value in sectionTeachers.items()
+    for key, value in section_teachers.items()
   ]
