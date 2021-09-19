@@ -16,14 +16,14 @@ def get_course_names():
       for row in csv.DictReader(file) 
       if row["School ID"] == "Upper"}
   
-def getSectionFacultyIds():
+def get_section_faculty_ids():
   with open(dir.section) as file: 
     return {
       row["SECTION_ID"]: row["FACULTY_ID"]
       for row in csv.DictReader(file)
       if row["SCHOOL_ID"] == "Upper" and row["FACULTY_ID"]}
       
-def getZoomLinks():
+def get_zoom_links():
   with open(dir.zoomLinks) as file:
     return {
       row["ID"]: row["LINK"]

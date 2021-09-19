@@ -1,4 +1,4 @@
-import reader
+from ..data.schedule import Section
 
 '''
 A collection of functions to index course data.
@@ -24,3 +24,14 @@ def getCourseId(sectionId):
 #      id = sect_id,
 #      name = courseNames[getCourseId(sect_id)],
 #      teacher = facultyNames[fac_id].name)
+
+def getSections(coursenames, sectionTeachers, facultyNames, zoomLinks):
+  return [
+    Section(
+      id = key,
+      name = coursenames[getCourseId(key)],
+      teacher = facultyNames[value].name,
+      zoomLink = zoomLinks[key]
+    )
+    for key, value in sectionTeachers.items()
+  ]

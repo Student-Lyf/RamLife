@@ -1,28 +1,38 @@
-from lib.utils.logger import logger
-from lib.sections.reader import reader as SectionReader
-from lib.faculty.reader import reader as FacultyReader
-print("Indexing data...")
+from lib.utils import logger
+from lib.sections import reader as section_reader
+from lib.faculty import reader as faculty_reader
+from lib.sections import logic as section_logic
+from lib import utils
+import lib.services.firestore as firestore
 
-courseNames = logger.log_value("course names", SectionReader.get_course_names())
+if __name__ == "main":
+  print("Indexing data...")
 
-sectionTeachers = logger.log_value("section teachers", SectionReader.getSectionFacultyIds())
+  course_names = logger.log_value("course names", section_reader.get_course_names())
 
-facultyNames = logger.log_value("faculty names", FacultyReader.getFaculty())
+  section_teachers = logger.log_value("section teachers", section_reader.get_section_faculty_ids())
 
-zoomLinks = logger.log_value("zoom links", SectionReader.getZoomLinks())
+  faculty_names = logger.log_value("faculty names", faculty_reader.get_faculty())
 
-print(f"Found {len(zoomLinks.keys())} zoom links")
+  zoom_links = logger.log_value("zoom links", section_reader.get_zoom_links())
 
-sections = logger.log_value("sections list", SectionLogic.getSections(
-  courseNames = courseNames,
-  sectionTeachers = sectionTeachers,
-  facultyNames = facultyNames,
-  zoomLinks = zoomLinks,
+  print(f"Found {len(zoom_links.keys())} zoom links")
+
+  sections = logger.log_value("sections list", section_logic.get_sections(
+    course_names = course_names,
+    section_teachers = section_teachers,
+    faculty_names = faculty_names,
+    zoom_links = zoom_links,
+    )
   )
-)
 
-print("Finished data indexing.")
+  print("Finished data indexing.")
 
-###
-# Rest ?
-###
+  if utils.args.should_upload:
+    utils.logger.log_value(
+      "data upload", firestore.upload_sections(sections)
+    )
+  
+  utils.logger.info(f"Processed {len(sections)} faculty")
+
+  

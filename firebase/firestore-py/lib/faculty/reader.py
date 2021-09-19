@@ -8,7 +8,7 @@ No function in this class actually performs logic on said data, just returns
 it. This helps keep the program modular, by separating the data sources from
 the data indexing.
 '''
-def getFaculty():
+def get_faculty():
   with open(dir.faculty) as file:
     return {row["USER_ID"]: student.User(
             id = row["USER_ID"],

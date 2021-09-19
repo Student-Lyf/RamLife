@@ -1,6 +1,3 @@
-from data.serializable import Serializable
-from serializable import Serializable
-
 # Tracks if a section meets in a semester.
 class Semesters():
   def __init__(self, semester1, semester2,sectionId):
@@ -11,7 +8,7 @@ class Semesters():
 
     self.sectionId = sectionId
 
-    assert semester1 and semester2, f"Could not read semester data for{sectionId}"
+    assert semester1 and semester2, f"Could not read semester data for {sectionId}"
 
   def __str__(self):
     return f"Semesters({self.semester1}, {self.semester2}"
@@ -32,6 +29,7 @@ class Section():
     # The full name of the teacher for this section.
     self.teacher = teacher
 
+    # Zoom link for the section. May or may not exist.
     self.zoomLink = zoomlink
 
     assert name and id and teacher, f"Could not read section data for {id}" 
@@ -39,27 +37,29 @@ class Section():
   def __str__(self):
     return f"{self.name} ({self.id})"
 
-  '''
-  I dont understand serializable.dart
-  I dont get what 'Map<String, String> get json' does
-  '''
+  def get_json(self):
+    return {
+      "name" : self.name,
+      "teacher" : self.teacher,
+      "id" : self.id,
+      "virtualLink" : self.zoomLink
+    }
 
 # A period in the day
 class Period():
-  def __init__(self, room, id, day, period):
-  # Maps a [Day.name] to the number of periods in that day.
+   # Maps a [Day.name] to the number of periods in that day.
   #
   # Not all periods will be shown in the app. 'Special.periods.length' will
   # dictate that, and 'Special.periods.skips' dictates which periods will be
   # skipped
-    self.periodsInDay = {
-      "Monday": 11,
-      "Tuesday": 11,
-      "Wednesday": 11,
-      "Thursday": 11,
-      "Friday": 11 
-      }
-
+  periodsInDay = {
+    "Monday": 10,
+    "Tuesday": 10,
+    "Wednesday": 10,
+    "Thursday": 10,
+    "Friday": 10 
+    }
+  def __init__(self, room, id, day, period):
     # The room the period is located in.
     self.room = room
 
@@ -80,9 +80,12 @@ class Period():
     assert (not id) == (not room), f"If ID is null, room must be (and vice versa) {day}, {period}, {id}"
 
   def __str__(self):
-    return f"{self.day}_{self.period}({id})"
+    return f"{self.day}_{self.period}({self.id})"
 
-  '''
-  I dont understand serializable.dart
-  I dont get what 'Map<String, String> get json' does
-  '''
+  def get_json(self):
+    return {
+      "room" : self.room,
+      "id" : self.id,
+      "dayName" : self.day,
+      "name" : str(self.period)
+    }
