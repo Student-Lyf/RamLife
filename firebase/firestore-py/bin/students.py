@@ -25,14 +25,13 @@ if __name__ == '__main__':
 		)
 	)
 
-	utils.logger.log_progress(
-		"student schedules", lambda: student_reader.set_students_schedules(
-			schedules = schedules,
-			homerooms = homerooms, 
-			homeroom_locations = homeroom_locations,
-		)
+	student_reader.set_students_schedules(
+		schedules = schedules,
+		homerooms = homerooms, 
+		homeroom_locations = homeroom_locations,
 	)
 	students_with_schedules = list(schedules.keys())
+	utils.logger.debug("Student schedules", students_with_schedules)
 	data.User.verify_schedule(students_with_schedules)
 
 	test_users = [

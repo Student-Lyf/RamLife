@@ -9,7 +9,7 @@ def read_students():
 		row ["ID"]: data.User(
 			first = row ["First Name"],
 			last = row ["Last Name"],
-			email = row ["Student E-mail"].lower(),
+			email = row ["Email"].lower(),
 			id = row ["ID"],
 		)
 		for row in csv.DictReader(file)
@@ -21,6 +21,7 @@ def read_periods():
 	periods = defaultdict(list)
 	with open(utils.dir.section_schedule) as file: 
 		for row in csv.DictReader(file): 
+			if row ["SCHOOL_ID"] != "Upper": continue
 			section_id = row ["SECTION_ID"]
 			day = row ["WEEKDAY_NAME"]
 			period_str = row ["BLOCK_NAME"]
@@ -31,6 +32,7 @@ def read_periods():
 			except ValueError: 
 				if period_str == "HOMEROOM": 
 					homeroom_locations [section_id] = room
+				continue
 
 			periods [section_id].append(data.Period(
 				day = day,
@@ -44,6 +46,7 @@ def read_student_courses():
 	courses = defaultdict(list)
 	with open(utils.dir.schedule) as file: 
 		for row in csv.DictReader(file): 
+			if row ["SCHOOL_ID"] != "Upper": continue
 			student = row ["STUDENT_ID"]
 			if student in utils.constants.corrupted_students: continue
 			courses [student].append(row ["SECTION_ID"])
@@ -57,12 +60,14 @@ def read_semesters():
 			section_id = row ["SECTION_ID"],
 		)
 		for row in csv.DictReader(file)
+		if row ["SCHOOL_ID"] == "Upper"
 	}
 
 def get_schedules(students, periods, student_courses, semesters): 
 	homerooms = {}
 	seniors = set()
 	result = defaultdict(data.DayDefaultDict)
+	ignored = set()
 
 	for student, courses in student_courses.items():
 		student = students [student]
@@ -74,22 +79,22 @@ def get_schedules(students, periods, student_courses, semesters):
 
 			try: semester = semesters [section_id]
 			except KeyError as error: 
-				Logger.error(f"Section {section_id} was in schedule.csv but not in sections.csv")
+				utils.logger.error(f"Section {section_id} was in schedule.csv but not in sections.csv")
 				raise error from None
 
 			if (semester is not None and not (semester.semester1 if utils.constants.is_semester1 else semester.semester2)): 
 				continue
 			elif section_id.startswith("12"): seniors.add(student)
 
-			if section_id not in periods:
-				utils.logger.debug(f"Periods for {student} ({section_id} is present) -- from schedule.csv", courses)
-				utils.logger.debug(f"All periods in section_schedule ({section_id} is missing)", periods)
-				utils.logger.error(f"{section_id} is in schedule.csv but not section_schedule")
+			if section_id not in periods:  # in schedule.csv but not section_schedule.csv
+				ignored.add(section_id)
+				continue
 
 			for period in periods [section_id]: 
 				result [student] [period.day] [period.period - 1] = period
 
 	for schedule in result.values(): schedule.populate(utils.constants.day_names)
+	if ignored: utils.logger.warning(f"Ignored the following classes: {ignored}")
 	return result, homerooms, seniors
 
 def set_students_schedules(schedules, homerooms, homeroom_locations): 

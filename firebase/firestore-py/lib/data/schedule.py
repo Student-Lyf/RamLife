@@ -25,11 +25,11 @@ class Section:
 
 class Period: 
 	PERIODS_IN_DAY = {
-		"Monday": 7,
-		"Tuesday": 7,
-		"Wednesday": 7,
-		"Thursday": 7,
-		"Friday": 7,
+		"Monday": 10,
+		"Tuesday": 10,
+		"Wednesday": 10,
+		"Thursday": 10,
+		"Friday": 6,
 	}
 
 	def __init__(self, room, id, day, period): 
