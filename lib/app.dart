@@ -2,8 +2,8 @@ import "package:flutter/material.dart";
 
 import "package:ramaz/constants.dart";
 import "package:ramaz/data.dart";
-import "package:ramaz/pages.dart";
 import "package:ramaz/models.dart";
+import "package:ramaz/pages.dart";
 import "package:ramaz/services.dart";
 import "package:ramaz/widgets.dart";
 
@@ -56,19 +56,17 @@ class RamLife extends StatelessWidget {
 	Widget build (BuildContext context) => ThemeChanger(
 		defaultBrightness: Brightness.light,
 		light: ThemeData (
-			brightness: Brightness.light,
-			primarySwatch: Colors.blue,
-			primaryColor: RamazColors.blue,
-			primaryColorBrightness: Brightness.dark,
-			primaryColorLight: RamazColors.blueLight,
-			primaryColorDark: RamazColors.blueDark,
-			accentColor: RamazColors.gold,
-			accentColorBrightness: Brightness.light,
+			colorScheme: const ColorScheme.light(
+				primary: RamazColors.blue,
+				primaryVariant: RamazColors.blueDark,
+				secondary: RamazColors.gold,
+				secondaryVariant: RamazColors.goldDark,
+				brightness: Brightness.light
+			),
 			textSelectionTheme: const TextSelectionThemeData(
 				cursorColor: RamazColors.blueLight,
 				selectionHandleColor: RamazColors.blueLight,
 			),
-			buttonColor: RamazColors.gold,
 			buttonTheme: const ButtonThemeData (
 				buttonColor: RamazColors.gold,
 				textTheme: ButtonTextTheme.normal,
@@ -80,17 +78,15 @@ class RamLife extends StatelessWidget {
 			)
 		),
 		dark: ThemeData(
-			brightness: Brightness.dark,
-			scaffoldBackgroundColor: Colors.grey[850],
-			primarySwatch: Colors.blue,
-			primaryColorBrightness: Brightness.dark,
-			primaryColorLight: RamazColors.blueLight,
-			primaryColorDark: RamazColors.blueDark,
-			accentColor: RamazColors.goldDark,
-			accentColorBrightness: Brightness.light,
+			colorScheme: const ColorScheme.dark(
+				primary: RamazColors.blue,
+				primaryVariant: RamazColors.blueDark,
+				secondary: RamazColors.gold,
+				secondaryVariant: RamazColors.goldDark,
+				brightness: Brightness.dark
+			),
 			iconTheme: const IconThemeData (color: RamazColors.goldDark),
 			primaryIconTheme: const IconThemeData (color: RamazColors.goldDark),
-			accentIconTheme: const IconThemeData (color: RamazColors.goldDark),
 			floatingActionButtonTheme: const FloatingActionButtonThemeData(
 				backgroundColor: RamazColors.goldDark,
 				foregroundColor: RamazColors.blue
@@ -103,7 +99,6 @@ class RamLife extends StatelessWidget {
 				color: Colors.grey[820]
 			),
 			toggleableActiveColor: RamazColors.blueLight,
-			buttonColor: RamazColors.blueDark,
 			buttonTheme: const ButtonThemeData (
 				buttonColor: RamazColors.blueDark, 
 				textTheme: ButtonTextTheme.accent,
@@ -120,15 +115,15 @@ class RamLife extends StatelessWidget {
 			color: RamazColors.blue,
 			theme: theme,
 			onGenerateRoute: (RouteSettings settings) => PageRouteBuilder(
-        settings: settings, 
-        transitionDuration: Duration.zero,
-        pageBuilder: (BuildContext context, __, ___) {
-        	final String routeName = 
-        		(settings.name == null || !routes.containsKey(settings.name))
-	        		? Routes.home : settings.name!;
-	        return routes [routeName]! (context);
-        },
-      )
+				settings: settings, 
+				transitionDuration: Duration.zero,
+				pageBuilder: (BuildContext context, __, ___) {
+					final String routeName = 
+						(settings.name == null || !routes.containsKey(settings.name))
+							? Routes.home : settings.name!;
+					return routes [routeName]! (context);
+				},
+			)
 		)
 	);
 }

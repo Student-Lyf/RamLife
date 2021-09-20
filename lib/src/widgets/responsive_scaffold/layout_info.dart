@@ -1,5 +1,5 @@
-import "package:flutter/material.dart";
 import "package:adaptive_breakpoints/adaptive_breakpoints.dart";
+import "package:flutter/material.dart";
 
 /// Provides info about how this scaffold should be laid out.
 /// 
