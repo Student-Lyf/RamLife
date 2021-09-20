@@ -100,6 +100,6 @@ def get_schedules(students, periods, student_courses, semesters):
 def set_students_schedules(schedules, homerooms, homeroom_locations): 
 	for student, schedule in schedules.items():
 		if student.id in utils.constants.ignored_students: continue
-		student.homeroom = "SENIOR_HOMEROOM" if student not in homerooms else homerooms [student],
+		student.homeroom = "SENIOR_HOMEROOM" if student not in homerooms else homerooms [student]
 		student.homeroom_location = "Unavailable" if student not in homerooms else homeroom_locations [homerooms [student]]
 		student.schedule = schedule

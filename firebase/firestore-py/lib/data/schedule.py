@@ -6,6 +6,7 @@ class Semesters:
 		assert semester1 is not None and semester2 is not None, f"Could not read semester data for {section_id}"
 
 	def __str__(self): return f"Semesters({self.semester1}, {self.semester2})"
+	def __repr__(self): return f"Semesters({int(self.semester1)}, {int(self.semester2)})"
 
 class Section: 
 	def __init__(self, name, id, teacher, zoom_link): 
@@ -45,6 +46,6 @@ class Period:
 	def to_json(self): return {
 		"room": self.room,
 		"id": self.id,
-		"dayname": self.day,
+		"dayName": self.day,
 		"name": str(self.period),
 	}
