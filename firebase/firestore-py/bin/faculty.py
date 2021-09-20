@@ -11,15 +11,15 @@ if __name__ == "main":
 	utils.logger.info("Indexing data...")
 
 	faculty = utils.logger.log_value(
-		"faculty objects", faculty_reader.getFaculty()
+		"faculty objects", faculty_reader.get_faculty()
 		)
 
 	section_teachers = utils.logger.log_value(
-		"section teachers", section_reader.getSectionFacultyIds()
+		"section teachers", section_reader.get_section_faculty_ids()
 		)
 	
 	faculty_sections = utils.logger.log_value(
-		"faculty sections", faculty_logic.getFacultySections(
+		"faculty sections", faculty_logic.get_faculty_sections(
 			faculty = faculty,
 			sectionTeachers = section_teachers
 		) 

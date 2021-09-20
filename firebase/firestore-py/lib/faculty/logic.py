@@ -3,6 +3,7 @@ from ..utils import logger
 from logging import warning
 from ..data.schedule import Period
 from ..constants import get_day_names
+from..data.student import DayDefaultDict
 
 '''
 A collection of functions o index faculty data.
@@ -117,12 +118,11 @@ def get_faculty_with_schedule(faculty_sections, section_periods):
   # Compiles a list of periods into a full schedule
   result = []
   for key, value in schedules.items():
-    schedule = [0 for i in range(Period.PERIODS_IN_DAY["Monday"])]
+    schedule = DayDefaultDict()
 
     for period in value:
       schedule[period.day][period.period-1] = period
     
-    schedule.set_default_for_all(get_day_names())
     result.append(key.add_schedule(schedule))
   
   return result
