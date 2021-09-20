@@ -248,8 +248,7 @@ class SuggestionWidget extends StatelessWidget {
 										"Link: ${suggestion.virtualLink}",
 										shouldTrimParams: true,
 										linkStyle: const TextStyle(color: Colors.blue)
-                					)
-									
+                	)
 							]
 						)
 					)

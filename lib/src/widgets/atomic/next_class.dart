@@ -1,7 +1,7 @@
 import "package:flutter/material.dart";
 
-import "package:ramaz/pages.dart";
 import "package:ramaz/data.dart";
+import "package:ramaz/pages.dart";
 import "package:ramaz/widgets.dart";
 
 import "info_card.dart";

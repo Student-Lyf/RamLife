@@ -2,8 +2,8 @@ import "package:flutter/material.dart";
 
 import "package:ramaz/constants.dart";
 import "package:ramaz/data.dart";
-import "package:ramaz/pages.dart";
 import "package:ramaz/models.dart";
+import "package:ramaz/pages.dart";
 import "package:ramaz/services.dart";
 import "package:ramaz/widgets.dart";
 
@@ -43,6 +43,9 @@ class RamLife extends StatelessWidget {
 		),
 		Routes.sports: (_) => const RouteInitializer(
 			child: SportsPage(),
+		),
+		Routes.credits: (_) => const RouteInitializer(
+			child: CreditsPage(),
 		),
 	};
 
