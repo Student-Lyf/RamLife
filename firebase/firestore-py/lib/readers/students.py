@@ -94,7 +94,9 @@ def get_schedules(students, periods, student_courses, semesters):
 				result [student] [period.day] [period.period - 1] = period
 
 	for schedule in result.values(): schedule.populate(utils.constants.day_names)
-	if ignored: utils.logger.warning(f"Ignored the following classes: {ignored}")
+	if ignored: 
+		utils.logger.warning(f"Ignored {len(ignored)} classes")
+		utils.logger.debug("Ignored classes", ignored)
 	return result, homerooms, seniors
 
 def set_students_schedules(schedules, homerooms, homeroom_locations): 
