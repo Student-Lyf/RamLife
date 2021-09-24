@@ -1,7 +1,7 @@
 import "package:flutter/material.dart";
-import "package:url_launcher/url_launcher.dart";
-// import "package:link_text/link_text.dart";
+import "package:url_launcher/url_launcher.dart";  
 
+// ignore: directives_ordering
 import "package:ramaz/data.dart";
 import "package:ramaz/widgets.dart";
 

@@ -16,9 +16,8 @@ class User:
 			utils.logger.warning(f"Misisng schedules for {missing_schedules}")
 
 	def schedule_to_json(schedule): return [
-		period.to_json()
+		period.to_json() if period is not None else None
 		for period in schedule
-		if period is not None
 	]
 
 	def __init__(self, first, last, email, id, homeroom=None, homeroom_location=None, schedule=None): 
@@ -37,15 +36,18 @@ class User:
 		for day_name in utils.constants.day_names: 
 			assert day_name in schedule, f"{self} does not have a schedule for {day_name}"
 
-	def empty(email, first, last): return User(
-		first = first,
-		last = last,
-		email = email,
-		id = "TEST",
-		homeroom = "SENIOR_HOMEROOM",
-		homeroom_location = "Unavailable",
-		schedule = DayDefaultDict(),
-	)
+	def empty(email, first, last): 
+		user = User(
+			first = first,
+			last = last,
+			email = email,
+			id = "TEST",
+			homeroom = "SENIOR_HOMEROOM",
+			homeroom_location = "Unavailable",
+			schedule = DayDefaultDict(),
+		)
+		user.schedule.populate(utils.constants.day_names)
+		return user
 
 	def __repr__(self):
 		return f"{self.first} {self.last} ({self.id})"
