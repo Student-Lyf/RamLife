@@ -15,7 +15,7 @@ def init():
 	with open(dir.constants) as file: 
 		contents = yaml.safe_load(file)
 
-	day_names = set(contents["dayNames"])
+	day_names = contents["dayNames"]
 	corrupted_students = contents["corruptStudents"]
 	testers = [
 		{"email": tester, "first": contents["testers"][tester]["first"], "last": contents["testers"][tester]["last"]}
