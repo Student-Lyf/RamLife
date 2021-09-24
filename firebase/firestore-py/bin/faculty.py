@@ -4,7 +4,7 @@ from lib.sections import reader as section_reader
 from lib.students import reader as student_reader
 from lib.faculty import logic as faculty_logic
 from lib.data.student import User
-import lib.services.firestore as firestore
+from lib import services
 
 
 if __name__ == "__main__":
@@ -42,10 +42,10 @@ if __name__ == "__main__":
 
 	if utils.args.should_upload:
 		utils.logger.log_value(
-			"data upload", lambda: firestore.upload_users(faculty_with_schedule)
+			"data upload", lambda: services.upload_users(faculty_with_schedule)
 		)
 	
-	utils.logger.info(f"Processed {faculty_with_schedule} faculty")
+	utils.logger.info(f"Processed {len(faculty_with_schedule)} faculty")
 
 	
 

@@ -30,9 +30,9 @@ if __name__ == "__main__":
 
   if utils.args.should_upload:
     utils.logger.log_value(
-      "data upload", lambda: services.firestore.upload_sections(sections)
+      "data upload", lambda: services.upload_sections(sections)
     )
   
-  utils.logger.info(f"Processed {len(sections)} faculty")
+  utils.logger.info(f"Processed {len(sections)} sections")
 
   
