@@ -23,9 +23,10 @@ class User:
 
 	def __init__(self, first, last, email, id, homeroom=None, homeroom_location=None, schedule=None): 
 		assert id, f"Could not find id for user: {first} {last}, {email}"
-		assert first and last and email, f"Could not find contact info for {self}"
+		# assert first and last and email, f"Could not find contact info for {self}"
 		self.first = first
 		self.last = last
+		self.name = f"{first} {last}"
 		self.email = email
 		self.id = id
 		self.homeroom = homeroom
@@ -46,9 +47,11 @@ class User:
 		schedule = DayDefaultDict(),
 	)
 
-	def __repr__(self): return f"{self.first} {self.last} ({self.id})"
+	def __repr__(self):
+		return f"{self.first} {self.last} ({self.id})"
 
-	def has_no_classes(self): return all(
+	def has_no_classes(self):
+		return all(
 		all(period is None for period in day)
 		for day in self.schedule
 	)

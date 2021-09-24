@@ -23,12 +23,3 @@ testers:
   mentj@ramaz.org: 
     first: "John"
     last: "Ment"
-  leschesl@ramaz.org:
-    first: "Levi"
-    last: "Lesches"
-
-ignoredStudents: 
-  - "ID"
-
-ignoredSections: 
-  - "909000-10"

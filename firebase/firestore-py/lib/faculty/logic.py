@@ -1,8 +1,8 @@
-from .reader import getFaculty
+from .reader import get_faculty
 from ..utils import logger
 from logging import warning
 from ..data.schedule import Period
-from ..constants import get_day_names
+from ..utils.constants import get_day_names
 from..data.student import DayDefaultDict
 
 '''
@@ -25,10 +25,10 @@ These are kept as parameters instead of calling the functions by itself
 in order to keep the data and logic layers separate. 
 '''
 
-def get_faculty_sections(faculty,secion_teachers):
+def get_faculty_sections(faculty,section_teachers):
   result = {}
   missing_emails = set()
-  for key, value in secion_teachers.items():
+  for key, value in section_teachers.items():
     section_id = key
     faculty_id = value
 
@@ -102,13 +102,20 @@ def get_faculty_with_schedule(faculty_sections, section_periods):
     if faculty not in replace_homerooms:
       missing_homerooms.add(faculty)
     
-    schedule = schedules.remove(faculty)
+    faculty.
+
+
+    schedule = schedules.pop(faculty)
+
     assert schedule, f"Error adding homerooms to {faculty}"
 
     newFaculty = replace_homerooms[faculty] if faculty in replace_homerooms else faculty.addHomeroom(
                   homeroom = "SENIOR_HOMEROOM",
                   homeroom_location = "Unavailable"
                 )
+    
+
+
     schedules[newFaculty] = schedule
 
   # Some logging

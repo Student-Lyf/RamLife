@@ -11,9 +11,9 @@ the data indexing.
 def get_faculty():
   with open(dir.faculty) as file:
     return {row["USER_ID"]: student.User(
-            id = row["USER_ID"],
-            email = row["EMAIL"].lower(),
             first = row["FIRST_NAME"],
-            last = row ["LAST_NAME"])
-            for row in csv.csv.DictReader(file)}
-      
+            last = row ["LAST_NAME"],
+            email = row["EMAIL"].lower(),
+            id = row["USER_ID"])
+            for row in csv.DictReader(file)}
+

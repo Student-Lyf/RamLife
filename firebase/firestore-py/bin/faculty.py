@@ -7,30 +7,30 @@ from lib.data.student import User
 import lib.services.firestore as firestore
 
 
-if __name__ == "main":
+if __name__ == "__main__":
 	utils.logger.info("Indexing data...")
 
 	faculty = utils.logger.log_value(
-		"faculty objects", faculty_reader.get_faculty()
+		"faculty objects", faculty_reader.get_faculty
 		)
 
 	section_teachers = utils.logger.log_value(
-		"section teachers", section_reader.get_section_faculty_ids()
+		"section teachers", section_reader.get_section_faculty_ids
 		)
 	
 	faculty_sections = utils.logger.log_value(
-		"faculty sections", faculty_logic.get_faculty_sections(
+		"faculty sections", lambda: faculty_logic.get_faculty_sections(
 			faculty = faculty,
-			sectionTeachers = section_teachers
+			section_teachers = section_teachers
 		) 
 	)
 
 	periods = utils.logger.log_value(
-		"periods", student_reader.read_periods()
+		"periods", student_reader.read_periods
 	)
 
 	faculty_with_schedule = utils.logger.log_value(
-		"faculty with schedule", faculty_logic.get_faculty_with_schedule(
+		"faculty with schedule", lambda: faculty_logic.get_faculty_with_schedule(
 			faculty_sections = faculty_sections,
 			section_periods = periods
 		)
@@ -42,7 +42,7 @@ if __name__ == "main":
 
 	if utils.args.should_upload:
 		utils.logger.log_value(
-			"data upload", firestore.upload_users(faculty_with_schedule)
+			"data upload", lambda: firestore.upload_users(faculty_with_schedule)
 		)
 	
 	utils.logger.info(f"Processed {faculty_with_schedule} faculty")

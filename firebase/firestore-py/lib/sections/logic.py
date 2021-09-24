@@ -33,7 +33,7 @@ def get_sections(course_names, section_teachers, faculty_names, zoom_links):
       id = key,
       name = course_names[get_course_id(key)],
       teacher = faculty_names[value].name,
-      zoomLink = zoom_links[key]
+      zoom_link = zoom_links[key] if key in zoom_links else ""
     )
     for key, value in section_teachers.items()
   ]
