@@ -3,6 +3,8 @@ import "dart:async";
 import "package:flutter/foundation.dart" show ChangeNotifier;
 
 import "package:ramaz/data.dart";
+import 'package:ramaz/models.dart';
+import 'package:ramaz/pages.dart';
 import "package:ramaz/services.dart";
 
 /// Bundles a [DateTime] with a [Day] to edit the calendar.
@@ -125,4 +127,11 @@ class CalendarEditor with ChangeNotifier {
 					day.schoolDay?.toJson(),
 		]);
 	}
+	/// This function rep
+	// Future<void> deleteSchedules(Map<DateTime,Day> days) async {
+	// 	for (MapEntry<DateTime, Day> entry in days.entries){
+	// 		entry.value.schedule
+	// 		await updateDay(day: entry.value, date: entry.key);
+	// 	}
+	// }
 }
