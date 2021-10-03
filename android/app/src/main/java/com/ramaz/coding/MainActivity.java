@@ -1,4 +1,4 @@
-package com.ramaz.student_life;
+package com.ramaz.coding.ramlife;
 
 import io.flutter.embedding.android.FlutterActivity;
 

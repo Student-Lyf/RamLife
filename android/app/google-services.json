@@ -8,6 +8,50 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:267381428578:android:a239a636b2a4c4b42c5c3b",
+        "android_client_info": {
+          "package_name": "com.ramaz.coding.ramlife"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "267381428578-25kh5hmt9bl9nse2ebd6fk56m5bin2it.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ramaz.coding.ramlife",
+            "certificate_hash": "8de6f0b2cdbf4552c39a0210e58d30da7fddfac3"
+          }
+        },
+        {
+          "client_id": "267381428578-s9bsc6bqvfebqimv3th6cjp7qildrpsc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAtgjKhWYA9iwNNdPJB8fdYAFGg8rKUhBk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "267381428578-lg57jrfj8bof9etgn101ueqdsqds1q19.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "267381428578-7a8kkf45mdkepv1vr4j39gmlclcgob1u.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.ramaz.ramaz.student-life"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:267381428578:android:8be588f5967f914f",
         "android_client_info": {
           "package_name": "com.ramaz.student_life"
@@ -36,14 +80,14 @@
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "267381428578-s9bsc6bqvfebqimv3th6cjp7qildrpsc.apps.googleusercontent.com",
+              "client_id": "267381428578-lg57jrfj8bof9etgn101ueqdsqds1q19.apps.googleusercontent.com",
               "client_type": 3
             },
             {
-              "client_id": "267381428578-cpk8lv86lc3dcq62iegfc98dr3c0tt3u.apps.googleusercontent.com",
+              "client_id": "267381428578-7a8kkf45mdkepv1vr4j39gmlclcgob1u.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.example.authTest"
+                "bundle_id": "com.ramaz.ramaz.student-life"
               }
             }
           ]
