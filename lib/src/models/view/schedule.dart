@@ -8,12 +8,12 @@ import 'package:ramaz/src/data/schedule/schedule.dart';
 // ignore: prefer_mixin
 class ScheduleViewModel with ChangeNotifier {
 	/// The default [Schedule] for the UI.
-	String w =Schedule.schedules.firstWhere((schedule) => schedule.name =="Weekday");
+	Schedule defaultWeekday = Schedule.schedules.firstWhere((schedule) => schedule.name =="Weekday");
 	Map<String, Schedule> get defatulSchedule => {
-		"Monday":Schedule.schedules.firstWhere((schedule) => schedule.name =="Weekday"),
-		"Tuesday":Schedule.schedules.firstWhere((schedule) => schedule.name ==w),
-		"Wednesday":Schedule.schedules.firstWhere((schedule) => schedule.name ==w),
-		"Thursday":Schedule.schedules.firstWhere((schedule) => schedule.name ==w),
+		"Monday":defaultWeekday,
+		"Tuesday":defaultWeekday,
+		"Wednesday":defaultWeekday,
+		"Thursday":defaultWeekday,
 		"Friday":Schedule.schedules.firstWhere((schedule) =>
 		schedule.name == "Friday"),
 	};
