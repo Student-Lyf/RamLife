@@ -10,6 +10,7 @@ class ScheduleViewModel with ChangeNotifier {
 	/// The default [Schedule] for the UI.
 	Schedule defaultWeekday = Schedule.schedules.firstWhere((schedule) =>
 	schedule.name =="Weekday");
+	///
 	Map<String, Schedule> get defatulSchedule => {
 		"Monday":defaultWeekday,
 		"Tuesday":defaultWeekday,
