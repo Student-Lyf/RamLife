@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.ramaz.coding.ramlife">
+    package="com.ramaz.student_life">
 
     <!-- For re-scheduling notifications -->
     <uses-permission 
