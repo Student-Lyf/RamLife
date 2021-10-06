@@ -2,12 +2,23 @@ import "package:flutter/foundation.dart" show ChangeNotifier;
 
 import "package:ramaz/data.dart";
 import "package:ramaz/models.dart";
+import "package:ramaz/src/data/schedule/schedule.dart";
 
 /// A view model for the schedule page. 
 // ignore: prefer_mixin
 class ScheduleViewModel with ChangeNotifier {
 	/// The default [Schedule] for the UI.
-	static Schedule get defatulSchedule => Schedule.schedules.first;
+	Schedule defaultWeekday = Schedule.schedules.firstWhere((schedule) =>
+	schedule.name =="Weekday");
+	///
+	Map<String, Schedule> get defatulSchedule => {
+		"Monday":defaultWeekday,
+		"Tuesday":defaultWeekday,
+		"Wednesday":defaultWeekday,
+		"Thursday":defaultWeekday,
+		"Friday":Schedule.schedules.firstWhere((schedule) =>
+		schedule.name == "Friday"),
+	};
 
 	/// The default [Day] for the UI.
 	late Day defaultDay;
@@ -34,7 +45,7 @@ class ScheduleViewModel with ChangeNotifier {
 	ScheduleViewModel () : dataModel = Models.instance.schedule {
 		defaultDay = Day(
 			name: Models.instance.user.data.schedule.keys.first, 
-			schedule: defatulSchedule
+			schedule: defatulSchedule[Models.instance.user.data.schedule.keys.first]!
 		);
 		day = dataModel.today ?? defaultDay;
 	}
@@ -78,7 +89,7 @@ class ScheduleViewModel with ChangeNotifier {
 			// TODO: Move the logic from ClassList here. 
 			Models.instance.schedule.user.getPeriods(day);
 		} on RangeError { // ignore: avoid_catching_errors
-			day = Day(name: day.name, schedule: defatulSchedule);
+			day = Day(name: day.name, schedule: defatulSchedule[day.name]!);
 			if (onInvalidSchedule != null) {
 				onInvalidSchedule();
 			}

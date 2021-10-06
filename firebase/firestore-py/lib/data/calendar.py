@@ -23,6 +23,8 @@ def get_default_calendar(month):
 		weekday = calendar_model.day_name[date.weekday()]
 		if weekday in {"Saturday", "Sunday"}: 
 			result.append(None)
+		elif weekday == "Friday": 
+			result.append(Day(date=date, name=weekday, special="Friday"))
 		else: 
 			result.append(Day(date=date, name=weekday, special="Weekday"))
 	return result
