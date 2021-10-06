@@ -8,7 +8,7 @@ if __name__ == '__main__':
 	feedback = firebase.get_feedback()
 	feedback.sort()
 	for message in feedback:
-		utils.logger.debug("Feedback", str(message))
+		utils.logger.verbose(str(message))
 
 	delete_app(firebase.app)
 	utils.logger.info("Got feedback")
