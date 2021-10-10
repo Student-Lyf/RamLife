@@ -6,7 +6,7 @@ on: pull_request
 
 jobs:
   build_and_preview:
-    if: ${{ github.event.pull_request.head.repo.full_name == 'Levi-Lesches/RamLife' }}
+    if: ${{ github.event.pull_request.head.repo.full_name == 'Ramaz-Upper-School/RamLife' }}
     runs-on: ubuntu-latest
     defaults:
       run:
