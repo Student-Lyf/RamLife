@@ -1,10 +1,10 @@
-# Josh Todes has backend: data, testing, services and Firebase
-/firebase/ @todesj
-/lib/data.dart @todesj
-/lib/services.dart @todesj
-/lib/src/data @todesj
-/lib/src/services @todesj
-/test/ @todesj
+# Brayden Kohler has backend: data, testing, services and Firebase
+/firebase/ @BraydenKO
+/lib/data.dart @BraydenKO
+/lib/services.dart @BraydenKO
+/lib/src/data @BraydenKO
+/lib/src/services @BraydenKO
+/test/ @BraydenKO
 
 # David Tarrab has frontend and android
 /android/ @DavidTarrab
