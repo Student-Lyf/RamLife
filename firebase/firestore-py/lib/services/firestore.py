@@ -6,7 +6,7 @@ _firestore = firestore.client()
 
 students = _firestore.collection("students")
 calendar = _firestore.collection("calendar")
-courses = _firestore.collection("classses")
+courses = _firestore.collection("classes")
 feedback = _firestore.collection("feedback")
 
 def upload_users(users): 
@@ -22,9 +22,9 @@ def upload_month(month, data):
 	})
 
 def upload_sections(sections): 
-	batch = _firestore.bulk_writer()
+	batch = _firestore.batch()
 	for section in sections:
-		batch.set(courses.document(section.id), section.json)
+		batch.set(courses.document(section.id), section.to_json())
 	batch.commit()
 
 def get_month(month): 

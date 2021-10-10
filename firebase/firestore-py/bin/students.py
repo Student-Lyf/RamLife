@@ -1,6 +1,6 @@
 from lib import data
 from lib import utils
-from lib.readers import students as student_reader
+from lib.students import reader as student_reader
 from lib import services
 
 from collections import defaultdict

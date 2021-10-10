@@ -78,7 +78,7 @@ def log_value(label, function):
 	"""
 
 	logger.verbose(f"Getting {label}")
-	value = function();
+	value = function()
 	logger.debug(f"Value of {label}", value)
 	return value
 
