@@ -29,7 +29,8 @@ class Dashboard extends NavigationItem<DashboardModel> {
 				builder: (BuildContext context) => TextButton(
 					onPressed: () => Scaffold.of(context).openEndDrawer(),
 					child: const Text ("Tap for schedule",
-						style: TextStyle(color: Colors.blue),),
+						style: TextStyle(color: Colors.blue),
+					),
 				)
 			)
 		]
