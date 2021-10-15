@@ -26,6 +26,9 @@ testers:
   leschesl@ramaz.org:
     first: "Levi"
     last: "Lesches"
+  gershmane@ramaz.org: 
+    first: "Ezra"
+    last: "Gershman"
 
 ignoredStudents: 
   - "ID"
