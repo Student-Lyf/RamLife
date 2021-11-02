@@ -103,8 +103,8 @@ class LoginState extends State<Login> {
 				title: const Text ("Cannot connect"),
 				content: const Text (
 					"Due to technical difficulties, your account cannot be accessed.\n\n"
-					"If the problem persists, please contact Levi Lesches "
-					"(class of '21) for help" 
+					"If the problem persists, please contact the Ramlife Dev Team "
+					"for help" 
 				),
 				actions: [
 					TextButton(
@@ -112,8 +112,8 @@ class LoginState extends State<Login> {
 						child: const Text ("Cancel"),
 					),
 					ElevatedButton(
-						onPressed: () => launch("mailto:leschesl@ramaz.org"),
-						child: const Text ("leschesl@ramaz.org"),
+						onPressed: () => launch("mailto:ramlife@ramaz.org"),
+						child: const Text ("ramlife@ramaz.org"),
 					)
 				]
 			)
