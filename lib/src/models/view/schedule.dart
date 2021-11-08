@@ -1,5 +1,4 @@
 import "package:flutter/foundation.dart" show ChangeNotifier;
-
 import "package:ramaz/data.dart";
 import "package:ramaz/models.dart";
 import "package:ramaz/services.dart";
@@ -20,7 +19,6 @@ class ScheduleViewModel with ChangeNotifier {
 		"Friday":Schedule.schedules.firstWhere((schedule) =>
 		schedule.name == "Friday"),
 	};
-
 	/// The default [Day] for the UI.
 	late Day defaultDay;
 

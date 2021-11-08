@@ -3,7 +3,8 @@ import "dart:async" show Timer;
 import "package:ramaz/data.dart";
 import "package:ramaz/models.dart";
 import "package:ramaz/services.dart";
-
+import 'package:ramaz/src/services/databases/calendar/implementation.dart';
+import 'package:ramaz/src/services/firestore.dart';
 import "model.dart";
 
 /// A data model for the user's schedule.
@@ -70,6 +71,8 @@ class ScheduleModel extends Model {
 					day == null ? null : Day.fromJson(day)
 			]
 		];
+		Schedule.defaults = Map.from(await CloudCalendar.schedules.
+			throwIfNull("Cannot find defaults"))["defaults"];
 		user = Models.instance.user.data;
 		subjects = Models.instance.user.subjects;
 		setToday();

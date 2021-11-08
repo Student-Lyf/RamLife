@@ -3,9 +3,10 @@ import "dart:async";
 import "package:flutter/foundation.dart" show ChangeNotifier;
 
 import "package:ramaz/data.dart";
-import 'package:ramaz/models.dart';
-import 'package:ramaz/pages.dart';
+import "package:ramaz/models.dart";
+import "package:ramaz/pages.dart";
 import "package:ramaz/services.dart";
+import "package:ramaz/src/models/view/schedule.dart";
 
 /// Bundles a [DateTime] with a [Day] to edit the calendar.
 class CalendarDay {
@@ -128,9 +129,9 @@ class CalendarEditor with ChangeNotifier {
 		]);
 	}
 	/// This function rep
-	// Future<void> deleteSchedules(Map<DateTime,Day> days) async {
+	// Future<void> deleteSchedules(Map<DateTime,Day> days) async  {
 	// 	for (MapEntry<DateTime, Day> entry in days.entries){
-	// 		entry.value.schedule
+	// 		entry.value.schedule!=ScheduleViewModel.defatulSchedule[entry.value.name];
 	// 		await updateDay(day: entry.value, date: entry.key);
 	// 	}
 	// }
