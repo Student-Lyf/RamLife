@@ -82,7 +82,7 @@ class ScheduleModel extends Model {
 		for(MapEntry<String, String> entry in await
 		(Services.instance.database.calendar.getDefaultSchedules()).entries){
 			for(Schedule schedule in Schedule.schedules){
-				if(schedule.name == entry as String) {
+				if (schedule.name == entry) {
 					Schedule.defaults[entry.key] = schedule;
 				}
 			}
