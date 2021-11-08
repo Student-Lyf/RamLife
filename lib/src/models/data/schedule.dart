@@ -80,7 +80,7 @@ class ScheduleModel extends Model {
 	///
 	Future<void> setDefaultSchedules() async {
 		for(MapEntry<String, String> entry in await
-		(Services.instance.database.calendar.cloud.getDefaultSchedules()).entries){
+		(Services.instance.database.calendar.getDefaultSchedules()).entries){
 			for(Schedule schedule in Schedule.schedules){
 				if(schedule.name == entry as String) {
 					Schedule.defaults[entry.key] = schedule;
