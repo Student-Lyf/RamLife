@@ -78,7 +78,7 @@ class ScheduleModel extends Model {
 	}
 
 	///
-	Future<Map<String, Schedule>> getDefaultSchedules() async {
+	Future<void> setDefaultSchedules() async {
 		for(MapEntry<String, String> entry in await
 		(Services.instance.database.calendar.cloud.getDefaultSchedules()).entries){
 			for(Schedule schedule in Schedule.schedules){
