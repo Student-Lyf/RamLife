@@ -18,7 +18,7 @@ abstract class CalendarInterface {
 	Future<List<Map>> getSchedules();
 
 	/// Gets all the default schedules
-	Future<Map> getDefaultSchedules();
+	Future<Map<String, String>> getDefaultSchedules();
 	/// Saves all the schedules. 
 	Future<void> setSchedules(List<Map> json);
 }
