@@ -6,7 +6,8 @@ import "package:ramaz/data.dart";
 import "package:ramaz/models.dart";
 import "package:ramaz/pages.dart";
 import "package:ramaz/services.dart";
-import "package:ramaz/src/models/view/schedule.dart";
+
+import "schedule.dart";
 
 /// Bundles a [DateTime] with a [Day] to edit the calendar.
 class CalendarDay {
