@@ -17,6 +17,8 @@ abstract class CalendarInterface {
 	/// to know which schedules need to be used and which don't. 
 	Future<List<Map>> getSchedules();
 
+	/// Gets all the default schedules
+	Future<Map> getDefaultSchedules();
 	/// Saves all the schedules. 
 	Future<void> setSchedules(List<Map> json);
 }

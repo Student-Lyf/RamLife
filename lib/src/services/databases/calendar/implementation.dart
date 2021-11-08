@@ -34,12 +34,13 @@ class CloudCalendar implements CalendarInterface {
 	Future<List<Map>> getSchedules() async => List<Map>.from(
 		(await schedules.throwIfNull("Cannot find schedules")) ["schedules"]
 	);
-
+	@override
+	Future<Map<String, String>> getDefaultSchedules() async => Map.from(
+			(await schedules.throwIfNull("Cannot find defaults")) ["schedules"]);
 	@override
 	Future<void> setSchedules(List<Map> json) => schedules
 		.set({"schedules": json});
 }
-
 /// Handles calendar data on the device. 
 /// 
 /// The calendar is held in an object store where they key is the month numbered
@@ -67,6 +68,9 @@ class LocalCalendar implements CalendarInterface {
 	Future<List<Map>> getSchedules() => Idb.instance
 		.getAll(Idb.scheduleStoreName);
 
+	@override
+	Future<Map<String, String>> getDefaultSchedules() => Idb.instance
+			.get("schedules","Monday") as Future<Map<String, String>>;
 	@override
 	Future<void> setSchedules(List<Map> json) async {
 		for (final Map schedule in json) {

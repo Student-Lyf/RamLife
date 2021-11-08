@@ -116,6 +116,9 @@ class Idb extends DatabaseService {
 	/// The name for the schedules object store.
 	static const String scheduleStoreName = "schedules";
 
+	/// The name for the default schedules object store.
+	static const String defaultScheduleStoreName = "defaults";
+
 	/// The names of all the object stores.
 	static const List<String> storeNames = [
 		userStoreName,
@@ -124,6 +127,7 @@ class Idb extends DatabaseService {
 		reminderStoreName,
 		sportsStoreName,
 		scheduleStoreName,
+		defaultScheduleStoreName,
 	];
 
 	@override
@@ -141,7 +145,8 @@ class Idb extends DatabaseService {
 							..createObjectStore(calendarStoreName, keyPath: "month")
 							..createObjectStore(reminderStoreName, keyPath: "id")
 							..createObjectStore(sportsStoreName, autoIncrement:  true)
-							..createObjectStore(scheduleStoreName, keyPath: "name");
+							..createObjectStore(scheduleStoreName, keyPath: "name")
+							..createObjectStore(defaultScheduleStoreName, keyPath: "Monday");
 					}
 				},
 			);
