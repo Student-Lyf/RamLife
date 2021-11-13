@@ -50,6 +50,7 @@ class DashboardModel with ChangeNotifier {
 		try {
 			await Services.instance.database.user.signIn();
 			await Services.instance.database.calendar.signIn();
+			await Services.instance.database.dataRefresh.getRefreshData();
 			await Services.instance.database.sports.signIn();
 			await Models.instance.user.init();
 			await schedule.initCalendar();

@@ -11,12 +11,14 @@ import "databases/reminders/hybrid.dart";
 import "databases/schedule/hybrid.dart";
 import "databases/sports/hybrid.dart";
 import "databases/user/hybrid.dart";
+import "databases/dataRefresh/hybrid.dart";
 
 export "databases/calendar/hybrid.dart";
 export "databases/reminders/hybrid.dart";
 export "databases/schedule/hybrid.dart";
 export "databases/sports/hybrid.dart";
 export "databases/user/hybrid.dart";
+export "databases/dataRefresh/hybrid.dart";
 
 /// A wrapper around all data in all database. 
 /// 
@@ -53,6 +55,9 @@ class Database extends DatabaseService {
 
 	/// The sports data manager.
 	final HybridSports sports = HybridSports();
+
+	///
+	final HybridDataRefresh dataRefresh = HybridDataRefresh();
 
  	// ----------------------------------------------------------------
 

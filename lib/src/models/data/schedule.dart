@@ -74,6 +74,7 @@ class ScheduleModel extends Model {
 		subjects = Models.instance.user.subjects;
 		setToday();
 		notifyListeners();
+		await Services.instance.database.dataRefresh.setRefreshData("schedule");
 	}
 
 	@override 

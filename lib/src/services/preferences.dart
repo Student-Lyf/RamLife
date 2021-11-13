@@ -15,6 +15,9 @@ class Preferences extends Service {
 
 	late SharedPreferences _prefs;
 
+	///
+	static String refreshData(String data) => "refresh_$data";
+
 	@override
 	Future<void> init() async {
 		_prefs = await SharedPreferences.getInstance();
@@ -30,6 +33,19 @@ class Preferences extends Service {
 		return result;
 	}
 
+	/// Returns the last date the data was retrieved from the
+	/// database as [DateTime].
+	DateTime? getRefreshData(String data){
+		final String? lastUpdate = _prefs.getString(refreshData(data));
+				return DateTime.parse(lastUpdate!);
+	}
+
+	/// Saves the Date when the data was last retrieved from
+	/// the database as type [String].
+
+	Future<void> setRefreshData(String data, DateTime value) async{
+		await _prefs.setString(refreshData(data), value.toString());
+	}
 	/// The user's brightness preference. 
 	/// 
 	/// `true` means light mode, `false` means dark mode, and `null` gets the 
