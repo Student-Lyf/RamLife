@@ -75,6 +75,7 @@ class ScheduleModel extends Model {
 		setToday();
 		notifyListeners();
 		await Services.instance.database.dataRefresh.setRefreshData("schedule");
+		print("Schedule model initialized");
 	}
 
 	@override 

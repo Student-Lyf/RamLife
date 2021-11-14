@@ -15,14 +15,14 @@ class CloudDataRefresh implements DataRefreshInterface{
     if(DateTime.parse(map["user"]!).isAfter(Services.instance.prefs
         .getRefreshData("user")!)||
         Services.instance.prefs.getRefreshData("user")==null){
+        await Services.instance.database.user.signIn();
         await Models.instance.user.init();
         print(map["user"]);
-        print("User model initialized");
-    }else if(DateTime.parse(map["schedule"]!).isAfter(Services.instance.prefs
+    }
+    if(DateTime.parse(map["schedule"]!).isAfter(Services.instance.prefs
         .getRefreshData("schedule")!)){
           await Models.instance.schedule.init();
           print(map["schedule"]);
-          print("Schedule model initialized");
     }
   }
   @override
