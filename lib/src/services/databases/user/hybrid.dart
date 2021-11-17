@@ -1,3 +1,4 @@
+import '../../../../services.dart';
 import "../hybrid.dart";
 
 import "implementation.dart";
@@ -18,6 +19,8 @@ class HybridUser extends HybridDatabase implements UserInterface {
 	Future<void> signIn() async {
 		final Map userData = await cloud.getProfile();
 		await local.setProfile(userData);
+		await Services.instance.prefs.setLastUpdated("user");
+		print("User data updated");
 	}
 
 	@override

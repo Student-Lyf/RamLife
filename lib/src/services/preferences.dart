@@ -15,7 +15,7 @@ class Preferences extends Service {
 
 	late SharedPreferences _prefs;
 
-	///
+
 	static String refreshData(String data) => "refresh_$data";
 
 	@override
@@ -35,16 +35,20 @@ class Preferences extends Service {
 
 	/// Returns the last date the data was retrieved from the
 	/// database as [DateTime].
-	DateTime? getRefreshData(String data){
-		final String? lastUpdate = _prefs.getString(refreshData(data));
-				return DateTime.parse(lastUpdate!);
+	DateTime getLastUpdated(String data){
+		// final String lastUpdate = _prefs.getString(refreshData(data));
+		if(_prefs.getString(refreshData(data)) != null) {
+			final String lastUpdate = _prefs.getString(refreshData(data))!;
+			return DateTime.parse(lastUpdate);
+		} else{
+			return DateTime(0,0,0);
+		}
 	}
 
 	/// Saves the Date when the data was last retrieved from
 	/// the database as type [String].
-
-	Future<void> setRefreshData(String data, DateTime value) async{
-		await _prefs.setString(refreshData(data), value.toString());
+	Future<void> setLastUpdated(String data) async{
+		await _prefs.setString(refreshData(data), DateTime.now().toString());
 	}
 	/// The user's brightness preference. 
 	/// 

@@ -42,7 +42,5 @@ class UserModel extends Model {
 			for (final String scope in scopeStrings)
 				parseAdminScope(scope)
 		];
-		await Services.instance.database.dataRefresh.setRefreshData("user");
-		print("User model initialized");
 	}
 }
