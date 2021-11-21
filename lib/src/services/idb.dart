@@ -130,6 +130,7 @@ class Idb extends DatabaseService {
 	Future<void> init() async {
 		final IdbFactory _factory = await idbFactory;
 		try {
+			print("Idb initialized");
 			instance = await _factory.open(
 				"ramlife.db",
 				version: 1, 
