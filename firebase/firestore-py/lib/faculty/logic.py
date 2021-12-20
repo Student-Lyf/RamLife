@@ -69,7 +69,11 @@ def get_faculty_with_schedule(faculty_sections, section_periods):
     periods = []
     for section_id in value:
       if section_id in section_periods:
+<<<<<<< HEAD
         periods.extend(section_periods[section_id])
+=======
+        periods = list(section_periods[section_id])
+>>>>>>> 83770676147451aad06e974fb74133d26b719401
       elif section_id.startswith("UADV"):
         key.homeroom = section_id
         key.homeroom_location = "Unavailable"

@@ -16,4 +16,3 @@ def set_scopes(email, scopes): auth.set_custom_user_claims(
 	get_user(email).uid,
 	{"isAdmin": bool(scopes), "scopes": scopes},
 )
-
