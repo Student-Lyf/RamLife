@@ -1,11 +1,5 @@
 import csv
-<<<<<<< HEAD
 from ..utils import dir, logger
-=======
-from logging import log
-from ..utils import dir
-import warnings
->>>>>>> 83770676147451aad06e974fb74133d26b719401
 
 '''
 A collection of functions to read course data.
