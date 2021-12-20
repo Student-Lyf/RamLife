@@ -1,7 +1,5 @@
 import csv
-from logging import log
-from ..utils import dir
-import warnings
+from ..utils import dir, logger
 
 '''
 A collection of functions to read course data.
@@ -24,15 +22,26 @@ def get_section_faculty_ids():
       row["SECTION_ID"]: row["FACULTY_ID"]
       for row in csv.DictReader(file)
       if row["SCHOOL_ID"] == "Upper" and row["FACULTY_ID"]}
+  
       
 def get_zoom_links():
+  Links = {}
   try:
     with open(dir.zoom_links) as file:
-      return {
-        row["ID"]: row["LINK"]
-        for row in csv.DictReader(file)
-        if row["LINK"]
-      }
+      for row in csv.DictReader(file):
+        if row["LINK"]:
+          Links[row["EMAIL"]] = row["LINK"]
+
   except FileNotFoundError:
-    warnings.warn("zoom_links.csv doesn't exist. Cannot grab data. Using an empty dictionary instead")
-    return {}
+    logger.warning("zoom_links.csv doesn't exist. Cannot grab data. Using an empty dictionary instead")
+
+  try:
+    with open(dir.special_zoom_links) as file:
+      for row in csv.DictReader(file):
+        Links[row["ID"]] = row["LINK"]
+
+  except FileNotFoundError:
+    logger.warning("No special zoom links")
+  
+  return Links
+
