@@ -30,9 +30,7 @@ class Dashboard extends NavigationItem<DashboardModel> {
 				? Builder(
 						builder: (BuildContext context) => TextButton(
 							onPressed: () => Scaffold.of(context).openEndDrawer(),
-							child: const Text ("Tap for schedule",
-								style: TextStyle(color: Colors.blue),
-							),
+							child: const Icon(Icons.schedule),
 						)
 					)
 				: const SizedBox.shrink()
