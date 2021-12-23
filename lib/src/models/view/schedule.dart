@@ -2,7 +2,6 @@ import "package:flutter/foundation.dart" show ChangeNotifier;
 
 import "package:ramaz/data.dart";
 import "package:ramaz/models.dart";
-import "package:ramaz/src/data/schedule/schedule.dart";
 
 /// A view model for the schedule page. 
 // ignore: prefer_mixin
