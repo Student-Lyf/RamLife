@@ -1,3 +1,4 @@
+import "package:firebase_auth/firebase_auth.dart";
 import "package:firebase_core/firebase_core.dart";
 
 /// A wrapper around [Firebase].
@@ -7,6 +8,7 @@ import "package:firebase_core/firebase_core.dart";
 /// the process, we register Firebase as a separate service that can keep track
 /// of whether it has been initialized. 
 class FirebaseCore {
+	static bool shouldUseEmulator = false;
 	/// Whether Firebase has already been initialized.
 	static bool initialized = false;
 
@@ -14,6 +16,9 @@ class FirebaseCore {
 	static Future<void> init() async {
 		if (!initialized) {
 			await Firebase.initializeApp();
+			if(shouldUseEmulator){
+				await FirebaseAuth.instance.useAuthEmulator("localhost",9099);
+			}
 			initialized = true;
 		}
 	}
