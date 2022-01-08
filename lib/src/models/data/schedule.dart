@@ -5,7 +5,6 @@ import "package:ramaz/models.dart";
 import "package:ramaz/services.dart";
 
 import "model.dart";
-import "reminders.dart";
 
 /// A data model for the user's schedule.
 class ScheduleModel extends Model {
@@ -140,16 +139,11 @@ class ScheduleModel extends Model {
 		// So we have school today...
 		final int? newIndex = today?.getCurrentPeriod();
 
-		// Maybe the day changed
-		if (newIndex != null && newIndex == periodIndex) {
-			return;
-		}
-
 		// period changed since last checked.
 		periodIndex = newIndex;
 
 		// School ended
-		if (newIndex == null) { 
+		if (newIndex == null) {
 			period = nextPeriod = null;
 			return;
 		}
