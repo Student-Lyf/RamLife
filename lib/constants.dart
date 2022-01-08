@@ -33,7 +33,7 @@ class RamazColors {
 /// A collection of URLs used throughout the app
 class Urls {
 	/// The URL for schoology.
-	static const String schoology = "https://app.schoology.com";
+	static const String schoology = "https://connect.ramaz.org";
 
 	/// The URL for Outlook mail.
 	static const String email = "http://mymail.ramaz.org";
@@ -45,7 +45,7 @@ class Urls {
 	static const String googleDrive = "http://drive.google.com";
 
 	/// The URL for Outlook mail.
-	static const String seniorSystems = "https://my.ramaz.org/SeniorApps/facelets/home/home.xhtml";
+	static const String seniorSystems = "https://ramaz.seniormbp.com/SeniorApps/facelets/registration/loginCenter.xhtml";
 
 	/// The URL for Ramaz livestreaming. 
 	static const String sportsLivestream = "https://www.ramaz.org/page.cfm?p=10769";
