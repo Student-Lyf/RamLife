@@ -5,7 +5,6 @@ import "package:ramaz/models.dart";
 import "package:ramaz/services.dart";
 
 import "model.dart";
-import "reminders.dart";
 
 /// A data model for the user's schedule.
 class ScheduleModel extends Model {
