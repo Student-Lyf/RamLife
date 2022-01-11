@@ -5,7 +5,6 @@ import "package:ramaz/pages.dart";
 import "package:ramaz/widgets.dart";
 
 import "info_card.dart";
-import "reminder_tile.dart";
 
 /// A decorative border around a special addition to [NextClass]. 
 class SpecialTile extends StatelessWidget {
