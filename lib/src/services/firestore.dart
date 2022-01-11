@@ -51,7 +51,12 @@ class Firestore extends DatabaseService {
 	static final FirebaseFirestore instance = FirebaseFirestore.instance;
 
 	@override
-	Future<void> init() => FirebaseCore.init();
+	Future<void> init() async{
+		await FirebaseCore.init();
+		if(FirebaseCore.shouldUseEmulator){
+			instance.useFirestoreEmulator("localhost", 8080);
+		}
+	}
 
 	@override
 	Future<void> signIn() => Auth.signIn();
