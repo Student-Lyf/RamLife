@@ -8,7 +8,13 @@ import "package:firebase_core/firebase_core.dart";
 /// the process, we register Firebase as a separate service that can keep track
 /// of whether it has been initialized. 
 class FirebaseCore {
+	/// Whether the Firebase Local Emulator Suite should be used. 
+	///
+	/// This setting should be enabled during development ONLY. We can also use 
+	/// `kDebugMode` from `flutter/foundation`, but it's also valid to test UI 
+	/// or logic operations with the production database.
 	static bool shouldUseEmulator = false;
+	
 	/// Whether Firebase has already been initialized.
 	static bool initialized = false;
 
