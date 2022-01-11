@@ -26,11 +26,8 @@ in order to keep the data and logic layers separate.
 def get_faculty_sections(faculty,section_teachers):
   result = defaultdict(set)
   missing_emails = set()
-  for key, value in section_teachers.items():
-    section_id = key
-    faculty_id = value
-
-    #Teaches a class but doesn't have basic faculty data
+  for section_id, faculty_id in section_teachers.items():
+    # Teaches a class but doesn't have basic faculty data
     if faculty_id not in faculty:
       missing_emails.add(faculty_id)
       continue
@@ -72,7 +69,7 @@ def get_faculty_with_schedule(faculty_sections, section_periods):
     periods = []
     for section_id in value:
       if section_id in section_periods:
-        periods = list(section_periods[section_id])
+        periods.extend(section_periods[section_id])
       elif section_id.startswith("UADV"):
         key.homeroom = section_id
         key.homeroom_location = "Unavailable"
