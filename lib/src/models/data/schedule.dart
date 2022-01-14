@@ -53,8 +53,6 @@ class ScheduleModel extends Model {
 	Future<void> init() async {
 		reminders = Models.instance.reminders
 			..addListener(remindersListener);
-		user = Models.instance.user.data;
-		subjects = Models.instance.user.subjects;
 		await initCalendar();
 	}
 
@@ -72,6 +70,8 @@ class ScheduleModel extends Model {
 					day == null ? null : Day.fromJson(day)
 			]
 		];
+		user = Models.instance.user.data;
+		subjects = Models.instance.user.subjects;
 		setToday();
 		notifyListeners();
 	}
