@@ -172,7 +172,7 @@ class ScheduleSlot extends StatelessWidget {
 class SportsSlot extends StatelessWidget{
 	late final List<SportsGame> games;
 	SportsSlot(){
-		games = Models.instance.sports.games;
+		games = Models.instance.sports.todayGames;
 	}
 
 	List<Widget> get children=>[

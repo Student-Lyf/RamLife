@@ -25,7 +25,7 @@ class Sports extends Model {
 	List<SportsGame> games = [];
 
 	/// A list of games being played today to be showed on the home screen. 
-	List<int> todayGames = [];
+	List<SportsGame> todayGames = [];
 
 	/// Loads data from the device and 
 	@override
@@ -39,11 +39,11 @@ class Sports extends Model {
 	/// Returns a list of all the games taking place today.
 	/// 
 	/// The result should be saved to [todayGames].
-	List<int> getTodayGames() {
-		List<int> todaygame = [
+	List<SportsGame> getTodayGames() {
+		List<SportsGame> todaygame = [
 		for (final MapEntry<int, SportsGame> entry in games.asMap().entries) 
 			if (entry.value.date.isSameDay(DateTime.now()))
-				entry.key,
+				entry.value,
 	];
 	print(games);
 	return todaygame;
