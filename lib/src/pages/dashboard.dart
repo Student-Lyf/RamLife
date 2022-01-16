@@ -1,7 +1,10 @@
 import "package:flutter/material.dart";
 
 import "package:ramaz/models.dart";
+import 'package:ramaz/services.dart';
 import "package:ramaz/widgets.dart";
+
+import "../../data.dart";
 
 /// The names of the weekdays.
 const List<String> weekdayNames = [
@@ -107,8 +110,7 @@ class Dashboard extends NavigationItem<DashboardModel> {
 						style: Theme.of(context).textTheme.headline5,
 					),
 					const SizedBox(height: 10),
-					for (final int index in model.sports.todayGames)
-						SportsTile(model.sports.games [index])
+					SportsSlot(),
 				]
 			]
 		)
@@ -162,6 +164,30 @@ class ScheduleSlot extends StatelessWidget {
 					shrinkWrap: true,
 					crossAxisCount: layout.isDesktop ? children.length : 1,
 					children: children
+				) else Column(children: children)
+			]
+		)
+	);
+}
+class SportsSlot extends StatelessWidget{
+	late final List<SportsGame> games;
+	SportsSlot(){
+		games = Models.instance.sports.games;
+	}
+
+	List<Widget> get children=>[
+		for(SportsGame game in games)
+			SportsTile(game)
+	];
+
+	@override
+	Widget build(BuildContext context) => ResponsiveBuilder(
+		builder: (_, LayoutInfo layout, __) => Column(
+			children: [
+				if (layout.isDesktop && children.length > 1) GridView.count(
+						shrinkWrap: true,
+						crossAxisCount: layout.isDesktop ? children.length : 1,
+						children: children
 				) else Column(children: children)
 			]
 		)

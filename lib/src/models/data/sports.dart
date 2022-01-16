@@ -1,5 +1,6 @@
 import "dart:async";
 
+import 'package:flutter/cupertino.dart';
 import "package:ramaz/constants.dart" show DayComparison;
 import "package:ramaz/data.dart";
 import "package:ramaz/services.dart";
@@ -38,17 +39,23 @@ class Sports extends Model {
 	/// Returns a list of all the games taking place today.
 	/// 
 	/// The result should be saved to [todayGames].
-	List<int> getTodayGames() => [
+	List<int> getTodayGames() {
+		List<int> todaygame = [
 		for (final MapEntry<int, SportsGame> entry in games.asMap().entries) 
 			if (entry.value.date.isSameDay(DateTime.now()))
 				entry.key,
 	];
+	print(games);
+	return todaygame;
+	}
 
 	/// Adds a game to the database. 
 	Future<void> addGame(SportsGame? game) async {
 		if (game == null) {
 			return;
 		}
+		game.id=DateTime.now().toString();
+		print(game.id);
 		games.add(game);
 		return saveGames();
 	}

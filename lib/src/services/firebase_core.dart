@@ -13,7 +13,7 @@ class FirebaseCore {
 	/// This setting should be enabled during development ONLY. We can also use 
 	/// `kDebugMode` from `flutter/foundation`, but it's also valid to test UI 
 	/// or logic operations with the production database.
-	static bool shouldUseEmulator = false;
+	static bool shouldUseEmulator = true;
 	
 	/// Whether Firebase has already been initialized.
 	static bool initialized = false;

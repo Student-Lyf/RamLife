@@ -122,11 +122,24 @@ class SportsGame {
 	/// This method is needed since it casts each `dynamic` entry to a
 	/// `Map`, and then passes those values to 
 	/// [SportsGame.fromJson].
-	static List<SportsGame> fromList(List<Map> listJson) => [
-		for (final Map json in listJson) 
-			SportsGame.fromJson(json)
-	];
-
+	static List<SportsGame> fromList(List<Map> listJson) {
+		List<SportsGame> results=[];
+		for (final Map json in listJson) {
+			SportsGame game = SportsGame.fromJson(json);
+			if(results.isNotEmpty) {
+				for (SportsGame result in results) {
+					if (game.equals(result)) {
+						results[results.indexOf(result)] = game;
+					} else {
+						results.add(game);
+					}
+				}
+			}else{
+				results.add(game);
+			}
+		}
+		return results;
+	}
 	/// Converts a list of [SportsGame]s into a list of JSON entries. 
 	static List<Map> getJsonList(List<SportsGame> games) => [
 		for (final SportsGame game in games) 
@@ -162,10 +175,13 @@ class SportsGame {
 	/// 
 	/// The [Scores] dataclass holds helper methods to simplify logic about who 
 	/// won, and which score to get depending on [isHome].
-	final Scores? scores;
+	late final Scores? scores;
+
+	/// The randomly generated Id for each game
+	late String? id;
 
 	/// Creates a game dataclass.
-	const SportsGame({
+	SportsGame({
 		required this.sport,
 		required this.date,
 		required this.times,
@@ -173,6 +189,7 @@ class SportsGame {
 		required this.opponent,
 		required this.isHome,
 		this.scores,
+		this.id,
 	});
 
 	/// Converts a JSON entry to a [SportsGame].
@@ -195,7 +212,16 @@ class SportsGame {
 		opponent = json ["opponent"],
 		scores = json ["scores"] == null ? null : Scores.fromJson(
 			Map.from(json ["scores"])
-		);
+		),
+		id = json["id"];
+
+	bool equals(SportsGame game){
+		if(game.id==id){
+			return true;
+		}else{
+			return false;
+		}
+	}
 
 	// Specifically not including scores, since this can be used 
 	// to replace scores. 
@@ -223,6 +249,7 @@ class SportsGame {
 		"isHome": isHome, 
 		"opponent": opponent,
 		"scores": scores?.toJson(),
+		"id":id,
 	};
 
 	/// The end of the match. 
