@@ -86,7 +86,7 @@ class Dashboard extends NavigationItem<DashboardModel> {
 	Widget build(BuildContext context) => RefreshIndicator(
 		onRefresh: () => refresh(context),
 		child: ListView(
-			padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+			padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 20),
 			children: [
 				Text (
 					model.schedule.today == null

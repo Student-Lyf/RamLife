@@ -43,29 +43,26 @@ class NavigationDrawer extends StatelessWidget {
 							child: Column(
 								children: [
 									DrawerHeader(child: RamazLogos.ramSquare),
-									if (layout.isDesktop || getRouteName(context) != Routes.home)
-										ListTile (
-											title: const Text ("Dashboard"),
-											leading: Icon (Icons.dashboard),
-											onTap: pushRoute(context, Routes.home),
-										),
-									if (layout.isDesktop || getRouteName(context) != Routes.schedule)
-										ListTile (
-											title: const Text ("Schedule"),
-											leading: Icon (Icons.schedule),
-											onTap: pushRoute(context, Routes.schedule),
-										),
-									if (layout.isDesktop || getRouteName(context) != Routes.reminders)
-										ListTile (
-											title: const Text ("Reminders"),
-											leading: Icon (Icons.notifications),
-											onTap: pushRoute(context, Routes.reminders),
-										),
-									// ListTile (
-									// 	title: Text ("Sports"),
-									// 	leading: Icon (Icons.sports),
-									// 	onTap: pushRoute(context, Routes.sports),
-									// ),
+									ListTile (
+										title: const Text ("Dashboard"),
+										leading: Icon (Icons.dashboard),
+										onTap: pushRoute(context, Routes.home),
+									),
+									ListTile (
+										title: const Text ("Schedule"),
+										leading: Icon (Icons.schedule),
+										onTap: pushRoute(context, Routes.schedule),
+									),
+									ListTile (
+										title: const Text ("Reminders"),
+										leading: Icon (Icons.notifications),
+										onTap: pushRoute(context, Routes.reminders),
+									),
+									ListTile (
+										title: Text ("Sports"),
+										leading: Icon (Icons.sports),
+										onTap: pushRoute(context, Routes.sports),
+									),
 									if (Models.instance.user.isAdmin) ExpansionTile(
 										leading: Icon(Icons.admin_panel_settings),
 										title: const Text("Admin options"),
@@ -82,12 +79,6 @@ class NavigationDrawer extends StatelessWidget {
 													onTap: pushRoute(context, Routes.schedules),
 												),
 											],
-											if (isSportsAdmin) 
-												ListTile(
-													title: Text("Sports"),
-													leading: Icon(Icons.sports),
-													onTap: pushRoute(context, Routes.sports),
-												)
 										]
 									),
 									BrightnessChanger.dropdown(),
