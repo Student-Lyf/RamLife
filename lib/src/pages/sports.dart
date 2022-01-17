@@ -52,6 +52,7 @@ class GenericSportsView<T> extends StatelessWidget {
 
 					},
 					child: ListView(
+						padding: const EdgeInsets.symmetric(horizontal: 4),
 						children: [
 							if (model.loading)
 								const LinearProgressIndicator(),
@@ -196,67 +197,67 @@ void openMenu({
 	)
 );
 
-/// A page to show recent and upcoming games to the user. 
-class SportsPage extends StatefulWidget {
-	/// Creates the sports page.
-	const SportsPage();
+/// A page to show recent and upcoming games to the user.
+class SportsPage extends NavigationItem<SportsModel>{
+	@override
+	SportsModel get model => super.model!;
+
+	/// Creates the schedule page.
+	SportsPage() : super(
+		label: "Sports",
+		icon: const Icon(Icons.sports),
+		model: SportsModel(Models.instance.sports),
+		shouldDispose: true,
+	);
 
 	@override
-	SportsPageState createState() => SportsPageState();
-}
-
-/// The state for the sports page. 
-class SportsPageState extends ModelListener<SportsModel, SportsPage> {
-	@override
-	SportsModel getModel() => SportsModel(Models.instance.sports);
+	AppBar get appBar => AppBar(
+		title: const Text("Sports"),
+		bottom: const TabBar(
+			tabs: [
+				Tab(text: "Upcoming"),
+				Tab(text: "Recent"),
+			]
+		),
+		actions: [
+			if (model.isAdmin) Builder(
+				builder: (context) => IconButton(
+					icon: const Icon(Icons.add),
+					tooltip: "Add a game",
+					onPressed: () async {
+						model.loading = true;
+						await model.data.addGame(await SportsBuilder.createGame(context));
+						await model.refresh();
+						model.loading = false;
+					}
+				),
+			),
+			PopupMenuButton(
+				icon: const Icon(Icons.sort),
+				onSelected: (SortOption option) => model.sortOption = option,
+				tooltip: "Sort games",
+				itemBuilder: (_) => [
+					const PopupMenuItem(
+						value: SortOption.chronological,
+						child: Text("By date"),
+					),
+					const PopupMenuItem(
+						value: SortOption.sport,
+						child: Text("By sport"),
+					)
+				]
+			),
+			IconButton(
+				icon: const Icon(Icons.live_tv),
+				onPressed: () => launch(Urls.sportsLivestream),
+				tooltip: "Watch livestream",
+			)
+		]
+	);
 
 	@override 
 	Widget build(BuildContext context) => DefaultTabController(
 		length: 2,
-		child: ResponsiveScaffold(
-			appBar: AppBar(
-				title: const Text("Sports"),
-				bottom: const TabBar(
-					tabs: [
-						Tab(text: "Upcoming"),
-						Tab(text: "Recent"),
-					]
-				),
-				actions: [
-					if (model.isAdmin) IconButton(
-						icon: const Icon(Icons.add),
-						tooltip: "Add a game",
-						onPressed: () async {
-							model.loading = true;
-							await model.data.addGame(await SportsBuilder.createGame(context));
-							await model.refresh();
-							model.loading = false;
-						}
-					),
-					PopupMenuButton(
-						icon: const Icon(Icons.sort),
-						onSelected: (SortOption option) => model.sortOption = option,
-						tooltip: "Sort games",
-						itemBuilder: (_) => [
-							const PopupMenuItem(
-								value: SortOption.chronological,
-								child: Text("By date"),
-							),
-							const PopupMenuItem(
-								value: SortOption.sport,
-								child: Text("By sport"),
-							)
-						]
-					),
-					IconButton(
-						icon: const Icon(Icons.live_tv),
-						onPressed: () => launch(Urls.sportsLivestream),
-						tooltip: "Watch livestream",
-					)
-				]
-			),
-			drawer: const NavigationDrawer(),
-			bodyBuilder: (_) => getLayout(context, model),
-		),
+		child: getLayout(context, model),
 	);
 }

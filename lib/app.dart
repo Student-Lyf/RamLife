@@ -22,13 +22,13 @@ class RamLife extends StatelessWidget {
 			child: const Login(),
 		),
 		Routes.home: (_) => const RouteInitializer(
-			child: HomePage(),
-		),
-		Routes.schedule: (_) => const RouteInitializer(
 			child: HomePage(pageIndex: 1),
 		),
-		Routes.reminders: (_) => const RouteInitializer(
+		Routes.schedule: (_) => const RouteInitializer(
 			child: HomePage(pageIndex: 2),
+		),
+		Routes.reminders: (_) => const RouteInitializer(
+			child: HomePage(pageIndex: 3),
 		),
 		Routes.feedback: (_) => const RouteInitializer(
 			child: FeedbackPage(),
@@ -42,7 +42,7 @@ class RamLife extends StatelessWidget {
 			child: const AdminSchedulesPage(),
 		),
 		Routes.sports: (_) => const RouteInitializer(
-			child: SportsPage(),
+			child: HomePage(pageIndex: 0),
 		),
 		Routes.credits: (_) => const RouteInitializer(
 			child: CreditsPage(),

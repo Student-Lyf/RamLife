@@ -1,11 +1,7 @@
 import "package:flutter/material.dart";
-
+import "package:ramaz/pages.dart";
 import "package:ramaz/widgets.dart";
-
 import "dashboard.dart";
-import "drawer.dart";
-import "reminders.dart";
-import "schedule.dart";
 
 /// The home page of RamLife.
 /// 
@@ -19,19 +15,23 @@ class HomePage extends StatelessWidget {
 	/// 
 	/// Use this for app-wide navigation. For example, to navigate to the reminders
 	/// page, pass in 2 for [pageIndex].
-	const HomePage({this.pageIndex = 0});
+	const HomePage({required this.pageIndex});
 
 	@override
 	Widget build(BuildContext context) => ResponsiveBuilder(
-		builder: (_, LayoutInfo layout, __) => ResponsiveScaffold.navBar(
-			navItems: [
-				Dashboard(),
-				ResponsiveSchedule(),
-				ResponsiveReminders(),
-			],
-			initialNavIndex: pageIndex,
-			drawer: const NavigationDrawer(),
-			secondaryDrawer: const NavigationDrawer(),
-		)
+		builder: (_, LayoutInfo layout, __) => DefaultTabController(
+			length: 2,
+			child:ResponsiveScaffold.navBar(
+				navItems: [
+					SportsPage(),
+					Dashboard(),
+					ResponsiveSchedule(),
+					ResponsiveReminders(),
+				],
+				initialNavIndex: pageIndex,
+				drawer: const NavigationDrawer(),
+				secondaryDrawer: const NavigationDrawer(),
+			)
+		),
 	);
 }
