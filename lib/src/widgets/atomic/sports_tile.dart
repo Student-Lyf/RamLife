@@ -226,7 +226,7 @@ class SportsTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => ConstrainedBox(
-    constraints: BoxConstraints(
+    constraints: const BoxConstraints(
       minHeight: 160,
     ),
     child: Card(
