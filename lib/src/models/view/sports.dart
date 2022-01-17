@@ -144,6 +144,7 @@ class SportsModel with ChangeNotifier {
 		}
 	}
 
+	/// Refreshes the sports data needed for the sports page.
 	Future<void> refresh() async {
 		await Services.instance.database.sports.signIn();
 		await Models.instance.sports.init();

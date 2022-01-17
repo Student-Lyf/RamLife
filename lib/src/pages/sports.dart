@@ -4,7 +4,6 @@ import "package:ramaz/constants.dart";
 import "package:ramaz/data.dart";
 import "package:ramaz/models.dart";
 import "package:ramaz/pages.dart";
-import "package:ramaz/services.dart";
 import "package:ramaz/widgets.dart";
 
 import "package:url_launcher/url_launcher.dart";
@@ -30,6 +29,7 @@ class GenericSportsView<T> extends StatelessWidget {
 	/// Builds a list of [SportsTile]s using [upcoming] and [recents]. 
 	final Widget Function(T) builder;
 
+	/// Defines the sports view model.
 	final SportsModel model;
 
 	/// Creates a list of [SportsTile]s. 
