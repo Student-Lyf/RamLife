@@ -32,7 +32,7 @@ class SportsStats extends StatelessWidget {
     children: [
       Expanded(flex: 1, child: Text(team)),
       Expanded(flex: 1, child: Text(score?.toString() ?? "")),
-      Expanded(flex: 1, child: Center(child: Text(dateTime))),
+      Expanded(flex: 2, child: Center(child: Text(dateTime))),
     ]
   );
 }
@@ -218,9 +218,7 @@ class SportsTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => ConstrainedBox(
-    constraints: const BoxConstraints(
-      minHeight: 160,
-    ),
+    constraints: const BoxConstraints(minHeight: 160),
     child: Card(
       color: cardColor,
       child: InkWell(
@@ -230,9 +228,12 @@ class SportsTile extends StatelessWidget {
           child: Column(
             children: [
               ListTile(
-                leading: Icon(icon,size: 36,color: Theme.of(context).colorScheme
-                    .onBackground,),
-                title: Text(game.team,textScaleFactor: 1.3,),
+                leading: Icon(
+                  icon, 
+                  size: 36,
+                  color: Theme.of(context).colorScheme.onBackground
+                ),
+                title: Text(game.team,textScaleFactor: 1.3),
                 subtitle: Text(game.isHome
                 	? "${game.opponent} @ Ramaz"
                 	: "Ramaz @ ${game.opponent}",
@@ -245,7 +246,7 @@ class SportsTile extends StatelessWidget {
                 team: game.awayTeam,
                 score: game.scores?.getScore(home: false),
                 dateTime: MaterialLocalizations.of(context)
-                    .formatShortDate(game.date),
+                  .formatShortDate(game.date),
               ),
               const SizedBox(height: 10),
               SportsStats(
