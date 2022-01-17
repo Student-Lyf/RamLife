@@ -1,9 +1,8 @@
 import "dart:async";
 
-import "package:ramaz/constants.dart" show DayComparison;
+import "package:ramaz/constants.dart";
 import "package:ramaz/data.dart";
 import "package:ramaz/services.dart";
-
 import "model.dart";
 
 /// A data model for sports games. 
@@ -42,6 +41,9 @@ class Sports extends Model {
 	Future<void> addGame(SportsGame? game) async {
 		if (game == null) {
 			return;
+		}
+		if(game.isHome){
+			game.link = Urls.sportsLivestream;
 		}
 		games.add(game);
 		return saveGames();

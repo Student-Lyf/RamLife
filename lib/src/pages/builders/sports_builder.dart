@@ -119,6 +119,9 @@ class SportBuilderState extends ModelListener<
 	/// A controller to hold [SportsBuilder.parent]'s opponent.
 	final TextEditingController opponentController = TextEditingController();
 
+	/// A controller to hold [SportsBuilder.parent]'s opponent.
+	final TextEditingController linkController = TextEditingController();
+
 	@override
 	SportsBuilderModel getModel() => SportsBuilderModel(widget.parent);
 
@@ -126,6 +129,7 @@ class SportBuilderState extends ModelListener<
 	void initState() {
 		teamController.text = widget.parent?.team ?? "";
 		opponentController.text = widget.parent?.opponent ?? "";
+		linkController.text = widget.parent?.link ?? "";
 		super.initState();
 	}
 
@@ -133,6 +137,7 @@ class SportBuilderState extends ModelListener<
 	void dispose() {
 		teamController.dispose();
 		opponentController.dispose();
+		linkController.dispose();
 		super.dispose();
 	}
 
@@ -192,6 +197,15 @@ class SportBuilderState extends ModelListener<
 						onChanged: (bool? value) => model.away = value!,
 					),
 				),
+				if(model.away) ... [
+				FormRow(
+					"Link",
+					TextField(
+						onChanged: (String value) => model.link = value,
+						controller: linkController,
+					),
+					sized: true,
+				)],
 				FormRow.editable(
 					title: "Date",
 					value: SportsTile.formatDate(model.date),
