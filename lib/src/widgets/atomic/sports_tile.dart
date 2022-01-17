@@ -30,9 +30,9 @@ class SportsStats extends StatelessWidget {
   Widget build(BuildContext context) => Row(
     mainAxisAlignment: MainAxisAlignment.spaceBetween,
     children: [
-      Expanded(child: Text(team),flex: 1,),
-      Expanded(child: Text(score?.toString() ?? ""),flex: 1,),
-      Expanded(child: Center(child: Text(dateTime)),flex: 2,),
+      Expanded(flex: 1, child: Text(team)),
+      Expanded(flex: 1, child: Text(score?.toString() ?? "")),
+      Expanded(flex: 1, child: Center(child: Text(dateTime))),
     ]
   );
 }
@@ -251,7 +251,7 @@ class SportsTile extends StatelessWidget {
               SportsStats(
                 team: game.homeTeam,
                 score: game.scores?.getScore(home: true),
-                dateTime: formatTime(game.times,context),
+                dateTime: formatTimeRange(game.times,context),
               ),
             ]
           )
@@ -260,10 +260,17 @@ class SportsTile extends StatelessWidget {
     )
   );
 
-  formatTime(Range times,BuildContext context) {
+  /// Formats a [Range] according to the user's locale.
+  String formatTimeRange(Range times,BuildContext context) {
     final locale = MaterialLocalizations.of(context);
-    TimeOfDay start = TimeOfDay(hour: times.start.hour, minute: times.start.hour);
-    TimeOfDay end = TimeOfDay(hour: times.end.hour, minute: times.end.hour);
+    final TimeOfDay start = TimeOfDay(
+      hour: times.start.hour, 
+      minute: times.start.hour
+    );
+    final TimeOfDay end = TimeOfDay(
+      hour: times.end.hour, 
+      minute: times.end.hour
+    );
     return "${locale.formatTimeOfDay(start)} - ${locale.formatTimeOfDay(end)}";
   }
 }
