@@ -11,7 +11,7 @@ class SportsBuilderModel with ChangeNotifier {
 	DateTime? _date;
 	TimeOfDay? _start, _end;
 
-	String? _opponent, _team; 
+	String? _opponent, _team, _link;
 	bool _away = false, _loading = false;
 
 	/// Creates a ViewModel for the sports game builder page. 
@@ -26,7 +26,8 @@ class SportsBuilderModel with ChangeNotifier {
 		_end = parent?.times.end.asTimeOfDay,
 		_opponent = parent?.opponent,
 		_team = parent?.team,
-		_away = !(parent?.isHome ?? true);
+		_away = !(parent?.isHome ?? true),
+		_link = parent?.link;
 
 	/// Whether this game is ready to submit. 
 	bool get ready => sport != null &&
@@ -45,6 +46,7 @@ class SportsBuilderModel with ChangeNotifier {
 		opponent: opponent ?? "",
 		sport: sport!,
 		scores: scores,
+		link: link,
 	);
 
 	/// The scores for this game.
@@ -109,6 +111,15 @@ class SportsBuilderModel with ChangeNotifier {
 	String? get opponent => _opponent;
 	set opponent(String? value) {
 		_opponent = value;
+		notifyListeners();
+	}
+
+	/// The streaming link for each game
+	///
+	/// Changing this will update the page.
+	String? get link => _link;
+	set link(String? value){
+		_link =value;
 		notifyListeners();
 	}
 
