@@ -107,8 +107,7 @@ class Scores {
 	  ? ramazScore : otherScore;
 }
 
-/// A sports game. 
-@immutable
+/// A sports game.
 class SportsGame {
 	/// Capitalizes a word. 
 	/// 
@@ -164,8 +163,11 @@ class SportsGame {
 	/// won, and which score to get depending on [isHome].
 	final Scores? scores;
 
+	/// The Streaming link for each game
+	late String? link;
+
 	/// Creates a game dataclass.
-	const SportsGame({
+	SportsGame({
 		required this.sport,
 		required this.date,
 		required this.times,
@@ -173,6 +175,7 @@ class SportsGame {
 		required this.opponent,
 		required this.isHome,
 		this.scores,
+		this.link,
 	});
 
 	/// Converts a JSON entry to a [SportsGame].
@@ -195,7 +198,8 @@ class SportsGame {
 		opponent = json ["opponent"],
 		scores = json ["scores"] == null ? null : Scores.fromJson(
 			Map.from(json ["scores"])
-		);
+		),
+		link = json["link"];
 
 	// Specifically not including scores, since this can be used 
 	// to replace scores. 
@@ -223,6 +227,7 @@ class SportsGame {
 		"isHome": isHome, 
 		"opponent": opponent,
 		"scores": scores?.toJson(),
+		"link": link,
 	};
 
 	/// The end of the match. 

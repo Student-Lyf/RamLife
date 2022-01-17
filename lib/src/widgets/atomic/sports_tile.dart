@@ -1,6 +1,7 @@
 import "package:flutter/material.dart";
 
 import "package:ramaz/data.dart";
+import "package:url_launcher/url_launcher.dart";
 
 /// A row in a [SportsTile] that displays a team, their score, 
 /// and a part of the date.
@@ -30,9 +31,9 @@ class SportsStats extends StatelessWidget {
   Widget build(BuildContext context) => Row(
     mainAxisAlignment: MainAxisAlignment.spaceBetween,
     children: [
-      Expanded(child: Text(team),flex: 1,),
-      Expanded(child: Text(score?.toString() ?? ""),flex: 1,),
-      Expanded(child: Center(child: Text(dateTime)),flex: 2,),
+      Expanded(flex: 1,child: Text(team),),
+      Expanded(flex: 1,child: Text(score?.toString() ?? ""),),
+      Expanded(flex: 2,child: Center(child: Text(dateTime)),),
     ]
   );
 }
@@ -238,7 +239,13 @@ class SportsTile extends StatelessWidget {
                 	: "Ramaz @ ${game.opponent}",
                   textScaleFactor: 1.2,
               	),
-                trailing: onTap == null ? null : const Icon(Icons.edit),
+                trailing: onTap == null ? IconButton(
+                 icon: const Icon(Icons.live_tv),
+                 onPressed: () {
+                   if(game.link!=null){
+                    launch(game.link!);
+                   }},
+                ) : const Icon(Icons.edit),
               ),
               const SizedBox(height: 20),
               SportsStats(
@@ -260,9 +267,11 @@ class SportsTile extends StatelessWidget {
     )
   );
 
-  formatTime(Range times,BuildContext context) {
+  /// Formats the time of each game.
+  String formatTime(Range times,BuildContext context) {
     final locale = MaterialLocalizations.of(context);
-    TimeOfDay start = TimeOfDay(hour: times.start.hour, minute: times.start.hour);
+    TimeOfDay start = TimeOfDay(hour: times.start.hour,
+        minute: times.start.hour);
     TimeOfDay end = TimeOfDay(hour: times.end.hour, minute: times.end.hour);
     return "${locale.formatTimeOfDay(start)} - ${locale.formatTimeOfDay(end)}";
   }
