@@ -5,30 +5,6 @@ import "package:ramaz/constants.dart";
 import "../images/link_icon.dart";
 import "../images/loading_image.dart";
 
-/// A collection of icons for sports. 
-/// 
-/// These icons are Strings so that the background color of the icon can be 
-/// determined in the `build` method.
-class SportsIcons {
-	/// A baseball icon.
-	static const ImageProvider baseball = AssetImage("images/icons/baseball.png");
-
-	/// A basketball icon.
-	static const ImageProvider basketball = AssetImage("images/icons/basketball.png");	
-
-	/// A hockey icon. 
-	static const ImageProvider hockey = AssetImage("images/icons/hockey.png");	
-
-	/// A soccer icon. 
-	static const ImageProvider soccer = AssetImage("images/icons/soccer.png");	
-
-	/// A tennis icon. 
-	static const ImageProvider tennis = AssetImage("images/icons/tennis.png");	
-
-	/// A volleyball icon. 
-	static const ImageProvider volleyball = AssetImage("images/icons/volleyball.png");	
-}
-
 /// Brand logos used throughout the app. 
 /// 
 /// Ram Life does not claim ownership of any brand 
