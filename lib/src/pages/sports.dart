@@ -30,19 +30,14 @@ class GenericSportsView<T> extends StatelessWidget {
 	/// Builds a list of [SportsTile]s using [upcoming] and [recents]. 
 	final Widget Function(T) builder;
 
-	/// The function to call when the user refreshes the page. 
-	final Future<void> Function() onRefresh;
-
-	/// Whether to show a loading indicator. 
-	final bool loading;
+	final SportsModel model;
 
 	/// Creates a list of [SportsTile]s. 
 	const GenericSportsView({
 		required this.upcoming,
-		required this.recents, 
+		required this.recents,
 		required this.builder,
-		required this.onRefresh,
-		required this.loading,
+		required this.model,
 	});
 
 	@override
@@ -50,10 +45,15 @@ class GenericSportsView<T> extends StatelessWidget {
 		children: [
 			for (final List<T> gamesList in [upcoming, recents])
 				RefreshIndicator(
-					onRefresh: onRefresh,
+					onRefresh: () async{
+						model.loading = true;
+						await model.refresh();
+						model.loading = false;
+
+					},
 					child: ListView(
 						children: [
-							if (loading)
+							if (model.loading)
 								const LinearProgressIndicator(),
 							for (final T game in gamesList)
 								builder(game)
@@ -69,8 +69,7 @@ Widget getLayout(BuildContext context, SportsModel model) {
 	switch(model.sortOption) {
 		case SortOption.chronological: 
 			return GenericSportsView<int>(
-				loading: model.loading,
-				onRefresh: model.adminFunc(Services.instance.database.sports.signIn),
+				model: model,
 				recents: model.recents,
 				upcoming: model.upcoming,
 				builder: (int index) => SportsTile(
@@ -84,8 +83,7 @@ Widget getLayout(BuildContext context, SportsModel model) {
 			);
 		case SortOption.sport: 
 			return GenericSportsView<MapEntry<Sport, List<int>>>(
-				loading: model.loading,
-				onRefresh: model.adminFunc(Services.instance.database.sports.signIn),
+				model: model,
 				recents: model.recentBySport.entries.toList(),
 				upcoming: model.upcomingBySport.entries.toList(),
 				builder: (MapEntry<Sport, List<int>> entry) => Column(
@@ -188,6 +186,7 @@ void openMenu({
 					if (confirm ?? false) {
 						model.loading = true;
 						await Models.instance.sports.delete(index);
+						await model.refresh();
 						model.loading = false;
 					}
 				},
@@ -227,9 +226,12 @@ class SportsPageState extends ModelListener<SportsModel, SportsPage> {
 					if (model.isAdmin) IconButton(
 						icon: const Icon(Icons.add),
 						tooltip: "Add a game",
-						onPressed: model.adminFunc(() async => 
-							model.data.addGame(await SportsBuilder.createGame(context))
-						),
+						onPressed: () async {
+							model.loading = true;
+							await model.data.addGame(await SportsBuilder.createGame(context));
+							await model.refresh();
+							model.loading = false;
+						}
 					),
 					PopupMenuButton(
 						icon: const Icon(Icons.sort),

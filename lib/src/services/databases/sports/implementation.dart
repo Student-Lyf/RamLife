@@ -47,6 +47,7 @@ class LocalSports implements SportsInterface {
 
 	@override
 	Future<void> setAll(List<Map> json) async {
+		await Idb.instance.clearObjectStore(Idb.sportsStoreName);
 		for (final Map game in json) {
 			await Idb.instance.update(storeName: Idb.sportsStoreName, value: game);
 		}

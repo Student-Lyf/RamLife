@@ -225,8 +225,10 @@ class SportsTile extends StatelessWidget {
     ? game.opponent.length : "Ramaz".length;
 
   @override
-  Widget build(BuildContext context) => SizedBox(
-    height: 160,
+  Widget build(BuildContext context) => ConstrainedBox(
+    constraints: BoxConstraints(
+      minHeight: 160,
+    ),
     child: Card(
       color: cardColor,
       child: InkWell(

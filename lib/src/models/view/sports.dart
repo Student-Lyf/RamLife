@@ -144,13 +144,9 @@ class SportsModel with ChangeNotifier {
 		}
 	}
 
-	/// Returns an function that shows loading animations while running. 
-	/// 
-	/// The newly-returned function will set [loading] to true, run [func], 
-	/// and then set [loading] to false. It can be used in the widget tree. 
-	AsyncCallback adminFunc(AsyncCallback func) => () async {
-		loading = true;
-		await func();
-		loading = false;
-	};
+	Future<void> refresh() async {
+		await Services.instance.database.sports.signIn();
+		await Models.instance.sports.init();
+		setup();
+	}
 }
