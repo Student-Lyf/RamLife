@@ -42,9 +42,6 @@ class Sports extends Model {
 		if (game == null) {
 			return;
 		}
-		if(game.isHome){
-			game.link = Urls.sportsLivestream;
-		}
 		games.add(game);
 		return saveGames();
 	}

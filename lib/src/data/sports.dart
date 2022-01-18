@@ -1,6 +1,6 @@
 import "package:meta/meta.dart";
 
-import "package:ramaz/constants.dart" show DayComparison;
+import "package:ramaz/constants.dart";
 
 import "schedule/time.dart";
 
@@ -163,8 +163,8 @@ class SportsGame {
 	/// won, and which score to get depending on [isHome].
 	final Scores? scores;
 
-	/// The Streaming link for each game
-	late String? link;
+	/// The URL to the livestream for this game
+	late String? livestreamUrl;
 
 	/// Creates a game dataclass.
 	SportsGame({
@@ -175,7 +175,7 @@ class SportsGame {
 		required this.opponent,
 		required this.isHome,
 		this.scores,
-		this.link,
+		this.livestreamUrl = Urls.sportsLivestream,
 	});
 
 	/// Converts a JSON entry to a [SportsGame].
@@ -199,7 +199,7 @@ class SportsGame {
 		scores = json ["scores"] == null ? null : Scores.fromJson(
 			Map.from(json ["scores"])
 		),
-		link = json["link"];
+		livestreamUrl = json["livestreamUrl"];
 
 	// Specifically not including scores, since this can be used 
 	// to replace scores. 
@@ -227,7 +227,7 @@ class SportsGame {
 		"isHome": isHome, 
 		"opponent": opponent,
 		"scores": scores?.toJson(),
-		"link": link,
+		"livestreamUrl": livestreamUrl,
 	};
 
 	/// The end of the match. 

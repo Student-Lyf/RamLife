@@ -43,10 +43,7 @@ class FormRow extends StatelessWidget {
 		sized = false,
 		moreSpace = true,
 		picker = value == null
-			? IconButton(
-				icon: Icon(whenNull),
-				onPressed: setNewValue
-			)
+			? IconButton(icon: Icon(whenNull), onPressed: setNewValue)
 			: InkWell(
 				onTap: setNewValue,
 				child: Text(
@@ -64,16 +61,13 @@ class FormRow extends StatelessWidget {
 					Text(title), 
 					const Spacer(), 
 					if (sized) Container(
-						constraints: const BoxConstraints(
-							maxWidth: 200, 
-							maxHeight: 75,
-						),
+						constraints: const BoxConstraints(maxWidth: 200, maxHeight: 75),
 						child: picker,
 					)
 					else picker
 				]
 			),
-			SizedBox(height: moreSpace ? 25 : 15),
+			const SizedBox(height: 25),
 		]
 	);
 }
@@ -120,7 +114,7 @@ class SportBuilderState extends ModelListener<
 	final TextEditingController opponentController = TextEditingController();
 
 	/// A controller to hold [SportsBuilder.parent]'s opponent.
-	final TextEditingController linkController = TextEditingController();
+	final TextEditingController livestreamUrlController = TextEditingController();
 
 	@override
 	SportsBuilderModel getModel() => SportsBuilderModel(widget.parent);
@@ -129,7 +123,7 @@ class SportBuilderState extends ModelListener<
 	void initState() {
 		teamController.text = widget.parent?.team ?? "";
 		opponentController.text = widget.parent?.opponent ?? "";
-		linkController.text = widget.parent?.link ?? "";
+		livestreamUrlController.text = widget.parent?.livestreamUrl ?? "";
 		super.initState();
 	}
 
@@ -137,7 +131,7 @@ class SportBuilderState extends ModelListener<
 	void dispose() {
 		teamController.dispose();
 		opponentController.dispose();
-		linkController.dispose();
+		livestreamUrlController.dispose();
 		super.dispose();
 	}
 
@@ -197,15 +191,14 @@ class SportBuilderState extends ModelListener<
 						onChanged: (bool? value) => model.away = value!,
 					),
 				),
-				if(model.away) ... [
-				FormRow(
-					"Link",
+				if (model.away) FormRow(
+					"Link to livestream",
 					TextField(
-						onChanged: (String value) => model.link = value,
-						controller: linkController,
+						onChanged: (String value) => model.livestreamUrl = value,
+						controller: livestreamUrlController,
 					),
 					sized: true,
-				)],
+				),
 				FormRow.editable(
 					title: "Date",
 					value: SportsTile.formatDate(model.date),

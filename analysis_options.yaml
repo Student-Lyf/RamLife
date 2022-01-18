@@ -1,6 +1,7 @@
 analyzer: 
   exclude: 
     - lib/generated_plugin_registrant.dart
+    - lib/firebase_options.dart
     - test/*
     - firebase/*
 linter: 
