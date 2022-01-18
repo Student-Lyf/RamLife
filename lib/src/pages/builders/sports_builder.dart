@@ -43,10 +43,7 @@ class FormRow extends StatelessWidget {
 		sized = false,
 		moreSpace = true,
 		picker = value == null
-			? IconButton(
-				icon: Icon(whenNull),
-				onPressed: setNewValue
-			)
+			? IconButton(icon: Icon(whenNull), onPressed: setNewValue)
 			: InkWell(
 				onTap: setNewValue,
 				child: Text(
@@ -64,16 +61,14 @@ class FormRow extends StatelessWidget {
 					Text(title), 
 					const Spacer(), 
 					if (sized) Container(
-						constraints: const BoxConstraints(
-							maxWidth: 200, 
-							maxHeight: 75,
-						),
+						constraints: const BoxConstraints(maxWidth: 200, maxHeight: 75),
 						child: picker,
 					)
 					else picker
 				]
 			),
-			SizedBox(height: moreSpace ? 25 : 15),
+			// SizedBox(height: moreSpace ? 25 : 15),
+			const SizedBox(height: 25),
 		]
 	);
 }
@@ -197,15 +192,14 @@ class SportBuilderState extends ModelListener<
 						onChanged: (bool? value) => model.away = value!,
 					),
 				),
-				if(model.away) ... [
-				FormRow(
+				if (model.away) FormRow(
 					"Link",
 					TextField(
 						onChanged: (String value) => model.link = value,
 						controller: linkController,
 					),
 					sized: true,
-				)],
+				),
 				FormRow.editable(
 					title: "Date",
 					value: SportsTile.formatDate(model.date),
