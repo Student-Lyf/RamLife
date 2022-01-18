@@ -67,7 +67,6 @@ class FormRow extends StatelessWidget {
 					else picker
 				]
 			),
-			// SizedBox(height: moreSpace ? 25 : 15),
 			const SizedBox(height: 25),
 		]
 	);
@@ -115,7 +114,7 @@ class SportBuilderState extends ModelListener<
 	final TextEditingController opponentController = TextEditingController();
 
 	/// A controller to hold [SportsBuilder.parent]'s opponent.
-	final TextEditingController linkController = TextEditingController();
+	final TextEditingController livestreamUrlController = TextEditingController();
 
 	@override
 	SportsBuilderModel getModel() => SportsBuilderModel(widget.parent);
@@ -124,7 +123,7 @@ class SportBuilderState extends ModelListener<
 	void initState() {
 		teamController.text = widget.parent?.team ?? "";
 		opponentController.text = widget.parent?.opponent ?? "";
-		linkController.text = widget.parent?.link ?? "";
+		livestreamUrlController.text = widget.parent?.livestreamUrl ?? "";
 		super.initState();
 	}
 
@@ -132,7 +131,7 @@ class SportBuilderState extends ModelListener<
 	void dispose() {
 		teamController.dispose();
 		opponentController.dispose();
-		linkController.dispose();
+		livestreamUrlController.dispose();
 		super.dispose();
 	}
 
@@ -193,10 +192,10 @@ class SportBuilderState extends ModelListener<
 					),
 				),
 				if (model.away) FormRow(
-					"Link",
+					"Link to livestream",
 					TextField(
-						onChanged: (String value) => model.link = value,
-						controller: linkController,
+						onChanged: (String value) => model.livestreamUrl = value,
+						controller: livestreamUrlController,
 					),
 					sized: true,
 				),
