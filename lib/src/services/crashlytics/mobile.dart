@@ -2,7 +2,6 @@ import "package:firebase_crashlytics/firebase_crashlytics.dart" show FirebaseCra
 import "package:flutter/foundation.dart";
 
 import "../crashlytics.dart";
-import "../firebase_core.dart";
 
 /// Provides the correct implementation for mobile. 
 Crashlytics getCrashlytics() => CrashlyticsImplementation();

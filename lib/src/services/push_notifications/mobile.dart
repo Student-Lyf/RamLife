@@ -1,7 +1,6 @@
 import "dart:convert" show JsonUnsupportedObjectError;
 import "package:firebase_messaging/firebase_messaging.dart";
 
-import "../firebase_core.dart";
 import "../push_notifications.dart";
 
 /// Provides the correct implementation for push notifications. 
