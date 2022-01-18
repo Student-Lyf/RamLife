@@ -45,66 +45,21 @@ class GenericSportsView<T> extends StatelessWidget {
 		children: [
 			for (final List<T> gamesList in [upcoming, recents])
 				RefreshIndicator(
-					onRefresh: () async{
+					onRefresh: () async {
 						model.loading = true;
 						await model.refresh();
 						model.loading = false;
-
 					},
 					child: ListView(
 						padding: const EdgeInsets.symmetric(horizontal: 4),
 						children: [
-							if (model.loading)
-								const LinearProgressIndicator(),
-							for (final T game in gamesList)
-								builder(game)
+							if (model.loading) const LinearProgressIndicator(),
+							for (final T game in gamesList) builder(game)
 						]
 					)
 				)
 		]
 	);
-}
-
-/// Creates a [GenericSportsView] based on the sorting option.
-Widget getLayout(BuildContext context, SportsModel model) {
-	switch(model.sortOption) {
-		case SortOption.chronological: 
-			return GenericSportsView<int>(
-				model: model,
-				recents: model.recents,
-				upcoming: model.upcoming,
-				builder: (int index) => SportsTile(
-					model.data.games [index], 
-					onTap: !model.isAdmin ? null : () => openMenu(
-						context: context,
-						index: index,
-						model: model,
-					)
-				),
-			);
-		case SortOption.sport: 
-			return GenericSportsView<MapEntry<Sport, List<int>>>(
-				model: model,
-				recents: model.recentBySport.entries.toList(),
-				upcoming: model.upcomingBySport.entries.toList(),
-				builder: (MapEntry<Sport, List<int>> entry) => Column(
-					children: [
-						const SizedBox(height: 15),
-						Text(SportsGame.capitalize(entry.key)),
-						for (final int index in entry.value) 
-							SportsTile(
-								model.data.games [index], 
-								onTap: !model.isAdmin ? null : () => openMenu(
-									context: context, 
-									index: index,
-									model: model
-								)
-							),
-						const SizedBox(height: 20),
-					]
-				)
-			);
-	}
 }
 
 /// Opens a menu with options for the selected game. 
@@ -251,8 +206,42 @@ class SportsPage extends NavigationItem<SportsModel>{
 	);
 
 	@override 
-	Widget build(BuildContext context) => DefaultTabController(
-		length: 2,
-		child: getLayout(context, model),
-	);
+	Widget build(BuildContext context) {
+		switch(model.sortOption) {
+			case SortOption.chronological: return GenericSportsView<int>(
+				model: model,
+				recents: model.recents,
+				upcoming: model.upcoming,
+				builder: (int index) => SportsTile(
+					model.data.games [index], 
+					onTap: !model.isAdmin ? null : () => openMenu(
+						context: context,
+						index: index,
+						model: model,
+					)
+				),
+			);
+			case SortOption.sport: return GenericSportsView<MapEntry<Sport, List<int>>>(
+				model: model,
+				recents: model.recentBySport.entries.toList(),
+				upcoming: model.upcomingBySport.entries.toList(),
+				builder: (MapEntry<Sport, List<int>> entry) => Column(
+					children: [
+						const SizedBox(height: 15),
+						Text(SportsGame.capitalize(entry.key)),
+						for (final int index in entry.value) 
+							SportsTile(
+								model.data.games [index], 
+								onTap: !model.isAdmin ? null : () => openMenu(
+									context: context, 
+									index: index,
+									model: model
+								)
+							),
+						const SizedBox(height: 20),
+					]
+				)
+			);
+		}
+	}
 }
