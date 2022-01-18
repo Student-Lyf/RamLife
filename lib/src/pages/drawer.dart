@@ -63,7 +63,7 @@ class NavigationDrawer extends StatelessWidget {
 										leading: Icon (Icons.sports),
 										onTap: pushRoute(context, Routes.sports),
 									),
-									if (Models.instance.user.isAdmin) ExpansionTile(
+									if (isScheduleAdmin) ExpansionTile(
 										leading: Icon(Icons.admin_panel_settings),
 										title: const Text("Admin options"),
 										children: [

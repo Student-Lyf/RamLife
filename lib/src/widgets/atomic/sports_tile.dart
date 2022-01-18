@@ -246,6 +246,7 @@ class SportsTile extends StatelessWidget {
                    if(game.link!=null){
                     launch(game.link!);
                    }},
+                  tooltip: "Watch livestream",
                 ) : const Icon(Icons.edit),
               ),
               const SizedBox(height: 20),

@@ -247,11 +247,6 @@ class SportsPage extends NavigationItem<SportsModel>{
 					)
 				]
 			),
-			IconButton(
-				icon: const Icon(Icons.live_tv),
-				onPressed: () => launch(Urls.sportsLivestream),
-				tooltip: "Watch livestream",
-			)
 		]
 	);
 
