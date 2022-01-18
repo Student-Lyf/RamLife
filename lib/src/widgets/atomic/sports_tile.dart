@@ -243,8 +243,8 @@ class SportsTile extends StatelessWidget {
                 trailing: onTap == null ? IconButton(
                  icon: const Icon(Icons.live_tv),
                  onPressed: () {
-                   if(game.link!=null){
-                    launch(game.link!);
+                   if(game.livestreamUrl != null){
+                    launch(game.livestreamUrl!);
                    }},
                 ) : const Icon(Icons.edit),
               ),
