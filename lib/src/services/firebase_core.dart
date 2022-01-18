@@ -13,10 +13,6 @@ import "package:ramaz/firebase_options.dart";
 /// of whether it has been initialized. 
 class FirebaseCore {
 	/// Whether the Firebase Local Emulator Suite should be used. 
-	///
-	/// This setting should be enabled during development ONLY. We can also use 
-	/// `kDebugMode` from `flutter/foundation`, but it's also valid to test UI 
-	/// or logic operations with the production database.
 	static bool shouldUseEmulator = kDebugMode;
 	
 	/// Whether Firebase has already been initialized.
@@ -28,8 +24,16 @@ class FirebaseCore {
 		  options: DefaultFirebaseOptions.currentPlatform,
 		);
 		if (shouldUseEmulator) {
-			await FirebaseAuth.instance.useAuthEmulator("localhost",9099);
-			FirebaseFirestore.instance.useFirestoreEmulator("localhost", 8080);
+			await FirebaseAuth.instance.useAuthEmulator("localhost", 9099);
+			// Setting the emulator after a hot restart breaks Firestore. 
+			// See: https://github.com/FirebaseExtended/flutterfire/issues/6216
+			try { FirebaseFirestore.instance.useFirestoreEmulator("localhost", 8080); }
+			catch (error) {  // throws a JavaScript object instead of a FirebaseException
+				final String code = (error as dynamic).code;
+				if (code != "failed-precondition") {
+					rethrow; 
+				}
+			}
 		}
 	}
 }
