@@ -5,6 +5,6 @@ import "app.dart";
 
 Future<void> main() async {
 	WidgetsFlutterBinding.ensureInitialized();
-	await FirebaseCore.initializeFirebase();
+	await FirebaseCore.init();
 	runApp(const RamLife());
 }

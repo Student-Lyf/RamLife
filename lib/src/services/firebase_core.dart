@@ -23,7 +23,7 @@ class FirebaseCore {
 	static bool initialized = false;
 
 	/// Initializes Firebase as configured by flutterfire_cli
-	static Future<void> initializeFirebase() async {
+	static Future<void> init() async {
 		await Firebase.initializeApp(
 		  options: DefaultFirebaseOptions.currentPlatform,
 		);
@@ -32,15 +32,4 @@ class FirebaseCore {
 			FirebaseFirestore.instance.useFirestoreEmulator("localhost", 8080);
 		}
 	}
-
-	/// Initializes Firebase if it hasn't already been. 
-	static Future<void> init() => throw UnimplementedError();
-		// if (!initialized) {
-		// 	await Firebase.initializeApp();
-		// 	if(shouldUseEmulator){
-		// 		await FirebaseAuth.instance.useAuthEmulator("localhost",9099);
-		// 	}
-		// 	initialized = true;
-		// }
-	// }
 }

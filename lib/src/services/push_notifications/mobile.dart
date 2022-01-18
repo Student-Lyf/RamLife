@@ -42,7 +42,6 @@ class FCM extends PushNotifications {
 
 	@override
 	Future<void> init() async {
-		await FirebaseCore.init();
 		await registerForNotifications(
 			{
 				// "refresh": initialize,
