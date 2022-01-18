@@ -20,12 +20,12 @@ class FirebaseCore {
 
 	/// Initializes Firebase if it hasn't already been. 
 	static Future<void> init() async {
-		if (!initialized) {
-			await Firebase.initializeApp();
-			if(shouldUseEmulator){
-				await FirebaseAuth.instance.useAuthEmulator("localhost",9099);
-			}
-			initialized = true;
-		}
+		// if (!initialized) {
+		// 	await Firebase.initializeApp();
+		// 	if(shouldUseEmulator){
+		// 		await FirebaseAuth.instance.useAuthEmulator("localhost",9099);
+		// 	}
+		// 	initialized = true;
+		// }
 	}
 }

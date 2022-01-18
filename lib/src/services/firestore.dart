@@ -53,9 +53,9 @@ class Firestore extends DatabaseService {
 	@override
 	Future<void> init() async{
 		await FirebaseCore.init();
-		if(FirebaseCore.shouldUseEmulator){
-			instance.useFirestoreEmulator("localhost", 8080);
-		}
+		// if(FirebaseCore.shouldUseEmulator){
+		// 	instance.useFirestoreEmulator("localhost", 8080);
+		// }
 	}
 
 	@override
