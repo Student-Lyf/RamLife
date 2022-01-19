@@ -106,8 +106,6 @@ class SportsModel with ChangeNotifier {
 		for (final MapEntry<int, SportsGame> entry in data.games.asMap().entries) {
 			(entry.value.dateTime.isAfter(now) ? upcoming : recents).add(entry.key);
 		}
-		print(recents);
-		print(upcoming);
 		recents.sort(sortByDate);
 		upcoming.sort(sortByDate);
 	}
