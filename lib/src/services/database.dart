@@ -1,5 +1,8 @@
 // ignore_for_file: directives_ordering
 
+import 'package:ramaz/models.dart';
+
+import '../../services.dart';
 import "firestore.dart";
 import "idb.dart";
 import "service.dart";  
@@ -11,12 +14,14 @@ import "databases/reminders/hybrid.dart";
 import "databases/schedule/hybrid.dart";
 import "databases/sports/hybrid.dart";
 import "databases/user/hybrid.dart";
+import "databases/dataRefresh/hybrid.dart";
 
 export "databases/calendar/hybrid.dart";
 export "databases/reminders/hybrid.dart";
 export "databases/schedule/hybrid.dart";
 export "databases/sports/hybrid.dart";
 export "databases/user/hybrid.dart";
+export "databases/dataRefresh/hybrid.dart";
 
 /// A wrapper around all data in all database. 
 /// 
@@ -31,6 +36,9 @@ export "databases/user/hybrid.dart";
 class Database extends DatabaseService {
 	/// The cloud database, using Firebase's Cloud Firestore. 
 	final Firestore firestore = Firestore();
+
+	static final CollectionReference<Map> data = Firestore
+			.instance.collection("dataRefresh");
 
 	/// The local database. 
 	final Idb idb = Idb();
@@ -54,19 +62,20 @@ class Database extends DatabaseService {
 	/// The sports data manager.
 	final HybridSports sports = HybridSports();
 
+
  	// ----------------------------------------------------------------
 
 	@override
 	Future<void> init() async {
 		await firestore.init();
 		await idb.init();
+		await update();
 	}
 
 	@override
 	Future<void> signIn() async {
 		await firestore.signIn();
 		await idb.signIn();
-
 		await user.signIn();
 		await schedule.signIn();
 		await calendar.signIn();
@@ -78,5 +87,20 @@ class Database extends DatabaseService {
 	Future<void> signOut() async {
 		await firestore.signOut();
 		await idb.signOut();
+	}
+
+	Future<void> update() async{
+		final Map<String, String> map = Map<String,String>.from(await data
+        .doc("dataRefresh").throwIfNull("Cannot get refreshed data"));
+    if(DateTime.parse(map["user"]!).isAfter(Services.instance.prefs
+        .getLastUpdated("user"))){
+        await user.signIn();
+        print(map["user"]);
+    }
+    if(DateTime.parse(map["calendar"]!).isAfter(Services.instance.prefs
+        .getLastUpdated("calendar"))){
+          await calendar.signIn();
+          print(map["calendar"]);
+    }
 	}
 }

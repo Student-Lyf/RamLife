@@ -1,3 +1,4 @@
+import '../../../../services.dart';
 import "../hybrid.dart";
 
 import "implementation.dart";
@@ -23,6 +24,7 @@ class HybridCalendar extends HybridDatabase<CalendarInterface> implements Calend
 		await local.setSchedules(await cloud.getSchedules());
 		for (int month = 1; month <= 12; month++) {
 			await local.setMonth(month, await cloud.getMonth(month));
+			await Services.instance.prefs.setLastUpdated("schedule");
 		}
 	}
 
@@ -51,5 +53,7 @@ class HybridCalendar extends HybridDatabase<CalendarInterface> implements Calend
 		final int currentMonth = DateTime.now().month;
 		await local.setSchedules(await cloud.getSchedules());
 		await local.setMonth(currentMonth, await cloud.getMonth(currentMonth));
+		await Services.instance.prefs.setLastUpdated("calendar");
+		print("Calendar data updates");
 	}
 }
