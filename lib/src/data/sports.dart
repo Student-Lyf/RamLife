@@ -175,7 +175,7 @@ class SportsGame {
 		required this.opponent,
 		required this.isHome,
 		this.scores,
-		this.livestreamUrl = Urls.sportsLivestream,
+		this.livestreamUrl,
 	});
 
 	/// Converts a JSON entry to a [SportsGame].
