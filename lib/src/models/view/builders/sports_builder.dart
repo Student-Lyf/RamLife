@@ -46,7 +46,7 @@ class SportsBuilderModel with ChangeNotifier {
 		opponent: opponent ?? "",
 		sport: sport!,
 		scores: scores,
-		livestreamUrl: livestreamUrl,
+		livestreamUrl: away ? livestreamUrl : Urls.sportsLivestream,
 	);
 
 	/// The scores for this game.
@@ -119,7 +119,7 @@ class SportsBuilderModel with ChangeNotifier {
 	/// Changing this will update the page.
 	String? get livestreamUrl => _livestreamUrl;
 	set livestreamUrl(String? value){
-		_livestreamUrl = value;
+		_livestreamUrl = value!.isEmpty ? null : value;
 		notifyListeners();
 	}
 
