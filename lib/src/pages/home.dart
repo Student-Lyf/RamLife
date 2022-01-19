@@ -19,6 +19,7 @@ class HomePage extends StatelessWidget {
 
 	@override
 	Widget build(BuildContext context) => ResponsiveBuilder(
+		// This is a workaround for SportsPage's tab-based view that needs a controller.
 		builder: (_, LayoutInfo layout, __) => DefaultTabController(
 			length: 2,
 			child:ResponsiveScaffold.navBar(
