@@ -113,7 +113,7 @@ class SportBuilderState extends ModelListener<
 	/// A controller to hold [SportsBuilder.parent]'s opponent.
 	final TextEditingController opponentController = TextEditingController();
 
-	/// A controller to hold [SportsBuilder.parent]'s opponent.
+	/// A controller to hold [SportsBuilder.parent]'s livestreaming URL.
 	final TextEditingController livestreamUrlController = TextEditingController();
 
 	@override
