@@ -1,7 +1,8 @@
 import "package:flutter/foundation.dart" show ChangeNotifier;
-
 import "package:ramaz/data.dart";
 import "package:ramaz/models.dart";
+import "package:ramaz/services.dart";
+
 
 /// A view model for the schedule page. 
 // ignore: prefer_mixin
@@ -18,7 +19,6 @@ class ScheduleViewModel with ChangeNotifier {
 		"Friday":Schedule.schedules.firstWhere((schedule) =>
 		schedule.name == "Friday"),
 	};
-
 	/// The default [Day] for the UI.
 	late Day defaultDay;
 
@@ -70,7 +70,25 @@ class ScheduleViewModel with ChangeNotifier {
 
 	/// Gets the date whose schedule the user is looking at
 	DateTime get date => _selectedDay;
-
+	///This finds all the dates which schedule is the same as
+	///the one wanting to be deleted
+	Future<Map<DateTime, Day>> getDatesToChange(Schedule schedule) async {
+		Map<DateTime,Day> result={};
+		int year = DateTime.now().year;
+		HybridCalendar calendar = Services.instance.database.calendar;
+		for (int month = 1; month <= 12; month++) {
+			List<Map?> monthCal = await calendar.getMonth(month);
+			for (int date = 0; date < monthCal.length; date++) {
+				Map? json = monthCal [date];
+				if (json == null) continue;
+				Day day = Day.fromJson(json);
+				if (day.schedule == schedule) {
+				  result[DateTime(year, month, date + 1)]= day;
+				}
+			}
+		}
+		return result;
+	}
 	/// Updates the UI to a new day given a new dayName or schedule.
 	/// 
 	/// If the dayName is non-null, the schedule defaults to [defatulSchedule].

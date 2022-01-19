@@ -39,6 +39,9 @@ class HybridCalendar extends HybridDatabase<CalendarInterface> implements Calend
 	Future<List<Map>> getSchedules() => local.getSchedules();
 
 	@override
+	Future<Map> getDefaultSchedules() => local.getDefaultSchedules();
+
+	@override
 	Future<void> setSchedules(List<Map> json) async {
 		await cloud.setSchedules(json);
 		await local.setSchedules(json);

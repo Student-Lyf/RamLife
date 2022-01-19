@@ -3,7 +3,6 @@ import "dart:async" show Timer;
 import "package:ramaz/data.dart";
 import "package:ramaz/models.dart";
 import "package:ramaz/services.dart";
-
 import "model.dart";
 
 /// A data model for the user's schedule.
@@ -70,12 +69,25 @@ class ScheduleModel extends Model {
 					day == null ? null : Day.fromJson(day)
 			]
 		];
+		Schedule.defaults = Map.from(await CloudCalendar.schedules.
+			throwIfNull("Cannot find defaults"))["defaults"];
 		user = Models.instance.user.data;
 		subjects = Models.instance.user.subjects;
 		setToday();
 		notifyListeners();
 	}
 
+	///
+	Future<void> setDefaultSchedules() async {
+		for(MapEntry<String, String> entry in await
+		(Services.instance.database.calendar.getDefaultSchedules()).entries){
+			for(Schedule schedule in Schedule.schedules){
+				if (schedule.name == entry) {
+					Schedule.defaults[entry.key] = schedule;
+				}
+			}
+		}
+	}
 	@override 
 	void dispose() {
 		Models.instance.reminders.removeListener(remindersListener);
