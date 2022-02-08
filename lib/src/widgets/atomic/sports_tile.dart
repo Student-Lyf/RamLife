@@ -274,11 +274,11 @@ class SportsTile extends StatelessWidget {
     final locale = MaterialLocalizations.of(context);
     final TimeOfDay start = TimeOfDay(
       hour: times.start.hour, 
-      minute: times.start.hour
+      minute: times.start.minutes
     );
     final TimeOfDay end = TimeOfDay(
       hour: times.end.hour, 
-      minute: times.end.hour
+      minute: times.end.minutes
     );
     return "${locale.formatTimeOfDay(start)} - ${locale.formatTimeOfDay(end)}";
   }
