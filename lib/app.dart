@@ -58,9 +58,9 @@ class RamLife extends StatelessWidget {
 		light: ThemeData (
 			colorScheme: const ColorScheme.light(
 				primary: RamazColors.blue,
-				primaryVariant: RamazColors.blueDark,
+				// primaryVariant: RamazColors.blueDark,
 				secondary: RamazColors.gold,
-				secondaryVariant: RamazColors.goldDark,
+				// secondaryVariant: RamazColors.goldDark,
 				brightness: Brightness.light
 			),
 			textSelectionTheme: const TextSelectionThemeData(
@@ -80,9 +80,9 @@ class RamLife extends StatelessWidget {
 		dark: ThemeData(
 			colorScheme: const ColorScheme.dark(
 				primary: RamazColors.blue,
-				primaryVariant: RamazColors.blueDark,
+				// primaryVariant: RamazColors.blueDark,
 				secondary: RamazColors.gold,
-				secondaryVariant: RamazColors.goldDark,
+				// secondaryVariant: RamazColors.goldDark,
 				brightness: Brightness.dark
 			),
 			iconTheme: const IconThemeData (color: RamazColors.goldDark),
