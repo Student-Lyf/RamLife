@@ -107,7 +107,7 @@ class Day {
 			) {
 				return index;
 			}
-			return null;
 		}
+		return null;
 	}
 }
