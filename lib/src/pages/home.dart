@@ -24,10 +24,10 @@ class HomePage extends StatelessWidget {
 			length: 2,
 			child:ResponsiveScaffold.navBar(
 				navItems: [
-					SportsPage(),
 					Dashboard(),
 					ResponsiveSchedule(),
 					ResponsiveReminders(),
+					SportsPage(),
 				],
 				initialNavIndex: pageIndex,
 				drawer: const NavigationDrawer(),

@@ -96,6 +96,12 @@ class SportsModel with ChangeNotifier {
 	/// 
 	/// See [Comparator] and [Comparable.compareTo] for how to sort in Dart. 
 	int sortByDate(int a, int b) => 
+		data.games [b].dateTime.compareTo(data.games [a].dateTime);
+
+	/// Helper function to sort games for upcoming chronologically.
+	///
+	/// See [Comparator] and [Comparable.compareTo] for how to sort in Dart.
+	int sortByDateUpcoming(int a, int b) =>
 		data.games [a].dateTime.compareTo(data.games [b].dateTime);
 
 	/// Divides [Sports.games] into [recents] and [upcoming].
@@ -107,7 +113,7 @@ class SportsModel with ChangeNotifier {
 			(entry.value.dateTime.isAfter(now) ? upcoming : recents).add(entry.key);
 		}
 		recents.sort(sortByDate);
-		upcoming.sort(sortByDate);
+		upcoming.sort(sortByDateUpcoming);
 	}
 
 	/// Sorts a list of games by sports. 

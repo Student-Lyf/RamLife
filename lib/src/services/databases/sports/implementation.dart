@@ -10,7 +10,7 @@ import "interface.dart";
 class CloudSports implements SportsInterface {
 	/// The collection for sports games.
 	static final CollectionReference<Map<String, dynamic>> sports = Firestore
-		.instance.collection("sports");
+		.instance.collection("sports2");
 
 	/// The current school year. 
 	/// 
