@@ -2,6 +2,7 @@ import "package:flutter/material.dart" show ChangeNotifier, TimeOfDay;
 
 import "package:ramaz/constants.dart";
 import "package:ramaz/data.dart";
+import "package:string_extensions/string_extensions.dart";
 
 /// A ViewModel for the Sports game builder. 
 // ignore: prefer_mixin
@@ -101,7 +102,7 @@ class SportsBuilderModel with ChangeNotifier {
 	/// Changing this will update the page. 
 	String? get team => _team;
 	set team(String? value) {
-		_team = value;
+		_team = "$value ${sport?.name.capitalize}";
 		notifyListeners();
 	}
 
