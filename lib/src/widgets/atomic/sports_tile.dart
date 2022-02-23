@@ -240,15 +240,16 @@ class SportsTile extends StatelessWidget {
                 	: "Ramaz @ ${game.opponent}",
                   textScaleFactor: 1.2,
               	),
-                trailing: onTap == null ? ((game.livestreamUrl != null) ?
-                IconButton(
-                 icon: const Icon(Icons.live_tv),
-                 onPressed: () {
-                   if(game.livestreamUrl != null){
-                    launch(game.livestreamUrl!);
-                   }},
-                  tooltip: "Watch livestream",
-                ) : null) : const Icon(Icons.edit),
+                trailing: onTap == null ? ((game.livestreamUrl != null
+                    && game.scores == null) ?
+                      IconButton(
+                       icon: const Icon(Icons.live_tv),
+                       onPressed: () {
+                         if(game.livestreamUrl != null){
+                          launch(game.livestreamUrl!);
+                         }},
+                        tooltip: "Watch livestream",
+                      ) : null) : const Icon(Icons.edit),
               ),
               const SizedBox(height: 20),
               SportsStats(

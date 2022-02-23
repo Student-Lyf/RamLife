@@ -13,7 +13,7 @@ import "package:ramaz/firebase_options.dart";
 /// of whether it has been initialized. 
 class FirebaseCore {
 	/// Whether the Firebase Local Emulator Suite should be used.
-	static bool shouldUseEmulator = kDebugMode;
+	static bool shouldUseEmulator = false;
 	
 	/// Whether Firebase has already been initialized.
 	static bool initialized = false;
