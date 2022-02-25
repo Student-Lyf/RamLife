@@ -52,6 +52,7 @@ class DashboardModel with ChangeNotifier {
 			await Services.instance.database.calendar.signIn();
 			await Services.instance.database.sports.signIn();
 			await Models.instance.user.init();
+			await Models.instance.sports.init();
 			await schedule.initCalendar();
 		} catch (error) {  // ignore: avoid_catches_without_on_clauses
 			// We just want to allow the user to retry. But still rethrow.

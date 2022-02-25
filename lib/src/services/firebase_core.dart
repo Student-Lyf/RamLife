@@ -1,7 +1,6 @@
 import "package:cloud_firestore/cloud_firestore.dart";
 import "package:firebase_auth/firebase_auth.dart";
 import "package:firebase_core/firebase_core.dart";
-import "package:flutter/foundation.dart";
 
 import "package:ramaz/firebase_options.dart";
 
@@ -12,8 +11,8 @@ import "package:ramaz/firebase_options.dart";
 /// the process, we register Firebase as a separate service that can keep track
 /// of whether it has been initialized. 
 class FirebaseCore {
-	/// Whether the Firebase Local Emulator Suite should be used. 
-	static bool shouldUseEmulator = kDebugMode;
+	/// Whether the Firebase Local Emulator Suite should be used.
+	static bool shouldUseEmulator = false;
 	
 	/// Whether Firebase has already been initialized.
 	static bool initialized = false;

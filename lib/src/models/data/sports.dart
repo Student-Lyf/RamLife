@@ -1,9 +1,8 @@
 import "dart:async";
 
-import "package:ramaz/constants.dart" show DayComparison;
+import "package:ramaz/constants.dart";
 import "package:ramaz/data.dart";
 import "package:ramaz/services.dart";
-
 import "model.dart";
 
 /// A data model for sports games. 
@@ -12,11 +11,6 @@ import "model.dart";
 /// as well as CRUD methods for the database (if permissions allow). 
 // ignore: prefer_mixin
 class Sports extends Model {
-	static const Duration _minute = Duration(minutes: 1);
-
-	/// A timer to refresh [todayGames].
-	late Timer timer; 
-
 	/// Helps partition [games] by past and future. 
 	DateTime now = DateTime.now();
 
@@ -29,7 +23,6 @@ class Sports extends Model {
 	/// Loads data from the device and 
 	@override
 	Future<void> init() async {
-		timer = Timer.periodic(_minute, (_) => todayGames = getTodayGames());
 		games = SportsGame.fromList(await Services.instance.database.sports.getAll());
 		todayGames = getTodayGames();
 		now = DateTime.now();
@@ -66,9 +59,10 @@ class Sports extends Model {
 	}
 
 	/// Deletes a game from the database.
-	Future<void> delete(int index) {
+	Future<void> delete(int index) async {
 		games.removeAt(index);
-		return saveGames();
+		await saveGames();
+		await init();
 	}
 
 	/// Saves the games to the database. 

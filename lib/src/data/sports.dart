@@ -1,6 +1,6 @@
 import "package:meta/meta.dart";
 
-import "package:ramaz/constants.dart" show DayComparison;
+import "package:ramaz/constants.dart";
 
 import "schedule/time.dart";
 
@@ -107,8 +107,7 @@ class Scores {
 	  ? ramazScore : otherScore;
 }
 
-/// A sports game. 
-@immutable
+/// A sports game.
 class SportsGame {
 	/// Capitalizes a word. 
 	/// 
@@ -164,8 +163,11 @@ class SportsGame {
 	/// won, and which score to get depending on [isHome].
 	final Scores? scores;
 
+	/// The URL to the livestream for this game
+	late String? livestreamUrl;
+
 	/// Creates a game dataclass.
-	const SportsGame({
+	SportsGame({
 		required this.sport,
 		required this.date,
 		required this.times,
@@ -173,6 +175,7 @@ class SportsGame {
 		required this.opponent,
 		required this.isHome,
 		this.scores,
+		this.livestreamUrl,
 	});
 
 	/// Converts a JSON entry to a [SportsGame].
@@ -195,7 +198,8 @@ class SportsGame {
 		opponent = json ["opponent"],
 		scores = json ["scores"] == null ? null : Scores.fromJson(
 			Map.from(json ["scores"])
-		);
+		),
+		livestreamUrl = json["livestreamUrl"];
 
 	// Specifically not including scores, since this can be used 
 	// to replace scores. 
@@ -223,6 +227,7 @@ class SportsGame {
 		"isHome": isHome, 
 		"opponent": opponent,
 		"scores": scores?.toJson(),
+		"livestreamUrl": livestreamUrl,
 	};
 
 	/// The end of the match. 

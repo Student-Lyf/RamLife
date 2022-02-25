@@ -1,13 +1,9 @@
 import "package:flutter/material.dart";
 
-import "package:ramaz/constants.dart";
 import "package:ramaz/data.dart";
 import "package:ramaz/models.dart";
 import "package:ramaz/pages.dart";
-import "package:ramaz/services.dart";
 import "package:ramaz/widgets.dart";
-
-import "package:url_launcher/url_launcher.dart";
 
 /// A Swipe to Refresh list of [SportsGame]s. 
 /// 
@@ -30,19 +26,15 @@ class GenericSportsView<T> extends StatelessWidget {
 	/// Builds a list of [SportsTile]s using [upcoming] and [recents]. 
 	final Widget Function(T) builder;
 
-	/// The function to call when the user refreshes the page. 
-	final Future<void> Function() onRefresh;
-
-	/// Whether to show a loading indicator. 
-	final bool loading;
+	/// Defines the sports view model.
+	final SportsModel model;
 
 	/// Creates a list of [SportsTile]s. 
 	const GenericSportsView({
 		required this.upcoming,
-		required this.recents, 
+		required this.recents,
 		required this.builder,
-		required this.onRefresh,
-		required this.loading,
+		required this.model,
 	});
 
 	@override
@@ -50,62 +42,21 @@ class GenericSportsView<T> extends StatelessWidget {
 		children: [
 			for (final List<T> gamesList in [upcoming, recents])
 				RefreshIndicator(
-					onRefresh: onRefresh,
+					onRefresh: () async {
+						model.loading = true;
+						await model.refresh();
+						model.loading = false;
+					},
 					child: ListView(
+						padding: const EdgeInsets.symmetric(horizontal: 4),
 						children: [
-							if (loading)
-								const LinearProgressIndicator(),
-							for (final T game in gamesList)
-								builder(game)
+							if (model.loading) const LinearProgressIndicator(),
+							for (final T game in gamesList) builder(game)
 						]
 					)
 				)
 		]
 	);
-}
-
-/// Creates a [GenericSportsView] based on the sorting option.
-Widget getLayout(BuildContext context, SportsModel model) {
-	switch(model.sortOption) {
-		case SortOption.chronological: 
-			return GenericSportsView<int>(
-				loading: model.loading,
-				onRefresh: model.adminFunc(Services.instance.database.sports.signIn),
-				recents: model.recents,
-				upcoming: model.upcoming,
-				builder: (int index) => SportsTile(
-					model.data.games [index], 
-					onTap: !model.isAdmin ? null : () => openMenu(
-						context: context,
-						index: index,
-						model: model,
-					)
-				),
-			);
-		case SortOption.sport: 
-			return GenericSportsView<MapEntry<Sport, List<int>>>(
-				loading: model.loading,
-				onRefresh: model.adminFunc(Services.instance.database.sports.signIn),
-				recents: model.recentBySport.entries.toList(),
-				upcoming: model.upcomingBySport.entries.toList(),
-				builder: (MapEntry<Sport, List<int>> entry) => Column(
-					children: [
-						const SizedBox(height: 15),
-						Text(SportsGame.capitalize(entry.key)),
-						for (final int index in entry.value) 
-							SportsTile(
-								model.data.games [index], 
-								onTap: !model.isAdmin ? null : () => openMenu(
-									context: context, 
-									index: index,
-									model: model
-								)
-							),
-						const SizedBox(height: 20),
-					]
-				)
-			);
-	}
 }
 
 /// Opens a menu with options for the selected game. 
@@ -188,6 +139,7 @@ void openMenu({
 					if (confirm ?? false) {
 						model.loading = true;
 						await Models.instance.sports.delete(index);
+						await model.refresh();
 						model.loading = false;
 					}
 				},
@@ -197,64 +149,96 @@ void openMenu({
 	)
 );
 
-/// A page to show recent and upcoming games to the user. 
-class SportsPage extends StatefulWidget {
-	/// Creates the sports page.
-	const SportsPage();
+/// A page to show recent and upcoming games to the user.
+class SportsPage extends NavigationItem<SportsModel>{
+	@override
+	SportsModel get model => super.model!;
+
+	/// Creates the schedule page.
+	SportsPage() : super(
+		label: "Sports",
+		icon: const Icon(Icons.sports),
+		model: SportsModel(Models.instance.sports),
+		shouldDispose: true,
+	);
 
 	@override
-	SportsPageState createState() => SportsPageState();
-}
-
-/// The state for the sports page. 
-class SportsPageState extends ModelListener<SportsModel, SportsPage> {
-	@override
-	SportsModel getModel() => SportsModel(Models.instance.sports);
-
-	@override 
-	Widget build(BuildContext context) => DefaultTabController(
-		length: 2,
-		child: ResponsiveScaffold(
-			appBar: AppBar(
-				title: const Text("Sports"),
-				bottom: const TabBar(
-					tabs: [
-						Tab(text: "Upcoming"),
-						Tab(text: "Recent"),
-					]
+	AppBar get appBar => AppBar(
+		title: const Text("Sports"),
+		bottom: const TabBar(
+			tabs: [
+				Tab(text: "Upcoming"),
+				Tab(text: "Recent"),
+			]
+		),
+		actions: [
+			if (model.isAdmin) Builder(
+				builder: (context) => IconButton(
+					icon: const Icon(Icons.add),
+					tooltip: "Add a game",
+					onPressed: () async {
+						model.loading = true;
+						await model.data.addGame(await SportsBuilder.createGame(context));
+						await model.refresh();
+						model.loading = false;
+					}
 				),
-				actions: [
-					if (model.isAdmin) IconButton(
-						icon: const Icon(Icons.add),
-						tooltip: "Add a game",
-						onPressed: model.adminFunc(() async => 
-							model.data.addGame(await SportsBuilder.createGame(context))
-						),
+			),
+			PopupMenuButton(
+				icon: const Icon(Icons.sort),
+				onSelected: (SortOption option) => model.sortOption = option,
+				tooltip: "Sort games",
+				itemBuilder: (_) => [
+					const PopupMenuItem(
+						value: SortOption.chronological,
+						child: Text("By date"),
 					),
-					PopupMenuButton(
-						icon: const Icon(Icons.sort),
-						onSelected: (SortOption option) => model.sortOption = option,
-						tooltip: "Sort games",
-						itemBuilder: (_) => [
-							const PopupMenuItem(
-								value: SortOption.chronological,
-								child: Text("By date"),
-							),
-							const PopupMenuItem(
-								value: SortOption.sport,
-								child: Text("By sport"),
-							)
-						]
-					),
-					IconButton(
-						icon: const Icon(Icons.live_tv),
-						onPressed: () => launch(Urls.sportsLivestream),
-						tooltip: "Watch livestream",
+					const PopupMenuItem(
+						value: SortOption.sport,
+						child: Text("By sport"),
 					)
 				]
 			),
-			drawer: const NavigationDrawer(),
-			bodyBuilder: (_) => getLayout(context, model),
-		),
+		]
 	);
+
+	@override 
+	Widget build(BuildContext context) {
+		switch(model.sortOption) {
+			case SortOption.chronological: return GenericSportsView<int>(
+				model: model,
+				recents: model.recents,
+				upcoming: model.upcoming,
+				builder: (int index) => SportsTile(
+					model.data.games [index], 
+					onTap: !model.isAdmin ? null : () => openMenu(
+						context: context,
+						index: index,
+						model: model,
+					)
+				),
+			);
+			case SortOption.sport: return GenericSportsView<MapEntry<Sport, List<int>>>(
+				model: model,
+				recents: model.recentBySport.entries.toList(),
+				upcoming: model.upcomingBySport.entries.toList(),
+				builder: (MapEntry<Sport, List<int>> entry) => Column(
+					children: [
+						const SizedBox(height: 15),
+						Text(SportsGame.capitalize(entry.key)),
+						for (final int index in entry.value) 
+							SportsTile(
+								model.data.games [index], 
+								onTap: !model.isAdmin ? null : () => openMenu(
+									context: context, 
+									index: index,
+									model: model
+								)
+							),
+						const SizedBox(height: 20),
+					]
+				)
+			);
+		}
+	}
 }

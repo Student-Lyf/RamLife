@@ -60,14 +60,10 @@ class LoginState extends State<Login> {
 				children: [
 					if (isLoading) const LinearProgressIndicator(minHeight: 8),
 					const Spacer(flex: 2),
-					SizedBox(
+					const SizedBox(
 						height: 300, 
 						width: 300, 
-						child: ThemeChanger.of(context).brightness == Brightness.light
-							? ClipRRect(
-								borderRadius: BorderRadius.circular(20),
-								child: RamazLogos.teal
-							) : RamazLogos.ramSquareWords
+						child: RamazLogos.ramSquareWords
 					),
 					// const SizedBox(height: 100),
 					const Spacer(flex: 1),
