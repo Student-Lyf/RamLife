@@ -1,7 +1,7 @@
 import "package:flutter/material.dart";
 
 import "package:ramaz/data.dart";
-import "package:ramaz/widgets.dart";
+import "package:url_launcher/url_launcher.dart";
 
 /// A row in a [SportsTile] that displays a team, their score, 
 /// and a part of the date.
@@ -31,12 +31,9 @@ class SportsStats extends StatelessWidget {
   Widget build(BuildContext context) => Row(
     mainAxisAlignment: MainAxisAlignment.spaceBetween,
     children: [
-      Text(team),
-      const Spacer(flex: 2),
-      Text(score?.toString() ?? ""),
-      const Spacer(flex: 3),
-      Text(dateTime),
-      const Spacer(),
+      Expanded(flex: 1, child: Text(team)),
+      Expanded(flex: 1, child: Text(score?.toString() ?? "")),
+      Expanded(flex: 2, child: Center(child: Text(dateTime))),
     ]
   );
 }
@@ -197,14 +194,14 @@ class SportsTile extends StatelessWidget {
   /// cases. This use case is especially important (as opposed to parts of the 
   /// data library which are Maps) because any error here will show up on the 
   /// screen, instead of simply sending a bug report.
-	ImageProvider get icon {
+	IconData get icon {
 		switch (game.sport) {
-			case Sport.baseball: return SportsIcons.baseball;
-			case Sport.basketball: return SportsIcons.basketball;
-			case Sport.soccer: return SportsIcons.soccer;
-			case Sport.hockey: return SportsIcons.hockey;
-			case Sport.tennis: return SportsIcons.tennis;
-			case Sport.volleyball: return SportsIcons.volleyball;
+			case Sport.baseball: return Icons.sports_baseball;
+			case Sport.basketball: return Icons.sports_basketball;
+			case Sport.soccer: return Icons.sports_soccer;
+			case Sport.hockey: return Icons.sports_hockey;
+			case Sport.tennis: return Icons.sports_tennis;
+			case Sport.volleyball: return Icons.sports_volleyball;
 		}
 	}
   
@@ -217,16 +214,12 @@ class SportsTile extends StatelessWidget {
   /// This is a great example of why the helper class [Scores] exists.
   Color? get cardColor => game.scores == null ? null : 
     game.scores!.didDraw
-			? Colors.blueGrey
-			: (game.scores!.didWin ? Colors.lightGreen : Colors.red [400]);
-
-  /// Determines how long to pad the team names so they align.
-  int get padLength => game.opponent.length > "Ramaz".length
-    ? game.opponent.length : "Ramaz".length;
+			? const Color(0x4502b4fc)
+			: (game.scores!.didWin ? const Color(0xad00ff48) : const Color(0xd8d32f2f));
 
   @override
-  Widget build(BuildContext context) => SizedBox(
-    height: 160,
+  Widget build(BuildContext context) => ConstrainedBox(
+    constraints: const BoxConstraints(minHeight: 160),
     child: Card(
       color: cardColor,
       child: InkWell(
@@ -236,28 +229,40 @@ class SportsTile extends StatelessWidget {
           child: Column(
             children: [
               ListTile(
-                leading: CircleAvatar (
-                  backgroundImage: icon,
-                  backgroundColor: cardColor ?? Theme.of(context).cardColor,
+                leading: Icon(
+                  icon, 
+                  size: 36,
+                  color: Theme.of(context).colorScheme.onBackground
                 ),
-                title: Text(game.team),
+                title: Text(game.team,textScaleFactor: 1.3),
                 subtitle: Text(game.isHome
                 	? "${game.opponent} @ Ramaz"
-                	: "Ramaz @ ${game.opponent}"
+                	: "Ramaz @ ${game.opponent}",
+                  textScaleFactor: 1.2,
               	),
-                trailing: onTap == null ? null : const Icon(Icons.edit),
+                trailing: onTap == null ? ((game.livestreamUrl != null
+                    && game.scores == null) ?
+                      IconButton(
+                       icon: const Icon(Icons.live_tv),
+                       onPressed: () {
+                         if(game.livestreamUrl != null){
+                          launch(game.livestreamUrl!);
+                         }},
+                        tooltip: "Watch livestream",
+                      ) : null) : const Icon(Icons.edit),
               ),
               const SizedBox(height: 20),
               SportsStats(
-                team: game.awayTeam.padRight(padLength),
+                team: game.awayTeam,
                 score: game.scores?.getScore(home: false),
-                dateTime: formatDate(game.date),
+                dateTime: MaterialLocalizations.of(context)
+                  .formatShortDate(game.date),
               ),
               const SizedBox(height: 10),
               SportsStats(
-                team: game.homeTeam.padRight(padLength),
+                team: game.homeTeam,
                 score: game.scores?.getScore(home: true),
-                dateTime: (game.times).toString(),
+                dateTime: formatTimeRange(game.times,context),
               ),
             ]
           )
@@ -265,4 +270,18 @@ class SportsTile extends StatelessWidget {
       )
     )
   );
+
+  /// Formats a [Range] according to the user's locale.
+  String formatTimeRange(Range times,BuildContext context) {
+    final locale = MaterialLocalizations.of(context);
+    final TimeOfDay start = TimeOfDay(
+      hour: times.start.hour, 
+      minute: times.start.minutes
+    );
+    final TimeOfDay end = TimeOfDay(
+      hour: times.end.hour, 
+      minute: times.end.minutes
+    );
+    return "${locale.formatTimeOfDay(start)} - ${locale.formatTimeOfDay(end)}";
+  }
 }
