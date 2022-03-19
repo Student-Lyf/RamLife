@@ -29,5 +29,5 @@ if __name__ == '__main__':
 	set_claims(admins)
 
 	delete_app(firebase.app)
-	utils.logger.info("Finished settig up admins")
+	utils.logger.info("Finished setting up admins")
 

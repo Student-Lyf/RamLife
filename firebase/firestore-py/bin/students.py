@@ -6,6 +6,8 @@ from lib import services
 from collections import defaultdict
 from firebase_admin import delete_app
 
+from datetime import date
+
 if __name__ == '__main__':
 	utils.logger.info("Indexing students...")
 
@@ -15,7 +17,8 @@ if __name__ == '__main__':
 	homeroom_locations = defaultdict(lambda: "Unavailable")
 	utils.logger.debug("Homeroom locations", homeroom_locations)
 	semesters = utils.logger.log_value("semesters", student_reader.read_semesters)
-
+	
+	
 	schedules, homerooms, seniors = utils.logger.log_value(
 		"schedules", lambda: student_reader.get_schedules(
 			students = students,
@@ -24,7 +27,7 @@ if __name__ == '__main__':
 			semesters = semesters,
 		)
 	)
-
+	
 	student_reader.set_students_schedules(
 		schedules = schedules,
 		homerooms = homerooms, 
@@ -48,10 +51,18 @@ if __name__ == '__main__':
 
 	utils.logger.info("Finished processing students")
 
+	today = date.today().strftime("%Y-%m-%d")
+	
+
+
 	if utils.args.should_upload:
 		utils.logger.log_progress(
 			"data upload", 
 			lambda: services.upload_users(students_with_schedules)
+		)
+		utils.logger.log_progress(
+			"date upload",
+			lambda: services.upload_userdate(today)
 		)
 	else: utils.logger.warning("Did not upload student data. Use the --upload flag.")
 

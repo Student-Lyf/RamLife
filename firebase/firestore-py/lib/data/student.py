@@ -20,8 +20,11 @@ class User:
 		for period in schedule
 	]
 
-	def __init__(self, first, last, email, id, homeroom=None, homeroom_location=None, schedule=None): 
-		assert id, f"Could not find id for user: {first} {last}, {email}"
+	def __init__(self, first, last, email, id, homeroom=None, homeroom_location=None, schedule=None):
+		if not id:
+			print(f"Could not find id for user: {first} {last}, {email}")
+			print("Moving on")
+
 		# assert first and last and email, f"Could not find contact info for {self}"
 		self.first = first
 		self.last = last

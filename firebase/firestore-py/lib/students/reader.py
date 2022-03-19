@@ -10,7 +10,7 @@ def read_students():
 			first = row ["First Name"],
 			last = row ["Last Name"],
 			email = row ["Email"].lower(),
-			id = row ["ID"],
+			id = str(int(float(row ["ID"]))),
 		)
 		for row in csv.DictReader(file)
 		if row ["ID"] not in utils.constants.corrupted_students
@@ -20,20 +20,20 @@ def read_periods():
 	homeroom_locations = {}
 	periods = defaultdict(list)
 	with open(utils.dir.section_schedule) as file: 
-		for row in csv.DictReader(file): 
+		for row in csv.DictReader(file):
 			if row ["SCHOOL_ID"] != "Upper": continue
 			section_id = row ["SECTION_ID"]
 			day = row ["WEEKDAY_NAME"]
 			period_str = row ["BLOCK_NAME"]
 			room = row ["ROOM"]
-
 			# Handle homerooms
-			try: period_num = int(period_str)
-			except ValueError: 
+			try: 
+				period_num = int(float(period_str))
+				 
+			except ValueError:
 				if period_str == "HOMEROOM": 
 					homeroom_locations [section_id] = room
 				continue
-
 			periods [section_id].append(data.Period(
 				day = day,
 				room = room, 

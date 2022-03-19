@@ -1,7 +1,6 @@
 import "package:cloud_firestore/cloud_firestore.dart";
 
 import "auth.dart";
-import "firebase_core.dart";
 import "service.dart";
 
 export "package:cloud_firestore/cloud_firestore.dart";
@@ -51,7 +50,7 @@ class Firestore extends DatabaseService {
 	static final FirebaseFirestore instance = FirebaseFirestore.instance;
 
 	@override
-	Future<void> init() => FirebaseCore.init();
+	Future<void> init() async {}
 
 	@override
 	Future<void> signIn() => Auth.signIn();

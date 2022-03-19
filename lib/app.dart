@@ -22,7 +22,7 @@ class RamLife extends StatelessWidget {
 			child: const Login(),
 		),
 		Routes.home: (_) => const RouteInitializer(
-			child: HomePage(),
+			child: HomePage(pageIndex: 0),
 		),
 		Routes.schedule: (_) => const RouteInitializer(
 			child: HomePage(pageIndex: 1),
@@ -42,7 +42,7 @@ class RamLife extends StatelessWidget {
 			child: const AdminSchedulesPage(),
 		),
 		Routes.sports: (_) => const RouteInitializer(
-			child: SportsPage(),
+			child: HomePage(pageIndex: 3),
 		),
 		Routes.credits: (_) => const RouteInitializer(
 			child: CreditsPage(),
@@ -58,9 +58,9 @@ class RamLife extends StatelessWidget {
 		light: ThemeData (
 			colorScheme: const ColorScheme.light(
 				primary: RamazColors.blue,
-				primaryVariant: RamazColors.blueDark,
+				// primaryVariant: RamazColors.blueDark,
 				secondary: RamazColors.gold,
-				secondaryVariant: RamazColors.goldDark,
+				// secondaryVariant: RamazColors.goldDark,
 				brightness: Brightness.light
 			),
 			textSelectionTheme: const TextSelectionThemeData(
@@ -80,9 +80,9 @@ class RamLife extends StatelessWidget {
 		dark: ThemeData(
 			colorScheme: const ColorScheme.dark(
 				primary: RamazColors.blue,
-				primaryVariant: RamazColors.blueDark,
+				// primaryVariant: RamazColors.blueDark,
 				secondary: RamazColors.gold,
-				secondaryVariant: RamazColors.goldDark,
+				// secondaryVariant: RamazColors.goldDark,
 				brightness: Brightness.dark
 			),
 			iconTheme: const IconThemeData (color: RamazColors.goldDark),

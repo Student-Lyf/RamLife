@@ -43,10 +43,7 @@ class FormRow extends StatelessWidget {
 		sized = false,
 		moreSpace = true,
 		picker = value == null
-			? IconButton(
-				icon: Icon(whenNull),
-				onPressed: setNewValue
-			)
+			? IconButton(icon: Icon(whenNull), onPressed: setNewValue)
 			: InkWell(
 				onTap: setNewValue,
 				child: Text(
@@ -64,16 +61,13 @@ class FormRow extends StatelessWidget {
 					Text(title), 
 					const Spacer(), 
 					if (sized) Container(
-						constraints: const BoxConstraints(
-							maxWidth: 200, 
-							maxHeight: 75,
-						),
+						constraints: const BoxConstraints(maxWidth: 200, maxHeight: 75),
 						child: picker,
 					)
 					else picker
 				]
 			),
-			SizedBox(height: moreSpace ? 25 : 15),
+			const SizedBox(height: 25),
 		]
 	);
 }
@@ -119,6 +113,9 @@ class SportBuilderState extends ModelListener<
 	/// A controller to hold [SportsBuilder.parent]'s opponent.
 	final TextEditingController opponentController = TextEditingController();
 
+	/// A controller to hold [SportsBuilder.parent]'s livestreaming URL.
+	final TextEditingController livestreamUrlController = TextEditingController();
+
 	@override
 	SportsBuilderModel getModel() => SportsBuilderModel(widget.parent);
 
@@ -126,6 +123,7 @@ class SportBuilderState extends ModelListener<
 	void initState() {
 		teamController.text = widget.parent?.team ?? "";
 		opponentController.text = widget.parent?.opponent ?? "";
+		livestreamUrlController.text = widget.parent?.livestreamUrl ?? "";
 		super.initState();
 	}
 
@@ -133,6 +131,7 @@ class SportBuilderState extends ModelListener<
 	void dispose() {
 		teamController.dispose();
 		opponentController.dispose();
+		livestreamUrlController.dispose();
 		super.dispose();
 	}
 
@@ -191,6 +190,14 @@ class SportBuilderState extends ModelListener<
 						// If tristate == false (default), value never be null
 						onChanged: (bool? value) => model.away = value!,
 					),
+				),
+				if (model.away) FormRow(
+					"Link to livestream",
+					TextField(
+						onChanged: (String value) => model.livestreamUrl = value,
+						controller: livestreamUrlController,
+					),
+					sized: true,
 				),
 				FormRow.editable(
 					title: "Date",

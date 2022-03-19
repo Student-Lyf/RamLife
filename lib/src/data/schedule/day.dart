@@ -108,5 +108,6 @@ class Day {
 				return index;
 			}
 		}
+		return null;
 	}
 }

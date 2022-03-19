@@ -2,6 +2,7 @@ import "package:flutter/material.dart" show ChangeNotifier, TimeOfDay;
 
 import "package:ramaz/constants.dart";
 import "package:ramaz/data.dart";
+import "package:string_extensions/string_extensions.dart";
 
 /// A ViewModel for the Sports game builder. 
 // ignore: prefer_mixin
@@ -11,7 +12,7 @@ class SportsBuilderModel with ChangeNotifier {
 	DateTime? _date;
 	TimeOfDay? _start, _end;
 
-	String? _opponent, _team; 
+	String? _opponent, _team, _livestreamUrl;
 	bool _away = false, _loading = false;
 
 	/// Creates a ViewModel for the sports game builder page. 
@@ -26,7 +27,8 @@ class SportsBuilderModel with ChangeNotifier {
 		_end = parent?.times.end.asTimeOfDay,
 		_opponent = parent?.opponent,
 		_team = parent?.team,
-		_away = !(parent?.isHome ?? true);
+		_away = !(parent?.isHome ?? true),
+		_livestreamUrl = parent?.livestreamUrl;
 
 	/// Whether this game is ready to submit. 
 	bool get ready => sport != null &&
@@ -45,6 +47,7 @@ class SportsBuilderModel with ChangeNotifier {
 		opponent: opponent ?? "",
 		sport: sport!,
 		scores: scores,
+		livestreamUrl: away ? livestreamUrl : Urls.sportsLivestream,
 	);
 
 	/// The scores for this game.
@@ -99,7 +102,7 @@ class SportsBuilderModel with ChangeNotifier {
 	/// Changing this will update the page. 
 	String? get team => _team;
 	set team(String? value) {
-		_team = value;
+		_team = "$value ${sport?.name.capitalize}";
 		notifyListeners();
 	}
 
@@ -109,6 +112,15 @@ class SportsBuilderModel with ChangeNotifier {
 	String? get opponent => _opponent;
 	set opponent(String? value) {
 		_opponent = value;
+		notifyListeners();
+	}
+
+	/// The URL to the livestream for this game
+	///
+	/// Changing this will update the page.
+	String? get livestreamUrl => _livestreamUrl;
+	set livestreamUrl(String? value){
+		_livestreamUrl = value!.isEmpty ? null : value;
 		notifyListeners();
 	}
 

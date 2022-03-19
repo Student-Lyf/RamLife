@@ -48,7 +48,7 @@ class Urls {
 	static const String seniorSystems = "https://ramaz.seniormbp.com/SeniorApps/facelets/registration/loginCenter.xhtml";
 
 	/// The URL for Ramaz livestreaming. 
-	static const String sportsLivestream = "https://www.ramaz.org/page.cfm?p=10769";
+	static const String sportsLivestream = "https://www.ramaz.org/streaming";
 }
 
 /// Some date constants.

@@ -7,7 +7,7 @@ description: A new Flutter project.
 # Both the version and the builder number may be overridden in flutter
 # build by specifying --build-name and --build-number, respectively.
 # Read more about versioning at semver.org.
-version: 1.0.1+4
+version: 1.1.0+11
 
 environment:
   sdk: ">=2.12.0 <=3.0.0"
@@ -17,12 +17,12 @@ dependencies:
     sdk: flutter
 
   # ------------- Services -------------
-  cloud_firestore: ^3.0.0
-  firebase_auth: ^3.1.5
-  firebase_core: ^1.9.0
-  firebase_crashlytics: ^2.2.5
-  firebase_messaging: ^11.0.0
-  google_sign_in: ^5.2.1
+  cloud_firestore: ^3.1.6
+  firebase_auth: ^3.3.5
+  firebase_core: ^1.11.0
+  firebase_crashlytics: ^2.4.5
+  firebase_messaging: ^11.2.5
+  google_sign_in: ^5.2.3
 
   flutter_local_notifications: ^5.0.0
   idb_shim: ^2.0.0
@@ -34,6 +34,7 @@ dependencies:
   url_launcher: ^6.0.3
   adaptive_breakpoints: ^0.0.4
   link_text: ^0.2.0
+  string_extensions: ^0.4.0
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -73,12 +74,6 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    - images/icons/baseball.png
-    - images/icons/basketball.png
-    - images/icons/hockey.png
-    - images/icons/soccer.png
-    - images/icons/tennis.png
-    - images/icons/volleyball.png
     - images/logos/drive.png
     - images/logos/google.png
     - images/logos/google_sign_in.png

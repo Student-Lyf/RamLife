@@ -25,12 +25,15 @@ class Dashboard extends NavigationItem<DashboardModel> {
 		title: const Text("Dashboard"),
 		actions: [
 		ResponsiveBuilder(
-			builder: (_, LayoutInfo layout, __)  => 
-			layout.isMobile && model.schedule.hasSchool
+			builder: (_, LayoutInfo layout, __)  =>
+				!layout.hasStandardSideSheet && model.schedule.hasSchool
 				? Builder(
 						builder: (BuildContext context) => TextButton(
 							onPressed: () => Scaffold.of(context).openEndDrawer(),
-							child: const Icon(Icons.schedule),
+							child: const Icon(
+								Icons.schedule,
+								color: Colors.white
+							),
 						)
 					)
 				: const SizedBox.shrink()
@@ -83,7 +86,7 @@ class Dashboard extends NavigationItem<DashboardModel> {
 	Widget build(BuildContext context) => RefreshIndicator(
 		onRefresh: () => refresh(context),
 		child: ListView(
-			padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+			padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 20),
 			children: [
 				Text (
 					model.schedule.today == null
