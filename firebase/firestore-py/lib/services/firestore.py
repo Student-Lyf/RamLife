@@ -1,3 +1,4 @@
+from turtle import update
 from firebase_admin import _DEFAULT_APP_NAME, firestore
 from .firebase import app
 from .. import data
@@ -49,4 +50,22 @@ def upload_userdate(date):
 def upload_caldate(date):
 	dataRefresh.document("dataRefresh").update({
 		"calendar": date
-	}) 
+	})
+
+# Note: users is a list of emails (str) not User objects
+def update_user(users, section_id, meetings):
+	query = students.where("email", "in", users).stream()
+	batch = _firestore.batch()
+	for user in query:
+		user_dict = user.to_dict()
+		for day, period, room in meetings:
+			user_dict[day][int(period)-1] = {
+				"id": section_id,
+				"name": period,
+				"room": room,
+				"dayName": day
+			}
+		batch.set(students.document(user_dict["email"]), user_dict)
+	
+	batch.commit()
+
