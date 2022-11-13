@@ -16,3 +16,9 @@ def set_scopes(email, scopes): auth.set_custom_user_claims(
 	get_user(email).uid,
 	{"isAdmin": bool(scopes), "scopes": scopes},
 )
+
+def list_users():
+  	return auth.list_users().iterate_all()
+
+def revoke_token(user): 
+	auth.revoke_refresh_tokens(user.uid)
