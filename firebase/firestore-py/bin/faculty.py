@@ -17,14 +17,17 @@ if __name__ == "__main__":
   section_teachers = utils.logger.log_value(
     "section teachers", section_reader.get_section_faculty_ids
     )
- 
   faculty_sections = utils.logger.log_value(
     "faculty sections", lambda: faculty_logic.get_faculty_sections(
       faculty = faculty,
       section_teachers = section_teachers
     ) 
   )
+<<<<<<< HEAD
+
+=======
   
+>>>>>>> 9019c375d1f93986b010b314f43c7c9299bde993
   periods = utils.logger.log_value(
     "periods", student_reader.read_periods
   )

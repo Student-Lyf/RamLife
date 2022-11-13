@@ -55,6 +55,9 @@ constants = project_dir / "constants.yaml"
 # Constants such as dayNames, corruptStudents, and testers
 constants = project_dir / "constants.yaml"
 
+# List of future Ramaz sports games
+sports_schedule = data_dir / "sports.csv"
+
 # Returns the path for the calendar at a given month.
 # 
 # The month should follow 1-based indexing.
