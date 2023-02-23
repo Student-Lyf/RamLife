@@ -106,6 +106,8 @@ class Day {
 				)
 			) {
 				return index;
+			}else if(time < schedule.periods [0].time.start){
+				return 0;
 			}
 		}
 		return null;

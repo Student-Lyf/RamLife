@@ -1,6 +1,7 @@
 import "package:flutter/material.dart";
 
 import "package:ramaz/data.dart";
+import "package:ramaz/models.dart";
 import "package:ramaz/pages.dart";
 import "package:ramaz/widgets.dart";
 
@@ -64,7 +65,13 @@ class NextClass extends StatelessWidget {
 				page: Routes.schedule,
 				title: period == null
 					? "School is over"
-					: "${next ? 'Up next' : 'Right now'}: ${period!.getName(subject)}"
+					: "${next ? (Models.instance.schedule.periods) != null ? (
+					(Time.fromDateTime(DateTime.now()) <
+					Models.instance.schedule.periods![0].time.start) ?
+					'Second Period': 'Up Next'): "Up Next" : (Models.instance.schedule.periods)
+					!= null ? ((Time.fromDateTime(DateTime.now()) <
+					Models.instance.schedule.periods![0].time.start) ?
+					'First Period': 'Right Now'):'Right Now'}: ${period!.getName(subject)}"
 			),
 			if (period?.activity != null) 
 				SpecialTile(child: ActivityTile(period!.activity!)),
