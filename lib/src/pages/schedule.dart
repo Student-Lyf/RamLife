@@ -242,13 +242,13 @@ class SuggestionWidget extends StatelessWidget {
 									"${suggestion.teacher}   ${suggestion.id}",
 									style: Theme.of(context).textTheme.headline6
 								),
-								const SizedBox(height: 10),
-								if (suggestion.virtualLink != null)
-									LinkText(
-										"Link: ${suggestion.virtualLink}",
-										shouldTrimParams: true,
-										linkStyle: const TextStyle(color: Colors.blue)
-                	)
+								// const SizedBox(height: 10),
+								// if (suggestion.virtualLink != null)
+								// 	LinkText(
+								// 		"Link: ${suggestion.virtualLink}",
+								// 		shouldTrimParams: true,
+								// 		linkStyle: const TextStyle(color: Colors.blue)
+                // 	)
 							]
 						)
 					)
