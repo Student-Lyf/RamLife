@@ -110,7 +110,7 @@ class ScheduleBuilderState extends State<ScheduleBuilder> {
   Widget build(BuildContext context) => ResponsiveScaffold(
   	drawer: const RamlifeDrawer(),
     appBar: AppBar(title: const Text("Create schedule")),
-    bodyBuilder: (_) => Column(
+    body: Column(
 	    children: [
 	      Expanded(
 	        child: ListView(

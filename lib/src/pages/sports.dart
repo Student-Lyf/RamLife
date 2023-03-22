@@ -150,60 +150,9 @@ void openMenu({
 );
 
 /// A page to show recent and upcoming games to the user.
-class SportsPage extends NavigationItem<SportsModel>{
-	@override
-	SportsModel get model => super.model!;
-
-	/// Creates the schedule page.
-	SportsPage() : super(
-		label: "Sports",
-		icon: const Icon(Icons.sports),
-		model: SportsModel(Models.instance.sports),
-		shouldDispose: true,
-	);
-
-	@override
-	AppBar get appBar => AppBar(
-		title: const Text("Sports"),
-		bottom: const TabBar(
-			tabs: [
-				Tab(text: "Upcoming"),
-				Tab(text: "Recent"),
-			]
-		),
-		actions: [
-			if (model.isAdmin) Builder(
-				builder: (context) => IconButton(
-					icon: const Icon(Icons.add),
-					tooltip: "Add a game",
-					onPressed: () async {
-						model.loading = true;
-						await model.data.addGame(await SportsBuilder.createGame(context));
-						await model.refresh();
-						model.loading = false;
-					}
-				),
-			),
-			PopupMenuButton(
-				icon: const Icon(Icons.sort),
-				onSelected: (SortOption option) => model.sortOption = option,
-				tooltip: "Sort games",
-				itemBuilder: (_) => [
-					const PopupMenuItem(
-						value: SortOption.chronological,
-						child: Text("By date"),
-					),
-					const PopupMenuItem(
-						value: SortOption.sport,
-						child: Text("By sport"),
-					)
-				]
-			),
-		]
-	);
-
-	@override 
-	Widget build(BuildContext context) {
+class SportsPage extends StatelessWidget {
+	/// Builds the body of the sports page.
+	Widget getBody(BuildContext context, SportsModel model) {
 		switch(model.sortOption) {
 			case SortOption.chronological: return GenericSportsView<int>(
 				model: model,
@@ -241,4 +190,55 @@ class SportsPage extends NavigationItem<SportsModel>{
 			);
 		}
 	}
+
+	@override
+	Widget build(BuildContext context) => ProviderConsumer(
+		create: () => SportsModel(Models.instance.sports),
+		builder: (model, child) => DefaultTabController(
+			length: 2,
+			child: ResponsiveScaffold(
+				enableNavigation: true,
+				drawer: const RamlifeDrawer(),
+				appBar: AppBar(
+					title: const Text("Sports"),
+					bottom: const TabBar(
+						tabs: [
+							Tab(text: "Upcoming"),
+							Tab(text: "Recent"),
+						]
+					),
+					actions: [
+						if (model.isAdmin) Builder(
+							builder: (context) => IconButton(
+								icon: const Icon(Icons.add),
+								tooltip: "Add a game",
+								onPressed: () async {
+									model.loading = true;
+									await model.data.addGame(await SportsBuilder.createGame(context));
+									await model.refresh();
+									model.loading = false;
+								}
+							),
+						),
+						PopupMenuButton(
+							icon: const Icon(Icons.sort),
+							onSelected: (SortOption option) => model.sortOption = option,
+							tooltip: "Sort games",
+							itemBuilder: (_) => [
+								const PopupMenuItem(
+									value: SortOption.chronological,
+									child: Text("By date"),
+								),
+								const PopupMenuItem(
+									value: SortOption.sport,
+									child: Text("By sport"),
+								)
+							]
+						),
+					]
+				),
+				body: getBody(context, model),
+			)
+		)
+	);
 }

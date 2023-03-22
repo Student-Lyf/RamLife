@@ -39,7 +39,7 @@ class AdminScheduleState extends
 			},
 			child: const Icon(Icons.add),
 		),
-		bodyBuilder: (_) => Padding(
+		body: Padding(
 			padding: const EdgeInsets.all(20), 
 			child: model.schedules.isEmpty
 				? const Center (

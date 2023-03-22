@@ -39,4 +39,19 @@ class LayoutInfo {
 
 	/// Whether the app should have a persistent [Drawer].
 	bool get hasStandardDrawer => isDesktop;
+
+	DeviceType get deviceType {
+		switch (windowType) {
+			case AdaptiveWindowType.xsmall: return DeviceType.mobile;
+			case AdaptiveWindowType.small: return DeviceType.tabletPortrait;
+			case AdaptiveWindowType.medium: return DeviceType.tabletLandscape;
+			case AdaptiveWindowType.large: return DeviceType.desktop;
+			case AdaptiveWindowType.xlarge: return DeviceType.desktop;
+			default: return DeviceType.mobile;
+		}
+	}
+}
+
+enum DeviceType {
+	desktop, tabletLandscape, tabletPortrait, mobile
 }
