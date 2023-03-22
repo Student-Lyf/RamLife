@@ -16,7 +16,7 @@ class CreditsPage extends StatelessWidget {
 	Widget build (BuildContext context) => ResponsiveScaffold(
 		drawer: const RamlifeDrawer(),
 		appBar: AppBar(title: const Text ("Credits")),
-		bodyBuilder: (_) => ListView(
+		body: ListView(
 			children: [
 				const SizedBox(height: 8),
 				Text(
@@ -107,7 +107,7 @@ class WideContributorCard extends StatelessWidget {
 							),
 							const SizedBox(height: 4),
 							InkWell(
-								onTap: () => launch(contributor.url),
+								onTap: () => launchUrl(Uri.parse(contributor.url)),
 								child: Text(
 									contributor.linkName,
 									textScaleFactor: 1.1,
@@ -156,7 +156,7 @@ class CompactContributorCard extends StatelessWidget {
 					children: [
 						Text(contributor.title),
 						InkWell(
-							onTap: () => launch(contributor.url),
+							onTap: () => launchUrl(Uri.parse(contributor.url)),
 							child: Text(
 								contributor.linkName,
 								style: TextStyle(color: Colors.blue.withAlpha(200)),
