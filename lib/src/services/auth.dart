@@ -85,8 +85,6 @@ class Auth {
 		await auth.signOut();
 	}
 
-	static Future<void> signInSilently() => google.signInSilently();
-
 	/// Signs the user in using Google as a provider. 
 	static Future<void> signIn() async {
 		final GoogleSignInAccount? googleAccount = await google.signIn();
