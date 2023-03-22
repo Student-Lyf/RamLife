@@ -14,19 +14,19 @@ class CreditsPage extends StatelessWidget {
 
 	@override 
 	Widget build (BuildContext context) => ResponsiveScaffold(
-		drawer: const NavigationDrawer(),
+		drawer: const RamlifeDrawer(),
 		appBar: AppBar(title: const Text ("Credits")),
 		bodyBuilder: (_) => ListView(
 			children: [
 				const SizedBox(height: 8),
 				Text(
 					"Thank You", 
-					style: Theme.of(context).textTheme.headline4,
+					style: Theme.of(context).textTheme.headlineMedium,
 					textAlign: TextAlign.center,
 				),
 				Text(
 					"To those who made this app possible",
-					style: Theme.of(context).textTheme.headline5,
+					style: Theme.of(context).textTheme.headlineSmall,
 					textAlign: TextAlign.center,
 				),
 				const SizedBox(height: 16),
@@ -97,12 +97,12 @@ class WideContributorCard extends StatelessWidget {
 						children: [
 					 		Text(
 								"${contributor.name} ${contributor.gradYear}",
-								style: Theme.of(context).textTheme.headline5,
+								style: Theme.of(context).textTheme.headlineSmall,
 							),
 							const SizedBox(height: 4),
 							Text(
 								contributor.title,
-								style: Theme.of(context).textTheme.bodyText2,
+								style: Theme.of(context).textTheme.bodyMedium,
 								textScaleFactor: 1.1,
 							),
 							const SizedBox(height: 4),
@@ -111,7 +111,7 @@ class WideContributorCard extends StatelessWidget {
 								child: Text(
 									contributor.linkName,
 									textScaleFactor: 1.1,
-									style: Theme.of(context).textTheme.caption!.copyWith(
+									style: Theme.of(context).textTheme.bodySmall!.copyWith(
 										color: Colors.blue.withAlpha(200), 
 									),
 								),
@@ -124,7 +124,7 @@ class WideContributorCard extends StatelessWidget {
 					flex: 3,
 					child: Text(
 						contributor.description,
-						style: Theme.of(context).textTheme.subtitle1
+						style: Theme.of(context).textTheme.titleMedium
 					)
 				),
 				const Spacer(),

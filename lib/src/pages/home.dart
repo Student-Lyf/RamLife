@@ -30,8 +30,8 @@ class HomePage extends StatelessWidget {
 					SportsPage(),
 				],
 				initialNavIndex: pageIndex,
-				drawer: const NavigationDrawer(),
-				secondaryDrawer: const NavigationDrawer(),
+				drawer: const RamlifeDrawer(),
+				secondaryDrawer: const RamlifeDrawer(),
 			)
 		),
 	);

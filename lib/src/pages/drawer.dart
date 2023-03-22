@@ -7,13 +7,13 @@ import "package:ramaz/pages.dart";
 import "package:ramaz/widgets.dart";
 
 /// A drawer to show throughout the app.
-class NavigationDrawer extends StatelessWidget {
+class RamlifeDrawer extends StatelessWidget {
 	/// Uses the navigator to launch a page by name.
 	static Future<void> Function() pushRoute(BuildContext context, String name) => 
 		() => Navigator.of(context).pushReplacementNamed(name);
 
 	/// Creates the drawer.
-	const NavigationDrawer();
+	const RamlifeDrawer();
 
 	/// Returns the current route name.
 	String? getRouteName(BuildContext context) => 

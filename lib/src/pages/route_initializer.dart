@@ -87,7 +87,7 @@ class RouteInitializerState extends State<RouteInitializer> {
 				: ResponsiveScaffold(
 					appBar: AppBar(title: const Text("Loading...")),
 					bodyBuilder: (_) => const Center(child: CircularProgressIndicator()),
-					drawer: const NavigationDrawer(),
+					drawer: const RamlifeDrawer(),
 				),
 	);
 }

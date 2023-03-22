@@ -28,7 +28,7 @@ class AdminScheduleState extends
 	@override
 	Widget build(BuildContext context) => ResponsiveScaffold(
 		appBar: AppBar(title: const Text("Custom schedules")),
-		drawer: const NavigationDrawer(),
+		drawer: const RamlifeDrawer(),
 		floatingActionButton: FloatingActionButton(
 			onPressed: () async {
 				final Schedule? schedule = await ScheduleBuilder.buildSchedule(context);
