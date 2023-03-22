@@ -98,7 +98,6 @@ class RamLife extends StatelessWidget {
 			cardTheme: CardTheme (
 				color: Colors.grey[820]
 			),
-			toggleableActiveColor: RamazColors.blueLight,
 			buttonTheme: const ButtonThemeData (
 				buttonColor: RamazColors.blueDark, 
 				textTheme: ButtonTextTheme.accent,

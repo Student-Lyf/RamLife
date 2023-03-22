@@ -22,7 +22,7 @@ class FeedbackState extends ModelListener<FeedbackModel, FeedbackPage> {
 
 	@override 
 	Widget build (BuildContext context) => ResponsiveScaffold(
-		drawer: const NavigationDrawer(),
+		drawer: const RamlifeDrawer(),
 		appBar: AppBar(title: const Text ("Send Feedback")),
 		bodyBuilder: (_) => Center(
 			child: SizedBox(
