@@ -10,31 +10,32 @@ description: A new Flutter project.
 version: 1.1.0+11
 
 environment:
-  sdk: ">=2.12.0 <=3.0.0"
+  sdk: ">=2.19.4 <=3.0.0"
  
 dependencies:
   flutter:
     sdk: flutter
 
   # ------------- Services -------------
-  cloud_firestore: ^3.1.6
-  firebase_auth: ^3.3.5
-  firebase_core: ^1.11.0
-  firebase_crashlytics: ^2.4.5
-  firebase_messaging: ^11.2.5
-  google_sign_in: ^5.2.3
+  cloud_firestore: ^4.4.5
+  firebase_auth: ^4.3.0
+  firebase_core: ^2.8.0
+  firebase_crashlytics: ^3.0.17
+  firebase_messaging: ^14.3.0
+  google_sign_in: ^6.0.2
 
-  flutter_local_notifications: ^5.0.0
+  flutter_local_notifications: ^13.0.0
   idb_shim: ^2.0.0
   path_provider: ^2.0.1
   shared_preferences: ^2.0.5
 
   # ------------- Misc -------------
-  flutter_native_timezone: ^2.0.0
+  # flutter_native_timezone: ^2.0.0
   url_launcher: ^6.0.3
-  adaptive_breakpoints: ^0.0.4
+  adaptive_breakpoints: ^0.1.6
   link_text: ^0.2.0
-  string_extensions: ^0.4.0
+  provider: ^6.0.5
+  # string_extensions: ^0.6.9
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.

@@ -102,6 +102,19 @@ class ClassList extends StatefulWidget {
 		this.headerText,
 	});
 
+	/// Populates fields from the given model.
+	ClassList.fromSchedule(ScheduleModel model) : 
+		day = model.today!,
+		periods = model.nextPeriod == null 
+			? model.periods!
+			: model.periods!.getRange (
+				(model.periodIndex ?? -1) + 1, 
+				model.periods!.length
+			),
+			headerText = model.period == null 
+				? "Today's Schedule" 
+				: "Upcoming Classes";
+
 	@override
 	ClassListState createState() => ClassListState();
 }

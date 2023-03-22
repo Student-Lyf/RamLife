@@ -1,4 +1,3 @@
-// ignore_for_file: prefer_const_constructors_in_immutables
 import "package:flutter/material.dart";
 
 import "package:link_text/link_text.dart";
@@ -7,22 +6,13 @@ import "package:ramaz/data.dart";
 import "package:ramaz/models.dart";
 import "package:ramaz/widgets.dart";
 
+import "drawer.dart";
+
 /// Allows users to explore their schedule.
 /// 
 /// Users can use the calendar button to check the schedule for a given date
 /// or create a custom [Day] from the drop-down menus.
-class ResponsiveSchedule extends NavigationItem<ScheduleViewModel> {
-	@override
-	ScheduleViewModel get model => super.model!;
-
-	/// Creates the schedule page.
-	ResponsiveSchedule() : super(
-		label: "Schedule", 
-		icon: const Icon(Icons.schedule),
-		model: ScheduleViewModel(),
-		shouldDispose: true,
-	);
-
+class SchedulePage extends StatelessWidget {
 	/// Allows the user to select a day in the calendar to view. 
 	/// 
 	/// If there is no school on that day, a [SnackBar] will be shown. 
@@ -34,6 +24,7 @@ class ResponsiveSchedule extends NavigationItem<ScheduleViewModel> {
 		if (selected == null) {
 			return;
 		}
+		model.date = selected;
 		try {
 			model.date = selected;
 		} on Exception {  // user picked a day with no school
@@ -45,79 +36,80 @@ class ResponsiveSchedule extends NavigationItem<ScheduleViewModel> {
 		}
 	}
 
-	@override
-	AppBar get appBar => AppBar(
-		title: const Text("Schedule"),
-		actions: [ Builder( 
-			builder: (BuildContext context) => IconButton(
-				icon: const Icon(Icons.search),
-				tooltip: "Search schedule",
-				onPressed: () => showSearch(
-					context: context,
-					delegate: CustomSearchDelegate(hintText: "Search for a class")
-				),
-			)
-		)]
-	);
-
-	@override
-	Widget? get floatingActionButton => Builder(
-		builder: (BuildContext context) => FloatingActionButton(
-			onPressed: () => viewDay(model, context),
-			child: const Icon(Icons.calendar_today),
-		)
-	);
-
 	/// Lets the user know that they chose an invalid schedule combination. 
 	void handleInvalidSchedule(BuildContext context) => ScaffoldMessenger
 		.of(context)
 		.showSnackBar(const SnackBar(content: Text("Invalid schedule")));
 
 	@override
-	Widget build(BuildContext context) => Column(
-		children: [
-			ListTile (
-				title: const Text ("Day"),
-				trailing: DropdownButton<String> (
-					value: model.day.name, 
-					onChanged: (String? value) => model.update(
-						newName: value,
-						onInvalidSchedule: () => handleInvalidSchedule(context),
-					),
-					items: [
-						for (final String dayName in Models.instance.schedule.user.dayNames)
-							DropdownMenuItem(
-								value: dayName,
-								child: Text(dayName),
-							)
-					]
-				)
+	Widget build(BuildContext context) => ProviderConsumer(
+		create: ScheduleViewModel.new,
+		builder: (model, child) => ResponsiveScaffold(
+			enableNavigation: true,
+			drawer: const RamlifeDrawer(),
+			appBar: AppBar(
+				title: const Text("Schedule"),
+				actions: [ Builder( 
+					builder: (BuildContext context) => IconButton(
+						icon: const Icon(Icons.search),
+						tooltip: "Search schedule",
+						onPressed: () => showSearch(
+							context: context,
+							delegate: CustomSearchDelegate(hintText: "Search for a class")
+						),
+					)
+				)]
 			),
-			ListTile (
-				title: const Text ("Schedule"),
-				trailing: DropdownButton<Schedule> (
-					value: model.day.schedule,
-					onChanged: (Schedule? schedule) => model.update(
-						newSchedule: schedule,
-						onInvalidSchedule: () => handleInvalidSchedule(context),
-					),
-					items: [
-						for (final Schedule schedule in Schedule.schedules)
-							DropdownMenuItem(
-								value: schedule,
-								child: Text (schedule.name),
+			floatingActionButton: FloatingActionButton(
+				onPressed: () => viewDay(model, context),
+				child: const Icon(Icons.calendar_today),
+			),
+			body: Builder(builder: (context) => Column(
+				children: [
+					ListTile (
+						title: const Text ("Day"),
+						trailing: DropdownButton<String> (
+							value: model.day.name, 
+							onChanged: (String? value) => model.update(
+								newName: value,
+								onInvalidSchedule: () => handleInvalidSchedule(context),
 							),
-					]
-				)
-			),
-			const Divider(height: 40),
-			Expanded(
-				child: ClassList(
-					day: model.day, 
-					periods: Models.instance.user.data.getPeriods(model.day)
-				),
-			),
-		]
+							items: [
+								for (final String dayName in Models.instance.schedule.user.dayNames)
+									DropdownMenuItem(
+										value: dayName,
+										child: Text(dayName),
+									)
+							]
+						)
+					),
+					ListTile (
+						title: const Text ("Schedule"),
+						trailing: DropdownButton<Schedule> (
+							value: model.day.schedule,
+							onChanged: (Schedule? schedule) => model.update(
+								newSchedule: schedule,
+								onInvalidSchedule: () => handleInvalidSchedule(context),
+							),
+							items: [
+								for (final Schedule schedule in Schedule.schedules)
+									DropdownMenuItem(
+										value: schedule,
+										child: Text (schedule.name),
+									),
+							]
+						)
+					),
+					const Divider(height: 40),
+					Expanded(
+						child: ClassList(
+							day: model.day, 
+							periods: Models.instance.user.data.getPeriods(model.day)
+						),
+					),
+				]
+			))
+		)
 	);
 }
 
@@ -271,7 +263,7 @@ class ResultWidget extends StatelessWidget {
 	final PeriodData period;
 
 	/// A constructor that defines what a result should have.
-	ResultWidget(this.period);
+	const ResultWidget(this.period);
 
 	@override
 	Widget build(BuildContext context) => Column(

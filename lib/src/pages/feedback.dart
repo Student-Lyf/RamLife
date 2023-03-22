@@ -24,7 +24,7 @@ class FeedbackState extends ModelListener<FeedbackModel, FeedbackPage> {
 	Widget build (BuildContext context) => ResponsiveScaffold(
 		drawer: const RamlifeDrawer(),
 		appBar: AppBar(title: const Text ("Send Feedback")),
-		bodyBuilder: (_) => Center(
+		body: Center(
 			child: SizedBox(
 				width: 400, 
 				child: Column(

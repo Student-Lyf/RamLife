@@ -108,7 +108,7 @@ class LoginState extends State<Login> {
 						child: const Text ("Cancel"),
 					),
 					ElevatedButton(
-						onPressed: () => launch("mailto:ramlife@ramaz.org"),
+						onPressed: () => launchUrl(Uri.parse("mailto:ramlife@ramaz.org")),
 						child: const Text ("ramlife@ramaz.org"),
 					)
 				]

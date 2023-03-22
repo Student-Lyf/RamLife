@@ -246,7 +246,7 @@ class SportsTile extends StatelessWidget {
                        icon: const Icon(Icons.live_tv),
                        onPressed: () {
                          if(game.livestreamUrl != null){
-                          launch(game.livestreamUrl!);
+                          launchUrl(Uri.parse(game.livestreamUrl!));
                          }},
                         tooltip: "Watch livestream",
                       ) : null) : const Icon(Icons.edit),

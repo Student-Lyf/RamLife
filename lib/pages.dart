@@ -9,9 +9,9 @@ export "src/pages/builders/schedule_builder.dart";
 export "src/pages/builders/sports_builder.dart";
 
 export "src/pages/credits.dart";
+export "src/pages/dashboard.dart";
 export "src/pages/drawer.dart";
 export "src/pages/feedback.dart";
-export "src/pages/home.dart";
 export "src/pages/login.dart";
 export "src/pages/reminders.dart";
 export "src/pages/route_initializer.dart";
