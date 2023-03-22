@@ -236,7 +236,7 @@ class ScheduleBuilderState extends State<ScheduleBuilder> {
   	return showTimePicker(
 	    context: context,
 	    initialTime: initialTime ?? TimeOfDay.now(),
-	    initialEntryMode: layout.isDesktop 
+	    initialEntryMode: layout.deviceType == DeviceType.desktop 
 		    ? TimePickerEntryMode.input : TimePickerEntryMode.dial,
 	  );
   }

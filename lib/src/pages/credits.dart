@@ -54,7 +54,7 @@ class ResponsiveContributorCard extends StatelessWidget{
 		margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
 		elevation: 4,
 		child: ResponsiveBuilder(
-			builder: (_, LayoutInfo layout, __) => layout.isMobile
+			builder: (_, LayoutInfo layout, __) => layout.deviceType == DeviceType.mobile
 				? CompactContributorCard(contributor)
 				: WideContributorCard(contributor),
 		)

@@ -130,9 +130,9 @@ class ScheduleSlot extends StatelessWidget {
 					style: Theme.of(context).textTheme.headlineSmall,
 				),
 				const SizedBox (height: 10),
-				if (layout.isDesktop && children.length > 1) GridView.count(
+				if (layout.deviceType == DeviceType.desktop && children.length > 1) GridView.count(
 					shrinkWrap: true,
-					crossAxisCount: layout.isDesktop ? children.length : 1,
+					crossAxisCount: children.length,
 					children: children
 				) else Column(children: children)
 			]

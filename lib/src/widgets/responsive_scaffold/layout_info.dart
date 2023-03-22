@@ -15,31 +15,21 @@ class LayoutInfo {
 	LayoutInfo(BuildContext context) : 
 		windowType = getWindowType(context);
 
-	/// Whether the app is running on a phone.
-	bool get isMobile => windowType == AdaptiveWindowType.xsmall;
-
-	/// Whether the app is running on a tablet in portrait mode (or a large phone).
-	bool get isTabletPortrait => windowType == AdaptiveWindowType.small;
-
-	/// Whether the app is running on a tablet in landscape mode.
-	bool get isTabletLandscape => windowType == AdaptiveWindowType.medium;
-
-	/// Whether the app is running on a desktop.
-	bool get isDesktop => windowType == AdaptiveWindowType.large
-		|| windowType == AdaptiveWindowType.xlarge;
-
-	/// Whether the app should use a [BottomNavigationBar].
-	bool get hasBottomNavBar => isMobile;
+	/// Whether the app should use a [NavigationBar].
+	bool get hasBottomNavBar => deviceType == DeviceType.mobile;
 
 	/// Whether the app should use a [NavigationRail]. 
-	bool get hasNavRail => isTabletPortrait || isTabletLandscape;
+	bool get hasNavRail => deviceType == DeviceType.tabletLandscape 
+		|| deviceType == DeviceType.tabletPortrait;
 
 	/// Whether the app should have a persistent [Scaffold.endDrawer].
-	bool get hasStandardSideSheet => isTabletLandscape || isDesktop;
+	bool get hasStandardSideSheet => deviceType == DeviceType.tabletLandscape 
+		|| deviceType == DeviceType.desktop;
 
 	/// Whether the app should have a persistent [Drawer].
-	bool get hasStandardDrawer => isDesktop;
+	bool get hasStandardDrawer => deviceType == DeviceType.desktop;
 
+	/// The probable device being used, based on the size.
 	DeviceType get deviceType {
 		switch (windowType) {
 			case AdaptiveWindowType.xsmall: return DeviceType.mobile;
@@ -52,6 +42,17 @@ class LayoutInfo {
 	}
 }
 
+/// Different user devices.
 enum DeviceType {
-	desktop, tabletLandscape, tabletPortrait, mobile
+	/// A desktop, implying a large screen and a resizable window.
+	desktop, 
+
+	/// A tablet in landscape mode, implying a wide screen.
+	tabletLandscape, 
+
+	/// A tablet in portrait mode, implying a medium-widget screen. 
+	tabletPortrait, 
+
+	/// A phone, implying a narrow screen.
+	mobile
 }

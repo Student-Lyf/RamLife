@@ -5,35 +5,38 @@ import "responsive_builder.dart";
 
 /// A Scaffold that rearranges itself according to the device size. 
 /// 
-/// Uses [LayoutInfo] to decide key elements of the layout. This class has 
-/// two uses: with and without primary navigation items. These are items that
-/// would normally be placed in a [BottomNavigationBar]. When primary navigation
-/// items are provided, two different drawers are used: with and without the 
-/// primary navigation items (to avoid duplication in the UI).
+/// Mainly, moves elements like [drawer] or [sideSheet] out of the way as the screen gets smaller.
+/// Additionally, by setting [enableNavigation] to true, this widget will display [destinations] in
+/// the appropriate spot for the screen size. 
 /// 
-/// On large screens: show the standard drawer and side sheet
-/// On medium screens: show the navigation rail and the side sheet
-/// On medium narrow screens: show the navigation rail and hide the side sheet
-/// On small screens: show the navigation bar and hide the side sheet 
+/// This class uses a [LayoutInfo] to decide how to layout the page: 
 /// 
-/// See the package documentation for how the layout is determined. 
+/// | Screen Size | Drawer | Side Sheet | Navigation |
+/// |--------|--------|--------|--------|
+/// | [DeviceType.desktop] | Standard | Standard | Hidden |
+/// | [DeviceType.tabletLandscape] | Modal | Standard | [NavigationRail] |
+/// | [DeviceType.tabletPortrait] | Modal | Modal | [NavigationRail] |
+/// | [DeviceType.desktop] | Modal | Modal | [NavigationBar] |
 class ResponsiveScaffold extends StatefulWidget {
-	/// The app bar. 
-	/// 
-	/// This does not change with the layout, except for showing a drawer menu.
+	/// The app bar (see [AppBar]).
 	final PreferredSizeWidget appBar;
 
 	/// The main body of the scaffold. 
 	final Widget body;
 
+	/// The navigation drawer (see [NavigationDrawer]).
 	final Widget drawer;
 
+	/// An optional side sheet (see [Scaffold.endDrawer]).
 	final Widget? sideSheet;
 
+	/// An optional floating action button (see [FloatingActionButton]).
 	final Widget? floatingActionButton;
 
+	/// Whether to show the navigation bar/rail.
 	final bool enableNavigation;
 
+	/// Creates a responsive scaffold.
 	const ResponsiveScaffold({
 		required this.body,
 		required this.appBar,
@@ -47,7 +50,9 @@ class ResponsiveScaffold extends StatefulWidget {
 	ResponsiveScaffoldState createState() => ResponsiveScaffoldState();
 }
 
+/// The state for a [ResponsiveScaffold].
 class ResponsiveScaffoldState extends State<ResponsiveScaffold>{
+	/// The index of the currently selected [RamLifeDestination].
 	late int index;
 
 	@override
@@ -56,6 +61,7 @@ class ResponsiveScaffoldState extends State<ResponsiveScaffold>{
 		index = getDestinationIndex(context);
 	}
 
+	/// A [NavigationRail] of [destinations].
 	Widget navRail() => NavigationRail(
 		selectedIndex: index,
 		onDestinationSelected: (value) => destinationCallback(context, value),
@@ -65,6 +71,7 @@ class ResponsiveScaffoldState extends State<ResponsiveScaffold>{
 		],
 	);
 
+	/// A [NavigationBar] of [destinations].
 	Widget navBar() => NavigationBar(
 		selectedIndex: index,
 		onDestinationSelected: (value) => destinationCallback(context, value),

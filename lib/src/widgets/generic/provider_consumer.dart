@@ -6,10 +6,14 @@ import "package:provider/provider.dart";
 /// To use, pass in a [create] function to create a new [ChangeNotifier], then pass a [builder] to
 /// build the UI based on the data in the model. If you have a widget that does *not* depend on the 
 /// underlying data, you can pass it in the [cachedChild] parameter to ensure it is not rebuilt. 
+/// 
+/// If you already have a [ChangeNotifier], you can pass it to the [.value()] constructor and it 
+/// won't be disposed.
 class ProviderConsumer<T extends ChangeNotifier> extends StatelessWidget {
 	/// A function to create the [ChangeNotifier].
 	final T Function()? create;
 
+	/// A [ChangeNotifier] that was already created and won't be disposed here.
 	final T? value;
 
 	/// A function to build the UI based on the [ChangeNotifier].
@@ -35,6 +39,7 @@ class ProviderConsumer<T extends ChangeNotifier> extends StatelessWidget {
 		this.cachedChild
 	}) : create = null;
 
+	/// A [ChangeNotifierProvider] that will or won't dispose of the model. 
 	Widget provider(Widget child) => value == null
 		? ChangeNotifierProvider(
 			create: (_) => create!(),
