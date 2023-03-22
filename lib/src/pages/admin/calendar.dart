@@ -110,7 +110,7 @@ class AdminCalendarState extends ModelListener<
 
 	@override
 	Widget build(BuildContext context) => ResponsiveScaffold(
-		drawer: const NavigationDrawer(),
+		drawer: const RamlifeDrawer(),
 		appBar: AppBar(title: const Text("Calendar")),
 		bodyBuilder: (_) => Center(
 			child: Column(

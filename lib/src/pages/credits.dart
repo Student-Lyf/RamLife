@@ -14,7 +14,7 @@ class CreditsPage extends StatelessWidget {
 
 	@override 
 	Widget build (BuildContext context) => ResponsiveScaffold(
-		drawer: const NavigationDrawer(),
+		drawer: const RamlifeDrawer(),
 		appBar: AppBar(title: const Text ("Credits")),
 		bodyBuilder: (_) => ListView(
 			children: [
