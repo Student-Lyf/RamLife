@@ -92,7 +92,7 @@ class Dashboard extends NavigationItem<DashboardModel> {
 					model.schedule.today == null
 						? "There is no school today"
 						: "Today is ${model.schedule.today!.name}",
-					style: Theme.of(context).textTheme.headline3,
+					style: Theme.of(context).textTheme.displaySmall,
 					textAlign: TextAlign.center
 				),
 				const SizedBox (height: 20),
@@ -104,7 +104,7 @@ class Dashboard extends NavigationItem<DashboardModel> {
 					Text(
 						"Sports games",
 						textAlign: TextAlign.center,
-						style: Theme.of(context).textTheme.headline5,
+						style: Theme.of(context).textTheme.headlineSmall,
 					),
 					const SizedBox(height: 10),
 					for (final int index in model.sports.todayGames)
@@ -155,7 +155,7 @@ class ScheduleSlot extends StatelessWidget {
 						? "Schedule: ${scheduleModel.today!.schedule.name}"
 						: "There is no school today",
 					textAlign: TextAlign.center,
-					style: Theme.of(context).textTheme.headline5,
+					style: Theme.of(context).textTheme.headlineSmall,
 				),
 				const SizedBox (height: 10),
 				if (layout.isDesktop && children.length > 1) GridView.count(

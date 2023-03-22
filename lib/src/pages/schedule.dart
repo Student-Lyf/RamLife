@@ -163,7 +163,7 @@ class CustomSearchDelegate extends SearchDelegate {
 						crossAxisAlignment: CrossAxisAlignment.center,
 						children: [ Text(
 							"No Results Found",
-							style: Theme.of(context).textTheme.headline4
+							style: Theme.of(context).textTheme.headlineMedium
 						)
 					])
 			]
@@ -189,7 +189,7 @@ class CustomSearchDelegate extends SearchDelegate {
 						crossAxisAlignment: CrossAxisAlignment.center,
 						children: [ Text(
 							"No Results Found",
-							style: Theme.of(context).textTheme.headline4
+							style: Theme.of(context).textTheme.headlineMedium
 						)
 					])
 			]
@@ -235,12 +235,12 @@ class SuggestionWidget extends StatelessWidget {
 							children: [ 
 								Text(
 									suggestion.name,
-									style: Theme.of(context).textTheme.headline4
+									style: Theme.of(context).textTheme.headlineMedium
 								),
 								const SizedBox(height: 5),
 								Text(
 									"${suggestion.teacher}   ${suggestion.id}",
-									style: Theme.of(context).textTheme.headline6
+									style: Theme.of(context).textTheme.titleLarge
 								),
 								const SizedBox(height: 10),
 								if (suggestion.virtualLink != null)
@@ -280,11 +280,11 @@ class ResultWidget extends StatelessWidget {
 			ListTile(
 				title: Text(
 					period.dayName,
-						style: Theme.of(context).textTheme.headline4
+						style: Theme.of(context).textTheme.headlineMedium
 					),
 				subtitle: Text(
 					"Period ${period.name}   Room ${period.room}",
-					style: Theme.of(context).textTheme.headline6
+					style: Theme.of(context).textTheme.titleLarge
 				)
 			),
 			for (int reminder in Models.instance.reminders.getReminders(
@@ -300,7 +300,7 @@ class ResultWidget extends StatelessWidget {
 							const SizedBox(width: 3),
 							Text(
 								Models.instance.reminders.reminders[reminder].message,
-								style: Theme.of(context).textTheme.subtitle1
+								style: Theme.of(context).textTheme.titleMedium
 							)
 						]
 					)

@@ -129,7 +129,7 @@ class AdminCalendarState extends ModelListener<
 							const Spacer(flex: 2),
 							Text(
 								"${months [currentMonth]} ${model.years [currentMonth]}",
-								style: Theme.of(context).textTheme.headline4,
+								style: Theme.of(context).textTheme.headlineMedium,
 							),
 							const Spacer(flex: 2),
 							TextButton.icon(
