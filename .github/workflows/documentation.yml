@@ -1,9 +1,8 @@
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
-
 name: Documentation
+
+# Documents the Dart code within this project with the `dartdoc` tool.
+# Publishes the result to a separate branch, `documentation`, under the `docs` folder. 
+# Set GitHub pages to publish that target to get an online documentation site. 
 
 on:
   push:
@@ -31,19 +30,17 @@ jobs:
         with: 
           fetch-depth: 0
           path: repo  # keep Flutter separate
+          submodules: recursive
 
       - name: Git Setup
         run: |
-          git config --local user.name "github-actions[bot]"
+          git config user.name "GitHub Actions Bot"
+          git config user.email "<>"
           git branch --all
           git switch --track origin/documentation
-          git merge origin/master
-          rm -rf docs
-          git stage docs
-          git commit -m "Removed documentation" -m "Will generate new docs"
-
+          git reset --hard origin/main
       - name: Add Flutter to path
-        run: echo "../flutter/bin" >> $GITHUB_PATH
+        run: echo "$GITHUB_WORKSPACE/flutter/bin" >> $GITHUB_PATH
 
       - name: Flutter Setup 
         run: |
@@ -51,10 +48,9 @@ jobs:
           flutter pub global activate dartdoc
           flutter pub global run dartdoc --version
           flutter --version
-
       - name: Analyze code
-        run: flutter analyze --dartdocs
-
+        run: |
+          flutter analyze --dartdocs
       - name: Output error
         if: failure()
         run: echo "::error The code or is missing documentation. Run flutter analyze --dartdocs"
@@ -62,13 +58,11 @@ jobs:
       - name: Generate documentation
         run: flutter pub global run dartdoc --ignore 'unresolved-doc-reference,not-implemented,no-documentable-libraries,ambiguous-reexport' --exclude 'dart:async,dart:collection,dart:convert,dart:core,dart:developer,dart:io,dart:isolate,dart:math,dart:typed_data,dart:ui,dart:html,dart:js,dart:ffi,dart:js_util' --quiet --json --output docs --no-validate-links --no-verbose-warnings --no-allow-non-local-warnings
         
-      - name: Commit files
+      - name: Commit and push files
         run: |
           cd docs
           cd ..
           git status
           git stage --force docs
           git commit -a -m "Generated documentation"
-      
-      - name: Push commit
-        run: git push
+          git push --force
