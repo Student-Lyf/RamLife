@@ -15,8 +15,9 @@ if __name__ == "__main__":
             "data upload", 
             lambda: services.upload_sports(sports_schedule)
         )
-    else: utils.logger.warning("Did not upload student data. Use the --upload flag.")
-
+    else: 
+      utils.logger.warning("Did not upload student data. Use the --upload flag.")
+      print(sports_schedule)
     utils.logger.info(f"Processed {len(sports_schedule)} sports games.")
 
 
