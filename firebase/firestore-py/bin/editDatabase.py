@@ -1,10 +1,11 @@
 from lib.data.schedule import Section
 from lib import utils, services
 
-print("Would you like to add a section (a) or change a section (c)?\n")
+print("Would you like to add a section (a) change a section (c) update schedule with PDF (p)?\n")
 
-add_or_change = input("a or c : ").lower()
-if add_or_change == "a":
+choice = input("a or c or p: ").lower()
+
+if choice == "a":
     section_id = input("Section id: ")
     name = input("Section name: ")
     teacher = input("Section teacher: ")
@@ -15,8 +16,35 @@ if add_or_change == "a":
       "section upload", lambda: services.upload_sections([section])
     )
 
-elif add_or_change == "c":
+elif choice == "c":
     section_id = input("Section id: ")
+
+elif choice == "p":
+  from lib.utils import txtschedule_reader as reader
+  files = reader.get_files()
+  schedules = []
+  students = []
+  for file in files:
+    lines = reader.read_pdf(file)
+    schedule = reader.build_schedule(lines)
+    
+    print(f"Verify?\n{schedule}")
+    print(f"Enter email for {reader.get_name(lines)}")
+    user = input(": ").lower()
+    students.append(user)
+    schedules.append(schedule)
+
+  if utils.args.should_upload:
+    utils.logger.log_progress(
+      "data update", lambda: services.update_user_beta(students, schedules)
+    )
+  else:
+    for i in range(len(students)):
+      print(students[i])
+      print(schedules[i])
+    print("-----------")
+
+  quit()
 
 else:
     print("Please enter a proper answer, a or c")
@@ -46,3 +74,4 @@ assert len(students) > 0, "Section must have a student to edit"
 utils.logger.log_progress(
     "data update", lambda: services.update_user(students, section_id, meetings)
 )
+

@@ -86,8 +86,8 @@ class RouteInitializerState extends State<RouteInitializer> {
 				? widget.child
 				: ResponsiveScaffold(
 					appBar: AppBar(title: const Text("Loading...")),
-					bodyBuilder: (_) => const Center(child: CircularProgressIndicator()),
-					drawer: const NavigationDrawer(),
+					body: const Center(child: CircularProgressIndicator()),
+					drawer: const RamlifeDrawer(),
 				),
 	);
 }

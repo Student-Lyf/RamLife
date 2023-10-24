@@ -10,7 +10,7 @@ This handles reading sports.csv and its logic all in one (faster!)
 KEYWORDS = {
     "BVH": "Boys Varsity Hockey",
     "BJVH": "Boys JV Hockey",
-    
+
     "GVBB": "Girls Varsity Basketball",
     "GJVBB": "Girls JV Basketball",
 
@@ -51,14 +51,9 @@ def read_sports():
                 start_hour = int(start[:start.index(":")]) + 12
                 start_min = int(start[start.index(":")+1:])
 
-                # Assume games take 1.5 hours
-                end_min = start_min + 30
+                # Assume games take 1 hour
+                end_min = start_min
                 end_hour = start_hour + 1
-
-                if end_min > 60:
-                    end_hour += end_min // 60
-                    end_min = end_min % 60
-
 
             except:
                 start_hour, start_min, end_hour, end_min = 0, 0, 0, 0
@@ -87,7 +82,8 @@ def get_date(year, date):
     month = date[:date.index("/")]
     if len(month) == 1: # If the month has only 1 digit
         month = "0" + month # Make it 2 digits
-        
+    if int(month) <= 7:
+        year = str(int(year) + 1)
     day = date[date.index("/") +1:]
     if len(day) == 1:
         day = "0" + day

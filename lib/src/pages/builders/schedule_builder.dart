@@ -108,9 +108,9 @@ class ScheduleBuilderState extends State<ScheduleBuilder> {
 
   @override
   Widget build(BuildContext context) => ResponsiveScaffold(
-  	drawer: const NavigationDrawer(),
+  	drawer: const RamlifeDrawer(),
     appBar: AppBar(title: const Text("Create schedule")),
-    bodyBuilder: (_) => Column(
+    body: Column(
 	    children: [
 	      Expanded(
 	        child: ListView(
@@ -236,7 +236,7 @@ class ScheduleBuilderState extends State<ScheduleBuilder> {
   	return showTimePicker(
 	    context: context,
 	    initialTime: initialTime ?? TimeOfDay.now(),
-	    initialEntryMode: layout.isDesktop 
+	    initialEntryMode: layout.deviceType == DeviceType.desktop 
 		    ? TimePickerEntryMode.input : TimePickerEntryMode.dial,
 	  );
   }

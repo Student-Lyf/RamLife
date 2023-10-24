@@ -110,9 +110,9 @@ class AdminCalendarState extends ModelListener<
 
 	@override
 	Widget build(BuildContext context) => ResponsiveScaffold(
-		drawer: const NavigationDrawer(),
+		drawer: const RamlifeDrawer(),
 		appBar: AppBar(title: const Text("Calendar")),
-		bodyBuilder: (_) => Center(
+		body: Center(
 			child: Column(
 				mainAxisSize: MainAxisSize.min,
 				mainAxisAlignment: MainAxisAlignment.center,
@@ -129,7 +129,7 @@ class AdminCalendarState extends ModelListener<
 							const Spacer(flex: 2),
 							Text(
 								"${months [currentMonth]} ${model.years [currentMonth]}",
-								style: Theme.of(context).textTheme.headline4,
+								style: Theme.of(context).textTheme.headlineMedium,
 							),
 							const Spacer(flex: 2),
 							TextButton.icon(

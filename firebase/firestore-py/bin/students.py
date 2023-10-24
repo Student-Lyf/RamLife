@@ -18,7 +18,6 @@ if __name__ == '__main__':
 	utils.logger.debug("Homeroom locations", homeroom_locations)
 	semesters = utils.logger.log_value("semesters", student_reader.read_semesters)
 	
-	
 	schedules, homerooms, seniors = utils.logger.log_value(
 		"schedules", lambda: student_reader.get_schedules(
 			students = students,
@@ -27,7 +26,7 @@ if __name__ == '__main__':
 			semesters = semesters,
 		)
 	)
-	
+
 	student_reader.set_students_schedules(
 		schedules = schedules,
 		homerooms = homerooms, 

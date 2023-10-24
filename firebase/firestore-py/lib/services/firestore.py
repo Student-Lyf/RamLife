@@ -81,3 +81,42 @@ def upload_sports(sports_games):
     year = str(int(year) - 1)
 
   sports.document(year).set({"games": sports_games})
+
+def update_user_beta(users, schedules):
+  """
+  Updates users in firestore by reading the whole schedule from a pdf (this part is just the updating part)
+  Precondition: users is a list of emails
+                schedules is a list of dictioniaries that map weekdays to a list of Period objects.
+                Each index of users corresponds to a schedule in schedules.
+  
+  Note: Reads the user's data first because not all of their data can be obtained from the PDF
+        Ex: Homeroom info
+  """
+  if len(users) > 10: 
+    update_user_beta(users[10:], schedules[10:])
+    users = users[:10]
+    schedules = schedules[:10]
+
+  user_to_sched = {users[i]:schedules[i] for i in range(len(users))}
+
+  query = students.where("email", "in", users).stream()
+  batch = _firestore.batch()
+
+  for user in query:
+    user_dict = user.to_dict()
+    email = user_dict['email']
+    schedule = user_to_sched[email]
+ 
+    for day, sched in schedule.items():
+      for p_num,period in enumerate(sched):
+        if period is not None:
+          user_dict[day][p_num] = {
+            'room': period.room,
+            'dayName': day,
+            'id': period.id,
+            'name': period.period
+          }
+        else:
+          user_dict[day][p_num] = None
+    batch.set(students.document(user_dict['email']), user_dict)
+  batch.commit()
