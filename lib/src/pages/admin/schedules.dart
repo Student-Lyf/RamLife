@@ -28,7 +28,7 @@ class AdminScheduleState extends
 	@override
 	Widget build(BuildContext context) => ResponsiveScaffold(
 		appBar: AppBar(title: const Text("Custom schedules")),
-		drawer: const NavigationDrawer(),
+		drawer: const RamlifeDrawer(),
 		floatingActionButton: FloatingActionButton(
 			onPressed: () async {
 				final Schedule? schedule = await ScheduleBuilder.buildSchedule(context);
@@ -39,7 +39,7 @@ class AdminScheduleState extends
 			},
 			child: const Icon(Icons.add),
 		),
-		bodyBuilder: (_) => Padding(
+		body: Padding(
 			padding: const EdgeInsets.all(20), 
 			child: model.schedules.isEmpty
 				? const Center (

@@ -1,6 +1,6 @@
 import "package:flutter/material.dart";
 
-import "package:url_launcher/url_launcher.dart" show launch;
+import "package:url_launcher/url_launcher.dart";
 
 /// An icon that opens a link when tapped. 
 class LinkIcon extends StatelessWidget {
@@ -15,7 +15,7 @@ class LinkIcon extends StatelessWidget {
 
 	@override Widget build(BuildContext context) => IconButton (
 		iconSize: 45,
-		onPressed: () => launch (url),
+		onPressed: () => launchUrl(Uri.parse(url)),
 		icon: CircleAvatar(backgroundImage: AssetImage(path)),
 	);
 }
