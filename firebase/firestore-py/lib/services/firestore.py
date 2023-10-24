@@ -76,8 +76,8 @@ def upload_sports(sports_games):
   year = date.today().strftime("%Y")
   month = int(date.today().strftime("%m"))
 
-  # In the academic year 22' - 23', use 2022
+  # In the academic year 22' - 23', use 2022 not 2023
   if month < 7:
     year = str(int(year) - 1)
 
-  sports.document(year).set({"games": sports_games})
+  sports.document(year).set({"games": [game.to_json() for game in sports_games]})

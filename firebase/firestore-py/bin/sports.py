@@ -8,7 +8,7 @@ if __name__ == "__main__":
     sports_schedule = utils.logger.log_value("sports schedule", sports_reader.read_sports)
     utils.logger.verbose(f"Found {len(sports_schedule)} sports games")
 
-    utils.logger.info("Finished processing students")
+    utils.logger.info("Finished processing sports games")
 
     if utils.args.should_upload:
         utils.logger.log_progress(

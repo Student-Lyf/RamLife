@@ -1,4 +1,5 @@
 import lib.utils as utils
+from lib.data.sports import SportsGame
 import csv
 from datetime import date
 year = date.today().strftime("%Y")
@@ -7,77 +8,29 @@ year = date.today().strftime("%Y")
 This handles reading sports.csv and its logic all in one (faster!)
 """
 
-KEYWORDS = {
-    "BVH": "Boys Varsity Hockey",
-    "BJVH": "Boys JV Hockey",
-    
-    "GVBB": "Girls Varsity Basketball",
-    "GJVBB": "Girls JV Basketball",
-
-    "BVBB": "Boys Varsity Basketball",
-    "BJVBB": "Boys JV Basketball",
-
-    "GVVB": "Girls Varsity Volleyball",
-    "GJVVB": "Girls JV Volleyball"
-}
-
 def read_sports():
     with open(utils.dir.sports_schedule) as f:
-        return_list = []
+        games = []
         for row in csv.DictReader(f):
             opponent = row["Opponent"]
             if opponent == "": continue
 
-            isHome = row["Location"] == "Home"
-            livestreamUrl = None
-
             date = get_date(year, row["Date"])
-
+            livestream_url = None
             scores = None
-
-            try:
-                team = KEYWORDS[row["Team"]]
-                sport = team.split(" ")[-1].lower()
-
-            # When the [team] cell has the tournament name instead
-            except KeyError: 
-                team = row["Team"]
-                # NOTE: This assumes that for all tournaments, the sport is basketball
-                # sports.csv makes no indication what sport it is, but its most likely basketball
-                sport = "basketball"
-
             start = row["Time"].split(" ")[0] # The split(" ")[0] gets rid of " PM" if it's in the time
-            try:
-                start_hour = int(start[:start.index(":")]) + 12
-                start_min = int(start[start.index(":")+1:])
 
-                # Assume games take 1.5 hours
-                end_min = start_min + 30
-                end_hour = start_hour + 1
-
-                if end_min > 60:
-                    end_hour += end_min // 60
-                    end_min = end_min % 60
-
-
-            except:
-                start_hour, start_min, end_hour, end_min = 0, 0, 0, 0
-
-            times = {
-                "end": {"hour": end_hour, "minutes": end_min},
-                "start": {"hour": start_hour, "minutes": start_min}
-            }
-
-            return_list.append({"date":date, 
-                                "isHome":isHome, 
-                                "livestreamUrl":livestreamUrl,
-                                 "opponent": opponent,
-                                 "scores": scores,
-                                 "sport": sport,
-                                 "team": team,
-                                 "times": times})
+            games.append(SportsGame(
+                opponent=opponent, 
+                location=row["Location"], 
+                date=date, 
+                livestream_url=livestream_url, 
+                scores=scores, 
+                team=row["Team"], 
+                start=start)
+                )
         
-        return return_list
+        return games
 
 def get_date(year, date):
     ...
