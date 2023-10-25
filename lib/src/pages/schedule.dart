@@ -32,7 +32,7 @@ class SchedulePage extends StatelessWidget {
 			ScaffoldMessenger.of(context).showSnackBar(
 				const SnackBar (
 					content: Text ("There is no school on this day"),
-				)
+				),
 			);
 		}
 	}
@@ -223,7 +223,7 @@ class SuggestionWidget extends StatelessWidget {
 							children: [ 
 								Text(
 									suggestion.name,
-									style: Theme.of(context).textTheme.titleMedium
+									style: Theme.of(context).textTheme.titleMedium,
 								),
 								const SizedBox(height: 5),
 								Text(
@@ -239,19 +239,19 @@ class SuggestionWidget extends StatelessWidget {
 										linkStyle: Theme.of(context).textTheme.bodySmall?.merge(
                       const TextStyle(color: Colors.blue),
                     ),
-                	)
-							]
-						)
-					)
-				)
-			])
+                	),
+							],
+						),
+					),
+				),
+			],),
 		),
 		const Divider(
 			height: 20,
 			indent: 40,
-			endIndent: 40
-		)
-	]
+			endIndent: 40,
+		),
+	],
 	);
 }
 
@@ -270,12 +270,12 @@ class ResultWidget extends StatelessWidget {
 			ListTile(
 				title: Text(
 					"${period.dayName} Period ${period.name}",
-						style: Theme.of(context).textTheme.titleMedium
+						style: Theme.of(context).textTheme.titleMedium,
 					),
 				subtitle: Text(
 					"Room ${period.room}",
 					style: Theme.of(context).textTheme.bodySmall,
-				)
+				),
 			),
 			for (final reminder in Models.instance.reminders.getReminders(
 				dayName: period.dayName,
@@ -296,6 +296,6 @@ class ResultWidget extends StatelessWidget {
 					),
 				),
 			const Divider(height: 20),
-		]
+		],
 	);
 }
