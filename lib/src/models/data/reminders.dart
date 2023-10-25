@@ -31,8 +31,8 @@ class Reminders extends Model {
 	@override
 	Future<void> init() async {
 		reminders = [
-			for (final Map json in await Services.instance.database.reminders.getAll())
-				Reminder.fromJson(json)
+			for (final Json json in await Services.instance.database.reminders.getAll())
+				Reminder.fromJson(json),
 		];
 	}
 
@@ -74,13 +74,13 @@ class Reminders extends Model {
 	/// This makes sure that any reminders in [currentReminders], 
 	/// [nextReminders], and [readReminders] are all up-to-date. 
 	void verifyReminders(int changedIndex) {
-		final List<List<int>> reminderLists = [
+		final reminderLists = <List<int>>[
 			currentReminders, 
 			nextReminders, 
-			readReminders
+			readReminders,
 		];
-		for (final List<int> remindersList in reminderLists) {
-			final int removeIndex = remindersList.indexOf(changedIndex);
+		for (final remindersList in reminderLists) {
+			final removeIndex = remindersList.indexOf(changedIndex);
 			if (removeIndex != -1) {
 				remindersList.removeAt(removeIndex);
 			}
@@ -117,7 +117,7 @@ class Reminders extends Model {
 
 	/// Deletes the reminder at a given index.
 	Future<void> deleteReminder(int index) async {
-		final String id = reminders [index].id;
+		final id = reminders [index].id;
 		await Services.instance.database.reminders.delete(id);
 		reminders.removeAt(index);
 		verifyReminders(index);  // remove the reminder from the schedule
@@ -130,10 +130,10 @@ class Reminders extends Model {
 	/// does not repeat and has been shown already (ie, in [currentReminders]), 
 	/// then calls [deleteReminder] on them. 
 	void cleanReminders() {
-		for (final Reminder reminder in [
+		for (final reminder in [
 			for (final int index in readReminders)
 				if (!reminders [index].time.repeats && !currentReminders.contains(index))
-					reminders [index]
+					reminders [index],
 		]) {
 			deleteReminder(reminders.indexOf(reminder));
 		}

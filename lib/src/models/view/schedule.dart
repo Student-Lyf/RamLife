@@ -8,7 +8,7 @@ import "package:ramaz/models.dart";
 class ScheduleViewModel with ChangeNotifier {
 	/// The default [Schedule] for the UI.
 	Schedule defaultWeekday = Schedule.schedules.firstWhere((schedule) =>
-	schedule.name =="Weekday");
+	schedule.name =="Weekday",);
 	///
 	Map<String, Schedule> get defatulSchedule => {
 		"Monday":defaultWeekday,
@@ -16,7 +16,7 @@ class ScheduleViewModel with ChangeNotifier {
 		"Wednesday":defaultWeekday,
 		"Thursday":defaultWeekday,
 		"Friday":Schedule.schedules.firstWhere((schedule) =>
-		schedule.name == "Friday"),
+		schedule.name == "Friday",),
 	};
 
 	/// The default [Day] for the UI.
@@ -44,7 +44,7 @@ class ScheduleViewModel with ChangeNotifier {
 	ScheduleViewModel () : dataModel = Models.instance.schedule {
 		defaultDay = Day(
 			name: Models.instance.user.data.schedule.keys.first, 
-			schedule: defatulSchedule[Models.instance.user.data.schedule.keys.first]!
+			schedule: defatulSchedule[Models.instance.user.data.schedule.keys.first]!,
 		);
 		day = dataModel.today ?? defaultDay;
 	}
@@ -54,12 +54,12 @@ class ScheduleViewModel with ChangeNotifier {
 	/// If there is no school on that day, then [ArgumentError] is thrown.
 	set date(DateTime date) {
 		// Get rid of time
-		final DateTime justDate = DateTime.utc (
+		final justDate = DateTime.utc (
 			date.year, 
 			date.month,
-			date.day
+			date.day,
 		);
-		final Day? selected = Day.getDate(dataModel.calendar, justDate);
+		final selected = Day.getDate(dataModel.calendar, justDate);
 		if (selected == null) {
 			throw Exception("No School");
 		}
@@ -79,13 +79,12 @@ class ScheduleViewModel with ChangeNotifier {
 		Schedule? newSchedule, 
 		void Function()? onInvalidSchedule,
 	}) {
-		final String name = newName ?? day.name;
-		final Schedule schedule = newSchedule ?? day.schedule;
+		final name = newName ?? day.name;
+		final schedule = newSchedule ?? day.schedule;
 		day = Day(name: name, schedule: schedule);
 		notifyListeners();
 		try {
 			// Just to see if the computation is possible. 
-			// TODO: Move the logic from ClassList here. 
 			Models.instance.schedule.user.getPeriods(day);
 		} on RangeError { // ignore: avoid_catching_errors
 			day = Day(name: day.name, schedule: defatulSchedule[day.name]!);

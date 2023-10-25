@@ -108,8 +108,8 @@ class SportsModel with ChangeNotifier {
 	void divideGames() {
 		recents = [];
 		upcoming = [];
-		final DateTime now = DateTime.now();
-		for (final MapEntry<int, SportsGame> entry in data.games.asMap().entries) {
+		final now = DateTime.now();
+		for (final entry in data.games.asMap().entries) {
 			(entry.value.dateTime.isAfter(now) ? upcoming : recents).add(entry.key);
 		}
 		recents.sort(sortByDate);
@@ -121,16 +121,16 @@ class SportsModel with ChangeNotifier {
 	/// The resulting map has all the sports as keys, and a list of games with 
 	/// that sport as its values.
 	Map<Sport, List<int>> sortBySport(List<int> gamesList) {
-		final Map<Sport, List<int>> result = {};
-		for (final int index in gamesList) {
-			final SportsGame game = data.games [index];
+		final result = <Sport, List<int>>{};
+		for (final index in gamesList) {
+			final game = data.games [index];
 			if (!result.containsKey(game.sport)) {
 				result [game.sport] = [index];
 			} else {
 				result [game.sport]!.add(index);
 			}
 		}
-		for (final List<int> gamesList in result.values) {
+		for (final gamesList in result.values) {
 			gamesList.sort(sortByDate);  // sort chronologically in place
 		}
 		return result;

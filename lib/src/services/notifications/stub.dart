@@ -29,7 +29,7 @@ class StubNotifications extends Notifications {
 	@override
 	void scheduleNotification({
 		required Notification notification, 
-		required DateTime date
+		required DateTime date,
 	}) {}
 
 	@override

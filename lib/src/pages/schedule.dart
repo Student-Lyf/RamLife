@@ -17,7 +17,7 @@ class SchedulePage extends StatelessWidget {
 	/// 
 	/// If there is no school on that day, a [SnackBar] will be shown. 
 	Future<void> viewDay(ScheduleViewModel model, BuildContext context) async {
-		final DateTime? selected = await pickDate(
+		final selected = await pickDate(
 			context: context,
 			initialDate: model.date,
 		);
@@ -28,10 +28,11 @@ class SchedulePage extends StatelessWidget {
 		try {
 			model.date = selected;
 		} on Exception {  // user picked a day with no school
+      if (!context.mounted) return;
 			ScaffoldMessenger.of(context).showSnackBar(
 				const SnackBar (
-					content: Text ("There is no school on this day")
-				)
+					content: Text ("There is no school on this day"),
+				),
 			);
 		}
 	}
@@ -55,10 +56,10 @@ class SchedulePage extends StatelessWidget {
 						tooltip: "Search schedule",
 						onPressed: () => showSearch(
 							context: context,
-							delegate: CustomSearchDelegate(hintText: "Search for a class")
+							delegate: CustomSearchDelegate(hintText: "Search for a class"),
 						),
-					)
-				)]
+					),
+				),],
 			),
 			floatingActionButton: FloatingActionButton(
 				onPressed: () => viewDay(model, context),
@@ -79,9 +80,9 @@ class SchedulePage extends StatelessWidget {
 									DropdownMenuItem(
 										value: dayName,
 										child: Text(dayName),
-									)
-							]
-						)
+									),
+							],
+						),
 					),
 					ListTile (
 						title: const Text ("Schedule"),
@@ -97,24 +98,24 @@ class SchedulePage extends StatelessWidget {
 										value: schedule,
 										child: Text (schedule.name),
 									),
-							]
-						)
+							],
+						),
 					),
 					const Divider(height: 40),
 					Expanded(
 						child: ClassList(
 							day: model.day, 
-							periods: Models.instance.user.data.getPeriods(model.day)
+							periods: Models.instance.user.data.getPeriods(model.day),
 						),
 					),
-				]
-			))
-		)
+				],
+			),),
+		),
 	);
 }
 
 /// A class that creates the search bar using ScheduleModel.
-class CustomSearchDelegate extends SearchDelegate {
+class CustomSearchDelegate extends SearchDelegate<Subject> {
 	/// This model handles the searching logic.
 	final ScheduleSearchModel model = ScheduleSearchModel();
 
@@ -130,19 +131,19 @@ class CustomSearchDelegate extends SearchDelegate {
 	@override
 	Widget buildLeading(BuildContext context) => ElevatedButton(
 		onPressed: () => Navigator.of(context).pop(),
-		child: const Icon(Icons.arrow_back)
+		child: const Icon(Icons.arrow_back),
 	);
 
 	@override
 	Widget buildSuggestions(BuildContext context) {
 
-		final List<Subject> subjects = model.getMatchingClasses(query.toLowerCase());
+		final subjects = model.getMatchingClasses(query.toLowerCase());
 
 		return ListView(
 			children: [
 				const SizedBox(height: 15),
 				if (subjects.isNotEmpty)
-					for (Subject suggestion in subjects)
+					for (final Subject suggestion in subjects)
 						SuggestionWidget(
 							suggestion: suggestion,
 							onTap: () {
@@ -152,39 +153,37 @@ class CustomSearchDelegate extends SearchDelegate {
 						)
 				else 
 					Column(
-						crossAxisAlignment: CrossAxisAlignment.center,
 						children: [ Text(
 							"No Results Found",
-							style: Theme.of(context).textTheme.headlineMedium
-						)
-					])
-			]
+							style: Theme.of(context).textTheme.headlineMedium,
+						),
+					],),
+			],
 		);
 	}
 
 	@override
 	Widget buildResults(BuildContext context) { 
 
-		final List<Subject> subjects = model.getMatchingClasses(query.toLowerCase());
+		final subjects = model.getMatchingClasses(query.toLowerCase());
 
 		return ListView(
 			children: [
 				const SizedBox(height: 15),
 				if (subjects.isNotEmpty)
 					for (
-						PeriodData period in 
+						final PeriodData period in 
 						model.getPeriods(subjects.first)
 					)
 						ResultWidget(period)
 				else 
 					Column(
-						crossAxisAlignment: CrossAxisAlignment.center,
 						children: [ Text(
 							"No Results Found",
-							style: Theme.of(context).textTheme.headlineMedium
-						)
-					])
-			]
+							style: Theme.of(context).textTheme.headlineMedium,
+						),
+					],),
+			],
 		);
 	}
 
@@ -193,8 +192,8 @@ class CustomSearchDelegate extends SearchDelegate {
 		if (query != "")
 			IconButton(
 				icon: const Icon(Icons.close),
-				onPressed: () => query = ""
-			)
+				onPressed: () => query = "",
+			),
 	];
 }
 
@@ -210,7 +209,7 @@ class SuggestionWidget extends StatelessWidget {
 	/// A constructor that defines what a suggestion should have.
 	const SuggestionWidget({
 		required this.suggestion,
-		required this.onTap
+		required this.onTap,
 	});
 
 	@override
@@ -227,32 +226,32 @@ class SuggestionWidget extends StatelessWidget {
 							children: [ 
 								Text(
 									suggestion.name,
-									style: Theme.of(context).textTheme.headlineMedium
+									style: Theme.of(context).textTheme.headlineMedium,
 								),
 								const SizedBox(height: 5),
 								Text(
 									"${suggestion.teacher}   ${suggestion.id}",
-									style: Theme.of(context).textTheme.titleLarge
+									style: Theme.of(context).textTheme.titleLarge,
 								),
 								const SizedBox(height: 10),
 								if (suggestion.virtualLink != null)
 									LinkText(
 										"Link: ${suggestion.virtualLink}",
 										shouldTrimParams: true,
-										linkStyle: const TextStyle(color: Colors.blue)
-                	)
-							]
-						)
-					)
-				)
-			])
+										linkStyle: const TextStyle(color: Colors.blue),
+                	),
+							],
+						),
+					),
+				),
+			],),
 		),
 		const Divider(
 			height: 20,
 			indent: 40,
-			endIndent: 40
-		)
-	]
+			endIndent: 40,
+		),
+	],
 	);
 }
 
@@ -272,17 +271,17 @@ class ResultWidget extends StatelessWidget {
 			ListTile(
 				title: Text(
 					period.dayName,
-						style: Theme.of(context).textTheme.headlineMedium
+						style: Theme.of(context).textTheme.headlineMedium,
 					),
 				subtitle: Text(
 					"Period ${period.name}   Room ${period.room}",
-					style: Theme.of(context).textTheme.titleLarge
-				)
+					style: Theme.of(context).textTheme.titleLarge,
+				),
 			),
-			for (int reminder in Models.instance.reminders.getReminders(
+			for (final int reminder in Models.instance.reminders.getReminders(
 				dayName: period.dayName,
 				period: period.name,
-				subject: Models.instance.user.subjects[period.id]?.name
+				subject: Models.instance.user.subjects[period.id]?.name,
 			))
 				Padding(
 					padding: const EdgeInsets.only(left: 7),
@@ -292,12 +291,12 @@ class ResultWidget extends StatelessWidget {
 							const SizedBox(width: 3),
 							Text(
 								Models.instance.reminders.reminders[reminder].message,
-								style: Theme.of(context).textTheme.titleMedium
-							)
-						]
-					)
+								style: Theme.of(context).textTheme.titleMedium,
+							),
+						],
+					),
 				),
 			const Divider(height: 20),
-		]
+		],
 	);
 }

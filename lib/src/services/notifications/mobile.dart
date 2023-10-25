@@ -31,18 +31,12 @@ class MobileNotification extends Notification {
 			priority: Priority.high,
 			color: RamazColors.blue,
 			groupKey: "reminders",
-			playSound: true,
-			enableVibration: true,
-			setAsGroupSummary: false,
-			channelShowBadge: true,
-			icon: null,
-			styleInformation: null,
 			enableLights: true,
 		),
 		iOS: DarwinNotificationDetails(
 			presentBadge: true,
-			presentSound: true
-		)
+			presentSound: true,
+		),
 	);
 
 	/// The platform-agnostic [NotificationDetails] for this class.  
@@ -50,18 +44,17 @@ class MobileNotification extends Notification {
 
 	/// Creates a new [Notification]. 
 	const MobileNotification({
-		required String title,
-		required String message,
+		required super.title,
+		required super.message,
 		required this.details,
-	}) : super(title: title, message: message);
+	});
 
 	/// The optimal configuration for a reminder notification.
 	MobileNotification.reminder({
-		required String title,
-		required String message,
+		required super.title,
+		required super.message,
 	}) : 
-		details = reminderDetails, 
-		super(title: title, message: message);
+		details = reminderDetails;
 }
 
 /// The mobile implementation of the notifications service. 
@@ -74,10 +67,10 @@ class MobileNotifications extends Notifications {
 		await plugin.initialize(
 			const InitializationSettings(
 				android: AndroidInitializationSettings(
-					"@mipmap/bright_yellow"  // default icon of app
+					"@mipmap/bright_yellow",  // default icon of app
 				),
 				iOS: DarwinInitializationSettings(),  // defaults are good
-			)
+			),
 		);
 		tz.initializeTimeZones();
 	}
@@ -117,6 +110,6 @@ class MobileNotifications extends Notifications {
 			final PendingNotificationRequest request in 
 			await plugin.pendingNotificationRequests()
 		) 
-			request.title!
+			request.title!,
 	];
 }

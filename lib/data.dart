@@ -26,4 +26,5 @@ export "src/data/schedule/subject.dart";
 export "src/data/schedule/time.dart";
 
 export "src/data/sports.dart";
+export "src/data/types.dart";
 export "src/data/user.dart";

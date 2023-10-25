@@ -42,7 +42,7 @@ class IntegerInput extends StatelessWidget {
         child: const Icon(Icons.add),
       ),
       const SizedBox(width: 16),
-    ]
+    ],
   );
 }
 
@@ -58,13 +58,13 @@ class ScheduleBuilder extends StatefulWidget {
 	/// This allows admins to make small changes quickly. 
 	static Future<Schedule?> buildSchedule(
 		BuildContext context,
-		{Schedule? preset}
+		{Schedule? preset,}
 	) => Navigator
 		.of(context)
 		.push<Schedule>(
 			PageRouteBuilder(
 				transitionDuration: Duration.zero,
-				pageBuilder: (_, __, ___) => ScheduleBuilder(preset: preset))
+				pageBuilder: (_, __, ___) => ScheduleBuilder(preset: preset),),
 		);
 
 	/// The schedule to work off.
@@ -149,7 +149,7 @@ class ScheduleBuilderState extends State<ScheduleBuilder> {
 	                      Text(
 	                      	period.start?.format(context) ?? "Start time",
 	                      	style: !period.hasInvalidTime ? null : TextStyle(
-	                      		color: Theme.of(context).colorScheme.error
+	                      		color: Theme.of(context).colorScheme.error,
                       		),
                       	),
 	                      placeholder: period.start == null,
@@ -158,13 +158,13 @@ class ScheduleBuilderState extends State<ScheduleBuilder> {
 	                        period.start = (await editTime(period.start)) 
 		                        ?? period.start;
 	                        setState(() {});
-	                      } 
+	                      }, 
 	                    ),
 	                    DataCell(
 	                      Text(
 	                      	period.end?.format(context) ?? "End time",
 	                      	style: !period.hasInvalidTime ? null : TextStyle(
-	                      		color: Theme.of(context).colorScheme.error
+	                      		color: Theme.of(context).colorScheme.error,
                       		),
                       	),
 	                      placeholder: period.end == null,
@@ -173,15 +173,15 @@ class ScheduleBuilderState extends State<ScheduleBuilder> {
 	                        period.end = (await editTime(period.end)) 
 		                        ?? period.end;
 	                        setState(() {});
-	                      } 
+	                      }, 
 	                    ),
 	                    DataCell(
 	                      int.tryParse(period.name) == null ? Container() 
 		                      : const Icon(Icons.check, color: Colors.green),
-	                    )
-	                  ]
+	                    ),
+	                  ],
 	                ),
-	              ]
+	              ],
 	            ),
 	          ],
 	        ),
@@ -191,7 +191,7 @@ class ScheduleBuilderState extends State<ScheduleBuilder> {
 	        children: [
 	          const SizedBox(width: 16),
 	          TextButton(
-	            onPressed: () => showModalBottomSheet(
+	            onPressed: () => showModalBottomSheet<void>(
 	              context: context,
 	              builder: (_) => ListView(
 	                children: [
@@ -202,10 +202,10 @@ class ScheduleBuilderState extends State<ScheduleBuilder> {
 	                    	onTap: () {
 	                    		model.usePreset(schedule);
 	                    		Navigator.of(context).pop();
-	                    	}
-	                  	)
-	                ]
-	              )
+	                    	},
+	                  	),
+	                ],
+	              ),
 	            ),
 	            child: const Text("Build off another schedule"),
 	          ),
@@ -220,11 +220,11 @@ class ScheduleBuilderState extends State<ScheduleBuilder> {
 	            child: const Text("Save"),
 	          ),
 	          const SizedBox(width: 16),
-	        ]
+	        ],
 	      ),
 	      const SizedBox(height: 16),
-	    ]
-    )
+	    ],
+    ),
   );
     
 	/// Picks a new time for a period. 
@@ -232,7 +232,7 @@ class ScheduleBuilderState extends State<ScheduleBuilder> {
 	/// On desktop, this shows the keyboard-friendly UI. On all other devices,
 	/// the touch-friendly UI is the default.
   Future<TimeOfDay?> editTime([TimeOfDay? initialTime]) {
-  	final LayoutInfo layout = LayoutInfo(context);
+  	final layout = LayoutInfo(context);
   	return showTimePicker(
 	    context: context,
 	    initialTime: initialTime ?? TimeOfDay.now(),

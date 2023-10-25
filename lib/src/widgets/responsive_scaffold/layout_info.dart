@@ -30,16 +30,14 @@ class LayoutInfo {
 	bool get hasStandardDrawer => deviceType == DeviceType.desktop;
 
 	/// The probable device being used, based on the size.
-	DeviceType get deviceType {
-		switch (windowType) {
-			case AdaptiveWindowType.xsmall: return DeviceType.mobile;
-			case AdaptiveWindowType.small: return DeviceType.tabletPortrait;
-			case AdaptiveWindowType.medium: return DeviceType.tabletLandscape;
-			case AdaptiveWindowType.large: return DeviceType.desktop;
-			case AdaptiveWindowType.xlarge: return DeviceType.desktop;
-			default: return DeviceType.mobile;
-		}
-	}
+	DeviceType get deviceType => switch (windowType) {
+    AdaptiveWindowType.xsmall => DeviceType.mobile,
+    AdaptiveWindowType.small => DeviceType.tabletPortrait,
+    AdaptiveWindowType.medium => DeviceType.tabletLandscape,
+    AdaptiveWindowType.large => DeviceType.desktop,
+    AdaptiveWindowType.xlarge => DeviceType.desktop,
+    AdaptiveWindowType() => DeviceType.mobile,
+	};
 }
 
 /// Different user devices.

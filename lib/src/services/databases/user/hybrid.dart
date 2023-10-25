@@ -7,7 +7,7 @@ import "interface.dart";
 /// 
 /// User profile is loaded once, on sign-in. Once this is complete, 
 /// the full profile is always assumed to be on-device. 
-class HybridUser extends HybridDatabase implements UserInterface {
+class HybridUser extends HybridDatabase<UserInterface> implements UserInterface {
 	@override
 	final UserInterface cloud = CloudUser();
 
@@ -16,15 +16,15 @@ class HybridUser extends HybridDatabase implements UserInterface {
 
 	@override
 	Future<void> signIn() async {
-		final Map userData = await cloud.getProfile();
+		final userData = await cloud.getProfile();
 		await local.setProfile(userData);
 	}
 
 	@override
-	Future<Map> getProfile() => local.getProfile();
+	Future<Json> getProfile() => local.getProfile();
 
 	@override
-	Future<void> setProfile(Map json) async {
+	Future<void> setProfile(Json json) async {
 		await cloud.setProfile(json);
 		await local.setProfile(json);
 	}

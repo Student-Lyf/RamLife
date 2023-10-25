@@ -1,7 +1,6 @@
-import "dart:convert";
-
 import "package:meta/meta.dart";
 
+import "../types.dart";
 import "period_reminder_time.dart";
 import "subject_reminder_time.dart";
 
@@ -43,7 +42,7 @@ abstract class ReminderTime {
 	/// Allows its subclasses to be `const`. 
 	const ReminderTime({
 		required this.repeats, 
-		required this.type
+		required this.type,
 	});
 
 	/// Initializes a new instance from JSON.
@@ -61,16 +60,10 @@ abstract class ReminderTime {
 	/// 	"name": "Monday",
 	/// }
 	/// ```
-	factory ReminderTime.fromJson(Map json) {
-		switch (stringToReminderTime [json ["type"]]) {
-			case ReminderTimeType.period: return PeriodReminderTime.fromJson(json);
-			case ReminderTimeType.subject: return SubjectReminderTime.fromJson(json);
-			default: throw JsonUnsupportedObjectError(
-				json,
-				cause: "Invalid time for reminder: $json"
-			);
-		}
-	}
+	factory ReminderTime.fromJson(Json json) => switch (stringToReminderTime [json ["type"]]!) {
+		ReminderTimeType.period => PeriodReminderTime.fromJson(json),
+    ReminderTimeType.subject => SubjectReminderTime.fromJson(json),
+  };
 
 	/// Instantiates new [ReminderTime] with all possible parameters. 
 	/// 
@@ -91,12 +84,12 @@ abstract class ReminderTime {
 			); case ReminderTimeType.subject: return SubjectReminderTime(
 				name: name!,
 				repeats: repeats,
-			); default: throw ArgumentError.notNull("type");
+			);
 		}
 	}
 
 	/// Returns this [ReminderTime] as JSON.
-	Map toJson();
+	Json toJson();
 
 	/// Checks if the reminder should be displayed.
 	/// 

@@ -20,23 +20,23 @@ class CloudCalendar implements CalendarInterface {
 		calendar.doc("schedules");
 
 	@override
-	Future<List<Map?>> getMonth(int month) async {
-		final Map json = await calendar.doc(month.toString())
+	Future<List<Json?>> getMonth(int month) async {
+		final json = await calendar.doc(month.toString())
 			.throwIfNull("Month $month not found in cloud database");
-		return List<Map?>.from(json ["calendar"]);
+		return List<Json?>.from(json ["calendar"]);
 	}
 
 	@override
-	Future<void> setMonth(int month, List<Map?> json) => calendar
+	Future<void> setMonth(int month, List<Json?> json) => calendar
 		.doc(month.toString()).set({"month": month, "calendar": json});
 
 	@override
-	Future<List<Map>> getSchedules() async => List<Map>.from(
-		(await schedules.throwIfNull("Cannot find schedules")) ["schedules"]
+	Future<List<Json>> getSchedules() async => List<Json>.from(
+		(await schedules.throwIfNull("Cannot find schedules")) ["schedules"],
 	);
 
 	@override
-	Future<void> setSchedules(List<Map> json) => schedules
+	Future<void> setSchedules(List<Json> json) => schedules
 		.set({"schedules": json});
 }
 
@@ -48,28 +48,28 @@ class CloudCalendar implements CalendarInterface {
 /// The schedules are in another object store where the names are the keys.
 class LocalCalendar implements CalendarInterface {
 	@override
-	Future<List<Map?>> getMonth(int month) async {
-		final Map json = await Idb.instance.throwIfNull(
+	Future<List<Json?>> getMonth(int month) async {
+		final json = await Idb.instance.throwIfNull(
 			storeName: Idb.calendarStoreName,
 			key: month,
 			message: "Cannot find $month in local database",
 		);
-		return List<Map?>.from(json ["calendar"]);
+		return List<Json?>.from(json ["calendar"]);
 	}
 
 	@override
-	Future<void> setMonth(int month, List<Map?> json) => Idb.instance.update(
+	Future<void> setMonth(int month, List<Json?> json) => Idb.instance.update(
 		storeName: Idb.calendarStoreName,
 		value: {"month": month, "calendar": json},
 	);
 
 	@override
-	Future<List<Map>> getSchedules() => Idb.instance
+	Future<List<Json>> getSchedules() => Idb.instance
 		.getAll(Idb.scheduleStoreName);
 
 	@override
-	Future<void> setSchedules(List<Map> json) async {
-		for (final Map schedule in json) {
+	Future<void> setSchedules(List<Json> json) async {
+		for (final schedule in json) {
 			await Idb.instance.update(
 				storeName: Idb.scheduleStoreName,
 				value: schedule,

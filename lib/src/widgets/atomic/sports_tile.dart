@@ -31,10 +31,10 @@ class SportsStats extends StatelessWidget {
   Widget build(BuildContext context) => Row(
     mainAxisAlignment: MainAxisAlignment.spaceBetween,
     children: [
-      Expanded(flex: 1, child: Text(team)),
-      Expanded(flex: 1, child: Text(score?.toString() ?? "")),
+      Expanded(child: Text(team)),
+      Expanded(child: Text(score?.toString() ?? "")),
       Expanded(flex: 2, child: Center(child: Text(dateTime))),
-    ]
+    ],
   );
 }
 
@@ -47,7 +47,7 @@ class SportsScoreUpdater extends StatefulWidget {
   /// Returns the scores as inputted.
   static Future<Scores?> updateScores(
   	BuildContext context,
-  	SportsGame game
+  	SportsGame game,
 	) => showDialog<Scores>(
     context: context,
     builder: (_) => SportsScoreUpdater(game),
@@ -85,7 +85,7 @@ class ScoreUpdaterState extends State<SportsScoreUpdater> {
   Scores get scores => Scores(
     ramazScore: ramazScore!,  // only called if [ready] == true
     otherScore: otherScore!,  // only called if [ready] == true
-    isHome: widget.game.isHome
+    isHome: widget.game.isHome,
   );
 
   /// Whether [scores] is valid and ready to submit.
@@ -115,7 +115,7 @@ class ScoreUpdaterState extends State<SportsScoreUpdater> {
             const Text("Ramaz"),
             const SizedBox(width: 50),
             Text(widget.game.opponent),
-          ]
+          ],
         ),
         const SizedBox(height: 20),
         Row(
@@ -126,10 +126,10 @@ class ScoreUpdaterState extends State<SportsScoreUpdater> {
               child: TextField(
                 controller: ramazController,
                 onChanged: (String score) => setState(
-                  () => ramazScore = int.tryParse(score)
+                  () => ramazScore = int.tryParse(score),
                 ),
                 keyboardType: TextInputType.number,
-              )
+              ),
             ),
             const SizedBox(width: 50),
             SizedBox(
@@ -137,14 +137,14 @@ class ScoreUpdaterState extends State<SportsScoreUpdater> {
               child: TextField(
                 controller: otherController,
                 onChanged: (String score) => setState(
-                  () => otherScore = int.tryParse(score)
+                  () => otherScore = int.tryParse(score),
                 ),
                 keyboardType: TextInputType.number,
-              )
+              ),
             ),
-          ]
-        )
-      ]
+          ],
+        ),
+      ],
     ),
     actions: [
       TextButton(
@@ -154,8 +154,8 @@ class ScoreUpdaterState extends State<SportsScoreUpdater> {
       ElevatedButton(
         onPressed: !ready ? null : () => Navigator.of(context).pop(scores),
         child: const Text("Save"),
-      )
-    ]
+      ),
+    ],
   );
 }
 
@@ -232,7 +232,7 @@ class SportsTile extends StatelessWidget {
                 leading: Icon(
                   icon, 
                   size: 36,
-                  color: Theme.of(context).colorScheme.onBackground
+                  color: Theme.of(context).colorScheme.onBackground,
                 ),
                 title: Text(game.team,textScaleFactor: 1.3),
                 subtitle: Text(game.isHome
@@ -264,23 +264,23 @@ class SportsTile extends StatelessWidget {
                 score: game.scores?.getScore(home: true),
                 dateTime: formatTimeRange(game.times,context),
               ),
-            ]
-          )
+            ],
+          ),
         ),
-      )
-    )
+      ),
+    ),
   );
 
   /// Formats a [Range] according to the user's locale.
   String formatTimeRange(Range times,BuildContext context) {
     final locale = MaterialLocalizations.of(context);
-    final TimeOfDay start = TimeOfDay(
+    final start = TimeOfDay(
       hour: times.start.hour, 
-      minute: times.start.minutes
+      minute: times.start.minutes,
     );
-    final TimeOfDay end = TimeOfDay(
+    final end = TimeOfDay(
       hour: times.end.hour, 
-      minute: times.end.minutes
+      minute: times.end.minutes,
     );
     return "${locale.formatTimeOfDay(start)} - ${locale.formatTimeOfDay(end)}";
   }

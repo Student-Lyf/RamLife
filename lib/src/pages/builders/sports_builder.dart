@@ -64,11 +64,11 @@ class FormRow extends StatelessWidget {
 						constraints: const BoxConstraints(maxWidth: 200, maxHeight: 75),
 						child: picker,
 					)
-					else picker
-				]
+					else picker,
+				],
 			),
 			const SizedBox(height: 25),
-		]
+		],
 	);
 }
 
@@ -81,11 +81,11 @@ class SportsBuilder extends StatefulWidget {
 	/// Opens a form for the user to 
 	static Future<SportsGame?> createGame(
 		BuildContext context, 
-		[SportsGame? parent]
+		[SportsGame? parent,]
 	) => Navigator.of(context).push<SportsGame>(
 		MaterialPageRoute(
 			builder: (BuildContext context) => SportsBuilder(parent),
-		)
+		),
 	);
 
 	/// Fills all the properties on this page with the properties of this game.
@@ -141,10 +141,10 @@ class SportBuilderState extends ModelListener<
 		bottomSheet: !model.loading ? null : Container(
 			height: 60, 
 			padding: const EdgeInsets.all(10),
-			child: Row(
+			child: const Row(
 				mainAxisAlignment: MainAxisAlignment.spaceBetween,
-				children: const [Text("Saving..."), CircularProgressIndicator()]
-			)
+				children: [Text("Saving..."), CircularProgressIndicator()],
+			),
 		),
 		body: ListView(
 			padding: const EdgeInsets.all(20),
@@ -159,8 +159,8 @@ class SportBuilderState extends ModelListener<
 							for (final Sport sport in Sport.values) 
 								DropdownMenuItem<Sport>(
 									value: sport,
-									child: Text(SportsGame.capitalize(sport))
-								)
+									child: Text(SportsGame.capitalize(sport)),
+								),
 						],
 					),
 					sized: true,
@@ -205,7 +205,7 @@ class SportBuilderState extends ModelListener<
 					whenNull: Icons.date_range,
 					setNewValue: () async => model.date = await pickDate(
 						initialDate: DateTime.now(),
-						context: context
+						context: context,
 					),
 				),
 				FormRow.editable(
@@ -232,20 +232,20 @@ class SportBuilderState extends ModelListener<
 					children: [
 						const Text(
 							"Tap on the card to change the scores", 
-							textScaleFactor: 0.9
+							textScaleFactor: 0.9,
 						),
 						TextButton(
 							onPressed: () => model.scores = null,
 							child: const Text("Clear"),
-						)
-					]
+						),
+					],
 				),
 				const SizedBox(height: 20),
 				if (model.ready) SportsTile(
 					model.game,
 					onTap: () async => model.scores = 
 						await SportsScoreUpdater.updateScores(context, model.game) 
-							?? model.scores
+							?? model.scores,
 			),
 				ButtonBar(
 					children: [
@@ -257,10 +257,10 @@ class SportBuilderState extends ModelListener<
 							onPressed: !model.ready ? null : 
 								() => Navigator.of(context).pop(model.game),
 							child: const Text("Save"),
-						)
-					]
-				)
-			]
-		)
+						),
+					],
+				),
+			],
+		),
 	);
 }

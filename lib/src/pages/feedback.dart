@@ -29,7 +29,6 @@ class FeedbackState extends ModelListener<FeedbackModel, FeedbackPage> {
 				width: 400, 
 				child: Column(
 					mainAxisAlignment: MainAxisAlignment.center,
-					crossAxisAlignment: CrossAxisAlignment.center,
 					children: [
 						TextField(
 							autofocus: true,
@@ -44,8 +43,8 @@ class FeedbackState extends ModelListener<FeedbackModel, FeedbackPage> {
 							onChanged: (bool? value) => model.anonymous = value!,
 							title: const Text("Anonymous"),
 							subtitle: const Text(
-								"To keep your name and email hidden, check this box."
-							)
+								"To keep your name and email hidden, check this box.",
+							),
 						),
 						const SizedBox(height: 50),
 						ElevatedButton.icon(
@@ -54,11 +53,11 @@ class FeedbackState extends ModelListener<FeedbackModel, FeedbackPage> {
 							onPressed: !model.ready ? null : () {
 								model.send();
 								Navigator.of(context).pop();
-							}
-						)
-					]
-				)
-			)
-		)
+							},
+						),
+					],
+				),
+			),
+		),
 	);
 }

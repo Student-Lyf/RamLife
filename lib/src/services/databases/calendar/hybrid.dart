@@ -21,25 +21,25 @@ class HybridCalendar extends HybridDatabase<CalendarInterface> implements Calend
 	@override
 	Future<void> signIn() async {
 		await local.setSchedules(await cloud.getSchedules());
-		for (int month = 1; month <= 12; month++) {
+		for (var month = 1; month <= 12; month++) {
 			await local.setMonth(month, await cloud.getMonth(month));
 		}
 	}
 
 	@override
-	Future<List<Map?>> getMonth(int month) => local.getMonth(month);	
+	Future<List<Json?>> getMonth(int month) => local.getMonth(month);	
 
 	@override
-	Future<void> setMonth(int month, List<Map?> json) async {
+	Future<void> setMonth(int month, List<Json?> json) async {
 		await cloud.setMonth(month, json);
 		await local.setMonth(month, json);
 	}
 
 	@override
-	Future<List<Map>> getSchedules() => local.getSchedules();
+	Future<List<Json>> getSchedules() => local.getSchedules();
 
 	@override
-	Future<void> setSchedules(List<Map> json) async {
+	Future<void> setSchedules(List<Json> json) async {
 		await cloud.setSchedules(json);
 		await local.setSchedules(json);
 	}
@@ -48,7 +48,7 @@ class HybridCalendar extends HybridDatabase<CalendarInterface> implements Calend
 	/// 
 	/// Just saves the schedules and the current month.
 	Future<void> update() async {
-		final int currentMonth = DateTime.now().month;
+		final currentMonth = DateTime.now().month;
 		await local.setSchedules(await cloud.getSchedules());
 		await local.setMonth(currentMonth, await cloud.getMonth(currentMonth));
 	}

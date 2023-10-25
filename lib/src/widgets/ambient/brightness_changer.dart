@@ -53,7 +53,7 @@ class BrightnessChangerState extends State<BrightnessChanger> {
 			onNull: Icons.brightness_auto,
 			onTrue: Icons.brightness_high,
 			onFalse: Icons.brightness_low,
-		)
+		),
 	);
 	
 	@override
@@ -81,19 +81,18 @@ class BrightnessChangerState extends State<BrightnessChanger> {
           hint: const Text("Auto"),
 					items: const [
 						DropdownMenuItem<bool?> (
-							value: null,
-							child: Text ("Auto")
+							child: Text ("Auto"),
 						),
 						DropdownMenuItem<bool?> (
 							value: true,
-							child: Text ("Light")
+							child: Text ("Light"),
 						),
 						DropdownMenuItem<bool?> (
 							value: false,
 							child: Text ("Dark"),
 						),
 					],
-				)
+				),
 			);
 		}
 	}

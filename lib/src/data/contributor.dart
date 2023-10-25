@@ -12,7 +12,7 @@ class Contributor {
 			linkName: "Email me",
 			imageName: "images/contributors/david-tarrab.jpg",
 			description: "David has been working on RamLife since sophomore year and "
-				"mainly works on creating the user interface and page layouts."
+				"mainly works on creating the user interface and page layouts.",
 		),
 		Contributor(
 			name: "Brayden K.",
@@ -22,7 +22,7 @@ class Contributor {
 			linkName: "See my other projects",
 			imageName: "images/contributors/brayden-kohler.jpg",
 			description: "Brayden joined the RamLife team as a sophomore and manages "
-				"the logic of the app. He also handles the database and other services."
+				"the logic of the app. He also handles the database and other services.",
 		),
 		Contributor(
 			name: "Josh Todes",
@@ -32,7 +32,7 @@ class Contributor {
 			linkName: "Email me",
 			imageName: "images/contributors/josh-todes.jpg",
 			description: "Josh worked on the iPhone app since he was a Freshman "
-				"and now handles tying the logic and graphics together seamlessly."
+				"and now handles tying the logic and graphics together seamlessly.",
 		),
 		Contributor(
 			name: "Mr. Vovsha",
@@ -42,7 +42,7 @@ class Contributor {
 			linkName: "Email me",
 			imageName: "images/contributors/eli-vovsha.jpg",
 			description: "Mr. Vovsha led the group since its conception, and has worked"
-				" tirelessly with the school to help bring RamLife where it is today."
+				" tirelessly with the school to help bring RamLife where it is today.",
 		),
 		Contributor(
 			name: "Levi Lesches",
@@ -52,7 +52,7 @@ class Contributor {
 			linkName: "See my other projects",
 			imageName: "images/contributors/levi-lesches.jpg",
 			description: "Levi created RamLife when he was a freshman and expanded it "
-				"over four years. He was the sole programmer until his senior year"
+				"over four years. He was the sole programmer until his senior year",
 		),
 	];
 

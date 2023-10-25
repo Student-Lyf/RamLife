@@ -9,10 +9,14 @@ class SportsBuilderModel with ChangeNotifier {
 	Scores? _scores;
 	Sport? _sport;
 	DateTime? _date;
-	TimeOfDay? _start, _end;
+	TimeOfDay? _start;
+	TimeOfDay? _end;
 
-	String? _opponent, _team, _livestreamUrl;
-	bool _away = false, _loading = false;
+	String? _opponent;
+	String? _team;
+	String? _livestreamUrl;
+	bool _away = false;
+	bool _loading = false;
 
 	/// Creates a ViewModel for the sports game builder page. 
 	/// 

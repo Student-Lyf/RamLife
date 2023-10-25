@@ -2,6 +2,7 @@ import "package:meta/meta.dart";
 
 import "package:ramaz/constants.dart";
 
+import "../types.dart";
 import "period.dart";
 import "time.dart";
 
@@ -44,19 +45,20 @@ class Schedule {
 	/// 
 	/// - a "name" field, which should be a string. See [name].
 	/// - a "periods" field, which should be a list of [Period] JSON objects. 
-	Schedule.fromJson(Map json) :
+	Schedule.fromJson(Json json) :
 		name = json ["name"],  // name
 		periods = [  // list of periods
 			for (final dynamic jsonElement in json ["periods"]) 
-				Period.fromJson(jsonElement)
+				Period.fromJson(jsonElement),
 		];
 
 	/// Determines whether to use a Winter Friday or regular Friday schedule. 
 	/// 
 	/// Winter Fridays mean shorter periods, with an ultimately shorter dismissal.
 	static Schedule getWinterFriday([DateTime? today]) {
-		final DateTime date = today ?? DateTime.now();
-		final int month = date.month, day = date.day;
+		final date = today ?? DateTime.now();
+		final month = date.month;
+		final day = date.day;
 		if (month >= Times.schoolStart && month < Times.winterFridayMonthStart) {
 			return friday;
 		} else if (
@@ -89,7 +91,7 @@ class Schedule {
 		other.name == name;
 
 	/// Returns a JSON representation of this schedule.
-	Map toJson() => {
+	Json toJson() => {
 		"name": name,
 		"periods": [
 			for (final Period period in periods) 

@@ -1,3 +1,5 @@
+import "package:ramaz/data.dart" show Json;
+
 import "package:firebase_auth/firebase_auth.dart";
 import "package:google_sign_in/google_sign_in.dart";
 
@@ -48,14 +50,14 @@ class Auth {
 	/// Gets the user's custom claims. 
 	/// 
 	/// See the official [Firebase docs](https://firebase.google.com/docs/auth/admin/custom-claims). 
-	static Future<Map<String, dynamic>?> get claims async => !isSignedIn ? null
+	static Future<Json?> get claims async => !isSignedIn ? null
 		: (await _currentUser!.getIdTokenResult()).claims;
 
 	/// Whether the user is an admin. 
 	/// 
 	/// This works by checking for an "isAdmin" flag in the user's custom [claims].
 	static Future<bool> get isAdmin async {
-		final Map? customClaims = await claims;
+		final customClaims = await claims;
 		return customClaims != null && (customClaims ["isAdmin"] ?? false);
 	}
 
@@ -63,10 +65,10 @@ class Auth {
 	/// 
 	/// Returns null if the user is not an admin (ie, [isAdmin] returns false).
 	static Future<List<String>?> get adminScopes async {
-		final Iterable? customClaims = (await claims) ?["scopes"];
+		final Iterable<String>? customClaims = (await claims)?["scopes"];
 		return customClaims == null ? null : [
 			for (final String scope in customClaims)
-				scope.toString()
+				scope,
 		];
 	}
 
@@ -87,11 +89,11 @@ class Auth {
 
 	/// Signs the user in using Google as a provider. 
 	static Future<void> signIn() async {
-		final GoogleSignInAccount? googleAccount = await google.signIn();
+		final googleAccount = await google.signIn();
 		if (googleAccount == null) {
 			throw NoAccountException();
 		}
-		final GoogleSignInAuthentication googleAuth = 
+		final googleAuth = 
 			await googleAccount.authentication;
 
 		final AuthCredential credential = GoogleAuthProvider.credential(

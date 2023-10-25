@@ -26,7 +26,7 @@ class CalendarTile extends StatelessWidget{
 		decoration: BoxDecoration(border: Border.all()),
 		child: date == null ? Container() : LayoutBuilder(
 			builder: (BuildContext context, BoxConstraints constraints) {
-				final double textSize = constraints.biggest.width > 120 ? 1.5 : 1;
+				final textSize = constraints.biggest.width > 120 ? 1.5 : 1.0;
 				return Column(
 					children: [
 						Align (
@@ -41,9 +41,9 @@ class CalendarTile extends StatelessWidget{
 							Expanded(child: Text (day!.schedule.name, textScaleFactor: 0.8)),
 						],
 						const Spacer(),
-					]
+					],
 				);
-			}
-		)
+			},
+		),
 	);
 }

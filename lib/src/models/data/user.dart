@@ -34,13 +34,13 @@ class UserModel extends Model {
 		subjects = {
 			for (final String id in data.sectionIDs)
 				id: Subject.fromJson(
-					await Services.instance.database.schedule.getCourse(id)
-				)
+					await Services.instance.database.schedule.getCourse(id),
+				),
 		};
-		final List<String>? scopeStrings = await Auth.adminScopes;
+		final scopeStrings = await Auth.adminScopes;
 		adminScopes = scopeStrings == null ? null : [
 			for (final String scope in scopeStrings)
-				parseAdminScope(scope)
+				parseAdminScope(scope),
 		];
 	}
 }

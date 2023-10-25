@@ -3,6 +3,7 @@ import "package:meta/meta.dart";
 import "package:ramaz/constants.dart";
 
 import "schedule/time.dart";
+import "types.dart";
 
 /// All the different sports that can be played. 
 /// 
@@ -44,8 +45,8 @@ const Map<String, Sport> stringToSport = {
 /// Use this to convert to JSON, since they can only use Strings.
 final Map<Sport, String> sportToString = Map.fromEntries(
 	stringToSport.entries.map(
-		(MapEntry<String, Sport> entry) => MapEntry(entry.value, entry.key)
-	)
+		(MapEntry<String, Sport> entry) => MapEntry(entry.value, entry.key),
+	),
 );
 
 /// The scores for a [SportsGame].
@@ -68,7 +69,7 @@ class Scores {
   const Scores({
   	required this.ramazScore, 
   	required this.otherScore,
-  	required this.isHome
+  	required this.isHome,
 	});
 
   /// Creates a [Scores] object from a JSON entry. 
@@ -78,7 +79,7 @@ class Scores {
 	/// - an "isHome" field, which should be a bool. See [isHome].
 	/// - an "otherScore" field, which should be an integer. See [otherScore].
 	/// - a "ramazScore" field, which should be an integer. See [ramazScore]. 
-  Scores.fromJson(Map json) : 
+  Scores.fromJson(Json json) : 
   	isHome = json ["isHome"],
   	ramazScore = json ["ramaz"],
   	otherScore = json ["other"];
@@ -87,7 +88,7 @@ class Scores {
 	/// 
 	/// Passing the result of this function to [Scores.fromJson()] should
 	/// return an equivalent object. 
-  Map toJson() => {
+  Json toJson() => {
   	"isHome": isHome,
   	"ramaz": ramazScore,
   	"other": otherScore,
@@ -108,6 +109,7 @@ class Scores {
 }
 
 /// A sports game.
+@immutable
 class SportsGame {
 	/// Capitalizes a word. 
 	/// 
@@ -121,15 +123,15 @@ class SportsGame {
 	/// This method is needed since it casts each `dynamic` entry to a
 	/// `Map`, and then passes those values to 
 	/// [SportsGame.fromJson].
-	static List<SportsGame> fromList(List<Map> listJson) => [
-		for (final Map json in listJson) 
-			SportsGame.fromJson(json)
+	static List<SportsGame> fromList(List<Json> listJson) => [
+		for (final Json json in listJson) 
+			SportsGame.fromJson(json),
 	];
 
 	/// Converts a list of [SportsGame]s into a list of JSON entries. 
-	static List<Map> getJsonList(List<SportsGame> games) => [
+	static List<Json> getJsonList(List<SportsGame> games) => [
 		for (final SportsGame game in games) 
-			game.toJson()
+			game.toJson(),
 	];
 
 	/// The type of sport being played.
@@ -164,10 +166,10 @@ class SportsGame {
 	final Scores? scores;
 
 	/// The URL to the livestream for this game
-	late String? livestreamUrl;
+	final String? livestreamUrl;
 
 	/// Creates a game dataclass.
-	SportsGame({
+	const SportsGame({
 		required this.sport,
 		required this.date,
 		required this.times,
@@ -189,7 +191,7 @@ class SportsGame {
 	/// - a "home" field (bool)
 	/// - an "opponent" field (String)
 	/// - a "scores" field. See [Scores.fromJson] for format.
-	SportsGame.fromJson(Map json) :
+	SportsGame.fromJson(Json json) :
 		sport = stringToSport [json ["sport"]]!,
 		date = DateTime.parse(json ["date"]),
 		times = Range.fromJson(json ["times"]),
@@ -197,7 +199,7 @@ class SportsGame {
 		isHome = json ["isHome"],
 		opponent = json ["opponent"],
 		scores = json ["scores"] == null ? null : Scores.fromJson(
-			Map.from(json ["scores"])
+			Json.from(json ["scores"]),
 		),
 		livestreamUrl = json["livestreamUrl"];
 
@@ -219,7 +221,7 @@ class SportsGame {
 	/// 
 	/// Passing the result of this function to [SportsGame.fromJson()] should
 	/// return an equivalent object. 
-	Map toJson() => {
+	Json toJson() => {
 		"sport": sportToString [sport],
 		"date": date.toString(),
 		"times": times.toJson(),

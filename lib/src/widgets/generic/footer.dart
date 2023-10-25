@@ -37,7 +37,7 @@ class FooterState extends ModelListener<ScheduleModel, Footer> {
 			builder: (BuildContext context) => GestureDetector(
 				onTap: !Models.instance.reminders.hasNextReminder ? null : 
 					() {
-						final NavigatorState nav = Navigator.of(context);
+						final nav = Navigator.of(context);
 						if (nav.canPop()) {
 							nav.pop();
 						}
@@ -52,7 +52,7 @@ class FooterState extends ModelListener<ScheduleModel, Footer> {
 								Text (
 									// ternary already checked for schedule.nextPeriod == null
 									"Next: ${model.nextPeriod!.getName(model.nextSubject)}",
-									textScaleFactor: Footer.textScale
+									textScaleFactor: Footer.textScale,
 								),
 								Text (
 									// ternary already checked for schedule.nextPeriod == null
@@ -62,7 +62,7 @@ class FooterState extends ModelListener<ScheduleModel, Footer> {
 											(String str) => (
 												str.startsWith("Period: ") || 
 												str.startsWith("Teacher: ")
-											)
+											),
 										)
 									).join (". "),
 									textScaleFactor: Footer.textScale,
@@ -71,10 +71,10 @@ class FooterState extends ModelListener<ScheduleModel, Footer> {
 									const Text("There is an activity"),
 								if (Models.instance.reminders.hasNextReminder) 
 									const Text ("Click to see reminder"),
-							]
-						)
-					)
-				)
-			)
+							],
+						),
+					),
+				),
+			),
 		);
 }

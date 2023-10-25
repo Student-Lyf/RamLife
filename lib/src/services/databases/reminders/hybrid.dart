@@ -16,16 +16,16 @@ class HybridReminders extends HybridDatabase<RemindersInterface> implements Remi
 
 	@override
 	Future<void> signIn() async {
-		for (final Map reminder in await cloud.getAll()) {
+		for (final reminder in await cloud.getAll()) {
 			await local.set(reminder);
 		}
 	}
 
 	@override
-	Future<List<Map>> getAll() => local.getAll();
+	Future<List<Json>> getAll() => local.getAll();
 
 	@override
-	Future<void> set(Map json) async {
+	Future<void> set(Json json) async {
 		await cloud.set(json);
 		await local.set(json);
 	}

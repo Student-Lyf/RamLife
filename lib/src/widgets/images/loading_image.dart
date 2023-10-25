@@ -35,7 +35,7 @@ class LoadingImage extends StatefulWidget {
 	/// Creates an image with a placeholder while it loads. 
 	const LoadingImage({
 		required this.image,
-		required this.aspectRatio
+		required this.aspectRatio,
 	});
 
 	@override 
@@ -61,7 +61,7 @@ class LoadingImageState extends State<LoadingImage> {
 
 	@override void initState() {
 		super.initState();
-		stream = widget.image.resolve(const ImageConfiguration());
+		stream = widget.image.resolve(ImageConfiguration.empty);
 		listener = ImageStreamListener(onLoad);
 		stream.addListener(listener);
 	}
@@ -75,7 +75,7 @@ class LoadingImageState extends State<LoadingImage> {
 	void onLoad (ImageInfo info, bool _) {
 		aspectRatio = Size (
 			info.image.width.toDouble(), 
-			info.image.height.toDouble()
+			info.image.height.toDouble(),
 		).aspectRatio;
 		if (widget.aspectRatio == null) {
 			debugPrint("LoadingImage: Aspect ratio for ${widget.image} is $aspectRatio");
@@ -90,7 +90,7 @@ class LoadingImageState extends State<LoadingImage> {
 		)
 		: AspectRatio (
 			aspectRatio: aspectRatio,
-			child: Image (image: widget.image)
+			child: Image (image: widget.image),
 		);
 
 	@override void dispose () {

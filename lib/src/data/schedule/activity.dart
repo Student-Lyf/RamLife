@@ -1,3 +1,4 @@
+import "../types.dart";
 import "package:meta/meta.dart";
 
 /// An activity for each grade. 
@@ -24,20 +25,20 @@ class GradeActivity {
 	});
 
 	/// Creates a container for activities from a JSON object.
-	GradeActivity.fromJson(Map json) : 
-		freshmen = Activity.fromJson(Map.from(json ["freshmen"])),
+	GradeActivity.fromJson(Json json) : 
+		freshmen = Activity.fromJson(Json.from(json ["freshmen"])),
 		sophomores = Activity.fromJson(
-			Map.from(json ["sophomores"])
+			Json.from(json ["sophomores"]),
 		),
-		juniors = Activity.fromJson(Map.from(json ["juniors"])),
-		seniors = Activity.fromJson(Map.from(json ["seniors"]));
+		juniors = Activity.fromJson(Json.from(json ["juniors"])),
+		seniors = Activity.fromJson(Json.from(json ["seniors"]));
 
 	@override 
 	String toString() => 
-		"Freshmen: ${freshmen.toString()}\n\n"
-		"Sophomores: ${sophomores.toString()}\n\n"
-		"Juniors: ${juniors.toString()}\n\n"
-		"Seniors: ${seniors.toString()}";
+		"Freshmen: $freshmen\n\n"
+		"Sophomores: $sophomores\n\n"
+		"Juniors: $juniors\n\n"
+		"Seniors: $seniors";
 }
 
 /// A type of activity during the day.
@@ -93,11 +94,11 @@ String activityTypeToString(ActivityType type) {
 @immutable
 class Activity {
 	/// Parses a JSON map of Activities still in JSON.
-	static Map<String, Activity> getActivities(Map json) {
-		final Map<String, Activity> result = {};
-		for (final MapEntry entry in json.entries) {
+	static Map<String, Activity> getActivities(Json json) {
+		final result = <String, Activity>{};
+		for (final entry in json.entries) {
 			result [entry.key] = Activity.fromJson(
-				Map.from(entry.value)
+				Map.from(entry.value),
 			);
 		}
 		return result;
@@ -124,28 +125,26 @@ class Activity {
 		type = ActivityType.grade;
 
 	/// Creates an activity from a JSON object.
-	factory Activity.fromJson(Map json) => json ["message"] is Map
+	factory Activity.fromJson(Json json) => json ["message"] is Map
 		? Activity.grade(
-			GradeActivity.fromJson(Map.from(json ["message"]))
+			GradeActivity.fromJson(Json.from(json ["message"])),
 		)
 		: Activity(
 			type: parseActivityType(json ["type"]),
-			message: json ["message"]
+			message: json ["message"],
 		);
 
 	/// A JSON representation of this object.
-	Map toJson() => {
+	Json toJson() => {
 		"message": message,
 		"type": activityTypeToString(type),
 	};
 
 	@override
-	String toString() {
-		switch (type) {
-			case ActivityType.misc: return message;
-			case ActivityType.advisory: return "Advisory -- $message";
-			case ActivityType.room: return message;
-			default: return "Activity";
-		}
-	}
+	String toString() => switch (type) {
+    ActivityType.misc => message,
+    ActivityType.advisory => "Advisory -- $message",
+    ActivityType.room => message,
+    ActivityType.grade => message,
+	};
 }

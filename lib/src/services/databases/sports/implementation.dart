@@ -9,32 +9,32 @@ import "interface.dart";
 /// is determined. Each document has a `games` field with a list of games.
 class CloudSports implements SportsInterface {
 	/// The collection for sports games.
-	static final CollectionReference<Map<String, dynamic>> sports = Firestore
+	static final CollectionReference<Json> sports = Firestore
 		.instance.collection("sports2");
 
 	/// The current school year. 
 	/// 
 	/// For example, in the '20-'21 school year, this returns `2020`.
 	static int get schoolYear {
-		final DateTime now = DateTime.now();
-		final int currentYear = now.year;
-		final int currentMonth = now.month;
+		final now = DateTime.now();
+		final currentYear = now.year;
+		final currentMonth = now.month;
 		return currentMonth > 7 ? currentYear : currentYear - 1;
 	}
 
 	/// The document for the current year. 
-	static DocumentReference<Map<String, dynamic>> get gamesDocument => 
+	static DocumentReference<Json> get gamesDocument => 
 		sports.doc(schoolYear.toString());
 
 	@override
-	Future<List<Map>> getAll() async {
-		final Map json = await gamesDocument
+	Future<List<Json>> getAll() async {
+		final json = await gamesDocument
 			.throwIfNull("Could not find sports games for this year");
-		return List<Map>.from(json ["games"]);
+		return List<Json>.from(json ["games"]);
 	}
 
 	@override
-	Future<void> setAll(List<Map> json) => gamesDocument.set({"games": json});
+	Future<void> setAll(List<Json> json) => gamesDocument.set({"games": json});
 }
 
 /// Handles sports data in the on-device database.
@@ -43,12 +43,12 @@ class CloudSports implements SportsInterface {
 /// with the cloud database, sports are updated in batch.  
 class LocalSports implements SportsInterface {
 	@override
-	Future<List<Map>> getAll() => Idb.instance.getAll(Idb.sportsStoreName);
+	Future<List<Json>> getAll() => Idb.instance.getAll(Idb.sportsStoreName);
 
 	@override
-	Future<void> setAll(List<Map> json) async {
+	Future<void> setAll(List<Json> json) async {
 		await Idb.instance.clearObjectStore(Idb.sportsStoreName);
-		for (final Map game in json) {
+		for (final game in json) {
 			await Idb.instance.update(storeName: Idb.sportsStoreName, value: game);
 		}
 	}

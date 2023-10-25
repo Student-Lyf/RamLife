@@ -1,5 +1,7 @@
 import "package:flutter/foundation.dart";
 
+import "../types.dart";
+
 /// A subject, or class, that a student can take.
 /// 
 /// Since one's schedule contains multiple instances of the same subject,
@@ -14,12 +16,12 @@ class Subject {
 	/// corresponding [Subject] instances.
 	/// See [Subject.fromJson] for more details. 
 	static Map<String, Subject> getSubjects(
-		Map<String, Map> data
+		Map<String, Json> data,
 	) => data.map (
-		(String id, Map json) => MapEntry (
+		(String id, Json json) => MapEntry (
 			id,
-			Subject.fromJson(json)
-		)
+			Subject.fromJson(json),
+		),
 	);
 
 	/// The name of this subject.
@@ -45,7 +47,7 @@ class Subject {
 	/// Returns a [Subject] instance from a JSON object. 
 	/// 
 	/// The JSON map must have a `teacher` and `name` field.
-	Subject.fromJson(Map json) :
+	Subject.fromJson(Json json) :
 		name = json ["name"], 
 		teacher = json ["teacher"],
 		id = json ["id"],

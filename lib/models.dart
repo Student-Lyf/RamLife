@@ -93,7 +93,7 @@ class Models extends Model {
 		if (isReady) {
 			return;
 		}
-		final Crashlytics crashlytics = Services.instance.crashlytics;
+		final crashlytics = Services.instance.crashlytics;
 		await crashlytics.log("Initializing user model");
 		await user.init();
 		await crashlytics.log("Initializing reminders model");

@@ -1,3 +1,4 @@
+import "../types.dart";
 import "package:meta/meta.dart";
 
 /// Bundles data relevant to advisory. 
@@ -21,7 +22,7 @@ class Advisory {
 	/// Creates an advisory object from JSON. 
 	/// 
 	/// This JSON can be null, so this constructor should only be called if needed.
-	Advisory.fromJson(Map json) :
+	Advisory.fromJson(Json json) :
 		id = json ["id"],
 		room = json ["room"];
 }

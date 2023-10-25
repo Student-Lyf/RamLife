@@ -25,7 +25,7 @@ class DayBuilder extends StatefulWidget {
 	const DayBuilder({
 		required this.day, 
 		required this.date, 
-		required this.upload
+		required this.upload,
 	});
 
 	@override
@@ -39,7 +39,7 @@ class DayBuilderState extends ModelListener<DayBuilderModel, DayBuilder> {
 	@override
 	DayBuilderModel getModel() => DayBuilderModel(
 		day: widget.day, 
-		date: widget.date
+		date: widget.date,
 	);
 
 	@override
@@ -55,7 +55,7 @@ class DayBuilderState extends ModelListener<DayBuilderModel, DayBuilder> {
 					value: model.hasSchool,
 					onChanged: (bool value) => model.hasSchool = value,
 				),
-				Container(
+				SizedBox(
 					width: double.infinity,
 					child: Wrap (
 						alignment: WrapAlignment.spaceBetween,
@@ -72,14 +72,14 @@ class DayBuilderState extends ModelListener<DayBuilderModel, DayBuilder> {
 										DropdownMenuItem<String>(
 											value: dayName,
 											child: Text(dayName),
-										)
+										),
 								],
-							)
-						]
+							),
+						],
 					),
 				),
 				const SizedBox(height: 20),
-				Container(
+				SizedBox(
 					width: double.infinity,
 					child: Wrap (
 						runSpacing: 3,
@@ -90,7 +90,7 @@ class DayBuilderState extends ModelListener<DayBuilderModel, DayBuilder> {
 								hint: const Text("Schedule"),
 								onChanged: !model.hasSchool ? null : (String? value) => 
 									model.schedule = Schedule.schedules.firstWhere(
-										(Schedule schedule) => schedule.name == value
+										(Schedule schedule) => schedule.name == value,
 									),
 								items: [
 									for (final Schedule schedule in Schedule.schedules) 
@@ -99,11 +99,11 @@ class DayBuilderState extends ModelListener<DayBuilderModel, DayBuilder> {
 											child: Text(schedule.name),
 										),
 								],
-							)
-						]
-					)
-				)
-			]
+							),
+						],
+					),
+				),
+			],
 		),
 		actions: [
 			TextButton(
@@ -113,10 +113,11 @@ class DayBuilderState extends ModelListener<DayBuilderModel, DayBuilder> {
 			ElevatedButton(
 				onPressed: !model.ready ? null : () async {
 					await widget.upload(model.day);
+          if (!mounted) return;
 					Navigator.of(context).pop();
 				},
 				child: const Text("Save", style: TextStyle(color: Colors.white)),
-			)
-		]
+			),
+		],
 	);
 }

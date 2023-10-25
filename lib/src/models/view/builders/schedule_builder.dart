@@ -59,8 +59,8 @@ class EditablePeriod {
   	if (start == null || end == null) {
   		return false;
   	}
-  	final DateTime startDt = start!.toDateTime;
-  	final DateTime endDt = end!.toDateTime;
+  	final startDt = start!.toDateTime;
+  	final endDt = end!.toDateTime;
   	return startDt.isAfter(endDt) || endDt.difference(startDt).inHours > 10;
   }
 
@@ -109,7 +109,7 @@ class ScheduleBuilderModel with ChangeNotifier {
 		periods: [
 			for (final EditablePeriod period in periods)
 				period.ramazPeriod,
-		]
+		],
 	);
 
 	/// Adds a period to the schedule.
@@ -133,7 +133,7 @@ class ScheduleBuilderModel with ChangeNotifier {
 		}
 		periods = [
 			for (final Period period in preset.periods)
-				EditablePeriod.fromPeriod(period)
+				EditablePeriod.fromPeriod(period),
 		];
 		if (includeName) {
 			_name = preset.name;
@@ -143,7 +143,7 @@ class ScheduleBuilderModel with ChangeNotifier {
 
 	@override
 	void dispose() {
-		for (final EditablePeriod period in periods) {
+		for (final period in periods) {
 			period.dispose();
 		}
 		super.dispose();

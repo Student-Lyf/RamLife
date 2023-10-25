@@ -11,7 +11,7 @@ class ScheduleSearchModel {
 
 	/// Gathers data for searching the user's schedule.
 	ScheduleSearchModel() {
-		final ScheduleModel model = Models.instance.schedule;
+		final model = Models.instance.schedule;
 		subjects = model.subjects.values.toList();
 		schedule = model.user.schedule;
 	}
@@ -29,7 +29,7 @@ class ScheduleSearchModel {
 				subject.name.toLowerCase().contains(query)
 				|| subject.id.toLowerCase().contains(query)
 				|| subject.teacher.toLowerCase().contains(query)
-			) subject
+			) subject,
 	];
 
 
@@ -38,6 +38,6 @@ class ScheduleSearchModel {
 		for (final List<PeriodData?> day in schedule.values)
 			for (final PeriodData? period in day)
 				if (period != null && period.id == subject.id)
-					period
+					period,
 	];
 }

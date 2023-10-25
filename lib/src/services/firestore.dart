@@ -1,33 +1,34 @@
 import "package:cloud_firestore/cloud_firestore.dart";
 
+import "package:ramaz/data.dart";
 import "auth.dart";
 import "service.dart";
 
 export "package:cloud_firestore/cloud_firestore.dart";
 
 /// Convenience methods on [CollectionReference].
-extension CollectionHelpers on CollectionReference<Map> {
+extension CollectionHelpers on CollectionReference<Json> {
 	/// Returns a [DocumentReference] by querying a field. 
-	Future<DocumentReference> findDocument(String field, String value) async {
-		final Query query = where(field, isEqualTo: value);
-		final QuerySnapshot querySnapshot = await query.get();
-		final QueryDocumentSnapshot snapshot = querySnapshot.docs.first;
-		final DocumentReference document = snapshot.reference;
+	Future<DocumentReference<Json>> findDocument(String field, String value) async {
+		final query = where(field, isEqualTo: value);
+		final querySnapshot = await query.get();
+		final snapshot = querySnapshot.docs.first;
+		final document = snapshot.reference;
 		return document;
 	}
 
 	/// Gets all the documents in a collection.
-	Future<List<Map>> getAll() async => [
-		for (final QueryDocumentSnapshot<Map> doc in (await get()).docs)
-			doc.data()
+	Future<List<Json>> getAll() async => [
+		for (final QueryDocumentSnapshot<Json> doc in (await get()).docs)
+			doc.data(),
 	];
 }
 
 /// Convenience methods on [DocumentReference].
-extension DocumentHelpers on DocumentReference<Map> {
+extension DocumentHelpers on DocumentReference<Json> {
 	/// Gets data from a document, throwing if null.
-	Future<Map> throwIfNull(String message) async {
-		final Map? value = (await get()).data();
+	Future<Json> throwIfNull(String message) async {
+		final value = (await get()).data();
 		if (value == null) {
 			throw StateError(message);
 		} else {
@@ -59,16 +60,16 @@ class Firestore extends DatabaseService {
 	Future<void> signOut() => Auth.signOut();
 
 	/// Submits feedback to the feedback collection.
-	Future<void> sendFeedback(Map json) => instance.collection("feedback").doc()
+	Future<void> sendFeedback(Json json) => instance.collection("feedback").doc()
 		.set(Map<String, dynamic>.from(json));
 
 	/// Listens to a month for changes in the calendar. 
-	Stream<List<Map?>> getCalendarStream(int month) => instance
+	Stream<List<Json?>> getCalendarStream(int month) => instance
 		.collection("calendar").doc(month.toString()).snapshots().map(
-			(DocumentSnapshot<Map<String, dynamic>> snapshot) => [
+			(DocumentSnapshot<Json> snapshot) => [
 				for (final dynamic entry in snapshot.data()! ["calendar"])
 					if (entry == null) null
-					else Map.from(entry)
-				]
+					else Map.from(entry),
+				],
 		);
 }

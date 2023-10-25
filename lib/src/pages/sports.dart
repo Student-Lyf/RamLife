@@ -51,11 +51,11 @@ class GenericSportsView<T> extends StatelessWidget {
 						padding: const EdgeInsets.symmetric(horizontal: 4),
 						children: [
 							if (model.loading) const LinearProgressIndicator(),
-							for (final T game in gamesList) builder(game)
-						]
-					)
-				)
-		]
+							for (final T game in gamesList) builder(game),
+						],
+					),
+				),
+		],
 	);
 }
 
@@ -65,8 +65,8 @@ class GenericSportsView<T> extends StatelessWidget {
 void openMenu({
 	required BuildContext context, 
 	required int index, 
-	required SportsModel model
-}) => showDialog(
+	required SportsModel model,
+}) => showDialog<void>(
 	context: context,
 	builder: (BuildContext newContext) => SimpleDialog(
 		title: Text(model.data.games [index].description),
@@ -74,8 +74,8 @@ void openMenu({
 			SimpleDialogOption(
 				onPressed: () async {
 					Navigator.of(newContext).pop();
-					final Scores? scores = await SportsScoreUpdater.updateScores(
-						context, model.data.games [index]
+					final scores = await SportsScoreUpdater.updateScores(
+						context, model.data.games [index],
 					);
 					if (scores == null) {
 						return;
@@ -83,7 +83,7 @@ void openMenu({
 					model.loading = true;
 					await Models.instance.sports.replace(
 						index, 
-						model.data.games [index].replaceScores(scores)
+						model.data.games [index].replaceScores(scores),
 					);
 					model.loading = false;
 				},
@@ -96,7 +96,7 @@ void openMenu({
 					model.loading = true;
 					await Models.instance.sports.replace(
 						index, 
-						model.data.games [index].replaceScores(null)
+						model.data.games [index].replaceScores(null),
 					);
 					model.loading = false;
 				},
@@ -109,7 +109,7 @@ void openMenu({
 					model.loading = true;
 					await Models.instance.sports.replace(
 						index, 
-						await SportsBuilder.createGame(context, model.data.games [index])
+						await SportsBuilder.createGame(context, model.data.games [index]),
 					);
 					model.loading = false;
 				},
@@ -119,7 +119,7 @@ void openMenu({
 			SimpleDialogOption(
 				onPressed: () async {
 					Navigator.of(newContext).pop();
-					final bool? confirm = await showDialog(
+					final confirm = await showDialog<bool>(
 						context: context,
 						builder: (BuildContext context) => AlertDialog(
 							title: const Text("Confirm"),
@@ -132,9 +132,9 @@ void openMenu({
 								ElevatedButton(
 									onPressed: () => Navigator.of(context).pop(true),
 									child: const Text("Confirm"),
-								)
-							]
-						)
+								),
+							],
+						),
 					);
 					if (confirm ?? false) {
 						model.loading = true;
@@ -145,8 +145,8 @@ void openMenu({
 				},
 				child: const Text("Remove game", textScaleFactor: 1.2),
 			),
-		]
-	)
+		],
+	),
 );
 
 /// A page to show recent and upcoming games to the user.
@@ -164,7 +164,7 @@ class SportsPage extends StatelessWidget {
 						context: context,
 						index: index,
 						model: model,
-					)
+					),
 				),
 			);
 			case SortOption.sport: return GenericSportsView<MapEntry<Sport, List<int>>>(
@@ -181,12 +181,12 @@ class SportsPage extends StatelessWidget {
 								onTap: !model.isAdmin ? null : () => openMenu(
 									context: context, 
 									index: index,
-									model: model
-								)
+									model: model,
+								),
 							),
 						const SizedBox(height: 20),
-					]
-				)
+					],
+				),
 			);
 		}
 	}
@@ -205,7 +205,7 @@ class SportsPage extends StatelessWidget {
 						tabs: [
 							Tab(text: "Upcoming"),
 							Tab(text: "Recent"),
-						]
+						],
 					),
 					actions: [
 						if (model.isAdmin) Builder(
@@ -217,7 +217,7 @@ class SportsPage extends StatelessWidget {
 									await model.data.addGame(await SportsBuilder.createGame(context));
 									await model.refresh();
 									model.loading = false;
-								}
+								},
 							),
 						),
 						PopupMenuButton(
@@ -232,13 +232,13 @@ class SportsPage extends StatelessWidget {
 								const PopupMenuItem(
 									value: SortOption.sport,
 									child: Text("By sport"),
-								)
-							]
+								),
+							],
 						),
-					]
+					],
 				),
 				body: getBody(context, model),
-			)
-		)
+			),
+		),
 	);
 }

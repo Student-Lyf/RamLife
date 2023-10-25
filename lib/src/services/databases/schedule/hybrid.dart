@@ -20,10 +20,10 @@ class HybridSchedule extends HybridDatabase<ScheduleInterface> implements Schedu
 	Future<void> signIn() async { }
 
 	@override
-	Future<Map> getCourse(String id) async {
-		Map? result = await local.getCourse(id);
+	Future<Json> getCourse(String id) async {
+    var result = await local.getCourse(id);
 		if (result == null) {
-			final Map course = (await cloud.getCourse(id))!;
+			final course = (await cloud.getCourse(id))!;
 			result = course;
 			await local.setCourse(id, result);
 		}
@@ -31,7 +31,7 @@ class HybridSchedule extends HybridDatabase<ScheduleInterface> implements Schedu
 	}
 
 	@override
-	Future<void> setCourse(String id, Map json) async {
+	Future<void> setCourse(String id, Json json) async {
 		await cloud.setCourse(id, json);
 		await local.setCourse(id, json);
 	}

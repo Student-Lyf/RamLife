@@ -22,10 +22,10 @@ class SpecialTile extends StatelessWidget {
 				shape: RoundedRectangleBorder(
 					side: BorderSide(color: Theme.of(context).primaryColor),
 					borderRadius: BorderRadius.circular(20),
-				)
+				),
 			),
 			child: child,
-		)
+		),
 	);
 }
 
@@ -64,12 +64,12 @@ class NextClass extends StatelessWidget {
 				page: Routes.schedule,
 				title: period == null
 					? "School is over"
-					: "${next ? 'Up next' : 'Right now'}: ${period!.getName(subject)}"
+					: "${next ? 'Up next' : 'Right now'}: ${period!.getName(subject)}",
 			),
 			if (period?.activity != null) 
 				SpecialTile(child: ActivityTile(period!.activity!)),
 			for (final int index in reminders) 
-				SpecialTile(child: ReminderTile(index: index))
-		]
+				SpecialTile(child: ReminderTile(index: index)),
+		],
 	);
 }

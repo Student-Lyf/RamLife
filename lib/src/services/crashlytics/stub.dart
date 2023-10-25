@@ -19,12 +19,12 @@ class CrashlyticsStub extends Crashlytics {
 	Future<void> recordError (
 		dynamic exception,
 		StackTrace stack,
-		{dynamic context}
+		{dynamic context,}
 	) => Future.error(exception, stack);  // keeps the stack trace
 
 	@override
 	Future<void> recordFlutterError (
-		FlutterErrorDetails details
+		FlutterErrorDetails details,
 	) async => throw details.exception;  // ignore: only_throw_errors
 	// [FlutterErrorDetails.exception] is an [Object], and can be any value. 
 

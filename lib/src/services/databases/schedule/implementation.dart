@@ -9,15 +9,15 @@ import "interface.dart";
 /// the courses section-IDs, so they're really "sections", not courses.
 class CloudSchedule implements ScheduleInterface {
 	/// The courses collection in Firestore. 
-	static final CollectionReference<Map> courses = Firestore.instance
+	static final CollectionReference<Json> courses = Firestore.instance
 		.collection("classes");
 
 	@override 
-	Future<Map> getCourse(String id) => courses.doc(id)
+	Future<Json> getCourse(String id) => courses.doc(id)
 		.throwIfNull("Course $id not found");
 
 	@override
-	Future<void> setCourse(String id, Map json) async { }
+	Future<void> setCourse(String id, Json json) async { }
 }
 
 /// Handles schedule data on the device. 
@@ -26,10 +26,10 @@ class CloudSchedule implements ScheduleInterface {
 /// keypath is the `id` field (the section-IDs).
 class LocalSchedule implements ScheduleInterface {
 	@override 
-	Future<Map?> getCourse(String id) => Idb.instance
+	Future<Json?> getCourse(String id) => Idb.instance
 		.get(Idb.sectionStoreName, id);
 
 	@override
-	Future<void> setCourse(String id, Map json) => Idb.instance
+	Future<void> setCourse(String id, Json json) => Idb.instance
 		.update(storeName: Idb.sectionStoreName, value: json);
 }

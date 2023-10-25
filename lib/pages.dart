@@ -1,5 +1,3 @@
-library pages;
-
 export "src/pages/admin/calendar.dart";
 export "src/pages/admin/schedules.dart";
 

@@ -18,7 +18,7 @@ class PushNotificationsStub extends PushNotifications {
 
 	@override
 	Future<void> registerForNotifications(
-		Map<String, AsyncCallback> callbacks
+		Map<String, AsyncCallback> callbacks,
 	) async {}
 
 	@override

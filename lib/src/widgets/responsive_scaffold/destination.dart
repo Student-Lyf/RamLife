@@ -73,4 +73,3 @@ int getDestinationIndex(BuildContext context) {
 	if (name == null) return -1;
 	return destinationRoutes.indexOf(name);
 }
-
