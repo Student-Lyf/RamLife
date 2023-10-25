@@ -9,7 +9,7 @@
   "devDependencies": {
     "@firebase/testing": "^0.17.0",
     "filesystem": "1.0.1",
-    "mocha": "^7.1.0",
+    "mocha": "^10.2.0",
     "prettier": "^1.19.1"
   },
   "dependencies": {
