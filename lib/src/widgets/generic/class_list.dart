@@ -1,5 +1,4 @@
 import "package:flutter/material.dart";
-import "package:link_text/link_text.dart";
 
 import "package:ramaz/data.dart";
 import "package:ramaz/models.dart";
@@ -59,11 +58,7 @@ class ClassPanel extends StatelessWidget {
 							for (final String label in children) 
 								Padding (
 									padding: const EdgeInsets.symmetric(vertical: 5),
-									child: LinkText(
-										label, 
-										shouldTrimParams: true,
-										linkStyle: const TextStyle(color: Color(0xff0000EE)),
-									),
+									child: Text(label),
 								),
 							if (activity != null)
 								ActivityTile(activity!),  // already checked for null

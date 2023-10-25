@@ -23,6 +23,14 @@
           }
         },
         {
+          "client_id": "267381428578-ondug0tlvefmbb9r68754p1vasu896vi.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ramaz.student_life",
+            "certificate_hash": "e3d8e54917b767218be4bd3cc33b6f754e57d52a"
+          }
+        },
+        {
           "client_id": "267381428578-s9bsc6bqvfebqimv3th6cjp7qildrpsc.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -40,10 +48,10 @@
               "client_type": 3
             },
             {
-              "client_id": "267381428578-cpk8lv86lc3dcq62iegfc98dr3c0tt3u.apps.googleusercontent.com",
+              "client_id": "267381428578-7a8kkf45mdkepv1vr4j39gmlclcgob1u.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.example.authTest"
+                "bundle_id": "com.ramaz.ramaz.student-life"
               }
             }
           ]

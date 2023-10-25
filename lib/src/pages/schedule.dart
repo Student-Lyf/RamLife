@@ -1,6 +1,5 @@
 import "package:flutter/material.dart";
-
-import "package:link_text/link_text.dart";
+import "package:url_launcher/url_launcher_string.dart";
 
 import "package:ramaz/data.dart";
 import "package:ramaz/models.dart";
@@ -9,7 +8,7 @@ import "package:ramaz/widgets.dart";
 import "drawer.dart";
 
 /// Allows users to explore their schedule.
-/// 
+///
 /// Users can use the calendar button to check the schedule for a given date
 /// or create a custom [Day] from the drop-down menus.
 class SchedulePage extends StatelessWidget {
@@ -37,10 +36,10 @@ class SchedulePage extends StatelessWidget {
 		}
 	}
 
-	/// Lets the user know that they chose an invalid schedule combination. 
-	void handleInvalidSchedule(BuildContext context) => ScaffoldMessenger
-		.of(context)
-		.showSnackBar(const SnackBar(content: Text("Invalid schedule")));
+  /// Lets the user know that they chose an invalid schedule combination.
+  void handleInvalidSchedule(BuildContext context) =>
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text("Invalid schedule")));
 
 	@override
 	Widget build(BuildContext context) => ProviderConsumer(
@@ -119,14 +118,14 @@ class CustomSearchDelegate extends SearchDelegate<Subject> {
 	/// This model handles the searching logic.
 	final ScheduleSearchModel model = ScheduleSearchModel();
 
-	/// A constructor that constructs the search bar.
-	CustomSearchDelegate({
-		required String hintText,
-	}) : super(
-		searchFieldLabel: hintText,
-		keyboardType: TextInputType.text,
-		textInputAction: TextInputAction.search,
-	);
+  /// A constructor that constructs the search bar.
+  CustomSearchDelegate({
+    required String hintText,
+  }) : super(
+          searchFieldLabel: hintText,
+          keyboardType: TextInputType.text,
+          textInputAction: TextInputAction.search,
+        );
 
 	@override
 	Widget buildLeading(BuildContext context) => ElevatedButton(
@@ -134,9 +133,8 @@ class CustomSearchDelegate extends SearchDelegate<Subject> {
 		child: const Icon(Icons.arrow_back),
 	);
 
-	@override
-	Widget buildSuggestions(BuildContext context) {
-
+  @override
+  Widget buildSuggestions(BuildContext context) {
 		final subjects = model.getMatchingClasses(query.toLowerCase());
 
 		return ListView(
@@ -162,9 +160,8 @@ class CustomSearchDelegate extends SearchDelegate<Subject> {
 		);
 	}
 
-	@override
-	Widget buildResults(BuildContext context) { 
-
+  @override
+  Widget buildResults(BuildContext context) {
 		final subjects = model.getMatchingClasses(query.toLowerCase());
 
 		return ListView(
@@ -199,12 +196,11 @@ class CustomSearchDelegate extends SearchDelegate<Subject> {
 
 /// A class that creates each individual suggestion.
 class SuggestionWidget extends StatelessWidget {
+  /// The function to be run when the suggestion is clicked.
+  final VoidCallback onTap;
 
-	/// The function to be run when the suggestion is clicked.
-	final VoidCallback onTap;
-
-	/// The Subject given to the widget.
-	final Subject suggestion;
+  /// The Subject given to the widget.
+  final Subject suggestion;
 
 	/// A constructor that defines what a suggestion should have.
 	const SuggestionWidget({
@@ -226,19 +222,18 @@ class SuggestionWidget extends StatelessWidget {
 							children: [ 
 								Text(
 									suggestion.name,
-									style: Theme.of(context).textTheme.headlineMedium,
+									style: Theme.of(context).textTheme.titleMedium,
 								),
 								const SizedBox(height: 5),
 								Text(
 									"${suggestion.teacher}   ${suggestion.id}",
-									style: Theme.of(context).textTheme.titleLarge,
+									style: Theme.of(context).textTheme.bodySmall,
 								),
 								const SizedBox(height: 10),
 								if (suggestion.virtualLink != null)
-									LinkText(
-										"Link: ${suggestion.virtualLink}",
-										shouldTrimParams: true,
-										linkStyle: const TextStyle(color: Colors.blue),
+									TextButton(
+										child: Text(suggestion.virtualLink!),
+                    onPressed: () => launchUrlString(suggestion.virtualLink!),
                 	),
 							],
 						),
@@ -257,12 +252,11 @@ class SuggestionWidget extends StatelessWidget {
 
 /// A class that creates each individual result.
 class ResultWidget extends StatelessWidget {
+  /// The PeriodData given to the widget.
+  final PeriodData period;
 
-	/// The PeriodData given to the widget.
-	final PeriodData period;
-
-	/// A constructor that defines what a result should have.
-	const ResultWidget(this.period);
+  /// A constructor that defines what a result should have.
+  const ResultWidget(this.period);
 
 	@override
 	Widget build(BuildContext context) => Column(
@@ -270,15 +264,15 @@ class ResultWidget extends StatelessWidget {
 		children: [
 			ListTile(
 				title: Text(
-					period.dayName,
-						style: Theme.of(context).textTheme.headlineMedium,
+					"${period.dayName} Period ${period.name}",
+						style: Theme.of(context).textTheme.titleMedium,
 					),
 				subtitle: Text(
-					"Period ${period.name}   Room ${period.room}",
-					style: Theme.of(context).textTheme.titleLarge,
+					"Room ${period.room}",
+					style: Theme.of(context).textTheme.bodySmall,
 				),
 			),
-			for (final int reminder in Models.instance.reminders.getReminders(
+			for (final reminder in Models.instance.reminders.getReminders(
 				dayName: period.dayName,
 				period: period.name,
 				subject: Models.instance.user.subjects[period.id]?.name,

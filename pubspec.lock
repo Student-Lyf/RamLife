@@ -392,14 +392,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.6.7"
-  link_text:
-    dependency: "direct main"
-    description:
-      name: link_text
-      sha256: "5babfe3bcd987bb3f1dde61a47aa55ffd05137634a392385c899651e788d7ebc"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.2.0"
   matcher:
     dependency: "direct dev"
     description:
