@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
+  <meta name="description" content="models library API docs, for the Dart programming language.">
+  <title>models library - Dart API</title>
+
+
+  
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" rel="stylesheet">
+  
+  <link rel="stylesheet" href="../static-assets/github.css?v1">
+  <link rel="stylesheet" href="../static-assets/styles.css?v1">
+  <link rel="icon" href="../static-assets/favicon.png?v1">
+
+  
+</head>
+
+
+<body data-base-href="../" data-using-base-href="false" class="light-theme">
+
+<div id="overlay-under-drawer"></div>
+
+<header id="title">
+  <span id="sidenav-left-toggle" class="material-symbols-outlined" role="button" tabindex="0">menu</span>
+  <ol class="breadcrumbs gt-separated dark hidden-xs">
+    <li><a href="../index.html">ramaz</a></li>
+    <li class="self-crumb">models library</li>
+  </ol>
+  <div class="self-name">models</div>
+  <form class="search navbar-right" role="search">
+    <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+  <div class="toggle" id="theme-button">
+    <label for="theme">
+      <input type="checkbox" id="theme" value="light-theme">
+      <span id="dark-theme-button" class="material-symbols-outlined">
+        brightness_4
+      </span>
+      <span id="light-theme-button" class="material-symbols-outlined">
+        brightness_5
+      </span>
+    </label>
+  </div>
+</header>
+<main>
+
+  <div
+      id="dartdoc-main-content"
+      class="main-content"
+      data-above-sidebar=""
+      data-below-sidebar="models&#47;models-library-sidebar.html">
+      
+      <div>
+  <div id="external-links" class="btn-group"><a title="View source code" class="source-link" href="https://github.com/Levi-Lesches/Ramaz-Student-Life/blob/master/lib/models.dart#L25"><span class="material-symbols-outlined">description</span></a></div>
+<h1><span class="kind-library">models</span> library 
+ 
+</h1></div>
+
+    
+<section class="desc markdown">
+  <p>An abstraction over data handling.</p>
+<p>This library can be split into two separate components:</p>
+<ol>
+<li>
+<p>Data models.</p>
+<p>Data models maintain the global state of the app. These models are
+responsible for pulling data from data sources (using services), and
+using that raw data to initialize data classes.</p>
+<p>By canonicalizing a single source of truth for all data, code duplication
+and race conditions are avoided.</p>
+</li>
+<li>
+<p>View models.</p>
+<p>View models maintain the state of a single part of the UI, for example,
+a page, or dialog. These models dictate what properties and methods a
+UI element needs, and provides them, as well as how and when to update
+the UI. Pages, for example, can now be stateless, and simply rely on
+the logic inherent in the view model to control their state.</p>
+<p>The point of a view model is to map fields to static UI elements and
+methods to interactive ones. Every button and label that depends on
+state should depend on their corresponding view model.</p>
+</li>
+</ol>
+</section>
+
+
+    <section class="summary offset-anchor" id="classes">
+      <h2>Classes</h2>
+
+      <dl>
+        <dt id="AdminScheduleModel">
+  <span class="name "><a href="../models/AdminScheduleModel-class.html">AdminScheduleModel</a></span> 
+
+</dt>
+<dd>
+  A view model for managing the schedules.
+</dd>
+
+        <dt id="CalendarDay">
+  <span class="name "><a href="../models/CalendarDay-class.html">CalendarDay</a></span> 
+
+</dt>
+<dd>
+  Bundles a <code>DateTime</code> with a <a href="../data/Day-class.html">Day</a> to edit the calendar.
+</dd>
+
+        <dt id="CalendarEditor">
+  <span class="name "><a href="../models/CalendarEditor-class.html">CalendarEditor</a></span> 
+
+</dt>
+<dd>
+  A model to manage the calendar.
+</dd>
+
+        <dt id="DashboardModel">
+  <span class="name "><a href="../models/DashboardModel-class.html">DashboardModel</a></span> 
+
+</dt>
+<dd>
+  A view model for the dashboard page.
+</dd>
+
+        <dt id="DayBuilderModel">
+  <span class="name "><a href="../models/DayBuilderModel-class.html">DayBuilderModel</a></span> 
+
+</dt>
+<dd>
+  A view model for the creating a new <a href="../data/Day-class.html">Day</a>.
+</dd>
+
+        <dt id="EditablePeriod">
+  <span class="name "><a href="../models/EditablePeriod-class.html">EditablePeriod</a></span> 
+
+</dt>
+<dd>
+  A variant of <a href="../data/Period-class.html">Period</a> with all nullable fields.
+</dd>
+
+        <dt id="FeedbackModel">
+  <span class="name "><a href="../models/FeedbackModel-class.html">FeedbackModel</a></span> 
+
+</dt>
+<dd>
+  A view model for the feedback page.
+</dd>
+
+        <dt id="Models">
+  <span class="name "><a href="../models/Models-class.html">Models</a></span> 
+
+</dt>
+<dd>
+  Bundles all the data models together.
+</dd>
+
+        <dt id="Reminders">
+  <span class="name "><a href="../models/Reminders-class.html">Reminders</a></span> 
+
+</dt>
+<dd>
+  A DataModel that keeps the state of the user's reminders.
+</dd>
+
+        <dt id="RemindersBuilderModel">
+  <span class="name "><a href="../models/RemindersBuilderModel-class.html">RemindersBuilderModel</a></span> 
+
+</dt>
+<dd>
+  A view model for the dialog that allows the user to build a reminder.
+</dd>
+
+        <dt id="ScheduleBuilderModel">
+  <span class="name "><a href="../models/ScheduleBuilderModel-class.html">ScheduleBuilderModel</a></span> 
+
+</dt>
+<dd>
+  A view model for the schedule builder page.
+</dd>
+
+        <dt id="ScheduleModel">
+  <span class="name "><a href="../models/ScheduleModel-class.html">ScheduleModel</a></span> 
+
+</dt>
+<dd>
+  A data model for the user's schedule.
+</dd>
+
+        <dt id="ScheduleSearchModel">
+  <span class="name "><a href="../models/ScheduleSearchModel-class.html">ScheduleSearchModel</a></span> 
+
+</dt>
+<dd>
+  Searches the user's classes and finds on what days and period it meets.
+</dd>
+
+        <dt id="ScheduleViewModel">
+  <span class="name "><a href="../models/ScheduleViewModel-class.html">ScheduleViewModel</a></span> 
+
+</dt>
+<dd>
+  A view model for the schedule page.
+</dd>
+
+        <dt id="Sports">
+  <span class="name "><a href="../models/Sports-class.html">Sports</a></span> 
+
+</dt>
+<dd>
+  A data model for sports games.
+</dd>
+
+        <dt id="SportsBuilderModel">
+  <span class="name "><a href="../models/SportsBuilderModel-class.html">SportsBuilderModel</a></span> 
+
+</dt>
+<dd>
+  A ViewModel for the Sports game builder.
+</dd>
+
+        <dt id="SportsModel">
+  <span class="name "><a href="../models/SportsModel-class.html">SportsModel</a></span> 
+
+</dt>
+<dd>
+  A view model for the sports page.
+</dd>
+
+        <dt id="UserModel">
+  <span class="name "><a href="../models/UserModel-class.html">UserModel</a></span> 
+
+</dt>
+<dd>
+  A data model to hold and initialize the <a href="../data/User-class.html">User</a> object.
+</dd>
+
+      </dl>
+    </section>
+
+
+
+
+
+
+
+    <section class="summary offset-anchor" id="enums">
+      <h2>Enums</h2>
+
+      <dl>
+        <dt id="SortOption">
+  <span class="name "><a href="../models/SortOption.html">SortOption</a></span> 
+
+</dt>
+<dd>
+  Different ways to sort the sports calendar.
+</dd>
+
+      </dl>
+    </section>
+
+
+
+  </div> <!-- /.main-content -->
+
+  <div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
+    <!-- The search input and breadcrumbs below are only responsively visible at low resolutions. -->
+<header id="header-search-sidebar" class="hidden-l">
+  <form class="search-sidebar" role="search">
+    <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+
+<ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
+    <li><a href="../index.html">ramaz</a></li>
+    <li class="self-crumb">models library</li>
+</ol>
+
+
+    <h5><span class="package-name">ramaz</span> <span class="package-kind">package</span></h5>
+    <ol>
+      <li class="section-title">Libraries</li>
+      <li><a href="../app/app-library.html">app</a></li>
+      <li><a href="../constants/constants-library.html">constants</a></li>
+      <li><a href="../data/data-library.html">data</a></li>
+      <li><a href="../firebase_options/firebase_options-library.html">firebase_options</a></li>
+      <li><a href="../main/main-library.html">main</a></li>
+      <li><a href="../models/models-library.html">models</a></li>
+      <li><a href="../pages/pages-library.html">pages</a></li>
+      <li><a href="../ramaz_services/ramaz_services-library.html">ramaz_services</a></li>
+      <li><a href="../widgets/widgets-library.html">widgets</a></li>
+</ol>
+
+  </div>
+
+  <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
+    <h5>models library</h5>
+  </div><!--/sidebar-offcanvas-right-->
+
+</main>
+
+<footer>
+  <span class="no-break">
+    ramaz
+      1.1.0+11
+  </span>
+
+  
+</footer>
+
+
+
+<script src="../static-assets/highlight.pack.js?v1"></script>
+<script src="../static-assets/docs.dart.js"></script>
+
+
+
+</body>
+
+</html>
+

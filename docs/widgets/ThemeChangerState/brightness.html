@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
+  <meta name="description" content="API docs for the brightness property from the ThemeChangerState class, for the Dart programming language.">
+  <title>brightness property - ThemeChangerState class - widgets library - Dart API</title>
+
+
+  
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" rel="stylesheet">
+  
+  <link rel="stylesheet" href="../../static-assets/github.css?v1">
+  <link rel="stylesheet" href="../../static-assets/styles.css?v1">
+  <link rel="icon" href="../../static-assets/favicon.png?v1">
+
+  
+</head>
+
+
+<body data-base-href="../../" data-using-base-href="false" class="light-theme">
+
+<div id="overlay-under-drawer"></div>
+
+<header id="title">
+  <span id="sidenav-left-toggle" class="material-symbols-outlined" role="button" tabindex="0">menu</span>
+  <ol class="breadcrumbs gt-separated dark hidden-xs">
+    <li><a href="../../index.html">ramaz</a></li>
+    <li><a href="../../widgets/widgets-library.html">widgets</a></li>
+    <li><a href="../../widgets/ThemeChangerState-class.html">ThemeChangerState</a></li>
+    <li class="self-crumb">brightness property</li>
+  </ol>
+  <div class="self-name">brightness</div>
+  <form class="search navbar-right" role="search">
+    <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+  <div class="toggle" id="theme-button">
+    <label for="theme">
+      <input type="checkbox" id="theme" value="light-theme">
+      <span id="dark-theme-button" class="material-symbols-outlined">
+        brightness_4
+      </span>
+      <span id="light-theme-button" class="material-symbols-outlined">
+        brightness_5
+      </span>
+    </label>
+  </div>
+</header>
+<main>
+
+  <div
+      id="dartdoc-main-content"
+      class="main-content"
+      data-above-sidebar="widgets&#47;ThemeChangerState-class-sidebar.html"
+      data-below-sidebar="">
+      <div>
+  <div id="external-links" class="btn-group"><a title="View source code" class="source-link" href="https://github.com/Levi-Lesches/Ramaz-Student-Life/blob/master/lib/src/widgets/ambient/theme_changer.dart#L91"><span class="material-symbols-outlined">description</span></a></div>
+<h1><span class="kind-property">brightness</span> property 
+</h1></div>
+
+
+        
+<section id="getter">
+
+<section class="multi-line-signature">
+  
+  <span class="returntype"><a href="https://api.flutter.dev/flutter/services/Brightness.html">Brightness</a></span>
+  <span class="name ">brightness</span>
+  
+
+</section>
+
+
+<section class="desc markdown">
+  <p>The current brightness.</p>
+<p>When changed, the theme will be changed to the appropriate theme (set by
+<a href="../../widgets/ThemeChanger/light.html">ThemeChanger.light</a> and <a href="../../widgets/ThemeChanger/dark.html">ThemeChanger.dark</a>).</p>
+</section>
+
+
+<section class="summary source-code" id="source">
+  <h2><span>Implementation</span></h2>
+  <pre class="language-dart"><code class="language-dart">Brightness get brightness =&gt; _brightness;</code></pre>
+</section>
+
+</section>
+
+
+        
+<section id="setter">
+
+<section class="multi-line-signature">
+  
+  <span class="returntype">void</span>
+  <span class="name ">brightness=</span><span class="signature">(<wbr><span class="parameter" id="brightness=-param-value"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/services/Brightness.html">Brightness</a></span> <span class="parameter-name">value</span></span>)</span>
+  
+
+</section>
+
+
+
+
+<section class="summary source-code" id="source">
+  <h2><span>Implementation</span></h2>
+  <pre class="language-dart"><code class="language-dart">set brightness(Brightness value) {
+	_key = null;
+	_brightness = value;
+	setState(() =&gt; _theme = value == Brightness.light
+		? widget.light : widget.dark,
+	);
+}</code></pre>
+</section>
+
+</section>
+
+  </div> <!-- /.main-content -->
+
+  <div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
+    <!-- The search input and breadcrumbs below are only responsively visible at low resolutions. -->
+<header id="header-search-sidebar" class="hidden-l">
+  <form class="search-sidebar" role="search">
+    <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+
+<ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
+    <li><a href="../../index.html">ramaz</a></li>
+    <li><a href="../../widgets/widgets-library.html">widgets</a></li>
+    <li><a href="../../widgets/ThemeChangerState-class.html">ThemeChangerState</a></li>
+    <li class="self-crumb">brightness property</li>
+</ol>
+
+
+    <h5>ThemeChangerState class</h5>
+    <div id="dartdoc-sidebar-left-content"></div>
+  </div><!--/.sidebar-offcanvas-->
+
+  <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
+  </div><!--/.sidebar-offcanvas-->
+
+</main>
+
+<footer>
+  <span class="no-break">
+    ramaz
+      1.1.0+11
+  </span>
+
+  
+</footer>
+
+
+
+<script src="../../static-assets/highlight.pack.js?v1"></script>
+<script src="../../static-assets/docs.dart.js"></script>
+
+
+
+</body>
+
+</html>
+

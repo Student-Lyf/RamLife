@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
+  <meta name="generator" content="made with love by dartdoc 7.0.1">
+  <meta name="description" content="ramaz API docs, for the Dart programming language.">
+  <title>ramaz - Dart API docs</title>
+
+
+  
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" rel="stylesheet">
+  
+  <link rel="stylesheet" href="static-assets/github.css?v1">
+  <link rel="stylesheet" href="static-assets/styles.css?v1">
+  <link rel="icon" href="static-assets/favicon.png?v1">
+
+  
+</head>
+
+
+<body data-base-href="" data-using-base-href="false" class="light-theme">
+
+<div id="overlay-under-drawer"></div>
+
+<header id="title">
+  <span id="sidenav-left-toggle" class="material-symbols-outlined" role="button" tabindex="0">menu</span>
+  <ol class="breadcrumbs gt-separated dark hidden-xs">
+    <li class="self-crumb">ramaz package</li>
+  </ol>
+  <div class="self-name">ramaz</div>
+  <form class="search navbar-right" role="search">
+    <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+  <div class="toggle" id="theme-button">
+    <label for="theme">
+      <input type="checkbox" id="theme" value="light-theme">
+      <span id="dark-theme-button" class="material-symbols-outlined">
+        brightness_4
+      </span>
+      <span id="light-theme-button" class="material-symbols-outlined">
+        brightness_5
+      </span>
+    </label>
+  </div>
+</header>
+<main>
+
+  <div id="dartdoc-main-content" class="main-content">
+      
+<section class="desc markdown">
+  <h1 id="ramaz-student-life">Ramaz Student Life</h1>
+<p>This is an app to help Ramaz students navigate their student life.
+It tells you what classes you have when, the latest sports news, lost and found information, and more.</p>
+<h2 id="complete-list-of-features">Complete list of features:</h2>
+<ul>
+<li>
+<h3 id="ramaz-login">Ramaz login</h3>
+You can login with your Ramaz email to get your schedule sent directly to the app!</li>
+<li>
+<h3 id="schedule-explorer">Schedule explorer</h3>
+A complete schedule built-in to your phone. It can tell you what you have now, later, or you can specify a letter and schedule (eg, Rosh Chodesh) to explore your schedule.</li>
+<li>
+<h3 id="notes">Notes</h3>
+You can now schedule reminders for individual classes or periods, such as every B-4 or a reminder to bring your textbook to history class.</li>
+</ul>
+<!-- - ### Lunch -->
+<!-- A calendar with all the lunches of the year is right on your phone, so you always know what's for lunch -- and when to use your priveleges. -->
+<!-- - ### Sports -->
+<!-- See upcoming games across all of Ramaz's sports teams. After the games you can see the score and team's overal record. -->
+<!-- - ### Newspapers -->
+<!-- Have instant access to all of Ramaz's student publications, including RamPage, XeVeX, Breakthrough, and more. -->
+<!-- - ### Lost & Found -->
+<!-- Tired of getting notifications every second when something is lost, but still want everyone else to be notified when **you** lose something? The Lost & Found feature introduces a chat-based system that notifies only the people involved. An image-recognition based system is coming soon, so finding your lost objects will require less effort than ever. -->
+<h2 id="your-feedback-is-appreciated">Your feedback is appreciated</h2>
+<p>We want to hear what you have to say, so please use the "Send Feedback" button in the app to tell us what you do -- or don't -- like, and we'll work on it.</p>
+<h1 id="contributing">Contributing</h1>
+<p>This repo is to be modified <em>only</em> by the Ramaz Coding Club. It follows a simple yet sophisticated structure, in addition to the standard Flutter folders. Here is a rundown of everything you need to know:</p>
+<ul>
+<li>
+<h2 id="the-android-folder">The <code>android</code> folder:</h2>
+<p>This folder contains Android-specific implementation details. The only notable files in it are the gradle configurations: <code>gradle.properties</code>, <code>build.gradle</code>, and <code>app\build.gradle</code> (which have been changed to configured Firebase). An adjustment was made to <code>gradle\wrapper\gradle-wrapper.properties</code> to upgrade to the latest version of Gradle. Android-specific assets are stored under <code>app\src\main\res</code>, and modifications have been made to <code>AndroidManifest.xml</code> accordingly.</p>
+</li>
+<li>
+<h2 id="the-data-folder">The <code>data</code> folder:</h2>
+<p>This folder is not meant to be public. It is basically a collection of <code>.csv</code> versions of the Ramaz database. The naming convention here is simple: make everything lowercase, remove <code>RG_</code>, and make abbreviations into the full word. For example, <code>RG_SECT_SCHED</code> should be saved as <code>data\section_schedule.csv</code>. This is essential for the data processing (in the <code>firebase</code> folder) to work. Also included is the <code>calendar.csv</code> file needed for calendar parsing.</p>
+</li>
+<li>
+<h2 id="the-doc-folder">The <code>doc</code> folder:</h2>
+<p>OK, so this folder is also absent from GitHub. But it's super simple to generate. Just run <code>dartdoc</code> in this repo and the full documentation will be saved here.</p>
+</li>
+<li>
+<h2 id="the-firebase-folder">The <code>firebase</code> folder:</h2>
+<p>This folder contains scripts whose sole purpose is to configure Google Firebase. This basically means configuring the database and authentication services based on data from the Ramaz database. It contains two more folders, <code>data</code> and <code>database</code> whose jobs are to handle data modeling and database configuration, respectively. Another notable file here is <code>auth.py</code>, which manages the FirebaseAuth API.</p>
+</li>
+<li>
+<h2 id="the-images-folder">The <code>images</code> folder:</h2>
+<p>This folder contains image assets for the project. They are imported in the <code>pubspec.yaml</code> file. There are two child folders:</p>
+<ul>
+<li>
+<h3 id="the-icons-folder">The <code>icons</code> folder:</h3>
+<p>This folder contains basic icons used throughout the app</p>
+<ul>
+<li>
+<h3 id="the-logos-folder">The <code>logos</code> folder:</h3>
+This folder contains logos used for various services throughout the app. Note that despite the use of this iconography, excluding Ramaz, we do not claim any ownership whatsoever of these brands. The <code>ramaz</code> folder contains Ramaz-specific branding.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<h2 id="the-ios-folder">The <code>ios</code> folder:</h2>
+<p>This folder contains iOS-specific modifications, including Firebase configuration and asset bundling.</p>
+</li>
+<li>
+<h2 id="the-lib-folder">The <code>lib</code> folder:</h2>
+<p>This is, where the main Dart code lies. This will be discussed in detail next section.</p>
+</li>
+</ul>
+<h2 id="code-related-folders">Code related folders:</h2>
+<p>Inside <code>lib\</code>, there are five libraries, each of which define a different part of the structure of the app. Each library two sections -- a folder under <code>lib\src</code>, containing all the code, and a file under <code>lib\</code>, which declares the library (sort of like a header file).</p>
+<ul>
+<li>
+<h3 id="the-data-library">The <code>data</code> library:</h3>
+<p>This library contains data models for everything in the app, separated into files by topic. Here, all the business logic is implemented either as complex factories or methods.</p>
+</li>
+<li>
+<h3 id="the-services-library">The <code>services</code> library:</h3>
+<p>This library contains abstractions over many different APIs (data sources), separated into files by API.</p>
+</li>
+<li>
+<h3 id="the-services_collection-library">The <code>services_collection</code> library:</h3>
+<p>This library contains logic for initializing the services. It can act as a wrapper around all the services, so function and constructor signatures can remain the same even after services are added or removed.</p>
+</li>
+<li>
+<h3 id="the-models-library">The <code>models</code> library:</h3>
+<p>This library contains two types of models:</p>
+<ol>
+<li>Data models. Data models control the state of the data across the lifespan of the app. The user profile is a good example of a data model, since it needs to be accessible to all code.
+<ol start="2">
+<li>View models. view models control the state of data in an element of UI, such as a page. View models can interact with data models to get their data, and should generally have a field for every label, and a method for every input action in the UI.</li>
+</ol>
+</li>
+</ol>
+</li>
+<li>
+<h3 id="the-widgets-library">The <code>widgets</code> library:</h3>
+<p>This folder contains UI elements ("widgets") that are independent enough from the rest of the screen to be able to be imported and used reliably anywhere in the app (even if they in reality aren't). There are a few categories of widgets:</p>
+<ol>
+<li>Ambient widgets are widgets that are exposed to the whole app (usually via <a href="https://api.flutter.dev/flutter/widgets/InheritedWidget-class.html"><code>InheritedWidgets</code></a>).
+<ol start="2">
+<li>Atomic widgets are widgets that represent individual pieces of data. They should be used throughout the app exclusively to represent those data types.</li>
+<li>Generic widgets are miscellaneous widgets that help compose the UI.</li>
+<li>Other helper widgets to display images and iconography throughout the UI.</li>
+</ol>
+</li>
+</ol>
+</li>
+<li>
+<h3 id="the-pages-library">The <code>pages</code> library:</h3>
+<p>This library contains all the screens of the app, separated into files. These files may import data templates (from <code>data</code>), APIs (from <code>services</code>), page states (from <code>models</code>), or other UI elements (from <code>widgets</code>).</p>
+</li>
+</ul>
+<h2 id="running-the-app">Running the app:</h2>
+<p>To run the app, make sure you have <a href="https://flutter.dev">Flutter</a> installed, and run these commands:
+	</p><pre class="language-dart">		git clone <a href="https://github.com/Levi-Lesches/Ramaz-Student-Life.git">https://github.com/Levi-Lesches/Ramaz-Student-Life.git</a>
+		cd ramaz
+	</pre><p></p>
+<p>To be able to run and debug the app, run <code>flutter run</code>. To simply download it, run <code>flutter build apk</code> or <code>flutter build ios</code>, plug in your phone and run <code>flutter install</code>.</p>
+</section>
+
+
+      <section class="summary">
+          <h2>Libraries</h2>
+        <dl>
+          <dt id="app">
+  <span class="name"><a href="app/app-library.html">app</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="constants">
+  <span class="name"><a href="constants/constants-library.html">constants</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="data">
+  <span class="name"><a href="data/data-library.html">data</a></span> 
+
+</dt>
+<dd>This library handles storing all the data in the app.
+</dd>
+
+          <dt id="firebase_options">
+  <span class="name"><a href="firebase_options/firebase_options-library.html">firebase_options</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="main">
+  <span class="name"><a href="main/main-library.html">main</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="models">
+  <span class="name"><a href="models/models-library.html">models</a></span> 
+
+</dt>
+<dd>An abstraction over data handling.
+</dd>
+
+          <dt id="pages">
+  <span class="name"><a href="pages/pages-library.html">pages</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="ramaz_services">
+  <span class="name"><a href="ramaz_services/ramaz_services-library.html">ramaz_services</a></span> 
+
+</dt>
+<dd>An abstraction over device services and data sources.
+</dd>
+
+          <dt id="widgets">
+  <span class="name"><a href="widgets/widgets-library.html">widgets</a></span> 
+
+</dt>
+<dd>A collection of widgets to use.
+</dd>
+
+        </dl>
+      </section>
+
+  </div> <!-- /.main-content -->
+
+  <div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
+    <!-- The search input and breadcrumbs below are only responsively visible at low resolutions. -->
+<header id="header-search-sidebar" class="hidden-l">
+  <form class="search-sidebar" role="search">
+    <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+
+<ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
+    <li class="self-crumb">ramaz package</li>
+</ol>
+
+
+    <h5 class="hidden-xs"><span class="package-name">ramaz</span> <span class="package-kind">package</span></h5>
+    <ol>
+      <li class="section-title">Libraries</li>
+      <li><a href="app/app-library.html">app</a></li>
+      <li><a href="constants/constants-library.html">constants</a></li>
+      <li><a href="data/data-library.html">data</a></li>
+      <li><a href="firebase_options/firebase_options-library.html">firebase_options</a></li>
+      <li><a href="main/main-library.html">main</a></li>
+      <li><a href="models/models-library.html">models</a></li>
+      <li><a href="pages/pages-library.html">pages</a></li>
+      <li><a href="ramaz_services/ramaz_services-library.html">ramaz_services</a></li>
+      <li><a href="widgets/widgets-library.html">widgets</a></li>
+</ol>
+
+  </div>
+
+  <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
+  </div>
+
+</main>
+
+<footer>
+  <span class="no-break">
+    ramaz
+      1.1.0+11
+  </span>
+
+  
+</footer>
+
+
+
+<script src="static-assets/highlight.pack.js?v1"></script>
+<script src="static-assets/docs.dart.js"></script>
+
+
+
+</body>
+
+</html>
+
