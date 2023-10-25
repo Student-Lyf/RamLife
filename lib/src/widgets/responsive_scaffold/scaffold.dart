@@ -67,7 +67,7 @@ class ResponsiveScaffoldState extends State<ResponsiveScaffold>{
 		onDestinationSelected: (value) => destinationCallback(context, value),
 		labelType: NavigationRailLabelType.all,
 		destinations: [
-			for (final destination in destinations) destination.rail
+			for (final destination in destinations) destination.rail,
 		],
 	);
 
@@ -76,7 +76,7 @@ class ResponsiveScaffoldState extends State<ResponsiveScaffold>{
 		selectedIndex: index,
 		onDestinationSelected: (value) => destinationCallback(context, value),
 		destinations: [
-			for (final destination in destinations) destination.bar
+			for (final destination in destinations) destination.bar,
 		],
 	);
 
@@ -92,8 +92,8 @@ class ResponsiveScaffoldState extends State<ResponsiveScaffold>{
 							widget.drawer,
 							Expanded(child: widget.body),
 							widget.sideSheet ?? Container(),
-						]
-					)
+						],
+					),
 				);
 				case DeviceType.tabletLandscape: return Scaffold(
 					appBar: widget.appBar,
@@ -104,31 +104,30 @@ class ResponsiveScaffoldState extends State<ResponsiveScaffold>{
 							if (widget.enableNavigation) navRail(),
 							Expanded(child: widget.body),
 							widget.sideSheet ?? Container(),
-						]
-					)
+						],
+					),
 				);
 				case DeviceType.tabletPortrait: return Scaffold(
 					appBar: widget.appBar,
 					floatingActionButton: widget.floatingActionButton,
 					drawer: Drawer(child: widget.drawer),
-					endDrawer: widget.sideSheet == null ? null : Drawer(child: widget.sideSheet!),
+					endDrawer: widget.sideSheet == null ? null : Drawer(child: widget.sideSheet),
 					body: Row(
 						children: [
 							if (widget.enableNavigation) navRail(),
 							Expanded(child: widget.body),
-						]
-					)
+						],
+					),
 				);
 				case DeviceType.mobile: return Scaffold(
 					appBar: widget.appBar,
 					floatingActionButton: widget.floatingActionButton,
 					drawer: Drawer(child: widget.drawer),
-					endDrawer: widget.sideSheet == null ? null : Drawer(child: widget.sideSheet!),
+					endDrawer: widget.sideSheet == null ? null : Drawer(child: widget.sideSheet),
 					bottomNavigationBar: widget.enableNavigation ? navBar() : null,
 					body: widget.body,
 				);
 			}
-		}
+		},
 	);
 }
-

@@ -1,5 +1,7 @@
 import "package:meta/meta.dart";
 
+import "../types.dart";
+
 /// The hour and minute representation of a time. 
 /// 
 /// This is used instead of [Flutter's TimeOfDay](https://api.flutter.dev/flutter/material/TimeOfDay-class.html)
@@ -23,12 +25,12 @@ class Time {
 	/// Returns a new [Time] object from JSON data.
 	/// 
 	/// The json must have `hour` and `minutes` fields that map to integers.
-	Time.fromJson(Map json) :
+	Time.fromJson(Json json) :
 		hour = json ["hour"],
 		minutes = json ["minutes"];
 
 	/// Returns this obect in JSON form
-	Map toJson() => {
+	Json toJson() => {
 		"hour": hour, 
 		"minutes": minutes,
 	};
@@ -77,7 +79,7 @@ class Range {
 		int startHour, 
 		int startMinute, 
 		int endHour, 
-		int endMinute
+		int endMinute,
 	) : 
 		start = Time (startHour, startMinute), 
 		end = Time (endHour, endMinute);
@@ -87,12 +89,12 @@ class Range {
 	/// The json must have `start` and `end` fields 
 	/// that map to [Time] JSON objects.
 	/// See [Time.fromJson] for more details.
-	Range.fromJson(Map json) :
-		start = Time.fromJson(Map.from(json ["start"])),
-		end = Time.fromJson(Map.from(json ["end"]));
+	Range.fromJson(Json json) :
+		start = Time.fromJson(Json.from(json ["start"])),
+		end = Time.fromJson(Json.from(json ["end"]));
 
 	/// Returns a JSON representation of this range. 
-	Map toJson() => {
+	Json toJson() => {
 		"start": start.toJson(),
 		"end": end.toJson(),
 	};
@@ -121,4 +123,3 @@ class Range {
 		start.minutes > other.minutes
 	);
 }
-

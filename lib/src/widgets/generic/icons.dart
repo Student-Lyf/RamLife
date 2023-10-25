@@ -21,31 +21,31 @@ class Logos {
 	/// The Google Drive logo. 
 	static const Widget drive = LinkIcon (
 		path: "images/logos/drive.png",
-		url: Urls.googleDrive
+		url: Urls.googleDrive,
 	);
 
 	/// The Microsoft Outlook logo. 
 	static const Widget outlook = LinkIcon (
 		path: "images/logos/outlook.jpg",
-		url: Urls.email
+		url: Urls.email,
 	);
 
 	/// The Schoology logo. 
 	static const Widget schoology = LinkIcon (
 		path: "images/logos/schoology.png",
-		url: Urls.schoology
+		url: Urls.schoology,
 	);
 
 	/// The Ramaz website logo. 
 	static const Widget ramazIcon = LinkIcon (
 		path: "images/logos/ramaz/teal.jpg",
-		url: Urls.ramaz
+		url: Urls.ramaz,
 	);
 
 	/// The Senior Systems (My Backpack) logo. 
 	static const seniorSystems = LinkIcon (
 		path: "images/logos/senior_systems.png",
-		url: Urls.seniorSystems
+		url: Urls.seniorSystems,
 	);
 }
 
@@ -56,7 +56,7 @@ class RamazLogos {
 	/// https://pbs.twimg.com/profile_images/378800000152983492/5724a8d14e67b53234ed96e3235fe526.jpeg
 	static const Widget teal = LoadingImage(
 		image: AssetImage("images/logos/ramaz/teal.jpg"),
-		aspectRatio: 1
+		aspectRatio: 1,
 	);
 
 	/// The Ramaz logo with a Ram head and the words Ramaz underneath. 
@@ -65,7 +65,7 @@ class RamazLogos {
 	/// but with the word Ramaz underneath. 
 	static const Widget ramSquareWords = LoadingImage(
 		image: AssetImage("images/logos/ramaz/ram_square_words.png"),
-		aspectRatio: 0.9276218611521418
+		aspectRatio: 0.9276218611521418,
 	);
 
 	/// A ram head. 
@@ -73,7 +73,7 @@ class RamazLogos {
 	/// https://www.the-rampage.org/wp-content/uploads/2019/08/IMG_0432.png
 	static const Widget ramSquare = LoadingImage(
 		image: AssetImage("images/logos/ramaz/ram_square.png"),
-		aspectRatio: 1.0666666666666667
+		aspectRatio: 1.0666666666666667,
 	);
 
 	/// The Ramaz Ram with the word Ramaz to its right. 
@@ -83,6 +83,6 @@ class RamazLogos {
 	/// next to it. 
 	static const Widget ramRectangle = LoadingImage(
 		image: AssetImage("images/logos/ramaz/ram_rectangle.png"),
-		aspectRatio: 2.8915864378401004
+		aspectRatio: 2.8915864378401004,
 	);
 }

@@ -36,7 +36,7 @@ class ProviderConsumer<T extends ChangeNotifier> extends StatelessWidget {
 	const ProviderConsumer.value({
 		required this.value, 
 		required this.builder, 
-		this.cachedChild
+		this.cachedChild,
 	}) : create = null;
 
 	/// A [ChangeNotifierProvider] that will or won't dispose of the model. 
@@ -53,6 +53,6 @@ class ProviderConsumer<T extends ChangeNotifier> extends StatelessWidget {
 	Widget build(BuildContext context) => provider(
 		Consumer<T>(
 			builder: (context, model, _) => builder(model, cachedChild ?? Container()),
-		)
+		),
 	);
 }

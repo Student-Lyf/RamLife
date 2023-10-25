@@ -42,6 +42,6 @@ class FeedbackModel with ChangeNotifier {
 				anonymous: anonymous,
 				name: anonymous ? null : Auth.name,
 				email: anonymous ? null : Auth.email,
-			).toJson()
+			).toJson(),
 	);
 }

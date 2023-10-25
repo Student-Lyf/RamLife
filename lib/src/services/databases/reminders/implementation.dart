@@ -11,15 +11,15 @@ import "interface.dart";
 /// document has the reminder id as its ID.
 class CloudReminders implements RemindersInterface {
 	/// The reminders subcollection for this user.
-	static CollectionReference<Map> get reminders => CloudUser.userDocument
+	static CollectionReference<Json> get reminders => CloudUser.userDocument
 		.collection("reminders");
 
 	@override
-	Future<List<Map>> getAll() => reminders.getAll();
+	Future<List<Json>> getAll() => reminders.getAll();
 
 	@override
-	Future<void> set(Map json) => reminders.doc(json ["id"])
-		.set(Map<String, dynamic>.from(json));
+	Future<void> set(Json json) => reminders.doc(json ["id"])
+		.set(Json.from(json));
 
 	@override
 	Future<void> delete(String id) => reminders.doc(id).delete();
@@ -33,10 +33,10 @@ class CloudReminders implements RemindersInterface {
 /// Reminders are stored in an object store where the keypath is `id`. 
 class LocalReminders implements RemindersInterface {
 	@override
-	Future<List<Map>> getAll() => Idb.instance.getAll(Idb.reminderStoreName);
+	Future<List<Json>> getAll() => Idb.instance.getAll(Idb.reminderStoreName);
 
 	@override
-	Future<void> set(Map json) => Idb.instance.update(
+	Future<void> set(Json json) => Idb.instance.update(
 		storeName: Idb.reminderStoreName,
 		value: json,
 	);

@@ -48,14 +48,14 @@ class InfoCard extends StatelessWidget {
 								LinkText(
 									text, 
 									shouldTrimParams: true,
-									linkStyle: const TextStyle(color: Color(0xff0000EE))
+									linkStyle: const TextStyle(color: Color(0xff0000EE)),
 								),
 								const SizedBox(height: 2.5),
-							]
-						]
-					] 
-				)
-			)
-		)
+							],
+						],
+					], 
+				),
+			),
+		),
 	);
 }

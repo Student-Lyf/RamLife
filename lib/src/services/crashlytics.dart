@@ -30,7 +30,7 @@ abstract class Crashlytics extends Service {
 	Future<void> recordError(
 		dynamic exception,
 		StackTrace stack,
-		{dynamic context}
+		{dynamic context,}
 	);
 
 	/// Records an error in the Flutter framework. 

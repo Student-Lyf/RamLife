@@ -6,6 +6,8 @@ import "schedule/day.dart";
 import "schedule/period.dart";
 import "schedule/time.dart";
 
+import "types.dart";
+
 /// Scopes for administrative privileges.
 /// 
 /// Admin users use these scopes to determine what they can read/write.
@@ -95,8 +97,6 @@ class User {
 	final Grade? grade;
 
 	/// The IDs of the clubs this user attends.
-	/// 
-	/// TODO: decide if this is relevant for captains.
 	final List<String> registeredClubs; 
 
 	/// The possible day names for this user's schedule.
@@ -117,7 +117,7 @@ class User {
 	/// Gets a value from JSON, throwing if null.
 	/// 
 	/// This function is needed since null checks don't run on dynamic values.
-	static dynamic safeJson(Map json, String key) {
+	static dynamic safeJson(Json json, String key) {
 		final dynamic value = json [key];
 		if (value == null) {
 			throw ArgumentError.notNull(key);
@@ -127,17 +127,17 @@ class User {
 	}
 
 	/// Creates a new user from JSON. 
-	User.fromJson(Map json) : 
+	User.fromJson(Json json) : 
 		dayNames = List<String>.from(safeJson(json, "dayNames")),
 		schedule = {
 			for (final String dayName in safeJson(json, "dayNames"))
-				dayName: PeriodData.getList(json [dayName])
+				dayName: PeriodData.getList(json [dayName]),
 		},
 		advisory = json ["advisory"] == null ? null : Advisory.fromJson(
-			Map.from(safeJson(json, "advisory"))
+			Map.from(safeJson(json, "advisory")),
 		),
 		contactInfo = ContactInfo.fromJson(
-			Map.from(safeJson(json, "contactInfo"))
+			Map.from(safeJson(json, "contactInfo")),
 		),
 		grade = json ["grade"] == null ? null : intToGrade [safeJson(json, "grade")],
 		registeredClubs = List<String>.from(json ["registeredClubs"] ?? []);
@@ -149,7 +149,7 @@ class User {
 		for (final List<PeriodData?> daySchedule in schedule.values)
 			for (final PeriodData? period in daySchedule)
 				if (period != null)
-					period.id
+					period.id,
 	};
 
 	/// Computes the periods, in order, for a given day. 
@@ -160,7 +160,7 @@ class User {
 	List<Period> getPeriods(Day day) => [
 		for (final Period period in day.schedule.periods) period.copyWith(
 			int.tryParse(period.name) == null ? null 
-				: schedule [day.name]! [int.parse(period.name) - 1]
-		)
+				: schedule [day.name]! [int.parse(period.name) - 1],
+		),
 	];
 }

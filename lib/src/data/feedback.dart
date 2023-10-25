@@ -1,3 +1,5 @@
+import "types.dart";
+
 /// Feedback from the user.
 class Feedback {
 	/// The message to the developer. 
@@ -30,11 +32,11 @@ class Feedback {
 		name = anonymous ? null : name;
 
 	/// A JSON representation of this feedback.
-	Map toJson() => {
+	Json toJson() => {
 		"message": message,
 		"email": email,
 		"name": name,
 		"anonymous": anonymous,
-		"timestamp": timestamp
+		"timestamp": timestamp,
 	};
 }

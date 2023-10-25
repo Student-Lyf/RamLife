@@ -1,4 +1,5 @@
 import "reminder_time.dart";
+import "../types.dart";
 
 /// A [ReminderTime] that depends on a name and period.
 class PeriodReminderTime extends ReminderTime {
@@ -14,8 +15,8 @@ class PeriodReminderTime extends ReminderTime {
 	const PeriodReminderTime({
 		required this.dayName,
 		required this.period,
-		required bool repeats
-	}) : super (repeats: repeats, type: ReminderTimeType.period);
+		required super.repeats,
+	}) : super (type: ReminderTimeType.period);
 
 	/// Creates a new [ReminderTime] from JSON.
 	/// 
@@ -23,7 +24,7 @@ class PeriodReminderTime extends ReminderTime {
 	/// 
 	/// `json ["period"]` should be a valid period for that day,
 	/// notwithstanding any schedule changes (like an "early dismissal").
-	PeriodReminderTime.fromJson(Map json) :
+	PeriodReminderTime.fromJson(Json json) :
 		dayName = json ["dayName"],
 		period = json ["period"],
 		super (repeats: json ["repeats"], type: ReminderTimeType.period);
@@ -33,7 +34,7 @@ class PeriodReminderTime extends ReminderTime {
 		"${repeats ? 'Repeats every ' : ''}$dayName-$period";
 
 	@override 
-	Map toJson() => {
+	Json toJson() => {
 		"dayName": dayName,
 		"period": period,
 		"repeats": repeats,

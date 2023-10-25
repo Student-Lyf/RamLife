@@ -12,19 +12,19 @@ import "interface.dart";
 /// Users cannot currently modify their own profiles. Use the Admin SDK instead.
 class CloudUser implements UserInterface {
 	/// The users collection in firestore.
-	static final CollectionReference<Map> users = Firestore.instance
+	static final CollectionReference<Json> users = Firestore.instance
 		.collection("students");
 
 	/// The document for this user.
-	static DocumentReference<Map> get userDocument => users.doc(Auth.email!);
+	static DocumentReference<Json> get userDocument => users.doc(Auth.email);
 
 	@override
-	Future<Map> getProfile() => userDocument
+	Future<Json> getProfile() => userDocument
 		.throwIfNull("User not in the database");
 
 	// Users cannot currently edit their own profiles.
 	@override 
-	Future<void> setProfile(Map json) async { }
+	Future<void> setProfile(Json json) async { }
 }
 
 /// Handles user data in the local database. 
@@ -32,13 +32,13 @@ class CloudUser implements UserInterface {
 /// The user is stored as the only record in the user's table.
 class LocalUser implements UserInterface {
 	@override
-	Future<Map> getProfile() => Idb.instance.throwIfNull(
+	Future<Json> getProfile() => Idb.instance.throwIfNull(
 		storeName: Idb.userStoreName,
 		key: Auth.email!,
 		message: "User email innaccessible",
 	);
 
 	@override
-	Future<void> setProfile(Map json) => Idb.instance
+	Future<void> setProfile(Json json) => Idb.instance
 		.update(storeName: Idb.userStoreName, value: json);
 }

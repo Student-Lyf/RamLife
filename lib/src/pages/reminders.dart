@@ -34,7 +34,7 @@ class RemindersPage extends StatelessWidget {
 					itemCount: model.reminders.length,
 					separatorBuilder: (_, __) => const Divider(),
 					itemBuilder: (BuildContext context, int index) => ReminderTile(index: index),
-				)
-		)
+				),
+		),
 	);
 }

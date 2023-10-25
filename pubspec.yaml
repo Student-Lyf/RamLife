@@ -10,7 +10,7 @@ description: A new Flutter project.
 version: 1.1.0+11
 
 environment:
-  sdk: ">=2.19.4 <=3.0.0"
+  sdk: ^3.1.0
  
 dependencies:
   flutter:
@@ -35,6 +35,8 @@ dependencies:
   adaptive_breakpoints: ^0.1.6
   link_text: ^0.2.0
   provider: ^6.0.5
+  meta: ^1.9.1
+  timezone: ^0.9.2
   # string_extensions: ^0.6.9
 
   # The following adds the Cupertino Icons font to your application.
@@ -46,7 +48,7 @@ dev_dependencies:
     sdk: flutter
   matcher: any
   flutter_launcher_icons: ^0.9.0
-  # pedantic: ^1.4.0
+  very_good_analysis: ^5.1.0
 
 flutter_icons:
   android: false  # overwrite

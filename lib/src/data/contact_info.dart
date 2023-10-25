@@ -1,3 +1,5 @@
+import "types.dart";
+
 /// Holds personal information about the user. 
 /// 
 /// While [name] and [email] can be read from the authentication service, 
@@ -25,7 +27,7 @@ class ContactInfo {
 	});
 
 	/// Creates a contact from JSON. 
-	ContactInfo.fromJson(Map json) : 
+	ContactInfo.fromJson(Json json) : 
 		name = json ["name"],
 		email = json ["email"],
 		phoneNumber = json ["phoneNumber"];

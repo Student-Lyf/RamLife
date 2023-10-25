@@ -1,3 +1,4 @@
+import "types.dart";
 import "package:meta/meta.dart";
 
 import "reminders/reminder_time.dart";
@@ -23,16 +24,16 @@ class Reminder {
 			if (reminders [index].time.doesApply(
 				dayName: dayName,
 				period: period,
-				subject: subject				
-			)) index
+				subject: subject,				
+			)) index,
 	];
 
 	/// Returns a list of reminders from a list of JSON objects. 
 	/// 
 	/// Calls [Reminder.fromJson] for every JSON object in the list.
-	static List<Reminder> fromList(List reminders) => [
+	static List<Reminder> fromList(List<dynamic> reminders) => [
 		for (final dynamic json in reminders)
-			Reminder.fromJson(Map.from(json))
+			Reminder.fromJson(Json.from(json)),
 	];
 
 	/// The message this reminder should show. 
@@ -60,12 +61,12 @@ class Reminder {
 	Reminder.fromJson(dynamic json) :
 		message = json ["message"],
 		id = json ["id"],
-		time = ReminderTime.fromJson(Map.from(json ["time"]));
+		time = ReminderTime.fromJson(Json.from(json ["time"]));
 
 	@override String toString() => "$message ($time)";
 
 	/// Returns a JSON representation of this reminder.
-	Map toJson() => {
+	Json toJson() => {
 		"message": message,
 		"time": time.toJson(),
 		"id": id,

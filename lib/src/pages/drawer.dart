@@ -54,13 +54,13 @@ class RamlifeDrawer extends StatelessWidget {
 								onTap: pushRoute(context, Routes.schedules),
 							),
 						],
-					]
+					],
 				),
 				BrightnessChanger.dropdown(),
 				ListTile (
 					title: const Text ("Logout"),
 					leading: Icon (Icons.lock),
-					onTap: pushRoute(context, Routes.login)
+					onTap: pushRoute(context, Routes.login),
 				),
 				ListTile (
 					title: const Text ("Send Feedback"),
@@ -72,23 +72,21 @@ class RamlifeDrawer extends StatelessWidget {
 					leading: Icon (Icons.info),
 					onTap: pushRoute(context, Routes.credits),
 				),
-			]
-		)),
+			],
+		),),
 		Material(
-			elevation: 0,
 			child: SingleChildScrollView (
 				scrollDirection: Axis.horizontal,
 				child: Row (
-					crossAxisAlignment: CrossAxisAlignment.center,
 					children: const [
 						Logos.ramazIcon,
 						Logos.outlook,
 						Logos.schoology,
 						Logos.drive,
-						Logos.seniorSystems
-					]
-				)
-			)
-		)
-	]);
+						Logos.seniorSystems,
+					],
+				),
+			),
+		),
+	],);
 }

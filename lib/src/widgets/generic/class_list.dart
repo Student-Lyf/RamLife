@@ -45,8 +45,8 @@ class ClassPanel extends StatelessWidget {
 					contentPadding: EdgeInsets.zero,
 					trailing: reminders.isEmpty ? null : const Icon(Icons.note),
 					leading: activity == null ? null : const Icon(Icons.announcement),
-				)
-			)
+				),
+			),
 		),
 		children: [
 			Padding (
@@ -62,8 +62,8 @@ class ClassPanel extends StatelessWidget {
 									child: LinkText(
 										label, 
 										shouldTrimParams: true,
-										linkStyle: const TextStyle(color: Color(0xff0000EE))
-									)
+										linkStyle: const TextStyle(color: Color(0xff0000EE)),
+									),
 								),
 							if (activity != null)
 								ActivityTile(activity!),  // already checked for null
@@ -71,12 +71,12 @@ class ClassPanel extends StatelessWidget {
 								ReminderTile (
 									index: index,
 									height: 60,
-								)
-						]
-					)
-				)
-			)
-		]
+								),
+						],
+					),
+				),
+			),
+		],
 	);
 }
 
@@ -109,7 +109,7 @@ class ClassList extends StatefulWidget {
 			? model.periods!
 			: model.periods!.getRange (
 				(model.periodIndex ?? -1) + 1, 
-				model.periods!.length
+				model.periods!.length,
 			),
 			headerText = model.period == null 
 				? "Today's Schedule" 
@@ -137,19 +137,19 @@ class ClassListState extends ModelListener<Reminders, ClassList> {
 						widget.headerText ?? "",
 						textScaleFactor: 2,
 						textAlign: TextAlign.center,
-					)
-				)
+					),
+				),
 			),  
 			...[
 				for (final Period period in widget.periods) 
-					getPanel(period)
+					getPanel(period),
 			],
-		]
+		],
 	);
 
 	/// Creates a [ClassPanel] for a given period. 
 	Widget getPanel(Period period) {
-		final Subject? subject = Models.instance.schedule.subjects[period.id];
+		final subject = Models.instance.schedule.subjects[period.id];
 		return ClassPanel (
 			children: [
 				for (final String description in period.getInfo(subject))

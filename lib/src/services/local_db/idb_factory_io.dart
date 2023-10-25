@@ -6,5 +6,5 @@ import "package:path_provider/path_provider.dart";
 /// 
 /// The mobile implementation is based on a .json file.
 Future<IdbFactory> get idbFactory async => getIdbFactoryPersistent(
-	(await getApplicationDocumentsDirectory()).path
+	(await getApplicationDocumentsDirectory()).path,
 );

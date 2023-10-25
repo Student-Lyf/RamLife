@@ -31,7 +31,7 @@ class AdminScheduleState extends
 		drawer: const RamlifeDrawer(),
 		floatingActionButton: FloatingActionButton(
 			onPressed: () async {
-				final Schedule? schedule = await ScheduleBuilder.buildSchedule(context);
+				final schedule = await ScheduleBuilder.buildSchedule(context);
 				if (schedule == null) {
 					return;
 				}
@@ -47,7 +47,7 @@ class AdminScheduleState extends
 						"There are no schedules yet. Feel free to add one.",
 						textScaleFactor: 1.5,
 						textAlign: TextAlign.center,
-					)
+					),
 				)
 				: ListView(
 					children: [
@@ -55,16 +55,15 @@ class AdminScheduleState extends
 							ListTile(
 								title: Text(schedule.name),
 								onTap: () async {
-									final Schedule? newSchedule = 
+									final newSchedule = 
 										await ScheduleBuilder.buildSchedule(context, preset: schedule);
 									if (newSchedule != null) {
 										await model.replaceSchedule(newSchedule);
 									}
 								},
-							)
-					]
-			)
-		)
+							),
+					],
+			),
+		),
 	);
 }
-

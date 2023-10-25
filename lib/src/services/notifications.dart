@@ -56,7 +56,7 @@ abstract class Notifications extends Service {
 	/// [date] must not be in the past. 
 	void scheduleNotification({
 		required covariant Notification notification,
-		required DateTime date
+		required DateTime date,
 	});
 
 	/// Cancels all notifications.

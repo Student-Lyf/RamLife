@@ -19,10 +19,10 @@ class HybridSports extends HybridDatabase<SportsInterface> implements SportsInte
 	Future<void> signIn() async => local.setAll(await cloud.getAll());
 
 	@override
-	Future<List<Map>> getAll() => local.getAll();
+	Future<List<Json>> getAll() => local.getAll();
 
 	@override
-	Future<void> setAll(List<Map> json) async {
+	Future<void> setAll(List<Json> json) async {
 		await cloud.setAll(json);
 		await local.setAll(json);
 	}

@@ -25,15 +25,13 @@ class OldCalendarWidget extends StatelessWidget {
 	    padding: const EdgeInsets.symmetric(horizontal: 25),
 	    child: Column(
 	      mainAxisAlignment: MainAxisAlignment.center,
-	      crossAxisAlignment: CrossAxisAlignment.center,
 	      children: [
-	        const Spacer(flex: 1),
+	        const Spacer(),
 	        Expanded(
-	          flex: 1,
 	          child: Container(
 	            decoration: BoxDecoration(border: Border.all()),
 	            child: const Center(
-	              child: Text("Monday")
+	              child: Text("Monday"),
 	            ),
 	          ),
 	        ),
@@ -43,13 +41,13 @@ class OldCalendarWidget extends StatelessWidget {
 	            decoration: BoxDecoration(border: Border.all()),
 	            child: const Center(
 	              child: Text("01", textScaleFactor: 2),
-	            )
-	          )
+	            ),
+	          ),
 	        ),
-	        const Spacer(flex: 1),
-	      ]
-	    )
-    )
+	        const Spacer(),
+	      ],
+	    ),
+    ),
   );
 }
 
@@ -72,14 +70,14 @@ class AdminCalendarState extends ModelListener<
 	static const List<String> months = [
 		"January", "February", "March", "April", "May", 
 		"June", "July", "August", "September", "October",
-		"November", "December"
+		"November", "December",
 	];
 
 	/// The days of the week. 
 	/// 
 	/// This will be used as the labels of the calendar. 
 	static const List<String> weekdays = [
-		"Sun", "Mon", "Tue", "Wed", "Thur", "Fri", "Sat"
+		"Sun", "Mon", "Tue", "Wed", "Thur", "Fri", "Sat",
 	];
 
 	@override
@@ -140,7 +138,7 @@ class AdminCalendarState extends ModelListener<
 								onPressed: () => currentMonth++,
 							),
 							const Spacer(flex: 3),
-						]
+						],
 					),
 					const SizedBox(height: 16),
 					Row(
@@ -148,7 +146,7 @@ class AdminCalendarState extends ModelListener<
 						children: [
 							for (final String weekday in weekdays)
 								Text(weekday),
-						]
+						],
 					),
 					Flexible(
 						child: model.calendar [currentMonth] == null
@@ -162,24 +160,24 @@ class AdminCalendarState extends ModelListener<
 									for (final CalendarDay? day in model.calendar [currentMonth]!)
 										if (day == null) CalendarTile.blank
 										else GestureDetector(
-											onTap: () => showDialog(
+											onTap: () => showDialog<void>(
 												context: context,
 												builder: (_) => DayBuilder(
 													day: day.schoolDay, 
 													date: day.date,
 													upload: (Day? value) => model.updateDay(
 														day: value, 
-														date: day.date
+														date: day.date,
 													),
-												)
+												),
 											),
 											child: CalendarTile(day: day.schoolDay, date: day.date),
-										)
-								]
+										),
+								],
 							),
-					)
-				]
-			)
-		)
+					),
+				],
+			),
+		),
 	);
 }

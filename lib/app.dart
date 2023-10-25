@@ -60,8 +60,6 @@ class RamLife extends StatelessWidget {
 				primary: RamazColors.blue,
 				// primaryVariant: RamazColors.blueDark,
 				secondary: RamazColors.gold,
-				// secondaryVariant: RamazColors.goldDark,
-				brightness: Brightness.light
 			),
 			textSelectionTheme: const TextSelectionThemeData(
 				cursorColor: RamazColors.blueLight,
@@ -69,13 +67,12 @@ class RamLife extends StatelessWidget {
 			),
 			buttonTheme: const ButtonThemeData (
 				buttonColor: RamazColors.gold,
-				textTheme: ButtonTextTheme.normal,
 			),
 			elevatedButtonTheme: ElevatedButtonThemeData(
 				style: ButtonStyle(
-					backgroundColor: MaterialStateProperty.all(RamazColors.gold)
-				)
-			)
+					backgroundColor: MaterialStateProperty.all(RamazColors.gold),
+				),
+			),
 		),
 		dark: ThemeData(
 			colorScheme: const ColorScheme.dark(
@@ -83,20 +80,19 @@ class RamLife extends StatelessWidget {
 				// primaryVariant: RamazColors.blueDark,
 				secondary: RamazColors.gold,
 				// secondaryVariant: RamazColors.goldDark,
-				brightness: Brightness.dark
 			),
 			iconTheme: const IconThemeData (color: RamazColors.goldDark),
 			primaryIconTheme: const IconThemeData (color: RamazColors.goldDark),
 			floatingActionButtonTheme: const FloatingActionButtonThemeData(
 				backgroundColor: RamazColors.goldDark,
-				foregroundColor: RamazColors.blue
+				foregroundColor: RamazColors.blue,
 			),
 			textSelectionTheme: const TextSelectionThemeData(
 				cursorColor: RamazColors.blueLight,
 				selectionHandleColor: RamazColors.blueLight,
 			),
 			cardTheme: CardTheme (
-				color: Colors.grey[820]
+				color: Colors.grey[820],
 			),
 			buttonTheme: const ButtonThemeData (
 				buttonColor: RamazColors.blueDark, 
@@ -104,8 +100,8 @@ class RamLife extends StatelessWidget {
 			),
 			elevatedButtonTheme: ElevatedButtonThemeData(
 				style: ButtonStyle(
-					backgroundColor: MaterialStateProperty.all(RamazColors.blueDark)
-				)
+					backgroundColor: MaterialStateProperty.all(RamazColors.blueDark),
+				),
 			),
 		),
 		builder: (BuildContext context, ThemeData theme) => MaterialApp (
@@ -117,12 +113,12 @@ class RamLife extends StatelessWidget {
 				settings: settings, 
 				transitionDuration: Duration.zero,
 				pageBuilder: (BuildContext context, __, ___) {
-					final String routeName = 
+					final routeName = 
 						(settings.name == null || !routes.containsKey(settings.name))
 							? Routes.home : settings.name!;
 					return routes [routeName]! (context);
 				},
-			)
-		)
+			),
+		),
 	);
 }

@@ -1,5 +1,6 @@
 import "package:meta/meta.dart";
 
+import "../types.dart";
 import "activity.dart";
 import "schedule.dart";
 import "subject.dart";
@@ -16,10 +17,10 @@ class PeriodData {
 	/// Note that some entries in the list may be null.
 	/// They represent a free period in the schedule.
 	/// See [PeriodData.fromJson] for more details.
-	static List<PeriodData?> getList(List json) => [
+	static List<PeriodData?> getList(List<dynamic> json) => [
 		for (final dynamic periodJson in json)
 			periodJson == null ? null : 
-				PeriodData.fromJson(Map.from(periodJson))
+				PeriodData.fromJson(Json.from(periodJson)),
 	];
 
 	/// The room the student needs to be in for this period.
@@ -49,7 +50,7 @@ class PeriodData {
 	/// Returns a [PeriodData] from a JSON object.
 	/// 
 	/// Both `json ["room"]` and `json ["id"]` must be non-null.
-	factory PeriodData.fromJson(Map json) => PeriodData(
+	factory PeriodData.fromJson(Json json) => PeriodData(
 		room: json ["room"],
 		id: json ["id"],
 		name: json ["name"],
@@ -97,7 +98,7 @@ class Period {
 		required this.data,
 		required this.time, 
 		required this.name, 
-		this.activity
+		this.activity,
 	});
 
 	/// A Period as represented by the calendar. 
@@ -113,7 +114,7 @@ class Period {
 	/// A Period as represented by the calendar. 
 	/// 
 	/// This period is student-agnostic, so [data] is automatically null.
-	Period.fromJson(Map json) : 
+	Period.fromJson(Json json) : 
 		time = Range.fromJson(json ["time"]),
 		name = json ["name"],
 		data = null, 
@@ -121,7 +122,7 @@ class Period {
 			: Activity.fromJson(json ["activity"]);
 
 	/// The JSON representation of this period.
-	Map toJson() => {
+	Json toJson() => {
 		"time": time.toJson(),
 		"name": name,
 		"activity": activity?.toJson(),

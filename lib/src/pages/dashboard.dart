@@ -6,7 +6,7 @@ import "drawer.dart";
 
 /// The names of the weekdays.
 const List<String> weekdayNames = [
-	"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"
+	"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday",
 ];
 
 /// Shows relevant info about today on the home page. 
@@ -25,8 +25,8 @@ class DashboardPage extends StatelessWidget {
 					label: "RETRY", 
 					onPressed: () => refresh(context, model),
 				),
-			)
-		)
+			),
+		),
 	);
 
 	@override
@@ -45,11 +45,11 @@ class DashboardPage extends StatelessWidget {
 									builder: (BuildContext context) => IconButton(
 										onPressed: () => Scaffold.of(context).openEndDrawer(),
 										icon: const Icon(Icons.schedule, color: Colors.white),
-									)
+									),
 								)
-							: const SizedBox.shrink()
-					)
-				]
+							: const SizedBox.shrink(),
+					),
+				],
 			),
 			sideSheet: !model.schedule.hasSchool 
 				? null : Drawer(child: ClassList.fromSchedule(model.schedule)),
@@ -63,7 +63,7 @@ class DashboardPage extends StatelessWidget {
 								? "There is no school today"
 								: "Today is ${model.schedule.today!.name}",
 							style: Theme.of(context).textTheme.displaySmall,
-							textAlign: TextAlign.center
+							textAlign: TextAlign.center,
 						),
 						const SizedBox (height: 20),
 						if (model.schedule.hasSchool) ...[
@@ -78,11 +78,11 @@ class DashboardPage extends StatelessWidget {
 							),
 							const SizedBox(height: 10),
 							for (final int index in model.sports.todayGames)
-								SportsTile(model.sports.games [index])
-						]
-					]
-				)
-			)
+								SportsTile(model.sports.games [index]),
+						],
+					],
+				),
+			),
 		),
 	);
 }
@@ -97,7 +97,7 @@ class ScheduleSlot extends StatelessWidget {
 
 	/// Displays schedule info on the home page.
 	ScheduleSlot() {
-		final Models models = Models.instance;
+		final models = Models.instance;
 		remindersModel = models.reminders;
 		scheduleModel = models.schedule;
 	}
@@ -133,9 +133,9 @@ class ScheduleSlot extends StatelessWidget {
 				if (layout.deviceType == DeviceType.desktop && children.length > 1) GridView.count(
 					shrinkWrap: true,
 					crossAxisCount: children.length,
-					children: children
-				) else Column(children: children)
-			]
-		)
+					children: children,
+				) else Column(children: children),
+			],
+		),
 	);
 }

@@ -25,7 +25,7 @@ class Preferences extends Service {
 
 	/// Determines whether this is the first time opening the app.
 	bool get firstTime {
-		final bool result = _prefs.getBool(firstTimeKey) ?? true;
+		final result = _prefs.getBool(firstTimeKey) ?? true;
 		_prefs.setBool(firstTimeKey, false);
 		return result;
 	}

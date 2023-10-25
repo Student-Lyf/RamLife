@@ -1,3 +1,5 @@
+import "package:ramaz/data.dart";
+
 import "package:idb_shim/idb_shim.dart";
 
 import "local_db/idb_factory_stub.dart"
@@ -9,10 +11,10 @@ import "service.dart";
 /// Helper functions for [ObjectStore].
 extension ObjectStoreHelpers on ObjectStore {
 	/// Gets the data at the key in this object store.
-	Future<Map?> get(Object key) async {
+	Future<Json?> get(Object key) async {
 		final dynamic result = await getObject(key);
 		return result == null ? null :
-			Map.from(result);
+			Json.from(result);
 	}
 }
 
@@ -21,18 +23,18 @@ extension ObjectStoreHelpers on ObjectStore {
 /// This extension mostly abstracts details of IDB and handles type-safety.
 extension DatabaseHelpers on Database {
 	/// Gets data at a key in an object store.
-	Future<Map?> get(String storeName, Object key) =>
+	Future<Json?> get(String storeName, Object key) =>
 		transaction(storeName, idbModeReadOnly)
 		.objectStore(storeName)
 		.get(key);
 
 	/// Gets data from an object store, throwing if it doesn't exist.
-	Future<Map> throwIfNull({
+	Future<Json> throwIfNull({
 		required String storeName,
 		required Object key,
 		required String message,
 	}) async {
-		final Map? result = await get(storeName, key);
+		final result = await get(storeName, key);
 		if (result == null) {
 			throw StateError(message);
 		} else {
@@ -44,7 +46,7 @@ extension DatabaseHelpers on Database {
 	Future<void> update({
 		required String storeName,
 		required Object value,
-		Object? key
+		Object? key,
 	}) => transaction(storeName, idbModeReadWrite)
 		.objectStore(storeName)
 		.put(value, key);
@@ -64,12 +66,12 @@ extension DatabaseHelpers on Database {
 		.clear();
 
 	/// Gets all the data in an object store.
-	Future<List<Map>> getAll(String storeName) async => [
+	Future<List<Json>> getAll(String storeName) async => [
 		for (
 			final dynamic entry in
 			await transaction(storeName, idbModeReadOnly)
 				.objectStore(storeName).getAll()
-		)	Map.from(entry)
+		)	Map.from(entry),
 	];
 }
 
@@ -134,9 +136,9 @@ class Idb extends DatabaseService {
 
 	@override
 	Future<void> init() async {
-		final IdbFactory _factory = await idbFactory;
+		final factory = await idbFactory;
 		try {
-			instance = await _factory.open(
+			instance = await factory.open(
 				"ramlife.db",
 				version: 1,
 				onUpgradeNeeded: (VersionChangeEvent event) {
@@ -151,8 +153,8 @@ class Idb extends DatabaseService {
 					}
 				},
 			);
-		} on StateError {
-			await _factory.deleteDatabase("ramlife.db");
+		} on StateError {  // ignore: avoid_catching_errors
+			await factory.deleteDatabase("ramlife.db");
 			return init();
 		}
 	}
@@ -162,10 +164,10 @@ class Idb extends DatabaseService {
 
 	@override
 	Future<void> signOut() async {
-		final Transaction transaction = instance
+		final transaction = instance
 			.transactionList(storeNames, idbModeReadWrite);
 
-		for (final String storeName in storeNames) {
+		for (final storeName in storeNames) {
 			await transaction.objectStore(storeName).clear();
 		}
 	}

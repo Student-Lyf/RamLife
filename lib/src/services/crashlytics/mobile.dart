@@ -16,7 +16,7 @@ class CrashlyticsImplementation extends Crashlytics {
 
 	@override
 	Future<void> init() async {
-		final bool didCrashLastTime = await firebase.didCrashOnPreviousExecution();
+		final didCrashLastTime = await firebase.didCrashOnPreviousExecution();
 		if (didCrashLastTime) {
 			await log("App crashed on last run");
 		}
@@ -29,12 +29,12 @@ class CrashlyticsImplementation extends Crashlytics {
 	Future<void> recordError (
 		dynamic exception,
 		StackTrace stack,
-		{dynamic context}
+		{dynamic context,}
 	) => firebase.recordError(exception, stack);
 
 	@override
 	Future<void> recordFlutterError (
-		FlutterErrorDetails details
+		FlutterErrorDetails details,
 	) => firebase.recordFlutterError(details);
 
 	@override

@@ -51,7 +51,7 @@ class RemindersBuilderModel with ChangeNotifier {
 		_schedule = Models.instance.schedule,
 		courses = [
 			for (final Subject subject in Models.instance.schedule.subjects.values)
-				subject.name
+				subject.name,
 		]
 	{
 		if (reminder == null) {
@@ -64,18 +64,14 @@ class RemindersBuilderModel with ChangeNotifier {
 		time = reminder.time;	
 		shouldRepeat = time!.repeats;
 		type = time!.type;
-		switch (type) {
+		switch (type!) {
 			case ReminderTimeType.period: 
-				final PeriodReminderTime reminderTime = time as PeriodReminderTime;
+				final reminderTime = time! as PeriodReminderTime;
 				period = reminderTime.period;
 				dayName = reminderTime.dayName;
-				break;
 			case ReminderTimeType.subject:
-				final SubjectReminderTime reminderTime = time as SubjectReminderTime;
+				final reminderTime = time! as SubjectReminderTime;
 				course = reminderTime.name;
-				break;
-			default: 
-				throw ArgumentError.notNull("Reminder.time.type");
 		}
 	}
 
@@ -120,10 +116,10 @@ class RemindersBuilderModel with ChangeNotifier {
 		if (dayName == null) {
 			return null;
 		}
-		final List<PeriodData?> schedule = _schedule.user.schedule [dayName]!;
+		final schedule = _schedule.user.schedule [dayName]!;
 		return [
 			for (int index = 0; index < schedule.length; index++) 
-				(index + 1).toString() 
+				(index + 1).toString(), 
 		];
 	}
 

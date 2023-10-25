@@ -39,7 +39,7 @@ class RouteInitializer extends StatefulWidget {
 /// The state for a [RouteInitializer].
 class RouteInitializerState extends State<RouteInitializer> {
 	/// The future for initializing the backend.
-	late Future initFuture;
+	late Future<void> initFuture;
 
 	@override
 	void initState() {
@@ -54,6 +54,7 @@ class RouteInitializerState extends State<RouteInitializer> {
 		try {
 			if (!Services.instance.isReady) {
 				await Services.instance.init();
+        if (!mounted) return;
 				ThemeChanger.of(context).brightness = caseConverter<Brightness> (
 					value: Services.instance.prefs.brightness,
 					onTrue: Brightness.light,
@@ -68,12 +69,14 @@ class RouteInitializerState extends State<RouteInitializer> {
 		} catch (error, stack) {
 			await Services.instance.crashlytics.log("Error. Disposing models");
 			Models.instance.dispose();
+      if (!mounted) return;
 			if (widget.onError != null) {
 				await Navigator.of(context).pushReplacementNamed(widget.onError!);
 			}
 			await Services.instance.crashlytics.recordError(error, stack);
 		}
 		if (!widget.isAllowed()) {
+      if (!mounted) return;
 			await Navigator.of(context).pushReplacementNamed(widget.onFailure);
 		}
 	}
@@ -81,7 +84,7 @@ class RouteInitializerState extends State<RouteInitializer> {
 	@override
 	Widget build(BuildContext context) => FutureBuilder(
 		future: initFuture,
-		builder: (_, AsyncSnapshot snapshot) => 
+		builder: (_, AsyncSnapshot<void> snapshot) => 
 			snapshot.connectionState == ConnectionState.done
 				? widget.child
 				: ResponsiveScaffold(

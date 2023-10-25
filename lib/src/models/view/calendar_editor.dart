@@ -40,7 +40,7 @@ class CalendarEditor with ChangeNotifier {
 	final List<List<CalendarDay?>?> calendar = List.filled(12, null);
 
 	/// A list of streams on the Firebase streams.
-	final List<StreamSubscription?> subscriptions = List.filled(12, null);
+	final List<StreamSubscription<List<Json?>>?> subscriptions = List.filled(12, null);
 
 	/// The year of each month.
 	/// 
@@ -51,7 +51,7 @@ class CalendarEditor with ChangeNotifier {
 		for (int month = 0; month < 12; month++) 
 			currentMonth > 7
 				? month > 7 ? currentYear : currentYear + 1
-				: month > 7 ? currentYear - 1 : currentYear
+				: month > 7 ? currentYear - 1 : currentYear,
 	];
 
 	/// Loads the current month to create the calendar.
@@ -63,13 +63,13 @@ class CalendarEditor with ChangeNotifier {
 	void loadMonth(int month) => subscriptions [month] ??= Services
 		.instance.database.firestore.getCalendarStream(month + 1)
 		.listen(
-			(List<Map?> cal) {
+			(List<Json?> cal) {
 				calendar [month] = layoutMonth(
 					[
-						for (final Map? day in cal)
+						for (final Json? day in cal)
 							day == null ? null : Day.fromJson(day),
 					], 
-					month
+					month,
 				);
 				notifyListeners();
 			}
@@ -77,7 +77,7 @@ class CalendarEditor with ChangeNotifier {
 
 	@override
 	void dispose() {
-		for (final StreamSubscription? subscription in subscriptions) {
+		for (final subscription in subscriptions) {
 			subscription?.cancel();
 		}
 		super.dispose();
@@ -90,20 +90,20 @@ class CalendarEditor with ChangeNotifier {
 	/// the calendar grid. This function pads the calendar with the correct 
 	/// amount of empty days before and after the month. 
 	List<CalendarDay?> layoutMonth(List<Day?> cal, int month) {
-		final int year = years [month];
-		final int firstDayOfMonth = DateTime(year, month + 1, 1).weekday;
-		final int weekday = firstDayOfMonth == 7 ? 0 : firstDayOfMonth;
-		int weeks = 0;  // the number of sundays (except for the first week)
+		final year = years [month];
+		final firstDayOfMonth = DateTime(year, month + 1).weekday;
+		final weekday = firstDayOfMonth == 7 ? 0 : firstDayOfMonth;
+		var weeks = 0;  // the number of sundays (except for the first week)
 		if (firstDayOfMonth != 7) {  // First week doesn't have a sunday
 			weeks++;
 		}
-		for (int date = 0; date < cal.length; date++) {
+		for (var date = 0; date < cal.length; date++) {
 			if (DateTime(year, month + 1, date + 1).weekday == 7) {  // Sunday
 				weeks++;
 			}
 		}
-		final int leftPad = weekday;
-		final int rightPad = (weeks * 7) - (weekday + cal.length);
+		final leftPad = weekday;
+		final rightPad = (weeks * 7) - (weekday + cal.length);
 		return [
 			for (int _ = 0; _ < leftPad; _++) null,
 			for (int date = 0; date < cal.length; date++) CalendarDay(
@@ -116,7 +116,7 @@ class CalendarEditor with ChangeNotifier {
 
 	/// Updates the calendar. 
 	Future<void> updateDay({required Day? day, required DateTime date}) async {
-		final int index = calendar [date.month - 1]!
+		final index = calendar [date.month - 1]!
 			.indexWhere((CalendarDay? day) => day != null);
 		calendar [date.month - 1]! [index + date.day - 1]!.schoolDay = day;
 		await Services.instance.database.calendar.setMonth(date.month, [

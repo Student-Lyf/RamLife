@@ -77,7 +77,7 @@ class Services implements Service {
 
 	@override
 	Future<void> init() async {
-		for (final Service service in services) {
+		for (final service in services) {
 			await service.init();
 		}
 		isReady = true;
@@ -85,7 +85,7 @@ class Services implements Service {
 
 	@override
 	Future<void> signIn() async {
-		for (final Service service in services) {
+		for (final service in services) {
 			await service.signIn();
 		}
 	}

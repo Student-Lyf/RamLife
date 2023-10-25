@@ -69,7 +69,7 @@ class FCM extends PushNotifications {
 				partialResult: message.toString(),
 			);
 		}
-		final AsyncCallback? function = callbacks [command];
+		final function = callbacks [command];
 		if (function == null) {
 			throw ArgumentError.value(
 				command,
@@ -83,7 +83,7 @@ class FCM extends PushNotifications {
 
 	@override
 	Future<void> registerForNotifications(
-		Map<String, AsyncCallback> callbacks
+		Map<String, AsyncCallback> callbacks,
 	) async {
 		this.callbacks = callbacks;
 
@@ -99,7 +99,7 @@ class FCM extends PushNotifications {
 	/// Subscribes to all the topics in [topics].
 	@override
 	Future<void> subscribeToTopics() async {
-		for (final String topic in topics) {
+		for (final topic in topics) {
 			await firebase.subscribeToTopic(topic);
 		}
 	}

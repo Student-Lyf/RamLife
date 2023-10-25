@@ -10,9 +10,9 @@ class AdminScheduleModel with ChangeNotifier {
 	final List<Schedule> schedules = Schedule.schedules;
 
 	/// All schedules in JSON form.
-	List<Map> get jsonSchedules => [
+	List<Json> get jsonSchedules => [
 		for (final Schedule schedule in schedules)
-			schedule.toJson()
+			schedule.toJson(),
 	];
 
 	/// Saves the schedules to the database and refreshes. 

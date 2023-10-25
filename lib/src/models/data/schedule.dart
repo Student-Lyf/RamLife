@@ -58,17 +58,17 @@ class ScheduleModel extends Model {
 
 	/// Initializes the calendar. 
 	Future<void> initCalendar() async {
-		final HybridCalendar calendarDatabase = Services.instance.database.calendar;
-		final List<Map> json = await calendarDatabase.getSchedules();
+		final calendarDatabase = Services.instance.database.calendar;
+		final json = await calendarDatabase.getSchedules();
 		Schedule.schedules = [
-			for (final Map schedule in json)
-				Schedule.fromJson(schedule)
+			for (final Json schedule in json)
+				Schedule.fromJson(schedule),
 		];
 		calendar = [
 			for (int month = 1; month <= 12; month++) [
-				for (final Map? day in await calendarDatabase.getMonth(month))
-					day == null ? null : Day.fromJson(day)
-			]
+				for (final Json? day in await calendarDatabase.getMonth(month))
+					day == null ? null : Day.fromJson(day),
+			],
 		];
 		user = Models.instance.user.data;
 		subjects = Models.instance.user.subjects;
@@ -115,14 +115,14 @@ class ScheduleModel extends Model {
 			// initialize the timer. See comments for [timer].
 			timer = Timer.periodic(
 				timerInterval,
-				(Timer timer) => onNewPeriod()
+				(Timer timer) => onNewPeriod(),
 			);
 		}
 	}
 
 	/// Updates the current period.
 	void onNewPeriod({bool first = false}) {
-		final DateTime newDate = DateTime.now();
+		final newDate = DateTime.now();
 
 		// Day changed. Probably midnight.
 		if (newDate.day != now.day) {
@@ -137,7 +137,7 @@ class ScheduleModel extends Model {
 		}
 
 		// So we have school today...
-		final int? newIndex = today?.getCurrentPeriod();
+		final newIndex = today?.getCurrentPeriod();
 
 		// period changed since last checked.
 		periodIndex = newIndex;
@@ -191,7 +191,7 @@ class ScheduleModel extends Model {
 	/// using [Notifications.scheduleNotification]
 	Future<void> scheduleReminders() async {
 		Services.instance.notifications.cancelAll();
-		final DateTime now = DateTime.now();
+		final now = DateTime.now();
 
 		// No school today/right now
 		if (!hasSchool || periodIndex == null || periods == null) {
@@ -199,9 +199,9 @@ class ScheduleModel extends Model {
 		}
 
 		// For all periods starting from periodIndex, schedule applicable reminders.
-		for (int index = periodIndex!; index < periods!.length; index++) {
-			final Period period = periods! [index];
-			for (final int reminderIndex in reminders.getReminders(
+		for (var index = periodIndex!; index < periods!.length; index++) {
+			final period = periods! [index];
+			for (final reminderIndex in reminders.getReminders(
 				period: period.name,
 				subject: subjects [period.id]?.name,
 				dayName: today?.name,
@@ -217,7 +217,7 @@ class ScheduleModel extends Model {
 					notification: Notification.reminder(
 						title: "New reminder",
 						message: reminders.reminders [reminderIndex].message,
-					)
+					),
 				);
 			}
 		}
@@ -232,14 +232,13 @@ class ScheduleModel extends Model {
 	bool isValidReminder(Reminder reminder) {
 		switch(reminder.time.type) {
 			case ReminderTimeType.period: 
-				final PeriodReminderTime time = reminder.time as PeriodReminderTime;
-				final Iterable<String> dayNames = user.schedule.keys;
+				final time = reminder.time as PeriodReminderTime;
+				final dayNames = user.schedule.keys;
 				return dayNames.contains(time.dayName) 
 					&& int.parse(time.period) <= user.schedule [time.dayName]!.length;
 			case ReminderTimeType.subject: 
-				final SubjectReminderTime time = reminder.time as SubjectReminderTime;
+				final time = reminder.time as SubjectReminderTime;
 				return subjects.values.any((Subject subject) => subject.name == time.name);
-			default: throw StateError("Reminder <$reminder> has invalid ReminderTime");
 		}
 	}
 }

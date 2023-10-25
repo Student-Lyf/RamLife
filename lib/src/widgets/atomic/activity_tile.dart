@@ -28,23 +28,23 @@ class ActivityTile extends StatelessWidget {
 				title: Text(
 					activity.type == ActivityType.grade 
 						? "Activity by grade"
-						: "Activity"
+						: "Activity",
 				),
 				subtitle: Text(
 					detailedActivities.contains(activity.type)
 						? "Tap to see details"
 						: activity.toString(),
 				),
-				onTap: () => showDialog(
+				onTap: () => showDialog<void>(
 					context: context,
 					builder: (_) => AlertDialog(
 						title: const Text("Activity"),
 						content: SingleChildScrollView(
 							child: Text(activity.message),
-						)
-					)
-				)
-			)
-		)
+						),
+					),
+				),
+			),
+		),
 	);
 }

@@ -63,19 +63,19 @@ class LoginState extends State<Login> {
 					const SizedBox(
 						height: 300, 
 						width: 300, 
-						child: RamazLogos.ramSquareWords
+						child: RamazLogos.ramSquareWords,
 					),
 					// const SizedBox(height: 100),
-					const Spacer(flex: 1),
+					const Spacer(),
 					TextButton.icon(
 						icon: Logos.google,
 						label: const Text("Sign in with Google"),
 						onPressed: () => signIn(context),
 					),
 					const Spacer(flex: 2),
-				]
-			)
-		)
+				],
+			),
+		),
 	);
 
 	/// A function that runs whenever there is an error.
@@ -86,16 +86,16 @@ class LoginState extends State<Login> {
 	/// the user from logging in.
 	Future<void> onError(dynamic error, StackTrace stack) async {
 		setState(() => isLoading = false);
-		final Crashlytics crashlytics = Services.instance.crashlytics;
+		final crashlytics = Services.instance.crashlytics;
 		await crashlytics.log("Login failed");
-		final String? email = Auth.email;
+		final email = Auth.email;
 		if (email != null) {
 			await crashlytics.setEmail(email);
 		}
-		// ignore: unawaited_futures
-		showDialog (
+    if (!mounted) return;
+		showDialog<void>(  // ignore: unawaited_futures
 			context: context,
-			builder: (dialogContext) => AlertDialog (
+			builder: (dialogContext) => AlertDialog(
 				title: const Text ("Cannot connect"),
 				content: const Text (
 					"Due to technical difficulties, your account cannot be accessed.\n\n"
@@ -110,9 +110,9 @@ class LoginState extends State<Login> {
 					ElevatedButton(
 						onPressed: () => launchUrl(Uri.parse("mailto:ramlife@ramaz.org")),
 						child: const Text ("ramlife@ramaz.org"),
-					)
-				]
-			)
+					),
+				],
+			),
 		).then((_) async {		
 			await Services.instance.database.signOut();
 			Models.instance.dispose();
@@ -133,6 +133,7 @@ class LoginState extends State<Login> {
 		try {await function();} 
 		on PlatformException catch (error, stack) {
 			if (error.code == "ERROR_NETWORK_REQUEST_FAILED") {
+        if (!mounted) return;
 				ScaffoldMessenger.of(scaffoldContext).showSnackBar(
 					const SnackBar (content: Text ("No Internet")),
 				);

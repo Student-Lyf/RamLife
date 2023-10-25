@@ -1,3 +1,4 @@
+import "../types.dart";
 import "reminder_time.dart";
 
 /// A [ReminderTime] that depends on a subject. 
@@ -8,13 +9,13 @@ class SubjectReminderTime extends ReminderTime {
 	/// Returns a new [SubjectReminderTime]. All parameters must be non-null.
 	const SubjectReminderTime({
 		required this.name,
-		required bool repeats,
-	}) : super (repeats: repeats, type: ReminderTimeType.subject);
+		required super.repeats,
+	}) : super (type: ReminderTimeType.subject);
 
 	/// Returns a new [SubjectReminderTime] from a JSON object.
 	/// 
 	/// The fields `repeats` and `name` must not be null.
-	SubjectReminderTime.fromJson(Map json) :
+	SubjectReminderTime.fromJson(Json json) :
 		name = json ["name"],
 		super (repeats: json ["repeats"], type: ReminderTimeType.subject);
 
@@ -22,7 +23,7 @@ class SubjectReminderTime extends ReminderTime {
 	String toString() => (repeats ? "Repeats every " : "") + name;
 
 	@override 
-	Map toJson() => {
+	Json toJson() => {
 		"name": name,
 		"repeats": repeats,
 		"type": reminderTimeToString [type],

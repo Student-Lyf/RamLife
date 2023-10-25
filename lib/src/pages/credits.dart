@@ -31,9 +31,9 @@ class CreditsPage extends StatelessWidget {
 				),
 				const SizedBox(height: 16),
 				for (final Contributor contributor in Contributor.contributors)
-					ResponsiveContributorCard(contributor)
-			]
-		)
+					ResponsiveContributorCard(contributor),
+			],
+		),
 	);
 }
 
@@ -57,7 +57,7 @@ class ResponsiveContributorCard extends StatelessWidget{
 			builder: (_, LayoutInfo layout, __) => layout.deviceType == DeviceType.mobile
 				? CompactContributorCard(contributor)
 				: WideContributorCard(contributor),
-		)
+		),
 	);
 }
 
@@ -82,7 +82,6 @@ class WideContributorCard extends StatelessWidget {
 		child: Row(
 			children: [
 				Flexible(
-					flex: 1,
 					child: AspectRatio(
 						aspectRatio: 1, 
 						child: Image.asset(contributor.imageName),
@@ -116,7 +115,7 @@ class WideContributorCard extends StatelessWidget {
 									),
 								),
 							),
-						]
+						],
 					),
 				),
 				const Spacer(),
@@ -124,12 +123,12 @@ class WideContributorCard extends StatelessWidget {
 					flex: 3,
 					child: Text(
 						contributor.description,
-						style: Theme.of(context).textTheme.titleMedium
-					)
+						style: Theme.of(context).textTheme.titleMedium,
+					),
 				),
 				const Spacer(),
-			]
-		)
+			],
+		),
 	);
 }
 
@@ -162,13 +161,13 @@ class CompactContributorCard extends StatelessWidget {
 								style: TextStyle(color: Colors.blue.withAlpha(200)),
 							),
 						),
-					]
+					],
 				),
 			),
 			Padding(
 				padding: const EdgeInsets.all(16),
 				child: Text(contributor.description),
 			),
-		]
+		],
 	);
 }

@@ -22,7 +22,7 @@ class ReminderBuilder extends StatefulWidget {
 
 	/// Opens a [ReminderBuilder] pop-up to create or modify a [Reminder]. 
 	static Future<Reminder?> buildReminder(
-		BuildContext context, [Reminder? reminder]
+		BuildContext context, [Reminder? reminder,]
 	) => showDialog(
 		context: context, 
 		builder: (_) => ReminderBuilder(reminder),
@@ -79,7 +79,7 @@ class ReminderBuilderState extends ModelListener<
 					? () => Navigator.of(context).pop(model.build())
 					: null,
 				child: const Text("Save"),
-			)
+			),
 		],
 		content: Column (
 			mainAxisSize: MainAxisSize.min,
@@ -96,7 +96,7 @@ class ReminderBuilderState extends ModelListener<
 					// if toggleable is false (default), the value can never be null
 					onChanged: (value) => model.toggleRepeatType(value!),  
 					title: Text (
-						"${model.shouldRepeat ? 'Repeats every' : 'On'} period"
+						"${model.shouldRepeat ? 'Repeats every' : 'On'} period",
 					),
 				),
 				RadioListTile<ReminderTimeType> (
@@ -105,7 +105,7 @@ class ReminderBuilderState extends ModelListener<
 					// if toggleable is false (default), the value can never be null
 					onChanged: (value) => model.toggleRepeatType(value!),
 					title: Text (
-						"${model.shouldRepeat ? 'Repeats every' : 'On'} subject"
+						"${model.shouldRepeat ? 'Repeats every' : 'On'} subject",
 					),
 				),
 				const SizedBox (height: 20),
@@ -137,7 +137,7 @@ class ReminderBuilderState extends ModelListener<
 									DropdownMenuItem(
 										value: period,
 										child: Text (period),
-									)
+									),
 							],
 							onChanged: (String? value) {
 								if (value != null) {
@@ -146,8 +146,8 @@ class ReminderBuilderState extends ModelListener<
 							},
 							value: model.period,
 							hint: const Text ("Period"),
-						)
-					)
+						),
+					),
 				] else if (model.type == ReminderTimeType.subject)
 					ListTile (
 						title: const Text ("Class"),
@@ -157,7 +157,7 @@ class ReminderBuilderState extends ModelListener<
 									DropdownMenuItem(
 										value: course,
 										child: Text("${ReminderBuilder.trimString(course, 14)}..."),
-									)
+									),
 							],
 							onChanged: (String? value) {
 								if (value != null) {
@@ -167,7 +167,7 @@ class ReminderBuilderState extends ModelListener<
 							value: model.course,
 							isDense: true,
 							hint: const Text ("Class"),
-						)
+						),
 					),
 				SwitchListTile (
 					value: model.shouldRepeat,
@@ -175,7 +175,7 @@ class ReminderBuilderState extends ModelListener<
 					title: const Text ("Repeat"),
 					secondary: const Icon (Icons.repeat),
 				),
-			]
-		)
+			],
+		),
 	);
 }
