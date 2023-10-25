@@ -1,7 +1,6 @@
 import "package:flutter_local_notifications/flutter_local_notifications.dart";
-import "package:flutter_native_timezone/flutter_native_timezone.dart";
-import "package:timezone/data/latest.dart";
-import "package:timezone/timezone.dart";
+import "package:timezone/data/latest.dart" as tz;
+import "package:timezone/timezone.dart" as tz;
 
 // ignore: directives_ordering
 import "package:ramaz/constants.dart";
@@ -27,7 +26,7 @@ class MobileNotification extends Notification {
 		android: AndroidNotificationDetails(
 			"reminders",
 			"Reminders",
-			"When reminders are due.",
+			channelDescription: "When reminders are due.",
 			importance: Importance.high,
 			priority: Priority.high,
 			color: RamazColors.blue,
@@ -40,7 +39,7 @@ class MobileNotification extends Notification {
 			styleInformation: null,
 			enableLights: true,
 		),
-		iOS: IOSNotificationDetails(
+		iOS: DarwinNotificationDetails(
 			presentBadge: true,
 			presentSound: true
 		)
@@ -70,12 +69,6 @@ class MobileNotifications extends Notifications {
 	/// The plugin on mobile. 
 	final plugin = FlutterLocalNotificationsPlugin();
 
-	/// The location this device is in. 
-	late String timezoneName;
-
-	/// The location (and timezones) this device is in.
-	late Location location;
-
 	@override
 	Future<void> init() async {
 		await plugin.initialize(
@@ -83,12 +76,10 @@ class MobileNotifications extends Notifications {
 				android: AndroidInitializationSettings(
 					"@mipmap/bright_yellow"  // default icon of app
 				),
-				iOS: IOSInitializationSettings(),  // defaults are good
+				iOS: DarwinInitializationSettings(),  // defaults are good
 			)
 		);
-		initializeTimeZones();
-		timezoneName = await FlutterNativeTimezone.getLocalTimezone();
-		location = getLocation(timezoneName);
+		tz.initializeTimeZones();
 	}
 
 	@override
@@ -110,7 +101,7 @@ class MobileNotifications extends Notifications {
 		Notification.id,
 		notification.title,
 		notification.message,
-		TZDateTime.from(date, location),
+		tz.TZDateTime.from(date, tz.local),
 		notification.details,
 		androidAllowWhileIdle: true,
 		uiLocalNotificationDateInterpretation: 
