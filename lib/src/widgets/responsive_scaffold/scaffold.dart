@@ -13,7 +13,7 @@ import "responsive_builder.dart";
 /// 
 /// | Screen Size | Drawer | Side Sheet | Navigation |
 /// |--------|--------|--------|--------|
-/// | [DeviceType.desktop] | Standard | Standard | Hidden |
+/// | [DeviceType.desktop] | Standard | Standard | [NavigationDrawer] |
 /// | [DeviceType.tabletLandscape] | Modal | Standard | [NavigationRail] |
 /// | [DeviceType.tabletPortrait] | Modal | Modal | [NavigationRail] |
 /// | [DeviceType.desktop] | Modal | Modal | [NavigationBar] |

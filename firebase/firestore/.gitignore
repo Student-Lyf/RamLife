@@ -16,3 +16,4 @@ package-lock.json
 
 # Misc
 node/temp.dart
+constants.yaml
