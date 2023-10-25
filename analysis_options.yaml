@@ -51,4 +51,4 @@ linter:
     cascade_invocations: false  # this often looks uglier
     
     # Temporarily disabled until we are ready to document
-    public_member_api_docs: false
+    # public_member_api_docs: false

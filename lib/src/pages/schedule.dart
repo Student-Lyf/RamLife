@@ -1,6 +1,5 @@
 import "package:flutter/material.dart";
-
-import "package:link_text/link_text.dart";
+import "package:url_launcher/url_launcher_string.dart";
 
 import "package:ramaz/data.dart";
 import "package:ramaz/models.dart";
@@ -232,13 +231,9 @@ class SuggestionWidget extends StatelessWidget {
 								),
 								const SizedBox(height: 10),
 								if (suggestion.virtualLink != null)
-									LinkText(
-										"Link: ${suggestion.virtualLink}",
-										shouldTrimParams: true,
-                    textStyle: Theme.of(context).textTheme.bodySmall,
-										linkStyle: Theme.of(context).textTheme.bodySmall?.merge(
-                      const TextStyle(color: Colors.blue),
-                    ),
+									TextButton(
+										child: Text(suggestion.virtualLink!),
+                    onPressed: () => launchUrlString(suggestion.virtualLink!),
                 	),
 							],
 						),
