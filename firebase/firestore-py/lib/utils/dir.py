@@ -37,8 +37,12 @@ section_schedule = data_dir / "section_schedule.csv"
 # Contains the names, emails, and IDs of every student.
 students = data_dir / "students.csv"
 
-# The virtual class links.
+# The virtual class links connecting a zoom link to a teacher's email.
 zoom_links = data_dir / "zoom_links.csv"
+
+# The virtual class links connecting a zoom link to a section Id.
+special_zoom_links = data_dir / "special_zoom_links.csv"
+
 
 # The list of admins.
 # 
@@ -50,6 +54,9 @@ constants = project_dir / "constants.yaml"
 
 # Constants such as dayNames, corruptStudents, and testers
 constants = project_dir / "constants.yaml"
+
+# List of future Ramaz sports games
+sports_schedule = data_dir / "sports.csv"
 
 # Returns the path for the calendar at a given month.
 # 

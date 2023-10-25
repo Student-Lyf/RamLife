@@ -3,7 +3,7 @@ from datetime import date
 
 from . import dir
 
-day_names = None
+day_names = None 
 corrupted_students = None
 is_semester1 = date.today().month > 7
 testers = None

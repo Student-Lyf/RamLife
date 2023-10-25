@@ -29,9 +29,11 @@ if __name__ == "__main__":
   print("Finished data indexing.")
 
   if utils.args.should_upload:
-    utils.logger.log_value(
+    utils.logger.log_progress(
       "data upload", lambda: services.upload_sections(sections)
     )
+  else:
+    print("Did not upload sections data. Use the --upload flag.")
   
   utils.logger.info(f"Processed {len(sections)} sections")
 
